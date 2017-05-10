@@ -2,6 +2,10 @@
 
 Route::group(['namespace' => 'Backend'], function() {
 
-    Route::get('login', 'UserController@login');
+    Route::match(['get', 'post'], 'login', 'UserController@login');
+
+    Route::get('/', function() {
+        echo 'Logged';
+    });
 
 });
