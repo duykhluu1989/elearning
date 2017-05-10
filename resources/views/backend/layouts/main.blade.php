@@ -50,7 +50,7 @@
                 @yield('page_heading')
             </h1>
         </section>
-        <section class="content">
+        <section class="content no-padding">
             @yield('section')
         </section>
     </div>

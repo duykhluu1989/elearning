@@ -16,6 +16,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('/', 'HomeController@home');
 
+        Route::get('setting', 'SettingController@adminSetting');
+
     });
 
 });
