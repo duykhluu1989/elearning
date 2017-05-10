@@ -2,10 +2,20 @@
 
 Route::group(['namespace' => 'Backend'], function() {
 
-    Route::match(['get', 'post'], 'login', 'UserController@login');
+    Route::group(['middleware' => 'guest'], function() {
 
-    Route::get('/', function() {
-        echo 'Logged';
+        Route::get('login', 'UserController@login');
+
+        Route::post('login', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@login']);
+
+    });
+
+    Route::group(['middleware' => ['auth', 'permission']], function() {
+
+        Route::get('logout', 'UserController@logout');
+
+        Route::get('/', 'HomeController@home');
+
     });
 
 });

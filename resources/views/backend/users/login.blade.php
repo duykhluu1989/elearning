@@ -29,14 +29,14 @@
                 <input type="password" class="form-control" name="password" required="required" />
             </div>
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-xs-8">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" name="remember"{{ old('remember') ? 'checked="checked"' : '' }} /> Remember Me
                         </label>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-4">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
                 </div>
             </div>

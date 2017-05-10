@@ -44,4 +44,11 @@ class UserController extends Controller
 
         return view('backend.users.login');
     }
+
+    public function logout()
+    {
+        auth()->logout();
+
+        return redirect()->action('Backend\UserController@login');
+    }
 }
