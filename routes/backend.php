@@ -10,11 +10,15 @@ Route::group(['namespace' => 'Backend'], function() {
 
     });
 
-    Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
+    Route::group(['middleware' => ['auth', 'access']], function() {
 
         Route::get('logout', 'UserController@logout');
 
         Route::get('/', 'HomeController@home');
+
+    });
+
+    Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
 
         Route::get('setting', 'SettingController@adminSetting');
 

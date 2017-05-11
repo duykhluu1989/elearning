@@ -14,6 +14,11 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
+    public function userRoles()
+    {
+        return $this->hasMany('App\Models\UserRole', 'user_id');
+    }
+
     public static function initCoreUser()
     {
         $user = new User();
