@@ -61,8 +61,8 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
 
         if(Route::current()->getPrefix() == 'admin')
-            return redirect('admin/login');
+            return redirect()->action('Backend\UserController@login');
         else
-            return redirect('login');
+            return redirect()->action('Frontend\UserController@login');
     }
 }

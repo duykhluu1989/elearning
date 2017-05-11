@@ -11,17 +11,6 @@ class Permission
     {
         $user = auth()->user();
 
-        if($user->status == User::STATUS_INACTIVE_DB)
-        {
-            auth()->logout();
-
-            return redirect()->action('Backend\UserController@login');
-        }
-        else
-        {
-            if($user->admin == false)
-                return redirect('/');
-        }
 
         return $next($request);
     }

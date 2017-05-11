@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Admin</title>
+    <title>Admin - @yield('page_heading')</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -14,9 +14,9 @@
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
     <header class="main-header">
-        <a href="{{ url('dashboard') }}" class="logo">
-            <span class="logo-mini">E</span>
-            <span class="logo-lg">E</span>
+        <a href="{{ action('Backend\HomeController@home') }}" class="logo">
+            <span class="logo-mini"></span>
+            <span class="logo-lg"></span>
         </a>
         <nav class="navbar navbar-static-top" role="navigation">
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
@@ -50,7 +50,7 @@
                 @yield('page_heading')
             </h1>
         </section>
-        <section class="content no-padding">
+        <section class="content">
             @yield('section')
         </section>
     </div>

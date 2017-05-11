@@ -13,6 +13,8 @@ class Setting extends Model
     const TYPE_INT_DB = 1;
     const TYPE_JSON_DB = 2;
 
+    public static $settings = null;
+
     protected $table = 'setting';
 
     public $timestamps = false;
@@ -20,8 +22,8 @@ class Setting extends Model
     public static function initCoreSettings()
     {
         $coreSettings = [
-            [self::WEB_TITLE, 'Web Title', self::TYPE_STRING_DB],
-            [self::WEB_DESCRIPTION, 'Web Description', self::TYPE_STRING_DB],
+            [self::WEB_TITLE, 'Web Title', self::TYPE_STRING_DB, 'caydenthan'],
+            [self::WEB_DESCRIPTION, 'Web Description', self::TYPE_STRING_DB, 'caydenthan'],
         ];
 
         foreach($coreSettings as $coreSetting)
@@ -30,7 +32,20 @@ class Setting extends Model
             $setting->code = $coreSetting[0];
             $setting->name = $coreSetting[1];
             $setting->type = $coreSetting[2];
+            $setting->value = $coreSetting[3];
             $setting->save();
         }
+    }
+
+    public static function getSettings()
+    {
+        if(self::$settings == null)
+        {
+            $settings = Setting::all()->toArray();
+
+            self::$settings = $settings;
+        }
+
+        return self::$settings;
     }
 }

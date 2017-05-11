@@ -21,9 +21,9 @@ class RedirectIfAuthenticated
         if(Auth::guard($guard)->check())
         {
             if(Route::current()->getPrefix() == 'admin')
-                return redirect('admin');
+                return redirect()->action('Backend\HomeController@home');
             else
-                return redirect('/');
+                return redirect()->action('Frontend\HomeController@home');
         }
 
         return $next($request);
