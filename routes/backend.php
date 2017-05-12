@@ -26,6 +26,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'role/{id}/edit', 'RoleController@editRole');
 
+        Route::get('role/{id}/delete', 'RoleController@deleteRole');
+
         Route::get('setting', 'SettingController@adminSetting');
 
     });

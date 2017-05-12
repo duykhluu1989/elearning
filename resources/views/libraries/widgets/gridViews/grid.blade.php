@@ -60,12 +60,19 @@
     @push('scripts')
         <script type="text/javascript">
             $('.GridViewCheckBoxAll').click(function() {
+                if($(this).prop('checked'))
+                    $('.GridViewCheckBoxControl').show();
+                else
+                    $('.GridViewCheckBoxControl').hide();
+
                 $('.GridViewCheckBox').prop('checked', $(this).prop('checked'));
             });
 
             $('.GridViewCheckBox').click(function() {
                 if($(this).prop('checked'))
                 {
+                    $('.GridViewCheckBoxControl').show();
+
                     var allChecked = true;
 
                     $('.GridViewCheckBox').each(function() {
@@ -90,6 +97,9 @@
                             return false;
                         }
                     });
+
+                    if(noneChecked)
+                        $('.GridViewCheckBoxControl').hide();
 
                     $('.GridViewCheckBoxAll').first().prop('checked', $(this).prop('checked'));
                 }

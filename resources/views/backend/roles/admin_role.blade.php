@@ -17,6 +17,16 @@
                 'data-content' => 'Vai Trò Mới',
             ]);
         },
+        function() {
+            \App\Libraries\Helpers\Html::button('<i class="fa fa-trash fa-fw"></i>', [
+                'class' => 'btn btn-primary GridViewCheckBoxControl',
+                'data-container' => 'body',
+                'data-toggle' => 'popover',
+                'data-placement' => 'top',
+                'data-content' => 'Xóa',
+                'style' => 'display: none',
+            ]);
+        },
     ]);
 
     $gridView->render();

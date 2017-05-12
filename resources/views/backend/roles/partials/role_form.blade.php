@@ -1,7 +1,11 @@
 <div class="box box-primary">
     <div class="box-header with-border">
         <button type="submit" class="btn btn-primary">{{ empty($role->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
-        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Hủy</a>
+        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Quay Lại</a>
+
+        @if(!empty($role->id) && count($role->userRoles) == 0 && $role->name != \App\Models\Role::ROLE_ADMINISTRATOR)
+            <a href="{{ action('Backend\RoleController@deleteRole', ['id' => $role->id]) }}" class="btn btn-primary pull-right">Xóa</a>
+        @endif
     </div>
     <div class="box-body">
         <div class="row">
@@ -53,15 +57,11 @@
     </div>
     <div class="box-footer">
         <button type="submit" class="btn btn-primary">{{ empty($role->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
-        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Hủy</a>
+        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Quay lai</a>
+
+        @if(!empty($role->id) && count($role->userRoles) == 0 && $role->name != \App\Models\Role::ROLE_ADMINISTRATOR)
+            <a href="{{ action('Backend\RoleController@deleteRole', ['id' => $role->id]) }}" class="btn btn-primary pull-right">Xóa</a>
+        @endif
     </div>
 </div>
 {{ csrf_field() }}
-
-@if(session('message'))
-    @push('scripts')
-        <script type="text/javascript">
-            alert('{{ session('message') }}');
-        </script>
-    @endpush
-@endif

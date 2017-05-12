@@ -99,4 +99,16 @@ class RoleController extends Controller
             ]);
         }
     }
+
+    public function deleteRole($id)
+    {
+        $role = Role::find($id);
+
+        if(empty($role) || count($role->userRoles) > 0 || $role->name == Role::ROLE_ADMINISTRATOR)
+            return view('backend.errors.404');
+
+        $role->delete();
+
+        return redirect()->action('Backend\RoleController@adminRole')->with('message', 'Success');
+    }
 }

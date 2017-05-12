@@ -12,6 +12,11 @@ class Role extends Model
 
     public $timestamps = false;
 
+    public function userRoles()
+    {
+        return $this->hasMany('App\Models\UserRole', 'role_id');
+    }
+
     public static function initCoreRoles()
     {
         $role = new Role();
