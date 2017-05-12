@@ -111,4 +111,19 @@ class RoleController extends Controller
 
         return redirect()->action('Backend\RoleController@adminRole')->with('message', 'Success');
     }
+
+    public function controlDeleteRole(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $roles = Role::whereIn('id', explode(';', $ids))->get();
+
+        foreach($roles as $role)
+        {
+            if(count($role->userRoles) == 0 && $role->name != Role::ROLE_ADMINISTRATOR)
+                $role->delete();
+        }
+
+        return redirect()->action('Backend\RoleController@adminRole')->with('message', 'Success');
+    }
 }

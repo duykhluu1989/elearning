@@ -66,7 +66,9 @@
 @stack('scripts')
 @if(session('message'))
     <script type="text/javascript">
-        alert('{{ session('message') }}');
+        $(document).ready(function() {
+            alert('{{ session('message') }}');
+        });
     </script>
 @endif
 </body>

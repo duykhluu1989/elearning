@@ -104,6 +104,26 @@
                     $('.GridViewCheckBoxAll').first().prop('checked', $(this).prop('checked'));
                 }
             });
+
+            $('.GridViewCheckBoxControl').click(function() {
+                if($(this).val() != '')
+                {
+                    var ids = '';
+
+                    $('.GridViewCheckBox:checked').each(function() {
+                        if($(this).val() != '')
+                        {
+                            if(ids != '')
+                                ids += ';' + $(this).val();
+                            else
+                                ids = $(this).val();
+                        }
+                    });
+
+                    if(ids != '')
+                        window.location = $(this).val() + '?ids=' + ids;
+                }
+            });
         </script>
     @endpush
 @endif

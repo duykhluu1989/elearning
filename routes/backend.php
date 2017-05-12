@@ -28,6 +28,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('role/{id}/delete', 'RoleController@deleteRole');
 
+        Route::get('role/controlDelete', 'RoleController@controlDeleteRole');
+
         Route::get('setting', 'SettingController@adminSetting');
 
     });

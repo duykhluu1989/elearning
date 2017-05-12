@@ -4,7 +4,7 @@
         <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Quay Lại</a>
 
         @if(!empty($role->id) && count($role->userRoles) == 0 && $role->name != \App\Models\Role::ROLE_ADMINISTRATOR)
-            <a href="{{ action('Backend\RoleController@deleteRole', ['id' => $role->id]) }}" class="btn btn-primary pull-right">Xóa</a>
+            <a href="{{ action('Backend\RoleController@deleteRole', ['id' => $role->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
         @endif
     </div>
     <div class="box-body">
@@ -60,7 +60,7 @@
         <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Quay lai</a>
 
         @if(!empty($role->id) && count($role->userRoles) == 0 && $role->name != \App\Models\Role::ROLE_ADMINISTRATOR)
-            <a href="{{ action('Backend\RoleController@deleteRole', ['id' => $role->id]) }}" class="btn btn-primary pull-right">Xóa</a>
+            <a href="{{ action('Backend\RoleController@deleteRole', ['id' => $role->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
         @endif
     </div>
 </div>

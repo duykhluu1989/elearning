@@ -19,11 +19,12 @@
         },
         function() {
             \App\Libraries\Helpers\Html::button('<i class="fa fa-trash fa-fw"></i>', [
-                'class' => 'btn btn-primary GridViewCheckBoxControl',
+                'class' => 'btn btn-primary GridViewCheckBoxControl Confirmation',
                 'data-container' => 'body',
                 'data-toggle' => 'popover',
                 'data-placement' => 'top',
                 'data-content' => 'Xóa',
+                'value' => action('Backend\RoleController@controlDeleteRole'),
                 'style' => 'display: none',
             ]);
         },
