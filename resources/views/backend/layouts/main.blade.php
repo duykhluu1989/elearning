@@ -32,7 +32,7 @@
                         <ul class="dropdown-menu">
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="{{ action('Backend\UserController@logout') }}" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="{{ action('Backend\UserController@logout') }}" class="btn btn-default btn-flat">Đăng Xuất</a>
                                 </div>
                             </li>
                         </ul>
@@ -63,6 +63,6 @@
 <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('assets/js/app.min.js') }}"></script>
 <script src="{{ asset('assets/js/backend.js') }}"></script>
-@yield('javascript')
+@stack('scripts')
 </body>
 </html>

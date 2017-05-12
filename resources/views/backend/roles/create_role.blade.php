@@ -1,6 +1,6 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', 'Create Role')
+@section('page_heading', 'Vai Trò Mới')
 
 @section('section')
 

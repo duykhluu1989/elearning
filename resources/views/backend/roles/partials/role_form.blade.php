@@ -1,13 +1,13 @@
 <div class="box box-primary">
     <div class="box-header with-border">
-        <button type="submit" class="btn btn-primary">{{ empty($role->id) ? 'Create' : 'Update' }}</button>
-        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Back</a>
+        <button type="submit" class="btn btn-primary">{{ empty($role->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
+        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Hủy</a>
     </div>
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('name') ? ' has-error': '' }}">
-                    <label>Name</label>
+                    <label>Vai Trò</label>
                     <input type="text" class="form-control" name="name" required="required" value="{{ old('name', $role->name) }}" />
                     @if($errors->has('name'))
                         <span class="help-block">{{ $errors->first('name') }}</span>
@@ -26,7 +26,7 @@
 
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label>Permission</label>
+                    <label>Phân Quyền</label>
                     <div class="row">
                     @foreach($routes as $route)
                         @if(in_array('permission', $route->middleware()))
@@ -52,16 +52,16 @@
         </div>
     </div>
     <div class="box-footer">
-        <button type="submit" class="btn btn-primary">{{ empty($role->id) ? 'Create' : 'Update' }}</button>
-        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Back</a>
+        <button type="submit" class="btn btn-primary">{{ empty($role->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
+        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Hủy</a>
     </div>
 </div>
 {{ csrf_field() }}
 
-@section('javascript')
-    <script type="text/javascript">
-        @if(session('message'))
-        alert('{{ session('message') }}');
-        @endif
-    </script>
-@stop
+@if(session('message'))
+    @push('scripts')
+        <script type="text/javascript">
+            alert('{{ session('message') }}');
+        </script>
+    @endpush
+@endif

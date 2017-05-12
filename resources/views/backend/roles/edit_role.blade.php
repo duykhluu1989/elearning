@@ -1,6 +1,6 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', 'Edit Role - ' . $role->name)
+@section('page_heading', 'Chỉnh Sửa Vai Trò - ' . $role->name)
 
 @section('section')
 

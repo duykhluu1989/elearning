@@ -17,7 +17,7 @@ class RoleController extends Controller
 
         $columns = [
             [
-                'title' => 'Role',
+                'title' => 'Vai Trò',
                 'data' => function($row) {
                     if($row->name == Role::ROLE_ADMINISTRATOR)
                         echo $row->name;
@@ -32,6 +32,7 @@ class RoleController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
 
         return view('backend.roles.admin_role',[
             'gridView' => $gridView,

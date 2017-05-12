@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Admin | Log in</title>
+    <title>Admin | Đăng Nhập</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -25,19 +25,19 @@
                 @endif
             </div>
             <div class="form-group">
-                <label>Password</label>
+                <label>Mật Khẩu</label>
                 <input type="password" class="form-control" name="password" required="required" />
             </div>
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="remember"{{ old('remember') ? 'checked="checked"' : '' }} /> Remember Me
+                            <input type="checkbox" name="remember"{{ old('remember') ? 'checked="checked"' : '' }} />Tự Động Đăng Nhập
                         </label>
                     </div>
                 </div>
                 <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Đăng Nhập</button>
                 </div>
             </div>
             {{ csrf_field() }}

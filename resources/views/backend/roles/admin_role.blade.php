@@ -1,6 +1,6 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', 'Permission')
+@section('page_heading', 'Phân Quyền')
 
 @section('section')
 
@@ -14,7 +14,7 @@
                 'data-container' => 'body',
                 'data-toggle' => 'popover',
                 'data-placement' => 'top',
-                'data-content' => 'Create Role',
+                'data-content' => 'Vai Trò Mới',
             ]);
         },
     ]);
