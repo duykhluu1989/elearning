@@ -34,7 +34,7 @@ class UserController extends Controller
                     $remember = true;
 
                 if(auth()->attempt($credentials, $remember))
-                    return redirect('admin');
+                    return redirect()->action('Backend\HomeController@home');
                 else
                     return redirect()->action('Backend\UserController@login')->withErrors(['email' => 'Email or Password is not correct'])->withInput($request->except('password'));
             }

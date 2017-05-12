@@ -13,7 +13,7 @@ class Setting extends Model
     const TYPE_INT_DB = 1;
     const TYPE_JSON_DB = 2;
 
-    public static $settings = null;
+    protected static $settings = null;
 
     protected $table = 'setting';
 
@@ -37,13 +37,27 @@ class Setting extends Model
         }
     }
 
-    public static function getSettings()
+    public static function getSettings($code = null)
     {
         if(self::$settings == null)
         {
             $settings = Setting::all()->toArray();
 
             self::$settings = $settings;
+        }
+
+        if($code != null)
+        {
+            foreach(self::$settings as $setting)
+            {
+                if($setting['code'] == $code)
+                {
+                    if($setting['type'] == self::TYPE_JSON_DB)
+                        return json_decode($setting['value'], true);
+                    else
+                        return $setting['value'];
+                }
+            }
         }
 
         return self::$settings;

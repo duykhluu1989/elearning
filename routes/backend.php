@@ -20,6 +20,12 @@ Route::group(['namespace' => 'Backend'], function() {
 
     Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
 
+        Route::get('role', 'RoleController@adminRole');
+
+        Route::match(['get', 'post'], 'role/create', 'RoleController@createRole');
+
+        Route::match(['get', 'post'], 'role/{id}/edit', 'RoleController@editRole');
+
         Route::get('setting', 'SettingController@adminSetting');
 
     });
