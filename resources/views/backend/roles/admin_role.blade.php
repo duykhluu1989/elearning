@@ -8,7 +8,7 @@
 
     $gridView->setTools([
         function() {
-            \App\Libraries\Helpers\Html::a('<i class="fa fa-plus fa-fw"></i>', [
+            echo \App\Libraries\Helpers\Html::a(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-plus fa-fw']), [
                 'href' => action('Backend\RoleController@createRole'),
                 'class' => 'btn btn-primary',
                 'data-container' => 'body',
@@ -18,7 +18,7 @@
             ]);
         },
         function() {
-            \App\Libraries\Helpers\Html::button('<i class="fa fa-trash fa-fw"></i>', [
+            echo \App\Libraries\Helpers\Html::button(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-trash fa-fw']), [
                 'class' => 'btn btn-primary GridViewCheckBoxControl Confirmation',
                 'data-container' => 'body',
                 'data-toggle' => 'popover',

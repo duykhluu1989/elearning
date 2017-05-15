@@ -11,9 +11,9 @@ use App\Models\Role;
 
 class RoleController extends Controller
 {
-    public function adminRole(Request $request)
+    public function adminRole()
     {
-        $dataProvider = Role::select('id', 'name')->paginate(GridView::ROWS_PER_PAGE);
+        $dataProvider = Role::select('id', 'name', 'description')->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
@@ -23,11 +23,15 @@ class RoleController extends Controller
                         echo $row->name;
                     else
                     {
-                        Html::a($row->name, [
+                        echo Html::a($row->name, [
                             'href' => action('Backend\RoleController@editRole', ['id' => $row->id]),
                         ]);
                     }
                 },
+            ],
+            [
+                'title' => 'Mô Tả',
+                'data' => 'description',
             ],
         ];
 

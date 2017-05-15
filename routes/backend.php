@@ -20,6 +20,14 @@ Route::group(['namespace' => 'Backend'], function() {
 
     Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
 
+        Route::get('user', 'UserController@adminUser');
+
+        Route::get('userStudent', 'UserController@adminUserStudent');
+
+        Route::match(['get', 'post'], 'user/create', 'UserController@createUser');
+
+        Route::match(['get', 'post'], 'user/{id}/edit', 'UserController@editUser');
+
         Route::get('role', 'RoleController@adminRole');
 
         Route::match(['get', 'post'], 'role/create', 'RoleController@createRole');

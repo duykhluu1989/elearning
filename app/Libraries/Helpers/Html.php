@@ -6,25 +6,33 @@ class Html
 {
     public static function a($innerHtml, $attributes)
     {
-        $html = '<a';
-
-        foreach($attributes as $name => $value)
-            $html .= ' ' . $name . '="' . $value . '"';
-
-        $html .= '>' . $innerHtml . '</a>';
-
-        echo $html;
+        return self::renderHtmlOpenCloseTag('a', $innerHtml, $attributes);
     }
 
     public static function button($innerHtml, $attributes)
     {
-        $html = '<button';
+        return self::renderHtmlOpenCloseTag('button', $innerHtml, $attributes);
+    }
+
+    public static function span($innerHtml, $attributes)
+    {
+        return self::renderHtmlOpenCloseTag('span', $innerHtml, $attributes);
+    }
+
+    public static function i($innerHtml, $attributes)
+    {
+        return self::renderHtmlOpenCloseTag('i', $innerHtml, $attributes);
+    }
+
+    public static function renderHtmlOpenCloseTag($htmlTag, $innerHtml, $attributes)
+    {
+        $html = '<' . $htmlTag;
 
         foreach($attributes as $name => $value)
             $html .= ' ' . $name . '="' . $value . '"';
 
-        $html .= '>' . $innerHtml . '</button>';
+        $html .= '>' . $innerHtml . '</' . $htmlTag . '>';
 
-        echo $html;
+        return $html;
     }
 }

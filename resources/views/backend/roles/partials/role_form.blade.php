@@ -11,11 +11,17 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('name') ? ' has-error': '' }}">
-                    <label>Vai Trò</label>
+                    <label>Vai Trò <i>(bắt buộc)</i></label>
                     <input type="text" class="form-control" name="name" required="required" value="{{ old('name', $role->name) }}" />
                     @if($errors->has('name'))
                         <span class="help-block">{{ $errors->first('name') }}</span>
                     @endif
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>Mô Tả</label>
+                    <textarea class="form-control" name="description">{{ old('description', $role->description) }}</textarea>
                 </div>
             </div>
 
