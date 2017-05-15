@@ -24,38 +24,35 @@
                     <textarea class="form-control" name="description">{{ old('description', $role->description) }}</textarea>
                 </div>
             </div>
-
-            <?php
-            $allowedRoutes = array();
-            if(!empty($role->permission))
-                $allowedRoutes = json_decode($role->permission, true);
-            $allowedRoutes = old('permission', $allowedRoutes);
-
-            $routes = Route::getRoutes();
-            ?>
-
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>Phân Quyền</label>
+                    <?php
+                    $allowedRoutes = array();
+                    if(!empty($role->permission))
+                        $allowedRoutes = json_decode($role->permission, true);
+                    $allowedRoutes = old('permission', $allowedRoutes);
+                    $routes = Route::getRoutes();
+                    ?>
                     <div class="row">
-                    @foreach($routes as $route)
-                        @if(in_array('permission', $route->middleware()))
-                            @foreach($route->methods() as $method)
-                                @if(strtolower($method) != 'head')
-                                    <?php
-                                    $routeName = $method . ' - ' . $route->uri();
-                                    ?>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input name="permission[]" type="checkbox" value="{{ $routeName }}"<?php echo (in_array($routeName, $allowedRoutes) ? ' checked="checked"' : ''); ?> />{{ $routeName }}
-                                            </label>
+                        @foreach($routes as $route)
+                            @if(in_array('permission', $route->middleware()))
+                                @foreach($route->methods() as $method)
+                                    @if(strtolower($method) != 'head')
+                                        <?php
+                                        $routeName = $method . ' - ' . $route->uri();
+                                        ?>
+                                        <div class="col-sm-3">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="permission[]" type="checkbox" value="{{ $routeName }}"<?php echo (in_array($routeName, $allowedRoutes) ? ' checked="checked"' : ''); ?> />{{ $routeName }}
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @endif
-                    @endforeach
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\UserRole;
 
 class UserController extends Controller
 {
@@ -97,58 +100,63 @@ class UserController extends Controller
         $user->status = User::STATUS_ACTIVE_DB;
         $user->admin = User::STATUS_ACTIVE_DB;
 
-        return $this->saveUser($request, $user);
-    }
-
-    public function editUser(Request $request, $id)
-    {
-        $user = User::find($id);
-
-        if(empty($user))
-            return view('backend.errors.404');
-
-        return $this->saveUser($request, $user, false);
-    }
-
-    protected function saveUser($request, $user, $create = true)
-    {
         if($request->isMethod('post'))
         {
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-
+                'username' => 'required|alpha_dash',
+                'email' => 'required|email|unique:user,email',
+                'password' => 'required|alpha_dash|min:6',
+                're_password' => 'required|alpha_dash|min:6|same:password',
+                'roles' => 'required',
             ]);
 
             if($validator->passes())
             {
-
-
+                $user->username = $inputs['username'];
+                $user->email = $inputs['email'];
+                $user->status = $inputs['status'];
+                $user->admin = $inputs['admin'];
+                $user->created_at = date('Y-m-d H:i:s');
+                $user->password = Hash::make($inputs['password']);
                 $user->save();
+
+                foreach($inputs['roles'] as $roleId)
+                {
+                    $userRole = new UserRole();
+                    $userRole->user_id = $user->id;
+                    $userRole->role_id = $roleId;
+                    $userRole->save();
+                }
 
                 return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
             }
             else
-            {
-                if($create == true)
-                    return redirect()->action('Backend\UserController@createUser')->withErrors($validator)->withInput();
-                else
-                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->withErrors($validator)->withInput();
-            }
+                return redirect()->action('Backend\UserController@createUser')->withErrors($validator)->withInput();
         }
 
-        if($create == true)
-        {
-            return view('backend.users.create_user', [
-                'user' => $user,
-            ]);
-        }
-        else
-        {
-            return view('backend.users.edit_user', [
-                'user' => $user,
-            ]);
-        }
+        $roles = Role::pluck('name', 'id');
+
+        return view('backend.users.create_user', [
+            'user' => $user,
+            'roles' => $roles,
+        ]);
+    }
+
+    public function editUser(Request $request, $id)
+    {
+        $user = User::with('userRoles', 'profile')->find($id);
+
+        if(empty($user))
+            return view('backend.errors.404');
+
+        $roles = Role::pluck('name', 'id');
+
+        return view('backend.users.edit_user', [
+            'user' => $user,
+            'roles' => $roles,
+        ]);
     }
 
     public function adminUserStudent()

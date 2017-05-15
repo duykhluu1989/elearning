@@ -5,3 +5,9 @@ $('[data-toggle="popover"]').popover({
 $('.Confirmation').click(function() {
     return confirm('Bạn Chắc Chắn Rồi Chứ ?');
 });
+
+$('.DatePicker').datepicker({
+    changeYear: true,
+    changeMonth: true,
+    dateFormat: 'yy-mm-dd'
+});

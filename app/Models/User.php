@@ -19,6 +19,11 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
+    public function profile()
+    {
+        return $this->hasOne('App\Models\Profile', 'user_id');
+    }
+
     public function userRoles()
     {
         return $this->hasMany('App\Models\UserRole', 'user_id');

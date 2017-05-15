@@ -16,8 +16,8 @@
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('username') ? ' has-error': '' }}">
                             <label>Tên Tài Khoản <i>(bắt buộc)</i></label>
-                            <input type="text" class="form-control" name="username" required="required" value="{{ old('username', $user->username) }}" />
-                            @if($errors->has('name'))
+                            <input type="text" class="form-control" name="username" required="required" value="{{ old('username') }}" />
+                            @if($errors->has('username'))
                                 <span class="help-block">{{ $errors->first('username') }}</span>
                             @endif
                         </div>
@@ -25,7 +25,7 @@
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('email') ? ' has-error': '' }}">
                             <label>Email <i>(bắt buộc)</i></label>
-                            <input type="email" class="form-control" name="email" required="required" value="{{ old('email', $user->email) }}" />
+                            <input type="email" class="form-control" name="email" required="required" value="{{ old('email') }}" />
                             @if($errors->has('email'))
                                 <span class="help-block">{{ $errors->first('email') }}</span>
                             @endif
@@ -72,6 +72,57 @@
                             @if($errors->has('admin'))
                                 <span class="help-block">{{ $errors->first('admin') }}</span>
                             @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Thông Báo</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="new_account_email" type="checkbox" value="new_account_email" checked="checked" />Gửi Email Thông Tin Tài Khoản Cho Thành Viên Mới
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group{{ $errors->has('password') ? ' has-error': '' }}">
+                            <label>Mật Khẩu <i>(bắt buộc)</i></label>
+                            <input type="password" class="form-control" name="password" required="required" value="{{ old('password') }}" />
+                            @if($errors->has('password'))
+                                <span class="help-block">{{ $errors->first('password') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group{{ $errors->has('re_password') ? ' has-error': '' }}">
+                            <label>Xác Nhận Mật Khẩu <i>(bắt buộc)</i></label>
+                            <input type="password" class="form-control" name="re_password" required="required" value="{{ old('re_password') }}" />
+                            @if($errors->has('re_password'))
+                                <span class="help-block">{{ $errors->first('re_password') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group{{ $errors->has('roles') ? ' has-error': '' }}">
+                            <label>Vai Trò <i>(bắt buộc)</i></label>
+                            @if($errors->has('roles'))
+                                <span class="help-block">{{ $errors->first('roles') }}</span>
+                            @endif
+                            <?php
+                            $assignedRoles = array();
+                            $assignedRoles = old('roles', $assignedRoles);
+                            ?>
+                            <div class="row">
+                                @foreach($roles as $id => $name)
+                                    <div class="col-sm-3">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="roles[]" type="checkbox" value="{{ $id }}"<?php echo (in_array($id, $assignedRoles) ? ' checked="checked"' : ''); ?> />{{ $name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
