@@ -73,6 +73,7 @@ class RoleController extends Controller
             if($validator->passes())
             {
                 $role->name = $inputs['name'];
+                $role->description = $inputs['description'];
 
                 if(!empty($inputs['permission']))
                     $role->permission = json_encode($inputs['permission']);

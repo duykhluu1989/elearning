@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Command;
 use App\Models\Setting;
 use App\Models\User;
@@ -17,14 +18,29 @@ class Init extends Command
 
     public function handle()
     {
-        Setting::initCoreSettings();
+        try
+        {
+            DB::beginTransaction();
 
-        User::initCoreUser();
+            Setting::initCoreSettings();
 
-        Profile::initCoreProfile();
+            User::initCoreUser();
 
-        Role::initCoreRoles();
+            Profile::initCoreProfile();
 
-        UserRole::initCoreUserRoles();
+            Role::initCoreRoles();
+
+            UserRole::initCoreUserRoles();
+
+            DB::commit();
+
+            echo 'Init Succeed';
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            echo 'Init Failed: ' . $e->getMessage();
+        }
     }
 }

@@ -15,6 +15,8 @@ class User extends Authenticatable
     const ADMIN_TRUE_LABEL = 'Quản Trị';
     const ADMIN_FALSE_LABEL = 'Học Viên';
 
+    const AVATAR_UPLOAD_PATH = '/uploads/users/avatars';
+
     protected $table = 'user';
 
     public $timestamps = false;

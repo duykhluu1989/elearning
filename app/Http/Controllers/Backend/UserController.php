@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
+use App\Libraries\Helpers\Utility;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\UserRole;
@@ -111,7 +113,6 @@ class UserController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
-        $gridView->setCheckbox();
         $gridView->setFilters([
             [
                 'title' => 'Tên Tài Khoản',
@@ -156,30 +157,48 @@ class UserController extends Controller
 
             if($validator->passes())
             {
-                $user->username = $inputs['username'];
-                $user->email = $inputs['email'];
-                $user->status = $inputs['status'];
-                $user->admin = $inputs['admin'];
-                $user->created_at = date('Y-m-d H:i:s');
-                $user->password = Hash::make($inputs['password']);
-                $user->save();
-
-                if(isset($inputs['roles']))
+                try
                 {
-                    foreach($inputs['roles'] as $roleId)
+                    DB::beginTransaction();
+
+                    $user->username = $inputs['username'];
+                    $user->email = $inputs['email'];
+                    $user->status = $inputs['status'];
+                    $user->admin = $inputs['admin'];
+                    $user->created_at = date('Y-m-d H:i:s');
+                    $user->password = Hash::make($inputs['password']);
+                    $user->save();
+
+                    if(isset($inputs['roles']))
                     {
-                        $userRole = new UserRole();
-                        $userRole->user_id = $user->id;
-                        $userRole->role_id = $roleId;
-                        $userRole->save();
+                        foreach($inputs['roles'] as $roleId)
+                        {
+                            $userRole = new UserRole();
+                            $userRole->user_id = $user->id;
+                            $userRole->role_id = $roleId;
+                            $userRole->save();
+                        }
                     }
+
+                    $profile = new Profile();
+                    $profile->user_id = $user->id;
+                    $profile->save();
+
+                    DB::commit();
+
+                    if(isset($inputs['new_account_email']))
+                    {
+                        // Send new account email
+                    }
+
+                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
                 }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
 
-                $profile = new Profile();
-                $profile->user_id = $user->id;
-                $profile->save();
-
-                return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
+                    return redirect()->action('Backend\UserController@createUser')->withErrors(['username' => $e->getMessage()])->withInput();
+                }
             }
             else
                 return redirect()->action('Backend\UserController@createUser')->withErrors($validator)->withInput();
@@ -199,6 +218,104 @@ class UserController extends Controller
 
         if(empty($user))
             return view('backend.errors.404');
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'username' => 'required|alpha_dash',
+                'email' => 'required|email|unique:user,email,' . $user->id,
+                'password' => 'nullable|alpha_dash|min:6',
+                're_password' => 'nullable|alpha_dash|min:6|same:password',
+                'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
+                'first_name' => 'required_with:last_name',
+                'phone' => 'nullable|numeric',
+                'birthday' => 'nullable|date',
+            ]);
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    if(isset($inputs['avatar']))
+                    {
+                        $savePath = User::AVATAR_UPLOAD_PATH . '/' . $user->id;
+
+                        list($imagePath, $imageUrl) = Utility::saveFile($inputs['avatar'], $savePath, Utility::getValidImageExt());
+
+                        if(!empty($imagePath) && !empty($imageUrl))
+                        {
+                            Utility::resizeImage($imagePath, 300);
+
+                            if(!empty($user->avatar))
+                                Utility::deleteFile($user->avatar);
+
+                            $user->avatar = $imageUrl;
+                        }
+                    }
+
+                    $user->username = $inputs['username'];
+                    $user->email = $inputs['email'];
+                    $user->status = $inputs['status'];
+                    $user->admin = $inputs['admin'];
+
+                    if(!empty($inputs['password']))
+                        $user->password = Hash::make($inputs['password']);
+
+                    $user->save();
+
+                    if(isset($inputs['roles']))
+                    {
+                        foreach($user->userRoles as $userRole)
+                        {
+                            $key = array_search($userRole->role_id, $inputs['roles']);
+
+                            if($key !== false)
+                                unset($inputs['roles'][$key]);
+                            else
+                                $userRole->delete();
+                        }
+
+                        foreach($inputs['roles'] as $roleId)
+                        {
+                            $userRole = new UserRole();
+                            $userRole->user_id = $user->id;
+                            $userRole->role_id = $roleId;
+                            $userRole->save();
+                        }
+                    }
+                    else
+                    {
+                        foreach($user->userRoles as $userRole)
+                            $userRole->delete();
+                    }
+
+                    $user->profile->first_name = $inputs['first_name'];
+                    $user->profile->last_name = $inputs['last_name'];
+                    $user->profile->gender = $inputs['gender'];
+                    $user->profile->birthday = $inputs['birthday'];
+                    $user->profile->phone = $inputs['phone'];
+                    $user->profile->address = $inputs['address'];
+                    $user->profile->description = $inputs['description'];
+                    $user->profile->save();
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->withErrors(['username' => $e->getMessage()])->withInput();
+                }
+            }
+            else
+                return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->withErrors($validator)->withInput();
+        }
 
         $roles = Role::pluck('name', 'id');
 
@@ -234,7 +351,6 @@ class UserController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
-        $gridView->setCheckbox();
 
         return view('backend.users.admin_user_student',[
             'gridView' => $gridView,
