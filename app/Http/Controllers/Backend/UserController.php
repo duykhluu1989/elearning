@@ -248,7 +248,7 @@ class UserController extends Controller
 
                         if(!empty($imagePath) && !empty($imageUrl))
                         {
-                            Utility::resizeImage($imagePath, 300);
+                            Utility::resizeImage($imagePath, 200);
 
                             if(!empty($user->avatar))
                                 Utility::deleteFile($user->avatar);

@@ -22,7 +22,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group{{ $errors->has('avatar') ? ' has-error': '' }}">
-                                        <label>Ảnh Đại Diện <i>(300 x 300)</i></label>
+                                        <label>Ảnh Đại Diện <i>(200 x 200)</i></label>
                                         <input type="file" class="form-control" name="avatar" accept="{{ implode(', ', \App\Libraries\Helpers\Utility::getValidImageExt(true)) }}" />
                                         @if($errors->has('avatar'))
                                             <span class="help-block">{{ $errors->first('avatar') }}</span>
