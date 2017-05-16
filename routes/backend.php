@@ -16,6 +16,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('/', 'HomeController@home');
 
+        Route::match(['get', 'post'], 'account/edit', 'UserController@editAccount');
+
     });
 
     Route::group(['middleware' => ['auth', 'access', 'permission']], function() {

@@ -1,32 +1,37 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', 'Setting')
+@section('page_heading', 'Tổng Quan')
 
 @section('section')
 
-    <div class="box box-default">
-        <div class="box-header with-border">
+    <form action="{{ action('Backend\SettingController@adminSetting') }}" method="post">
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <button type="submit" class="btn btn-primary">Cập Nhật</button>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Tiêu Đề Web</label>
+                            <input type="text" class="form-control" name="web_title" value="{{ old('web_title', $settings[\App\Models\Setting::WEB_TITLE]['value']) }}" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Mô Tả Web</label>
+                            <input type="text" class="form-control" name="web_description" value="{{ old('web_description', $settings[\App\Models\Setting::WEB_DESCRIPTION]['value']) }}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Cập Nhật</button>
+            </div>
         </div>
-        <div class="box-body table-responsive no-padding">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Code</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($settings as $setting)
-                    <tr>
-                        <td>{{ $setting->name }}</td>
-                        <td>{{ $setting->code }}</td>
-                        <td>{{ $setting->value }}</td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+        {{ csrf_field() }}
+
+    </form>
 
 @stop

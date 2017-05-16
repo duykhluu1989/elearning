@@ -43,20 +43,18 @@ class Setting extends Model
         {
             $settings = Setting::all()->toArray();
 
-            self::$settings = $settings;
+            foreach($settings as $setting)
+                self::$settings[$setting['code']] = $setting;
         }
 
         if($code != null)
         {
-            foreach(self::$settings as $setting)
+            if(isset(self::$settings[$code]))
             {
-                if($setting['code'] == $code)
-                {
-                    if($setting['type'] == self::TYPE_JSON_DB)
-                        return json_decode($setting['value'], true);
-                    else
-                        return $setting['value'];
-                }
+                if(self::$settings[$code]['type'] == self::TYPE_JSON_DB)
+                    return json_decode(self::$settings[$code]['value'], true);
+                else
+                    return self::$settings[$code]['value'];
             }
         }
 

@@ -27,12 +27,25 @@
                 <ul class="nav navbar-nav">
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user fa-fw"></i>
+                            @if(!empty(auth()->user()->avatar))
+                                <img src="{{ auth()->user()->avatar }}" class="user-image" alt="User Avatar" />
+                            @else
+                                <i class="fa fa-user fa-fw"></i>
+                            @endif
                             <span class="hidden-xs">{{ auth()->user()->username }}</span>
                         </a>
                         <ul class="dropdown-menu">
+                            @if(!empty(auth()->user()->avatar))
+                                <li class="user-header">
+                                    <img src="{{ auth()->user()->avatar }}" class="img-circle" alt="User Avatar" />
+                                    <p>{{ auth()->user()->username }}</p>
+                                </li>
+                            @endif
                             <li class="user-footer">
                                 <div class="pull-left">
+                                    <a href="{{ action('Backend\UserController@editAccount') }}" class="btn btn-default btn-flat">Tài Khoản</a>
+                                </div>
+                                <div class="pull-right">
                                     <a href="{{ action('Backend\UserController@logout') }}" class="btn btn-default btn-flat">Đăng Xuất</a>
                                 </div>
                             </li>

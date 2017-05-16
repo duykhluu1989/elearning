@@ -28,7 +28,7 @@
                                             <span class="help-block">{{ $errors->first('avatar') }}</span>
                                         @endif
                                         @if(!empty($user->avatar))
-                                            <img src="{{ $user->avatar }}" width="150px" />
+                                            <img src="{{ $user->avatar }}" width="150px" alt="User Avatar" />
                                         @endif
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label>Vai Trò <i>(bắt buộc)</i></label>
+                                        <label>Vai Trò</label>
                                         <?php
                                         $assignedRoles = array();
                                         foreach($user->userRoles as $userRole)

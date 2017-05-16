@@ -11,7 +11,7 @@ class SettingController extends Controller
 {
     public function adminSetting()
     {
-        $settings = Setting::all();
+        $settings = Setting::getSettings();
 
         return view('backend.settings.admin_setting', [
             'settings' => $settings,

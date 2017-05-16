@@ -356,4 +356,13 @@ class UserController extends Controller
             'gridView' => $gridView,
         ]);
     }
+
+    public function editAccount(Request $request)
+    {
+        $user = auth()->user();
+
+        return view('backend.users.edit_account', [
+            'user' => $user,
+        ]);
+    }
 }
