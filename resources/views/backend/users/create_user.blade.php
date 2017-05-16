@@ -104,7 +104,7 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('roles') ? ' has-error': '' }}">
-                            <label>Vai Trò <i>(bắt buộc)</i></label>
+                            <label>Vai Trò</label>
                             @if($errors->has('roles'))
                                 <span class="help-block">{{ $errors->first('roles') }}</span>
                             @endif

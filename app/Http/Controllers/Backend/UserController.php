@@ -11,6 +11,7 @@ use App\Libraries\Helpers\Html;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\UserRole;
+use App\Models\Profile;
 
 class UserController extends Controller
 {
@@ -57,9 +58,25 @@ class UserController extends Controller
         return redirect()->action('Backend\UserController@login');
     }
 
-    public function adminUser()
+    public function adminUser(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', true)->paginate(GridView::ROWS_PER_PAGE);
+        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', true);
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['username']))
+                $dataProvider->where('username', 'like', '%' . $inputs['username'] . '%');
+
+            if(!empty($inputs['email']))
+                $dataProvider->where('email', 'like', '%' . $inputs['email'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('status', $inputs['status']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
@@ -75,6 +92,13 @@ class UserController extends Controller
                 'data' => 'email',
             ],
             [
+                'title' => 'Vai Trò',
+                'data' => function($row) {
+                    foreach($row->userRoles as $userRole)
+                        echo $userRole->role->name . ' ';
+                },
+            ],
+            [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
                     $status = User::getUserStatus($row->status);
@@ -88,6 +112,25 @@ class UserController extends Controller
 
         $gridView = new GridView($dataProvider, $columns);
         $gridView->setCheckbox();
+        $gridView->setFilters([
+            [
+                'title' => 'Tên Tài Khoản',
+                'name' => 'username',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Email',
+                'name' => 'email',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => User::getUserStatus(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
 
         return view('backend.users.admin_user',[
             'gridView' => $gridView,
@@ -109,7 +152,6 @@ class UserController extends Controller
                 'email' => 'required|email|unique:user,email',
                 'password' => 'required|alpha_dash|min:6',
                 're_password' => 'required|alpha_dash|min:6|same:password',
-                'roles' => 'required',
             ]);
 
             if($validator->passes())
@@ -122,13 +164,20 @@ class UserController extends Controller
                 $user->password = Hash::make($inputs['password']);
                 $user->save();
 
-                foreach($inputs['roles'] as $roleId)
+                if(isset($inputs['roles']))
                 {
-                    $userRole = new UserRole();
-                    $userRole->user_id = $user->id;
-                    $userRole->role_id = $roleId;
-                    $userRole->save();
+                    foreach($inputs['roles'] as $roleId)
+                    {
+                        $userRole = new UserRole();
+                        $userRole->user_id = $user->id;
+                        $userRole->role_id = $roleId;
+                        $userRole->save();
+                    }
                 }
+
+                $profile = new Profile();
+                $profile->user_id = $user->id;
+                $profile->save();
 
                 return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
             }

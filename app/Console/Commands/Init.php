@@ -7,6 +7,7 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\UserRole;
+use App\Models\Profile;
 
 class Init extends Command
 {
@@ -19,6 +20,8 @@ class Init extends Command
         Setting::initCoreSettings();
 
         User::initCoreUser();
+
+        Profile::initCoreProfile();
 
         Role::initCoreRoles();
 

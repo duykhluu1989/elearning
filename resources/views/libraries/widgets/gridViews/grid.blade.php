@@ -1,3 +1,49 @@
+@if(!empty($filters))
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Tìm Kiếm</h3>
+            <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus fa-fw"></i></button>
+            </div>
+        </div>
+        <form id="FilterForm" method="get" action="{{ url(request()->getPathInfo()) }}">
+            <div class="box-body">
+                <div class="row">
+                    @foreach($filters as $filter)
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">{{ $filter['title'] }}</label>
+                                <div class="col-sm-7">
+                                    @if($filter['type'] == 'input')
+                                        <?php
+                                        echo \App\Libraries\Helpers\Html::input((isset($filterValues[$filter['name']]) ? $filterValues[$filter['name']] : ''), [
+                                            'type' => 'text',
+                                            'class' => 'form-control',
+                                            'name' => $filter['name'],
+                                        ]);
+                                        ?>
+                                    @elseif($filter['type'] == 'select')
+                                        <?php
+                                        echo \App\Libraries\Helpers\Html::select((isset($filterValues[$filter['name']]) ? $filterValues[$filter['name']] : ''), $filter['options'], [
+                                            'class' => 'form-control',
+                                            'name' => $filter['name'],
+                                        ]);
+                                        ?>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="box-footer text-center">
+                <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
+                <a href="{{ url(request()->getPathInfo()) }}" class="btn btn-default">Hủy Tìm Kiếm</a>
+            </div>
+        </form>
+    </div>
+@endif
+
 <div class="box box-primary">
     <div class="box-header with-border">
         @if(!empty($tools))

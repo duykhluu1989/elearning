@@ -14,6 +14,8 @@ class GridView
 
     protected $filters;
 
+    protected $filterValues;
+
     protected $checkbox;
 
     public function __construct($dataProvider, $columns)
@@ -28,6 +30,7 @@ class GridView
             'dataProvider' => $this->dataProvider,
             'columns' => $this->columns,
             'tools' => $this->tools,
+            'filterValues' => $this->filterValues,
             'filters' => $this->filters,
             'checkbox' => $this->checkbox,
         ]);
@@ -41,6 +44,11 @@ class GridView
     public function setFilters($filters)
     {
         $this->filters = $filters;
+    }
+
+    public function setFilterValues($filterValues)
+    {
+        $this->filterValues = $filterValues;
     }
 
     public function setCheckbox()

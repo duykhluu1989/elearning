@@ -20,6 +20,13 @@ class Profile extends Model
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    public static function initCoreProfile()
+    {
+        $profile = new Profile();
+        $profile->user_id = User::where('username', 'admin')->first()->id;;
+        $profile->save();
+    }
+
     public static function getProfileGender($value = null)
     {
         $gender = [
