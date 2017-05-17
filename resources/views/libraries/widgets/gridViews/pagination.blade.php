@@ -1,4 +1,9 @@
 <ul class="pagination no-margin pull-right">
+    @if($dataProvider->total() > 0)
+        <li>
+            <a href="javascript:void(0)" class="no-border"><b>{{ $dataProvider->firstItem() . '-' . $dataProvider->lastItem() . '/' . $dataProvider->total() }}</b></a>
+        </li>
+    @endif
     @if($dataProvider->lastPage() > 1)
         @if($dataProvider->currentPage() > 1)
             <li>
@@ -18,7 +23,7 @@
             @endif
         @endfor
 
-        <li><a href="javascript:void(0)" class="active">{{ $dataProvider->currentPage() }}</a></li>
+        <li class="active"><a href="javascript:void(0)">{{ $dataProvider->currentPage() }}</a></li>
 
         @for($i = 1;$i <= 2;$i ++)
             @if($dataProvider->currentPage() + $i < $dataProvider->lastPage())

@@ -15,13 +15,13 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>Tiêu Đề Web</label>
-                            <input type="text" class="form-control" name="web_title" value="{{ old('web_title', $settings[\App\Models\Setting::WEB_TITLE]['value']) }}" />
+                            <input type="text" class="form-control" name="web_title" value="{{ old('web_title', $settings[\App\Models\Setting::WEB_TITLE]->value) }}" />
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>Mô Tả Web</label>
-                            <input type="text" class="form-control" name="web_description" value="{{ old('web_description', $settings[\App\Models\Setting::WEB_DESCRIPTION]['value']) }}" />
+                            <input type="text" class="form-control" name="web_description" value="{{ old('web_description', $settings[\App\Models\Setting::WEB_DESCRIPTION]->value) }}" />
                         </div>
                     </div>
                 </div>

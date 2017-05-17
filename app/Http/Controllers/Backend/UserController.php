@@ -325,9 +325,25 @@ class UserController extends Controller
         ]);
     }
 
-    public function adminUserStudent()
+    public function adminUserStudent(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', false)->paginate(GridView::ROWS_PER_PAGE);
+        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', false);
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['username']))
+                $dataProvider->where('username', 'like', '%' . $inputs['username'] . '%');
+
+            if(!empty($inputs['email']))
+                $dataProvider->where('email', 'like', '%' . $inputs['email'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('status', $inputs['status']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
@@ -343,7 +359,7 @@ class UserController extends Controller
                 'data' => 'email',
             ],
             [
-                'title' => 'Tình Trạng',
+                'title' => 'Trạng Thái',
                 'data' => function($row) {
                     echo User::getUserStatus($row->status);
                 },
@@ -351,6 +367,25 @@ class UserController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setFilters([
+            [
+                'title' => 'Tên Tài Khoản',
+                'name' => 'username',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Email',
+                'name' => 'email',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => User::getUserStatus(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
 
         return view('backend.users.admin_user_student',[
             'gridView' => $gridView,
@@ -360,6 +395,76 @@ class UserController extends Controller
     public function editAccount(Request $request)
     {
         $user = auth()->user();
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'username' => 'required|alpha_dash',
+                'email' => 'required|email|unique:user,email,' . $user->id,
+                'password' => 'nullable|alpha_dash|min:6',
+                're_password' => 'nullable|alpha_dash|min:6|same:password',
+                'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
+                'first_name' => 'required_with:last_name',
+                'phone' => 'nullable|numeric',
+                'birthday' => 'nullable|date',
+            ]);
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    if(isset($inputs['avatar']))
+                    {
+                        $savePath = User::AVATAR_UPLOAD_PATH . '/' . $user->id;
+
+                        list($imagePath, $imageUrl) = Utility::saveFile($inputs['avatar'], $savePath, Utility::getValidImageExt());
+
+                        if(!empty($imagePath) && !empty($imageUrl))
+                        {
+                            Utility::resizeImage($imagePath, 200);
+
+                            if(!empty($user->avatar))
+                                Utility::deleteFile($user->avatar);
+
+                            $user->avatar = $imageUrl;
+                        }
+                    }
+
+                    $user->username = $inputs['username'];
+                    $user->email = $inputs['email'];
+
+                    if(!empty($inputs['password']))
+                        $user->password = Hash::make($inputs['password']);
+
+                    $user->save();
+
+                    $user->profile->first_name = $inputs['first_name'];
+                    $user->profile->last_name = $inputs['last_name'];
+                    $user->profile->gender = $inputs['gender'];
+                    $user->profile->birthday = $inputs['birthday'];
+                    $user->profile->phone = $inputs['phone'];
+                    $user->profile->address = $inputs['address'];
+                    $user->profile->description = $inputs['description'];
+                    $user->profile->save();
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\UserController@editAccount')->with('message', 'Success');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Backend\UserController@editAccount')->withErrors(['username' => $e->getMessage()])->withInput();
+                }
+            }
+            else
+                return redirect()->action('Backend\UserController@editAccount')->withErrors($validator)->withInput();
+        }
 
         return view('backend.users.edit_account', [
             'user' => $user,

@@ -40,7 +40,7 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('role/controlDelete', 'RoleController@controlDeleteRole');
 
-        Route::get('setting', 'SettingController@adminSetting');
+        Route::match(['get', 'post'], 'setting', 'SettingController@adminSetting');
 
     });
 

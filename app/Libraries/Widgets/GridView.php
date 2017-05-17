@@ -49,6 +49,7 @@ class GridView
     public function setFilterValues($filterValues)
     {
         $this->filterValues = $filterValues;
+        $this->dataProvider->appends($this->filterValues);
     }
 
     public function setCheckbox()
