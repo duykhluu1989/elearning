@@ -38,7 +38,7 @@ class RoleController extends Controller
         $gridView = new GridView($dataProvider, $columns);
         $gridView->setCheckbox();
 
-        return view('backend.roles.admin_role',[
+        return view('backend.roles.admin_role', [
             'gridView' => $gridView,
         ]);
     }

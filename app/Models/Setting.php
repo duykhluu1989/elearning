@@ -22,8 +22,8 @@ class Setting extends Model
     public static function initCoreSettings()
     {
         $coreSettings = [
-            [self::WEB_TITLE, 'Web Title', self::TYPE_STRING_DB, 'caydenthan'],
-            [self::WEB_DESCRIPTION, 'Web Description', self::TYPE_STRING_DB, 'caydenthan'],
+            [self::WEB_TITLE, 'Tiêu Đề Web', self::TYPE_STRING_DB, 'caydenthan'],
+            [self::WEB_DESCRIPTION, 'Mô Tả Web', self::TYPE_STRING_DB, 'caydenthan'],
         ];
 
         foreach($coreSettings as $coreSetting)

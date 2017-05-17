@@ -133,7 +133,7 @@ class UserController extends Controller
         ]);
         $gridView->setFilterValues($inputs);
 
-        return view('backend.users.admin_user',[
+        return view('backend.users.admin_user', [
             'gridView' => $gridView,
         ]);
     }
@@ -387,7 +387,7 @@ class UserController extends Controller
         ]);
         $gridView->setFilterValues($inputs);
 
-        return view('backend.users.admin_user_student',[
+        return view('backend.users.admin_user_student', [
             'gridView' => $gridView,
         ]);
     }

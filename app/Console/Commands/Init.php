@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\UserRole;
 use App\Models\Profile;
+use App\Models\Widget;
 
 class Init extends Command
 {
@@ -31,6 +32,8 @@ class Init extends Command
             Role::initCoreRoles();
 
             UserRole::initCoreUserRoles();
+
+            Widget::initCoreWidgets();
 
             DB::commit();
 
