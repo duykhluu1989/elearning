@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/skins/skin-blue.min.css') }}">
+    @stack('stylesheets')
 </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">

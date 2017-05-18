@@ -179,7 +179,6 @@ return [
 
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        Barryvdh\Elfinder\ElfinderServiceProvider::class,
 
     ],
 
