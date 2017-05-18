@@ -54,11 +54,6 @@ class Widget extends Model
                         'name' => 'url',
                         'type' => self::ATTRIBUTE_TYPE_STRING_DB,
                     ],
-                    [
-                        'title' => 'Thứ Tự',
-                        'name' => 'order',
-                        'type' => self::ATTRIBUTE_TYPE_INT_DB,
-                    ],
                 ]),
             ],
         ];

@@ -26,6 +26,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'widget/{id}/edit', 'WidgetController@editWidget');
 
+        Route::get('elFinder/popup', 'ElFinderController@popup');
+
+        Route::match(['get', 'post'], 'elFinder/popupConnector', 'ElFinderController@popupConnector');
+
         Route::get('user', 'UserController@adminUser');
 
         Route::get('userStudent', 'UserController@adminUserStudent');

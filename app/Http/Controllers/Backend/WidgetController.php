@@ -91,6 +91,31 @@ class WidgetController extends Controller
         if(empty($widget))
             return view('backend.errors.404');
 
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $details = array();
+
+            if(isset($inputs['detail']))
+            {
+                foreach($inputs['detail'] as $attribute => $attributeItems)
+                {
+                    foreach($attributeItems as $key => $item)
+                    {
+                        if(!empty($item))
+                            $details[$key][$attribute] = $item;
+                    }
+                }
+            }
+
+            $widget->detail = json_encode($details);
+
+            $widget->save();
+
+            return redirect()->action('Backend\WidgetController@editWidget', ['id' => $widget->id])->with('message', 'Success');
+        }
+
         return view('backend.widgets.edit_widget', [
             'widget' => $widget,
         ]);
