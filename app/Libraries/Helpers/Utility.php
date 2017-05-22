@@ -6,6 +6,8 @@ use Intervention\Image\Facades\Image;
 
 class Utility
 {
+    const AUTO_COMPLETE_LIMIT = 20;
+
     public static function getValidImageExt($extensionDot = false)
     {
         if($extensionDot == true)

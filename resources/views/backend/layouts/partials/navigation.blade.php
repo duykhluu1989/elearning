@@ -1,6 +1,17 @@
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
+            <li class="treeview{{ (request()->is('admin/course*') ? ' active' : '') }}">
+                <a href="#"><i class="fa fa-book"></i><span>Khóa Học</span></a>
+                <ul class="treeview-menu">
+                    <li class="{{ (request()->is('admin/courseCategory') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\CourseController@adminCategory') }}">Chủ Đề</a>
+                    </li>
+                    <li class="{{ (request()->is('admin/course') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\CourseController@adminCourse') }}">Khóa Học</a>
+                    </li>
+                </ul>
+            </li>
             <li class="{{ (request()->is('admin/widget*') ? 'active' : '') }}">
                 <a href="{{ action('Backend\WidgetController@adminWidget') }}"><i class="fa fa-th"></i><span>Tiện Ích</span></a>
             </li>

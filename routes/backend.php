@@ -22,6 +22,20 @@ Route::group(['namespace' => 'Backend'], function() {
 
     Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
 
+        Route::get('courseCategory', 'CourseController@adminCategory');
+
+        Route::match(['get', 'post'], 'courseCategory/create', 'CourseController@createCategory');
+
+        Route::match(['get', 'post'], 'courseCategory/{id}/edit', 'CourseController@editCategory');
+
+        Route::post('courseCategory/autoComplete', 'CourseController@autoCompleteCategory');
+
+        Route::get('course', 'CourseController@adminCourse');
+
+        Route::match(['get', 'post'], 'course/create', 'CourseController@createCourse');
+
+        Route::match(['get', 'post'], 'course/{id}/edit', 'CourseController@editCourse');
+
         Route::get('widget', 'WidgetController@adminWidget');
 
         Route::match(['get', 'post'], 'widget/{id}/edit', 'WidgetController@editWidget');

@@ -12,15 +12,15 @@ class Role extends Model
 
     public $timestamps = false;
 
-    public function userRoles()
-    {
-        return $this->hasMany('App\Models\UserRole', 'role_id');
-    }
-
     public static function initCoreRoles()
     {
         $role = new Role();
         $role->name = self::ROLE_ADMINISTRATOR;
         $role->save();
+    }
+
+    public function countUserRoles()
+    {
+        return UserRole::where('role_id', $this->id)->count('id');
     }
 }

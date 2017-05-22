@@ -45,8 +45,18 @@ class Widget extends Model
                         'type' => self::ATTRIBUTE_TYPE_STRING_DB,
                     ],
                     [
+                        'title' => 'Tiêu Đề EN',
+                        'name' => 'title_en',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
                         'title' => 'Mô Tả',
                         'name' => 'description',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Mô Tả EN',
+                        'name' => 'description_en',
                         'type' => self::ATTRIBUTE_TYPE_STRING_DB,
                     ],
                     [

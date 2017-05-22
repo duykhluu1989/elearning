@@ -149,7 +149,7 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'username' => 'required|alpha_dash',
+                'username' => 'required|alpha_dash|unique:user,username',
                 'email' => 'required|email|unique:user,email',
                 'password' => 'required|alpha_dash|min:6',
                 're_password' => 'required|alpha_dash|min:6|same:password',
@@ -224,7 +224,7 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'username' => 'required|alpha_dash',
+                'username' => 'required|alpha_dash|unique:user,username,' . $user->id,
                 'email' => 'required|email|unique:user,email,' . $user->id,
                 'password' => 'nullable|alpha_dash|min:6',
                 're_password' => 'nullable|alpha_dash|min:6|same:password',
@@ -401,7 +401,7 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'username' => 'required|alpha_dash',
+                'username' => 'required|alpha_dash|unique:user,username,' . $user->id,
                 'email' => 'required|email|unique:user,email,' . $user->id,
                 'password' => 'nullable|alpha_dash|min:6',
                 're_password' => 'nullable|alpha_dash|min:6|same:password',

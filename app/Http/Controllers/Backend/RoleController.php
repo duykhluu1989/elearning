@@ -67,7 +67,7 @@ class RoleController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'name' => 'required|not_in:' . Role::ROLE_ADMINISTRATOR,
+                'name' => 'required|not_in:' . Role::ROLE_ADMINISTRATOR . '|unique:role,name' . ($create == true ? '' : (',' . $role->id)),
             ]);
 
             if($validator->passes())
@@ -109,7 +109,7 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
 
-        if(empty($role) || count($role->userRoles) > 0 || $role->name == Role::ROLE_ADMINISTRATOR)
+        if(empty($role) || $role->countUserRoles() > 0 || $role->name == Role::ROLE_ADMINISTRATOR)
             return view('backend.errors.404');
 
         $role->delete();
@@ -125,7 +125,7 @@ class RoleController extends Controller
 
         foreach($roles as $role)
         {
-            if(count($role->userRoles) == 0 && $role->name != Role::ROLE_ADMINISTRATOR)
+            if($role->countUserRoles() == 0 && $role->name != Role::ROLE_ADMINISTRATOR)
                 $role->delete();
         }
 
