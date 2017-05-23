@@ -290,6 +290,7 @@ class UserController extends Controller
 
                     $user->profile->first_name = $inputs['first_name'];
                     $user->profile->last_name = $inputs['last_name'];
+                    $user->profile->name = (!empty($user->profile->last_name) ? ($user->profile->last_name . ' ') : '') . $user->profile->first_name;
                     $user->profile->gender = $inputs['gender'];
                     $user->profile->birthday = $inputs['birthday'];
                     $user->profile->phone = $inputs['phone'];
@@ -439,6 +440,7 @@ class UserController extends Controller
 
                     $user->profile->first_name = $inputs['first_name'];
                     $user->profile->last_name = $inputs['last_name'];
+                    $user->profile->name = (!empty($user->profile->last_name) ? ($user->profile->last_name . ' ') : '') . $user->profile->first_name;
                     $user->profile->gender = $inputs['gender'];
                     $user->profile->birthday = $inputs['birthday'];
                     $user->profile->phone = $inputs['phone'];
@@ -464,5 +466,25 @@ class UserController extends Controller
         return view('backend.users.edit_account', [
             'user' => $user,
         ]);
+    }
+
+    public function autoCompleteUser(Request $request)
+    {
+        $term = $request->input('term');
+        $except = $request->input('except');
+
+        $builder = User::select('user.id', 'user.username', 'user.email', 'profile.name')
+            ->join('profile', 'user.id', '=', 'profile.user_id')
+            ->where('user.username', 'like', '%' . $term . '%')
+            ->orWhere('user.email', 'like', '%' . $term . '%')
+            ->orWhere('profile.name', 'like', '%' . $term . '%')
+            ->limit(Utility::AUTO_COMPLETE_LIMIT);
+
+        if(!empty($except))
+            $builder->where('id', '<>', $except);
+
+        $users = $builder->get()->toJson();
+
+        return $users;
     }
 }

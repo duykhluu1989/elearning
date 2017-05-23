@@ -11,6 +11,8 @@ use App\Libraries\Helpers\Utility;
 use App\Models\Category;
 use App\Models\Level;
 use App\Models\Course;
+use App\Models\CourseItem;
+use App\Models\CategoryCourse;
 
 class CourseController extends Controller
 {
@@ -312,18 +314,100 @@ class CourseController extends Controller
         }
     }
 
-    public function adminCourse()
+    public function adminCourse(Request $request)
     {
+        $dataProvider = Course::select('id', 'name')->orderBy('id', 'desc');
 
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['name']))
+                $dataProvider->where('name', 'like', '%' . $inputs['name'] . '%');
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo Html::a($row->name, [
+                        'href' => action('Backend\CourseController@editCategory', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setFilters([
+            [
+                'title' => 'Tên',
+                'name' => 'name',
+                'type' => 'input',
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
+
+        return view('backend.courses.admin_course', [
+            'gridView' => $gridView,
+        ]);
     }
 
-    public function createCourse()
+    public function createCourse(Request $request)
     {
+        $course = new Course();
 
+        return $this->saveCourse($request, $course);
     }
 
-    public function editCourse()
+    public function editCourse(Request $request, $id)
     {
+        $course = Course::find($id);
 
+        if(empty($course))
+            return view('backend.errors.404');
+
+        return $this->saveCourse($request, $course, false);
+    }
+
+    protected function saveCourse($request, $course, $create = true)
+    {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'name' => 'required|unique:course,name' . ($create == true ? '' : (',' . $course->id)),
+                'name_en' => 'nullable|unique:course,name_en' . ($create == true ? '' : (',' . $course->id)),
+            ]);
+
+            if($validator->passes())
+            {
+                $course->save();
+
+                return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('message', 'Success');
+            }
+            else
+            {
+                if($create == true)
+                    return redirect()->action('Backend\CourseController@createCourse')->withErrors($validator)->withInput();
+                else
+                    return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->withErrors($validator)->withInput();
+            }
+        }
+
+        if($create == true)
+        {
+            return view('backend.courses.create_course', [
+                'course' => $course,
+            ]);
+        }
+        else
+        {
+            return view('backend.courses.edit_course', [
+                'course' => $course,
+            ]);
+        }
     }
 }

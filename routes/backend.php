@@ -18,6 +18,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'account/edit', 'UserController@editAccount');
 
+        Route::post('courseCategory/autoComplete', 'CourseController@autoCompleteCategory');
+
+        Route::post('user/autoComplete', 'UserController@autoCompleteUser');
+
     });
 
     Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
@@ -27,8 +31,6 @@ Route::group(['namespace' => 'Backend'], function() {
         Route::match(['get', 'post'], 'courseCategory/create', 'CourseController@createCategory');
 
         Route::match(['get', 'post'], 'courseCategory/{id}/edit', 'CourseController@editCategory');
-
-        Route::post('courseCategory/autoComplete', 'CourseController@autoCompleteCategory');
 
         Route::get('courseLevel', 'CourseController@adminLevel');
 

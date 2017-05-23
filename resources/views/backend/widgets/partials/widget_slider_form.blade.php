@@ -7,7 +7,7 @@ if(!empty($widget->detail))
 ?>
 <div class="col-sm-12">
     <div class="form-group">
-        <label>Chi Tiết</label>
+        <label>Chi Tiết <i>(kéo thả để thay đổi thứ tự)</i></label>
         <div class="no-padding">
             <table class="table table-bordered table-striped table-hover table-condensed">
                 <thead>
