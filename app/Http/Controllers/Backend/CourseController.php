@@ -357,6 +357,9 @@ class CourseController extends Controller
     public function createCourse(Request $request)
     {
         $course = new Course();
+        $course->status = Course::STATUS_DRAFT_DB;
+        $course->type = Course::TYPE_NORMAL_DB;
+        $course->price = 0;
 
         return $this->saveCourse($request, $course);
     }
@@ -397,16 +400,20 @@ class CourseController extends Controller
             }
         }
 
+        $levels = Level::pluck('name', 'id');
+
         if($create == true)
         {
             return view('backend.courses.create_course', [
                 'course' => $course,
+                'levels' => $levels,
             ]);
         }
         else
         {
             return view('backend.courses.edit_course', [
                 'course' => $course,
+                'levels' => $levels,
             ]);
         }
     }

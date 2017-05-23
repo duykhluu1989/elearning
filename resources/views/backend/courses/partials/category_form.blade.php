@@ -75,11 +75,8 @@
             </div>
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('slug') ? ' has-error': '' }}">
-                    <label>Đường Dẫn</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">{{ request()->getSchemeAndHttpHost() . '/' }}</span>
-                        <input type="text" class="form-control" name="slug" value="{{ old('slug', $category->slug) }}" />
-                    </div>
+                    <label>Liên Kết Tĩnh</label>
+                    <input type="text" class="form-control" name="slug" value="{{ old('slug', $category->slug) }}" />
                     @if($errors->has('slug'))
                         <span class="help-block">{{ $errors->first('slug') }}</span>
                     @endif
@@ -87,11 +84,8 @@
             </div>
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('slug_en') ? ' has-error': '' }}">
-                    <label>Đường Dẫn EN</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">{{ request()->getSchemeAndHttpHost() . '/' }}</span>
-                        <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $category->slug_en) }}" />
-                    </div>
+                    <label>Liên Kết Tĩnh EN</label>
+                    <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $category->slug_en) }}" />
                     @if($errors->has('slug_en'))
                         <span class="help-block">{{ $errors->first('slug_en') }}</span>
                     @endif
