@@ -7,6 +7,9 @@
                     <li class="{{ (request()->is('admin/courseCategory') ? 'active' : '') }}">
                         <a href="{{ action('Backend\CourseController@adminCategory') }}">Chủ Đề</a>
                     </li>
+                    <li class="{{ (request()->is('admin/courseLevel') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\CourseController@adminLevel') }}">Cấp Độ</a>
+                    </li>
                     <li class="{{ (request()->is('admin/course') ? 'active' : '') }}">
                         <a href="{{ action('Backend\CourseController@adminCourse') }}">Khóa Học</a>
                     </li>

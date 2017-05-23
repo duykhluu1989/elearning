@@ -9,6 +9,7 @@ use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
 use App\Libraries\Helpers\Utility;
 use App\Models\Category;
+use App\Models\Level;
 use App\Models\Course;
 
 class CourseController extends Controller
@@ -216,6 +217,99 @@ class CourseController extends Controller
         $categories = $builder->get()->toJson();
 
         return $categories;
+    }
+
+    public function adminLevel()
+    {
+        $dataProvider = Level::select('id', 'name', 'name_en', 'order')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo Html::a($row->name, [
+                        'href' => action('Backend\CourseController@editLevel', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+            [
+                'title' => 'Tên EN',
+                'data' => 'name_en',
+            ],
+            [
+                'title' => 'Thứ Tự',
+                'data' => 'order',
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+
+        return view('backend.courses.admin_level', [
+            'gridView' => $gridView,
+        ]);
+
+    }
+
+    public function createLevel(Request $request)
+    {
+        $level = new Level();
+        $level->order = 1;
+
+        return $this->saveLevel($request, $level);
+    }
+
+    public function editLevel(Request $request, $id)
+    {
+        $level = Level::find($id);
+
+        if(empty($level))
+            return view('backend.errors.404');
+
+        return $this->saveLevel($request, $level, false);
+    }
+
+    protected function saveLevel($request, $level, $create = true)
+    {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'name' => 'required|unique:level,name' . ($create == true ? '' : (',' . $level->id)),
+                'name_en' => 'nullable|unique:level,name_en' . ($create == true ? '' : (',' . $level->id)),
+                'order' => 'required|integer|min:1',
+            ]);
+
+            if($validator->passes())
+            {
+                $level->name = $inputs['name'];
+                $level->name_en = $inputs['name_en'];
+                $level->order = $inputs['order'];
+                $level->save();
+
+                return redirect()->action('Backend\CourseController@editLevel', ['id' => $level->id])->with('message', 'Success');
+            }
+            else
+            {
+                if($create == true)
+                    return redirect()->action('Backend\CourseController@createLevel')->withErrors($validator)->withInput();
+                else
+                    return redirect()->action('Backend\CourseController@editLevel', ['id' => $level->id])->withErrors($validator)->withInput();
+            }
+        }
+
+        if($create == true)
+        {
+            return view('backend.courses.create_level', [
+                'level' => $level,
+            ]);
+        }
+        else
+        {
+            return view('backend.courses.edit_level', [
+                'level' => $level,
+            ]);
+        }
     }
 
     public function adminCourse()

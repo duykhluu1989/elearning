@@ -14,4 +14,9 @@ class Course extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
+
+    public function level()
+    {
+        return $this->belongsTo('App\Models\Level', 'level_id');
+    }
 }

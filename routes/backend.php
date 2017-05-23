@@ -30,6 +30,12 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('courseCategory/autoComplete', 'CourseController@autoCompleteCategory');
 
+        Route::get('courseLevel', 'CourseController@adminLevel');
+
+        Route::match(['get', 'post'], 'courseLevel/create', 'CourseController@createLevel');
+
+        Route::match(['get', 'post'], 'courseLevel/{id}/edit', 'CourseController@editLevel');
+
         Route::get('course', 'CourseController@adminCourse');
 
         Route::match(['get', 'post'], 'course/create', 'CourseController@createCourse');
