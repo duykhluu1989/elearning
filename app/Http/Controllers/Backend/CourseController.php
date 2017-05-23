@@ -15,7 +15,7 @@ class CourseController extends Controller
 {
     public function adminCategory(Request $request)
     {
-        $dataProvider = Category::select('id', 'name', 'name_en', 'status', 'order');
+        $dataProvider = Category::with('parentCategory')->select('id', 'parent_id', 'name', 'status', 'order', 'code')->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
@@ -24,8 +24,8 @@ class CourseController extends Controller
             if(!empty($inputs['name']))
                 $dataProvider->where('name', 'like', '%' . $inputs['name'] . '%');
 
-            if(!empty($inputs['name_en']))
-                $dataProvider->where('name_en', 'like', '%' . $inputs['name_en'] . '%');
+            if(!empty($inputs['code']))
+                $dataProvider->where('code', 'like', '%' . $inputs['code'] . '%');
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
                 $dataProvider->where('status', $inputs['status']);
@@ -43,12 +43,19 @@ class CourseController extends Controller
                 },
             ],
             [
-                'title' => 'Tên EN',
-                'data' => 'name_en',
+                'title' => 'Mã',
+                'data' => 'code',
             ],
             [
                 'title' => 'Thứ Tự',
                 'data' => 'order',
+            ],
+            [
+                'title' => 'Chủ Đề Cha',
+                'data' => function($row) {
+                    if(!empty($row->parentCategory))
+                        echo $row->parentCategory->name;
+                },
             ],
             [
                 'title' => 'Trạng Thái',
@@ -70,8 +77,8 @@ class CourseController extends Controller
                 'type' => 'input',
             ],
             [
-                'title' => 'Tên EN',
-                'name' => 'name_en',
+                'title' => 'Mã',
+                'name' => 'code',
                 'type' => 'input',
             ],
             [
@@ -122,7 +129,7 @@ class CourseController extends Controller
                 'order' => 'required|integer|min:1',
             ]);
 
-            $validator->after(function($validator) use(&$inputs) {
+            $validator->after(function($validator) use(&$inputs, $category, $create) {
                 if(empty($inputs['parent_name']))
                     $inputs['parent_id'] = null;
                 else
@@ -132,7 +139,25 @@ class CourseController extends Controller
                     if(empty($parentCategory))
                         $validator->errors()->add('parent_name', 'Chủ Đề Cha Không Tồn Tại');
                     else
+                    {
+                        if($create == false)
+                        {
+                            $tempParentCategory = $parentCategory;
+
+                            while(!empty($tempParentCategory->parentCategory))
+                            {
+                                $tempParentCategory = $tempParentCategory->parentCategory;
+
+                                if($tempParentCategory->id == $category->id)
+                                {
+                                    $validator->errors()->add('parent_name', 'Chủ Đề Cha Không Được Là Chủ Đề Con Của Chính Nó');
+                                    break;
+                                }
+                            }
+                        }
+
                         $inputs['parent_id'] = $parentCategory->id;
+                    }
                 }
             });
 
@@ -181,8 +206,14 @@ class CourseController extends Controller
     public function autoCompleteCategory(Request $request)
     {
         $term = $request->input('term');
+        $except = $request->input('except');
 
-        $categories = Category::select('id', 'name')->where('name', 'like', '%' . $term . '%')->limit(Utility::AUTO_COMPLETE_LIMIT)->get()->toJson();
+        $builder = Category::select('id', 'name')->where('name', 'like', '%' . $term . '%')->limit(Utility::AUTO_COMPLETE_LIMIT);
+
+        if(!empty($except))
+            $builder->where('id', '<>', $except);
+
+        $categories = $builder->get()->toJson();
 
         return $categories;
     }

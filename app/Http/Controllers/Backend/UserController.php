@@ -62,7 +62,7 @@ class UserController extends Controller
 
     public function adminUser(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', true);
+        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', true)->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
@@ -185,11 +185,6 @@ class UserController extends Controller
                     $profile->save();
 
                     DB::commit();
-
-                    if(isset($inputs['new_account_email']))
-                    {
-                        // Send new account email
-                    }
 
                     return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
                 }
@@ -327,7 +322,7 @@ class UserController extends Controller
 
     public function adminUserStudent(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', false);
+        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', false)->orderBy('id', 'desc');
 
         $inputs = $request->all();
 

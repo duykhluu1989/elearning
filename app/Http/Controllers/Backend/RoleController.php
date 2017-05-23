@@ -13,7 +13,7 @@ class RoleController extends Controller
 {
     public function adminRole()
     {
-        $dataProvider = Role::select('id', 'name', 'description')->paginate(GridView::ROWS_PER_PAGE);
+        $dataProvider = Role::select('id', 'name', 'description')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [

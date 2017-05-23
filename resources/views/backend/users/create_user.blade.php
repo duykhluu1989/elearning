@@ -74,16 +74,6 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Thông Báo</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="new_account_email" type="checkbox" value="new_account_email" checked="checked" />Gửi Email Thông Tin Tài Khoản Cho Thành Viên Mới
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('password') ? ' has-error': '' }}">
                             <label>Mật Khẩu <i>(bắt buộc)</i></label>
