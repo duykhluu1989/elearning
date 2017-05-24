@@ -378,14 +378,40 @@ class CourseController extends Controller
 
     public function adminCourse(Request $request)
     {
-        $dataProvider = Course::select('id', 'name')->orderBy('id', 'desc');
+        $dataProvider = Course::with(['user.profile', 'categoryCourses' => function($query) {
+            $query->orderBy('level', 'desc')->limit(1);
+        }, 'categoryCourses.category'])
+            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.type', 'course.code')->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
         if(count($inputs) > 0)
         {
             if(!empty($inputs['name']))
-                $dataProvider->where('name', 'like', '%' . $inputs['name'] . '%');
+                $dataProvider->where('course.name', 'like', '%' . $inputs['name'] . '%');
+
+            if(!empty($inputs['user_name']))
+            {
+                $dataProvider->join('user', 'course.user_id', '=', 'user.id')
+                    ->join('profile', 'user.id', '=', 'profile.user_id')
+                    ->where('profile.name', 'like', '%' . $inputs['user_name'] . '%');
+            }
+
+            if(!empty($inputs['category_name']))
+            {
+                $dataProvider->join('category_course', 'course.id', '=', 'category_course.course_id')
+                    ->join('category', 'category_course.category_id', '=', 'category.id')
+                    ->where('category.name', 'like', '%' . $inputs['category_name'] . '%');
+            }
+
+            if(!empty($inputs['code']))
+                $dataProvider->where('course.code', 'like', '%' . $inputs['code'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('course.status', $inputs['status']);
+
+            if(isset($inputs['type']) && $inputs['type'] !== '')
+                $dataProvider->where('course.type', $inputs['type']);
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -399,6 +425,46 @@ class CourseController extends Controller
                     ]);
                 },
             ],
+            [
+                'title' => 'Giảng Viên',
+                'data' => function($row) {
+                    echo $row->user->profile->name;
+                },
+            ],
+            [
+                'title' => 'Chủ Đề',
+                'data' => function($row) {
+                    echo $row->categoryCourses[0]->category->name;
+                },
+            ],
+            [
+                'title' => 'Mã',
+                'data' => 'code',
+            ],
+            [
+                'title' => 'Giá Tiền (VND)',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->price);
+                },
+            ],
+            [
+                'title' => 'Loại',
+                'data' => function($row) {
+                    echo Course::getCourseType($row->type);
+                },
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'data' => function($row) {
+                    $status = Course::getCourseStatus($row->status);
+                    if($row->status == Course::STATUS_PUBLISH_DB)
+                        echo Html::span($status, ['class' => 'text-green']);
+                    else if($row->status == \App\Models\Course::STATUS_FINISH_DB)
+                        echo Html::span($status, ['class' => 'text-light-blue']);
+                    else
+                        echo Html::span($status, ['class' => 'text-red']);
+                },
+            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);
@@ -407,6 +473,33 @@ class CourseController extends Controller
                 'title' => 'Tên',
                 'name' => 'name',
                 'type' => 'input',
+            ],
+            [
+                'title' => 'Giảng Viên',
+                'name' => 'user_name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Chủ Đề',
+                'name' => 'category_name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Mã',
+                'name' => 'code',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Loại',
+                'name' => 'type',
+                'type' => 'select',
+                'options' => Course::getCourseType(),
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => Course::getCourseStatus(),
             ],
         ]);
         $gridView->setFilterValues($inputs);
@@ -430,7 +523,7 @@ class CourseController extends Controller
     {
         $course = Course::with(['user.profile', 'categoryCourses' => function($query) {
             $query->orderBy('level');
-        }])->find($id);
+        }, 'categoryCourses.category'])->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -443,6 +536,11 @@ class CourseController extends Controller
         if($request->isMethod('post'))
         {
             $inputs = $request->all();
+
+            $inputs['price'] = implode('', explode('.', $inputs['price']));
+
+            if(!empty($inputs['point_price']))
+                $inputs['point_price'] = implode('', explode('.', $inputs['point_price']));
 
             $validator = Validator::make($inputs, [
                 'user_name' => 'required',

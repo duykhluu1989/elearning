@@ -119,7 +119,7 @@
                 <div class="form-group{{ $errors->has('price') ? ' has-error': '' }}">
                     <label>Giá Tiền <i>(Bắt Buộc)</i></label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="price" required="required" value="{{ old('price', $course->price) }}" />
+                        <input type="text" class="form-control InputForNumber" name="price" required="required" value="{{ old('price', \App\Libraries\Helpers\Utility::formatNumber($course->price)) }}" />
                         <span class="input-group-addon">VND</span>
                     </div>
                     @if($errors->has('price'))
@@ -140,7 +140,7 @@
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('point_price') ? ' has-error': '' }}">
                     <label>Điểm</label>
-                    <input type="text" class="form-control" id="PointPriceInput" name="point_price" value="{{ old('point_price', $course->point_price) }}"<?php echo (old('point_price', $course->point_price) ? '' : ' readonly="readonly"'); ?> />
+                    <input type="text" class="form-control InputForNumber" id="PointPriceInput" name="point_price" value="{{ old('point_price', (!empty($course->point_price) ? \App\Libraries\Helpers\Utility::formatNumber($course->point_price) : '')) }}"<?php echo (old('point_price', $course->point_price) ? '' : ' readonly="readonly"'); ?> />
                     @if($errors->has('point_price'))
                         <span class="help-block">{{ $errors->first('point_price') }}</span>
                     @endif

@@ -73,4 +73,48 @@ class Utility
         $image->save($imagePath);
         $image->destroy();
     }
+
+    public static function formatNumber($number, $delimiter = '.')
+    {
+        if(!empty($number))
+        {
+            $number = implode('', explode($delimiter, $number));
+
+            $formatted = '';
+            $sign = '';
+
+            if($number < 0)
+            {
+                $number = -$number;
+                $sign = '-';
+            }
+
+            while($number >= 1000)
+            {
+                $mod = $number % 1000;
+
+                if($formatted != '')
+                    $formatted = $delimiter . $formatted;
+                if($mod == 0)
+                    $formatted = '000' . $formatted;
+                else if($mod < 10)
+                    $formatted = '00' . $mod . $formatted;
+                else if($mod < 100)
+                    $formatted = '0' . $mod . $formatted;
+                else
+                    $formatted = $mod . $formatted;
+
+                $number = (int)($number / 1000);
+            }
+
+            if($formatted != '')
+                $formatted = $sign . $number . $delimiter . $formatted;
+            else
+                $formatted = $sign . $number;
+
+            return $formatted;
+        }
+        
+        return 0;
+    }
 }
