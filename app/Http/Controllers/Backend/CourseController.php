@@ -75,6 +75,7 @@ class CourseController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
         $gridView->setFilters([
             [
                 'title' => 'Tên',
@@ -212,6 +213,33 @@ class CourseController extends Controller
         }
     }
 
+    public function deleteCategory($id)
+    {
+        $category = Category::find($id);
+
+        if(empty($category) || $category->countCategoryCourses() > 0)
+            return view('backend.errors.404');
+
+        $category->delete();
+
+        return redirect()->action('Backend\CourseController@adminCategory')->with('message', 'Success');
+    }
+
+    public function controlDeleteCategory(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $categories = Category::whereIn('id', explode(';', $ids))->get();
+
+        foreach($categories as $category)
+        {
+            if($category->countCategoryCourses() == 0)
+                $category->delete();
+        }
+
+        return redirect()->action('Backend\CourseController@adminCategory')->with('message', 'Success');
+    }
+
     public function autoCompleteCategory(Request $request)
     {
         $term = $request->input('term');
@@ -251,6 +279,7 @@ class CourseController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
 
         return view('backend.courses.admin_level', [
             'gridView' => $gridView,
@@ -320,6 +349,33 @@ class CourseController extends Controller
         }
     }
 
+    public function deleteLevel($id)
+    {
+        $level = Level::find($id);
+
+        if(empty($level) || $level->countCourses() > 0)
+            return view('backend.errors.404');
+
+        $level->delete();
+
+        return redirect()->action('Backend\CourseController@adminLevel')->with('message', 'Success');
+    }
+
+    public function controlDeleteLevel(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $levels = Level::whereIn('id', explode(';', $ids))->get();
+
+        foreach($levels as $level)
+        {
+            if($level->countCourses() == 0)
+                $level->delete();
+        }
+
+        return redirect()->action('Backend\CourseController@adminLevel')->with('message', 'Success');
+    }
+
     public function adminCourse(Request $request)
     {
         $dataProvider = Course::select('id', 'name')->orderBy('id', 'desc');
@@ -339,7 +395,7 @@ class CourseController extends Controller
                 'title' => 'Tên',
                 'data' => function($row) {
                     echo Html::a($row->name, [
-                        'href' => action('Backend\CourseController@editCategory', ['id' => $row->id]),
+                        'href' => action('Backend\CourseController@editCourse', ['id' => $row->id]),
                     ]);
                 },
             ],

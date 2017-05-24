@@ -2,8 +2,15 @@ $('[data-toggle="popover"]').popover({
     'trigger': 'hover'
 });
 
-$('.Confirmation').click(function() {
-    return confirm('Bạn Chắc Chắn Rồi Chứ ?');
+$('.Confirmation').click(function(event) {
+    if(confirm('Bạn Chắc Chắn Rồi Chứ ?'))
+        return true;
+    else
+    {
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        return false;
+    }
 });
 
 $('.DatePicker').datepicker({

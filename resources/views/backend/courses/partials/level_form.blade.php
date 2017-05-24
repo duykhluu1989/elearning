@@ -2,6 +2,13 @@
     <div class="box-header with-border">
         <button type="submit" class="btn btn-primary">{{ empty($level->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ action('Backend\CourseController@adminLevel') }}" class="btn btn-default">Quay Lại</a>
+
+        <?php
+        $countCourses = $level->countCourses();
+        ?>
+        @if(!empty($level->id) && $countCourses == 0)
+            <a href="{{ action('Backend\CourseController@deleteLevel', ['id' => $level->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @endif
     </div>
     <div class="box-body">
         <div class="row">
@@ -37,6 +44,10 @@
     <div class="box-footer">
         <button type="submit" class="btn btn-primary">{{ empty($level->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ action('Backend\CourseController@adminLevel') }}" class="btn btn-default">Quay lai</a>
+
+        @if(!empty($level->id) && $countCourses == 0)
+            <a href="{{ action('Backend\CourseController@deleteLevel', ['id' => $level->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @endif
     </div>
 </div>
 {{ csrf_field() }}

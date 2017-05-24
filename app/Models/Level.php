@@ -9,4 +9,9 @@ class Level extends Model
     protected $table = 'level';
 
     public $timestamps = false;
+
+    public function countCourses()
+    {
+        return Course::where('level_id', $this->id)->count('id');
+    }
 }

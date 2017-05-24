@@ -34,11 +34,19 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'courseCategory/{id}/edit', 'CourseController@editCategory');
 
+        Route::get('courseCategory/{id}/delete', 'CourseController@deleteCategory');
+
+        Route::get('courseCategory/controlDelete', 'CourseController@controlDeleteCategory');
+
         Route::get('courseLevel', 'CourseController@adminLevel');
 
         Route::match(['get', 'post'], 'courseLevel/create', 'CourseController@createLevel');
 
         Route::match(['get', 'post'], 'courseLevel/{id}/edit', 'CourseController@editLevel');
+
+        Route::get('courseLevel/{id}/delete', 'CourseController@deleteLevel');
+
+        Route::get('courseLevel/controlDelete', 'CourseController@controlDeleteLevel');
 
         Route::get('course', 'CourseController@adminCourse');
 

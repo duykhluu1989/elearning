@@ -32,4 +32,9 @@ class Category extends Model
 
         return $status;
     }
+
+    public function countCategoryCourses()
+    {
+        return CategoryCourse::where('category_id', $this->id)->count('id');
+    }
 }
