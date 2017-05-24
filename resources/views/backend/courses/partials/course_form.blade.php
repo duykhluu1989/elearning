@@ -5,7 +5,19 @@
     </div>
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
+                <div class="form-group{{ $errors->has('image') ? ' has-error': '' }}">
+                    <label>Ảnh</label>
+                    <input type="file" class="form-control" name="avatar" accept="{{ implode(', ', \App\Libraries\Helpers\Utility::getValidImageExt(true)) }}" />
+                    @if($errors->has('image'))
+                        <span class="help-block">{{ $errors->first('image') }}</span>
+                    @endif
+                    @if(!empty($course->image))
+                        <img src="{{ $course->image }}" width="150px" alt="Course Image" />
+                    @endif
+                </div>
+            </div>
+            <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('name') ? ' has-error': '' }}">
                     <label>Tên <i>(bắt buộc)</i></label>
                     <input type="text" class="form-control" name="name" required="required" value="{{ old('name', $course->name) }}" />
@@ -14,7 +26,7 @@
                     @endif
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('name_en') ? ' has-error': '' }}">
                     <label>Tên EN</label>
                     <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $course->name_en) }}" />
@@ -147,6 +159,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="box-body">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true"><b>Nội Dung Tiếng Việt</b></a></li>

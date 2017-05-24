@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('name') ? ' has-error': '' }}">
                     <label>Tên <i>(bắt buộc)</i></label>
                     <input type="text" class="form-control" name="name" required="required" value="{{ old('name', $level->name) }}" />
@@ -21,7 +21,7 @@
                     @endif
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('name_en') ? ' has-error': '' }}">
                     <label>Tên EN</label>
                     <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $level->name_en) }}" />

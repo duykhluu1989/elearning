@@ -129,7 +129,7 @@ class CourseController extends Controller
             $validator = Validator::make($inputs, [
                 'name' => 'required|unique:category,name' . ($create == true ? '' : (',' . $category->id)),
                 'name_en' => 'nullable|unique:category,name_en' . ($create == true ? '' : (',' . $category->id)),
-                'code' => 'required|unique:category,code' . ($create == true ? '' : (',' . $category->id)),
+                'code' => 'required|alpha_num|unique:category,code' . ($create == true ? '' : (',' . $category->id)),
                 'slug' => 'nullable|unique:category,slug' . ($create == true ? '' : (',' . $category->id)),
                 'slug_en' => 'nullable|unique:category,slug_en' . ($create == true ? '' : (',' . $category->id)),
                 'order' => 'required|integer|min:1',
@@ -173,7 +173,7 @@ class CourseController extends Controller
                 $category->name_en = $inputs['name_en'];
                 $category->status = $inputs['status'];
                 $category->order = $inputs['order'];
-                $category->code = $inputs['code'];
+                $category->code = strtoupper($inputs['code']);
                 $category->parent_id = $inputs['parent_id'];
 
                 if(empty($inputs['slug']))
@@ -465,9 +465,23 @@ class CourseController extends Controller
                         echo Html::span($status, ['class' => 'text-red']);
                 },
             ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-list-ul fa-fw']), [
+                        'href' => action('Backend\CourseController@adminCourseItem', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Danh Sách Bài Học',
+                    ]);
+                },
+            ]
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
         $gridView->setFilters([
             [
                 'title' => 'Tên',
@@ -551,7 +565,7 @@ class CourseController extends Controller
                 'point_price' => 'nullable|integer|min:1',
                 'slug' => 'nullable|unique:course,slug' . ($create == true ? '' : (',' . $course->id)),
                 'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $course->id)),
-                'code' => 'required|unique:course,code' . ($create == true ? '' : (',' . $course->id)),
+                'code' => 'required|alpha_num|unique:course,code' . ($create == true ? '' : (',' . $course->id)),
                 'category_name' => 'required',
             ]);
 
@@ -606,7 +620,7 @@ class CourseController extends Controller
                     $course->description = $inputs['description'];
                     $course->description_en = $inputs['description_en'];
                     $course->point_price = $inputs['point_price'];
-                    $course->code = $inputs['code'];
+                    $course->code = strtoupper($inputs['code']);
                     $course->level_id = $inputs['level_id'];
                     $course->short_description = $inputs['short_description'];
                     $course->short_description_en = $inputs['short_description_en'];
@@ -690,5 +704,19 @@ class CourseController extends Controller
                 'levels' => $levels,
             ]);
         }
+    }
+
+    public function adminCourseItem(Request $request, $id)
+    {
+        $course = Course::select('id', 'name')->with(['courseItems' => function($query) {
+            $query->select('id', 'course_id', 'name', 'type')->orderBy('number');
+        }])->find($id);
+
+        if(empty($course))
+            return view('backend.errors.404');
+
+        return view('backend.courses.admin_course_item', [
+            'course' => $course,
+        ]);
     }
 }
