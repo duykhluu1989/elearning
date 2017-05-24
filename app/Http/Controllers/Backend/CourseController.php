@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,6 +14,7 @@ use App\Models\Level;
 use App\Models\Course;
 use App\Models\CourseItem;
 use App\Models\CategoryCourse;
+use App\Models\User;
 
 class CourseController extends Controller
 {
@@ -137,7 +139,7 @@ class CourseController extends Controller
                     $inputs['parent_id'] = null;
                 else
                 {
-                    $parentCategory = Category::where('name', $inputs['parent_name'])->first();
+                    $parentCategory = Category::select('id', 'parent_id')->where('name', $inputs['parent_name'])->first();
 
                     if(empty($parentCategory))
                         $validator->errors()->add('parent_name', 'Chủ Đề Cha Không Tồn Tại');
@@ -175,9 +177,13 @@ class CourseController extends Controller
 
                 if(empty($inputs['slug']))
                     $category->slug = str_slug($category->name);
+                else
+                    $category->slug = str_slug($inputs['slug']);
 
                 if(empty($inputs['slug_en']))
                     $category->slug_en = str_slug($category->name_en);
+                else
+                    $category->slug_en = str_slug($inputs['slug_en']);
 
                 $category->save();
 
@@ -366,7 +372,9 @@ class CourseController extends Controller
 
     public function editCourse(Request $request, $id)
     {
-        $course = Course::find($id);
+        $course = Course::with(['user.profile', 'categoryCourses' => function($query) {
+            $query->orderBy('level');
+        }])->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -381,15 +389,127 @@ class CourseController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
+                'user_name' => 'required',
                 'name' => 'required|unique:course,name' . ($create == true ? '' : (',' . $course->id)),
                 'name_en' => 'nullable|unique:course,name_en' . ($create == true ? '' : (',' . $course->id)),
+                'price' => 'required|integer|min:0',
+                'description' => 'required',
+                'point_price' => 'nullable|integer|min:1',
+                'slug' => 'nullable|unique:course,slug' . ($create == true ? '' : (',' . $course->id)),
+                'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $course->id)),
+                'code' => 'required|unique:course,code' . ($create == true ? '' : (',' . $course->id)),
+                'category_name' => 'required',
             ]);
+
+            $validator->after(function($validator) use(&$inputs, $course, $create) {
+                $teacherNameParts = explode(' - ', $inputs['user_name']);
+
+                if(count($teacherNameParts) == 2)
+                {
+                    $user = User::select('user.id')
+                        ->join('profile', 'user.id', '=', 'profile.user_id')
+                        ->where('user.email', $teacherNameParts[1])
+                        ->where('profile.name', $teacherNameParts[0])
+                        ->first();
+
+                    if(!empty($user))
+                        $inputs['user_id'] = $user->id;
+                }
+
+                if(!isset($inputs['user_id']))
+                    $validator->errors()->add('user_name', 'Giảng Viên Không Tồn Tại');
+
+                $category = Category::select('id', 'parent_id')->where('name', $inputs['category_name'])->first();
+
+                if(empty($category))
+                    $validator->errors()->add('category_name', 'Chủ Đề Không Tồn Tại');
+                else
+                {
+                    $categoryIds[] = $category->id;
+
+                    while(!empty($category->parentCategory))
+                    {
+                        $category = $category->parentCategory;
+
+                        $categoryIds[] = $category->id;
+                    }
+
+                    $inputs['categoryIds'] = array_reverse($categoryIds);
+                }
+            });
 
             if($validator->passes())
             {
-                $course->save();
+                try
+                {
+                    DB::beginTransaction();
 
-                return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('message', 'Success');
+                    $course->user_id = $inputs['user_id'];
+                    $course->name = $inputs['name'];
+                    $course->name_en = $inputs['name_en'];
+                    $course->price = $inputs['price'];
+                    $course->status = $inputs['status'];
+                    $course->description = $inputs['description'];
+                    $course->description_en = $inputs['description_en'];
+                    $course->point_price = $inputs['point_price'];
+                    $course->code = $inputs['code'];
+                    $course->level_id = $inputs['level_id'];
+                    $course->short_description = $inputs['short_description'];
+                    $course->short_description_en = $inputs['short_description_en'];
+                    $course->type = $inputs['type'];
+
+                    if(empty($course->published_at) && $course->status == Course::STATUS_PUBLISH_DB)
+                        $course->published_at = date('Y-m-d H:i:s');
+
+                    if(empty($inputs['slug']))
+                        $course->slug = str_slug($course->name);
+                    else
+                        $course->slug = str_slug($inputs['slug']);
+
+                    if(empty($inputs['slug_en']))
+                        $course->slug_en = str_slug($course->name_en);
+                    else
+                        $course->slug_en = str_slug($inputs['slug_en']);
+
+                    $course->save();
+
+                    foreach($course->categoryCourses as $categoryCourse)
+                    {
+                        $key = array_search($categoryCourse->category_id, $inputs['categoryIds']);
+
+                        if($key !== false)
+                        {
+                            $categoryCourse->level = $key + 1;
+                            $categoryCourse->save();
+
+                            unset($inputs['categoryIds'][$key]);
+                        }
+                        else
+                            $categoryCourse->delete();
+                    }
+
+                    foreach($inputs['categoryIds'] as $key => $categoryId)
+                    {
+                        $categoryCourse = new CategoryCourse();
+                        $categoryCourse->category_id = $categoryId;
+                        $categoryCourse->course_id = $course->id;
+                        $categoryCourse->level = $key + 1;
+                        $categoryCourse->save();
+                    }
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('message', 'Success');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    if($create == true)
+                        return redirect()->action('Backend\CourseController@createCourse')->withErrors(['category_name' => $e->getMessage()])->withInput();
+                    else
+                        return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->withErrors(['category_name' => $e->getMessage()])->withInput();
+                }
             }
             else
             {

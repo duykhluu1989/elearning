@@ -18,6 +18,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'account/edit', 'UserController@editAccount');
 
+        Route::post('refreshCsrfToken', 'HomeController@refreshCsrfToken');
+
         Route::post('courseCategory/autoComplete', 'CourseController@autoCompleteCategory');
 
         Route::post('user/autoComplete', 'UserController@autoCompleteUser');

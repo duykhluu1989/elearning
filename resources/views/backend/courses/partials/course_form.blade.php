@@ -5,10 +5,28 @@
     </div>
     <div class="box-body">
         <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group{{ $errors->has('name') ? ' has-error': '' }}">
+                    <label>Tên <i>(bắt buộc)</i></label>
+                    <input type="text" class="form-control" name="name" required="required" value="{{ old('name', $course->name) }}" />
+                    @if($errors->has('name'))
+                        <span class="help-block">{{ $errors->first('name') }}</span>
+                    @endif
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group{{ $errors->has('name_en') ? ' has-error': '' }}">
+                    <label>Tên EN</label>
+                    <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $course->name_en) }}" />
+                    @if($errors->has('name_en'))
+                        <span class="help-block">{{ $errors->first('name_en') }}</span>
+                    @endif
+                </div>
+            </div>
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('category_name') ? ' has-error': '' }}">
                     <label>Chủ Đề <i>(Bắt Buộc)</i></label>
-                    <input type="text" class="form-control" id="CategoryInput" name="category_name" required="required" value="{{ old('category_name', (count($course->categoryCourses) > 0 ? $course->categoryCourses[0]->category->name : '')) }}" />
+                    <input type="text" class="form-control" id="CategoryInput" name="category_name" required="required" value="{{ old('category_name', (count($course->categoryCourses) > 0 ? $course->categoryCourses[count($course->categoryCourses) - 1]->category->name : '')) }}" />
                     @if($errors->has('category_name'))
                         <span class="help-block">{{ $errors->first('category_name') }}</span>
                     @endif
@@ -26,7 +44,7 @@
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('user_name') ? ' has-error': '' }}">
                     <label>Giảng Viên <i>(bắt buộc)</i></label>
-                    <input type="text" class="form-control" id="UserInput" name="user_name" value="{{ old('user_name', (!empty($course->user_id) ? (!empty($course->user) ? $category->user->profile->name : '') : '')) }}" />
+                    <input type="text" class="form-control" id="UserInput" name="user_name" value="{{ old('user_name', (!empty($course->user_id) ? (!empty($course->user) ? ($course->user->profile->name . ' - ' . $course->user->email) : '') : '')) }}" />
                     @if($errors->has('user_name'))
                         <span class="help-block">{{ $errors->first('user_name') }}</span>
                     @endif
@@ -114,7 +132,7 @@
                     <label>Mua Bằng Điểm</label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="can_buy_by_point" id="CanBuyByPointCheckBox" value="can_buy_by_point"<?php echo (old('point_price', $course->point_price) !== null ? ' checked="checked"' : ''); ?> />Cho Phép Mua Khóa Học Bằng Điểm
+                            <input type="checkbox" name="can_buy_by_point" id="CanBuyByPointCheckBox" value="can_buy_by_point"<?php echo (old('point_price', $course->point_price) ? ' checked="checked"' : ''); ?> />Cho Phép Mua Khóa Học Bằng Điểm
                         </label>
                     </div>
                 </div>
@@ -122,7 +140,7 @@
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('point_price') ? ' has-error': '' }}">
                     <label>Điểm</label>
-                    <input type="text" class="form-control" id="PointPriceInput" name="point_price" value="{{ old('point_price', $course->point_price) }}"<?php echo (old('point_price', $course->point_price) !== null ? '' : ' readonly="readonly"'); ?> />
+                    <input type="text" class="form-control" id="PointPriceInput" name="point_price" value="{{ old('point_price', $course->point_price) }}"<?php echo (old('point_price', $course->point_price) ? '' : ' readonly="readonly"'); ?> />
                     @if($errors->has('point_price'))
                         <span class="help-block">{{ $errors->first('point_price') }}</span>
                     @endif
@@ -137,15 +155,6 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('name') ? ' has-error': '' }}">
-                                <label>Tên <i>(bắt buộc)</i></label>
-                                <input type="text" class="form-control" name="name" required="required" value="{{ old('name', $course->name) }}" />
-                                @if($errors->has('name'))
-                                    <span class="help-block">{{ $errors->first('name') }}</span>
-                                @endif
-                            </div>
-                        </div>
                         <div class="col-sm-12">
                             <div class="form-group{{ $errors->has('slug') ? ' has-error': '' }}">
                                 <label>Liên Kết Tĩnh</label>
@@ -167,25 +176,16 @@
                         <div class="col-sm-12">
                             <div class="form-group{{ $errors->has('description') ? ' has-error': '' }}">
                                 <label>Mô Tả <i>(bắt buộc)</i></label>
-                                <textarea class="form-control TextEditorInput" name="description" required="required">{{ old('description', $course->description) }}</textarea>
                                 @if($errors->has('description'))
                                     <span class="help-block">{{ $errors->first('description') }}</span>
                                 @endif
+                                <textarea class="form-control TextEditorInput" name="description">{{ old('description', $course->description) }}</textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('name_en') ? ' has-error': '' }}">
-                                <label>Tên EN</label>
-                                <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $course->name_en) }}" />
-                                @if($errors->has('name_en'))
-                                    <span class="help-block">{{ $errors->first('name_en') }}</span>
-                                @endif
-                            </div>
-                        </div>
                         <div class="col-sm-12">
                             <div class="form-group{{ $errors->has('slug_en') ? ' has-error': '' }}">
                                 <label>Liên Kết Tĩnh EN</label>
@@ -207,10 +207,10 @@
                         <div class="col-sm-12">
                             <div class="form-group{{ $errors->has('description_en') ? ' has-error': '' }}">
                                 <label>Mô Tả EN</label>
-                                <textarea class="form-control TextEditorInput" name="description_en" required="required">{{ old('description_en', $course->description_en) }}</textarea>
                                 @if($errors->has('description_en'))
                                     <span class="help-block">{{ $errors->first('description_en') }}</span>
                                 @endif
+                                <textarea class="form-control TextEditorInput" name="description_en">{{ old('description_en', $course->description_en) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -262,11 +262,11 @@
                 });
             },
             select: function(event, ui) {
-                $(this).val(ui.item.name);
+                $(this).val(ui.item.name + ' - ' + ui.item.email);
                 return false;
             }
         }).autocomplete('instance')._renderItem = function(ul, item) {
-            return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
+            return $('<li>').append('<a>' + item.name + ' - ' + item.email + '</a>').appendTo(ul);
         };
 
         $('#CategoryInput').autocomplete({
@@ -300,5 +300,21 @@
             else
                 $('#PointPriceInput').val('').prop('readonly', 'readonly');
         });
+
+        setInterval(function() {
+            $.ajax({
+                url: '{{ action('Backend\HomeController@refreshCsrfToken') }}',
+                type: 'post',
+                data: '_token=' + $('input[name="_token"]').first().val(),
+                success: function(result) {
+                    if(result)
+                    {
+                        $('input[name="_token"]').each(function() {
+                            $(this).val(result);
+                        });
+                    }
+                }
+            });
+        }, 60000);
     </script>
 @endpush
