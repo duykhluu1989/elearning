@@ -109,7 +109,7 @@
                 $.ajax({
                     url: '{{ action('Backend\CourseController@autoCompleteCategory') }}',
                     type: 'post',
-                    data: '_token={{ csrf_token() }}<?php echo !empty($category->id) ? ('&except=' . $category->id) : ''; ?>&term=' + request.term,
+                    data: '_token=' + $('input[name="_token"]').first().val() + '<?php echo !empty($category->id) ? ('&except=' . $category->id) : ''; ?>&term=' + request.term,
                     success: function(result) {
                         if(result)
                         {
