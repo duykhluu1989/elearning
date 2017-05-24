@@ -6,6 +6,15 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
+                <div class="form-group{{ $errors->has('category_name') ? ' has-error': '' }}">
+                    <label>Chủ Đề <i>(Bắt Buộc)</i></label>
+                    <input type="text" class="form-control" id="CategoryInput" name="category_name" required="required" value="{{ old('category_name', (count($course->categoryCourses) > 0 ? $course->categoryCourses[0]->category->name : '')) }}" />
+                    @if($errors->has('category_name'))
+                        <span class="help-block">{{ $errors->first('category_name') }}</span>
+                    @endif
+                </div>
+            </div>
+            <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('code') ? ' has-error': '' }}">
                     <label>Mã <i>(Bắt Buộc)</i></label>
                     <input type="text" class="form-control" name="code" required="required" value="{{ old('code', $course->code) }}" />
@@ -105,7 +114,7 @@
                     <label>Mua Bằng Điểm</label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="can_buy_by_point" id="CanBuyByPointCheckBox" value="can_buy_by_point" />Có Thể Mua Khóa Học Bằng Điểm
+                            <input type="checkbox" name="can_buy_by_point" id="CanBuyByPointCheckBox" value="can_buy_by_point"<?php echo (old('point_price', $course->point_price) !== null ? ' checked="checked"' : ''); ?> />Cho Phép Mua Khóa Học Bằng Điểm
                         </label>
                     </div>
                 </div>
@@ -113,7 +122,7 @@
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('point_price') ? ' has-error': '' }}">
                     <label>Điểm</label>
-                    <input type="text" class="form-control" id="PointPriceInput" name="point_price" value="{{ old('point_price', $course->point_price) }}" />
+                    <input type="text" class="form-control" id="PointPriceInput" name="point_price" value="{{ old('point_price', $course->point_price) }}"<?php echo (old('point_price', $course->point_price) !== null ? '' : ' readonly="readonly"'); ?> />
                     @if($errors->has('point_price'))
                         <span class="help-block">{{ $errors->first('point_price') }}</span>
                     @endif
@@ -122,8 +131,8 @@
         </div>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Mô Tả Tiếng Việt</a></li>
-                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Mô Tả Tiếng Anh</a></li>
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true"><b>Nội Dung Tiếng Việt</b></a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false"><b>Nội Dung Tiếng Anh</b></a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -242,7 +251,7 @@
                 $.ajax({
                     url: '{{ action('Backend\UserController@autoCompleteUser') }}',
                     type: 'post',
-                    data: '_token={{ csrf_token() }}&term=' + request.term,
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
                     success: function(result) {
                         if(result)
                         {
@@ -257,12 +266,37 @@
                 return false;
             }
         }).autocomplete('instance')._renderItem = function(ul, item) {
-            return $('<li>').append('<a>' + item.name + ' - ' + item.username + ' - ' + item.email + '</a>').appendTo(ul);
+            return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
+        };
+
+        $('#CategoryInput').autocomplete({
+            minLength: 3,
+            delay: 1000,
+            source: function(request, response) {
+                $.ajax({
+                    url: '{{ action('Backend\CourseController@autoCompleteCategory') }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
+                    success: function(result) {
+                        if(result)
+                        {
+                            result = JSON.parse(result);
+                            response(result);
+                        }
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $(this).val(ui.item.name);
+                return false;
+            }
+        }).autocomplete('instance')._renderItem = function(ul, item) {
+            return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
         };
 
         $('#CanBuyByPointCheckBox').click(function() {
             if($(this).prop('checked'))
-                $('#PointPriceInput').removeAttr('readonly').val(0);
+                $('#PointPriceInput').removeAttr('readonly').val(1);
             else
                 $('#PointPriceInput').val('').prop('readonly', 'readonly');
         });

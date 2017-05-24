@@ -14,8 +14,8 @@
             <div class="box-body">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Thông Tin Tài Khoản</a></li>
-                        <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Thông Tin Thành Viên</a></li>
+                        <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true"><b>Thông Tin Tài Khoản</b></a></li>
+                        <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false"><b>Thông Tin Thành Viên</b></a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_1">

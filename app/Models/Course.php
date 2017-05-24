@@ -32,6 +32,11 @@ class Course extends Model
         return $this->belongsTo('App\Models\Level', 'level_id');
     }
 
+    public function categoryCourses()
+    {
+        return $this->hasMany('App\Models\CategoryCourse', 'course_id');
+    }
+
     public static function getCourseStatus($value = null)
     {
         $status = [
