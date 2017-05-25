@@ -8,13 +8,13 @@
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('image') ? ' has-error': '' }}">
                     <label>Ảnh</label>
-                    <input type="file" class="form-control" name="avatar" accept="{{ implode(', ', \App\Libraries\Helpers\Utility::getValidImageExt(true)) }}" />
-                    @if($errors->has('image'))
-                        <span class="help-block">{{ $errors->first('image') }}</span>
-                    @endif
-                    @if(!empty($course->image))
-                        <img src="{{ $course->image }}" width="150px" alt="Course Image" />
-                    @endif
+                    <div>
+                        <button type="button" class="btn btn-default" id="ElFinderPopupOpen"><i class="fa fa-image fa-fw"></i></button>
+                        <input type="hidden" name="image" value="{{ old('image', $course->image) }}" />
+                        @if(old('image', $course->image))
+                            <img src="{{ old('image', $course->image) }}" width="100%" alt="Course Image" />
+                        @endif
+                    </div>
                 </div>
             </div>
             <div class="col-sm-12">
@@ -239,9 +239,18 @@
 </div>
 {{ csrf_field() }}
 
+@push('stylesheets')
+    <link rel="stylesheet" href="{{ asset('packages/elfinder/css/elfinder.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/colorbox.css') }}">
+@endpush
+
 @push('scripts')
+    <script src="{{ asset('packages/elfinder/js/elfinder.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.colorbox-min.js') }}"></script>
     <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
     <script type="text/javascript">
+        var elFinderSelectedFile;
+
         tinymce.init({
             selector: '.TextEditorInput',
             height: 600,
@@ -255,7 +264,32 @@
             toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
             toolbar2: 'print preview media | forecolor backcolor emoticons',
             image_advtab: true,
-            nonbreaking_force_tab: true
+            nonbreaking_force_tab: true,
+            convert_urls: false,
+            file_picker_callback : function(callback, value, meta) {
+                tinymce.activeEditor.windowManager.open({
+                    file: '{{ action('Backend\ElFinderController@tinymce') }}',
+                    title: 'Thư Viện',
+                    width: 1200,
+                    height: 600
+                }, {
+                    oninsert: function(file, elf) {
+                        var url, reg, info;
+                        url = file.url;
+                        reg = /\/[^/]+?\/\.\.\//;
+                        while(url.match(reg))
+                            url = url.replace(reg, '/');
+                        info = file.name + ' (' + elf.formatSize(file.size) + ')';
+                        if(meta.filetype == 'file')
+                            callback(url, {text: info, title: info});
+                        if(meta.filetype == 'image')
+                            callback(url, {alt: info});
+                        if(meta.filetype == 'media')
+                            callback(url);
+                    }
+                });
+                return false;
+            }
         });
 
         $('#UserInput').autocomplete({
@@ -314,6 +348,32 @@
             else
                 $('#PointPriceInput').val('').prop('readonly', 'readonly');
         });
+
+        $('#ElFinderPopupOpen').click(function() {
+            elFinderSelectedFile = $(this).parent().find('input').first();
+
+            $.colorbox({
+                href: '{{ action('Backend\ElFinderController@popup') }}',
+                iframe: true,
+                width: '1200',
+                height: '600',
+                closeButton: false
+            });
+        });
+
+        function elFinderProcessSelectedFile(fileUrl)
+        {
+            elFinderSelectedFile.val(fileUrl);
+
+            if(elFinderSelectedFile.parent().find('img').length > 0)
+                elFinderSelectedFile.parent().find('img').first().prop('src', fileUrl);
+            else
+            {
+                elFinderSelectedFile.parent().append('' +
+                    '<img src="' + fileUrl + '" width="100%" alt="Course Image" />' +
+                '');
+            }
+        }
 
         setInterval(function() {
             $.ajax({

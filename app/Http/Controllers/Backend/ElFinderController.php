@@ -39,4 +39,9 @@ class ElFinderController extends Controller
         $connector->run();
         return $connector->getResponse();
     }
+
+    public function tinymce()
+    {
+        return view('backend.elFinders.tinymce');
+    }
 }

@@ -64,6 +64,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'elFinder/popupConnector', 'ElFinderController@popupConnector');
 
+        Route::get('elFinder/tinymce', 'ElFinderController@tinymce');
+
         Route::get('user', 'UserController@adminUser');
 
         Route::get('userStudent', 'UserController@adminUserStudent');

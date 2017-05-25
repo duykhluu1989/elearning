@@ -33,7 +33,7 @@ if(!empty($widget->detail))
                                     <button type="button" class="btn btn-default ElFinderPopupOpen"><i class="fa fa-image fa-fw"></i></button>
                                     <input type="hidden" name="detail[{{ $attribute['name'] }}][]" value="{{ isset($detail[$attribute['name']]) ? $detail[$attribute['name']] : '' }}" />
                                     @if(isset($detail[$attribute['name']]))
-                                        <img src="{{ $detail[$attribute['name']] }}" width="100%" />
+                                        <img src="{{ $detail[$attribute['name']] }}" width="100%" alt="Slider Image" />
                                     @endif
                                 </td>
                             @else
@@ -114,7 +114,7 @@ if(!empty($widget->detail))
             else
             {
                 elFinderSelectedFile.parent().append('' +
-                    '<img src="' + fileUrl + '" width="100%" />' +
+                    '<img src="' + fileUrl + '" width="100%" alt="Slider Image" />' +
                 '');
             }
         }
