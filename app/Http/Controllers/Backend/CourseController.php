@@ -708,8 +708,8 @@ class CourseController extends Controller
 
     public function adminCourseItem(Request $request, $id)
     {
-        $course = Course::select('id', 'name')->with(['courseItems' => function($query) {
-            $query->select('id', 'course_id', 'name', 'type')->orderBy('number');
+        $course = Course::with(['courseItems' => function($query) {
+            $query->orderBy('number');
         }])->find($id);
 
         if(empty($course))
@@ -718,5 +718,54 @@ class CourseController extends Controller
         return view('backend.courses.admin_course_item', [
             'course' => $course,
         ]);
+    }
+
+    public function createCourseItem(Request $request, $id)
+    {
+        $course = Course::with(['courseItems' => function($query) {
+            $query->select('id', 'course_id', 'number')->orderBy('number', 'desc')->limit(1);
+        }])->find($id);
+
+        if(empty($course))
+            return view('backend.errors.404');
+
+        $courseItem = new CourseItem();
+        $courseItem->course_id = $course->id;
+        $courseItem->type = CourseItem::TYPE_TEXT_DB;
+
+        if(count($course->courseItems) > 0)
+            $courseItem->number = $course->courseItems[0]->number + 1;
+        else
+            $courseItem->number = 1;
+
+        $courseItem->course()->associate($course);
+
+        return $this->saveCourseItem($request, $courseItem);
+    }
+
+    public function editCourseItem(Request $request, $id)
+    {
+        $courseItem = CourseItem::with('course')->find($id);
+
+        if(empty($courseItem))
+            return view('backend.errors.404');
+
+        return $this->saveCourseItem($request, $courseItem, false);
+    }
+
+    protected function saveCourseItem($request, $courseItem, $create = true)
+    {
+        if($create == true)
+        {
+            return view('backend.courses.create_course_item', [
+                'courseItem' => $courseItem,
+            ]);
+        }
+        else
+        {
+            return view('backend.courses.edit_course_item', [
+                'courseItem' => $courseItem,
+            ]);
+        }
     }
 }

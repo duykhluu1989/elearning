@@ -56,6 +56,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('course/{id}/courseItem', 'CourseController@adminCourseItem');
 
+        Route::match(['get', 'post'], 'course/{id}/courseItem/create', 'CourseController@createCourseItem');
+
+        Route::match(['get', 'post'], 'courseItem/{id}/edit', 'CourseController@editCourseItem');
+
         Route::get('widget', 'WidgetController@adminWidget');
 
         Route::match(['get', 'post'], 'widget/{id}/edit', 'WidgetController@editWidget');
