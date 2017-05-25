@@ -9,7 +9,7 @@ class CourseItem extends Model
     const TYPE_TEXT_DB = 0;
     const TYPE_VIDEO_DB = 1;
     const TYPE_TEXT_LABEL = 'Văn Bản';
-    const TYPE_VIDEO_LABEL = 'Quay Phim';
+    const TYPE_VIDEO_LABEL = 'Video';
 
     protected $table = 'course_item';
 

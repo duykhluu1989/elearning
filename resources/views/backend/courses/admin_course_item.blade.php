@@ -13,9 +13,18 @@
                 <tbody>
                 @foreach($course->courseItems as $courseItem)
                     <tr>
-                        <td>{{ $courseItem->number }}</td>
-                        <td>{{ $courseItem->name }}</td>
-                        <td>{{ \App\Models\CourseItem::getCourseItemType($courseItem->type) }}</td>
+                        <th>Bài Học Số {{ $courseItem->number }}</th>
+                        <td>
+                            <a href="{{ action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id]) }}">{{ $courseItem->name }}</a>
+                        </td>
+                        <td>
+                            @if($courseItem->type == \App\Models\CourseItem::TYPE_TEXT_DB)
+                                <i class="fa fa-file-text-o fa-fw"></i>
+                            @else
+                                <i class="fa fa-youtube-play fa-fw"></i>
+                            @endif
+                            {{ \App\Models\CourseItem::getCourseItemType($courseItem->type) }}
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

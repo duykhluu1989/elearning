@@ -22,12 +22,9 @@
                 </div>
             </div>
             <div class="col-sm-12">
-                <div class="form-group{{ $errors->has('name_en') ? ' has-error': '' }}">
+                <div class="form-group">
                     <label>Tên EN</label>
                     <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $category->name_en) }}" />
-                    @if($errors->has('name_en'))
-                        <span class="help-block">{{ $errors->first('name_en') }}</span>
-                    @endif
                 </div>
             </div>
             <div class="col-sm-12">
@@ -81,21 +78,15 @@
                 </div>
             </div>
             <div class="col-sm-12">
-                <div class="form-group{{ $errors->has('slug') ? ' has-error': '' }}">
+                <div class="form-group">
                     <label>Liên Kết Tĩnh</label>
                     <input type="text" class="form-control" name="slug" value="{{ old('slug', $category->slug) }}" />
-                    @if($errors->has('slug'))
-                        <span class="help-block">{{ $errors->first('slug') }}</span>
-                    @endif
                 </div>
             </div>
             <div class="col-sm-12">
-                <div class="form-group{{ $errors->has('slug_en') ? ' has-error': '' }}">
+                <div class="form-group">
                     <label>Liên Kết Tĩnh EN</label>
                     <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $category->slug_en) }}" />
-                    @if($errors->has('slug_en'))
-                        <span class="help-block">{{ $errors->first('slug_en') }}</span>
-                    @endif
                 </div>
             </div>
         </div>

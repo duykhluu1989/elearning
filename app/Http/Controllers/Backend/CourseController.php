@@ -755,6 +755,62 @@ class CourseController extends Controller
 
     protected function saveCourseItem($request, $courseItem, $create = true)
     {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'name' => 'required',
+                'content' => 'required_if:type,' . CourseItem::TYPE_TEXT_DB,
+                'video_path' => 'required_if:type,' . CourseItem::TYPE_VIDEO_DB,
+            ]);
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $courseItem->name = $inputs['name'];
+                    $courseItem->name_en = $inputs['name_en'];
+                    $courseItem->type = $inputs['type'];
+
+                    if($courseItem->type == CourseItem::TYPE_TEXT_DB)
+                    {
+                        $courseItem->content = $inputs['content'];
+                        $courseItem->content_en = $inputs['content_en'];
+                    }
+                    else
+                    {
+                        $courseItem->content = $inputs['video_path'];
+                        $courseItem->content_en = $inputs['video_path_en'];
+                    }
+
+                    $courseItem->save();
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->with('message', 'Success');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    if($create == true)
+                        return redirect()->action('Backend\CourseController@createCourseItem', ['id' => $courseItem->course_id])->withErrors(['name' => $e->getMessage()])->withInput();
+                    else
+                        return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->withErrors(['name' => $e->getMessage()])->withInput();
+                }
+            }
+            else
+            {
+                if($create == true)
+                    return redirect()->action('Backend\CourseController@createCourseItem', ['id' => $courseItem->course_id])->withErrors($validator)->withInput();
+                else
+                    return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->withErrors($validator)->withInput();
+            }
+        }
+
         if($create == true)
         {
             return view('backend.courses.create_course_item', [

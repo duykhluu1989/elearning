@@ -112,23 +112,20 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group{{ $errors->has('type') ? ' has-error': '' }}">
+                <div class="form-group">
                     <label>Loại</label>
                     <select class="form-control" name="type">
                         <?php
                         $type = old('type', $course->type);
                         ?>
                         @foreach(\App\Models\Course::getCourseType() as $value => $label)
-                            @if($status == $value)
+                            @if($type == $value)
                                 <option value="{{ $value }}" selected="selected">{{ $label }}</option>
                             @else
                                 <option value="{{ $value }}">{{ $label }}</option>
                             @endif
                         @endforeach
                     </select>
-                    @if($errors->has('type'))
-                        <span class="help-block">{{ $errors->first('type') }}</span>
-                    @endif
                 </div>
             </div>
             <div class="col-sm-4">
@@ -174,21 +171,15 @@
                 <div class="tab-pane active" id="tab_1">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('slug') ? ' has-error': '' }}">
+                            <div class="form-group">
                                 <label>Liên Kết Tĩnh</label>
                                 <input type="text" class="form-control" name="slug" value="{{ old('slug', $course->slug) }}" />
-                                @if($errors->has('slug'))
-                                    <span class="help-block">{{ $errors->first('slug') }}</span>
-                                @endif
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('short_description') ? ' has-error': '' }}">
+                            <div class="form-group">
                                 <label>Mô Tả Ngắn</label>
                                 <input type="text" class="form-control" name="short_description" value="{{ old('short_description', $course->short_description) }}" />
-                                @if($errors->has('short_description'))
-                                    <span class="help-block">{{ $errors->first('short_description') }}</span>
-                                @endif
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -205,29 +196,20 @@
                 <div class="tab-pane" id="tab_2">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('slug_en') ? ' has-error': '' }}">
+                            <div class="form-group">
                                 <label>Liên Kết Tĩnh EN</label>
                                 <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $course->slug_en) }}" />
-                                @if($errors->has('slug_en'))
-                                    <span class="help-block">{{ $errors->first('slug_en') }}</span>
-                                @endif
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('short_description_en') ? ' has-error': '' }}">
+                            <div class="form-group">
                                 <label>Mô Tả Ngắn EN</label>
                                 <input type="text" class="form-control" name="short_description_en" value="{{ old('short_description_en', $course->short_description_en) }}" />
-                                @if($errors->has('short_description_en'))
-                                    <span class="help-block">{{ $errors->first('short_description_en') }}</span>
-                                @endif
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('description_en') ? ' has-error': '' }}">
+                            <div class="form-group">
                                 <label>Mô Tả EN</label>
-                                @if($errors->has('description_en'))
-                                    <span class="help-block">{{ $errors->first('description_en') }}</span>
-                                @endif
                                 <textarea class="form-control TextEditorInput" name="description_en">{{ old('description_en', $course->description_en) }}</textarea>
                             </div>
                         </div>
