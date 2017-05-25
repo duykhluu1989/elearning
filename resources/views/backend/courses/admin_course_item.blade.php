@@ -9,6 +9,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <a href="{{ action('Backend\CourseController@createCourseItem', ['id' => $course->id]) }}" class="btn btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Bài Học Mới"><i class="fa fa-plus fa-fw"></i></a>
+                    <a href="{{ action('Backend\CourseController@adminCourse') }}" class="btn btn-default">Quay Lại</a>
                 </div>
                 <div class="col-sm-4">
                     <span class="form-control no-border"><b>Tổng Số Bài Học:</b> {{ count($course->courseItems) }}</span>
@@ -35,6 +36,7 @@
                             @endif
                             {{ \App\Models\CourseItem::getCourseItemType($courseItem->type) }}
                         </td>
+                        <td>{{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->video_length) }}</td>
                     </tr>
                 @endforeach
                 </tbody>

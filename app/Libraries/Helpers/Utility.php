@@ -160,6 +160,6 @@ class Utility
             return $timeString;
         }
 
-        return '0 s';
+        return '';
     }
 }
