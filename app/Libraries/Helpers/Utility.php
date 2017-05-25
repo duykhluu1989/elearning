@@ -117,4 +117,49 @@ class Utility
         
         return 0;
     }
+
+    public static function formatTimeString($second)
+    {
+        if(!empty($second))
+        {
+            $timeString = '';
+
+            if($second >= 3600)
+            {
+                $mod = $second % 3600;
+
+                $hours = (int)($second / 3600);
+
+                $second = $mod;
+
+                $timeString .= $hours . ' h';
+            }
+
+            if($second >= 60)
+            {
+                $mod = $second % 60;
+
+                $minutes = (int)($second / 60);
+
+                $second = $mod;
+
+                if($timeString != '')
+                    $timeString .= ' ';
+
+                $timeString .= $minutes . ' m';
+            }
+
+            if($second > 0)
+            {
+                if($timeString != '')
+                    $timeString .= ' ';
+
+                $timeString .= $second . ' s';
+            }
+
+            return $timeString;
+        }
+
+        return '0 s';
+    }
 }

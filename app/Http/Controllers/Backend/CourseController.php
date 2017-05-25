@@ -15,6 +15,7 @@ use App\Models\Course;
 use App\Models\CourseItem;
 use App\Models\CategoryCourse;
 use App\Models\User;
+use FFMpeg\FFProbe;
 
 class CourseController extends Controller
 {
@@ -753,7 +754,7 @@ class CourseController extends Controller
         return $this->saveCourseItem($request, $courseItem, false);
     }
 
-    protected function saveCourseItem($request, $courseItem, $create = true)
+    protected function saveCourseItem($request, CourseItem $courseItem, $create = true)
     {
         if($request->isMethod('post'))
         {
@@ -779,11 +780,41 @@ class CourseController extends Controller
                     {
                         $courseItem->content = $inputs['content'];
                         $courseItem->content_en = $inputs['content_en'];
+                        $courseItem->video_length = null;
                     }
                     else
                     {
                         $courseItem->content = $inputs['video_path'];
                         $courseItem->content_en = $inputs['video_path_en'];
+
+                        $ffprobe = FFProbe::create([
+                            'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
+                            'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe',
+                        ]);
+                        $duration = (int)$ffprobe->format($courseItem->content)->get('duration');
+                        if($duration < 1)
+                            $duration = null;
+
+                        $courseItem->video_length = $duration;
+                    }
+
+                    if($courseItem->video_length != $courseItem->getOriginal('video_length'))
+                    {
+                        if($courseItem->getOriginal('video_length') && $courseItem->course->video_length)
+                            $courseItem->course->video_length -= $courseItem->getOriginal('video_length');
+
+                        if($courseItem->video_length)
+                        {
+                            if($courseItem->course->video_length)
+                                $courseItem->course->video_length += $courseItem->video_length;
+                            else
+                                $courseItem->course->video_length = $courseItem->video_length;
+                        }
+
+                        if($courseItem->course->video_length < 1)
+                            $courseItem->course->video_length = null;
+
+                        $courseItem->course->save();
                     }
 
                     $courseItem->save();

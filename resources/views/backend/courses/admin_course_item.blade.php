@@ -6,7 +6,17 @@
 
     <div class="box box-primary">
         <div class="box-header with-border">
-            <a href="{{ action('Backend\CourseController@createCourseItem', ['id' => $course->id]) }}" class="btn btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Bài Học Mới"><i class="fa fa-plus fa-fw"></i></a>
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="{{ action('Backend\CourseController@createCourseItem', ['id' => $course->id]) }}" class="btn btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Bài Học Mới"><i class="fa fa-plus fa-fw"></i></a>
+                </div>
+                <div class="col-sm-4">
+                    <span class="form-control no-border"><b>Tổng Số Bài Học:</b> {{ count($course->courseItems) }}</span>
+                </div>
+                <div class="col-sm-4">
+                    <span class="form-control no-border"><b>Tổng Thời Gian Video:</b> {{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</span>
+                </div>
+            </div>
         </div>
         <div class="box-body table-responsive no-padding">
             <table class="table table-striped table-hover table-condensed">
