@@ -379,9 +379,15 @@ class CourseController extends Controller
 
     public function adminCourse(Request $request)
     {
-        $dataProvider = Course::with(['user.profile', 'categoryCourses' => function($query) {
+        $dataProvider = Course::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'categoryCourses' => function($query) {
             $query->orderBy('level', 'desc')->limit(1);
-        }, 'categoryCourses.category'])
+        }, 'categoryCourses.category' => function($query) {
+            $query->select('id', 'name');
+        }])
             ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.type', 'course.code')->orderBy('id', 'desc');
 
         $inputs = $request->all();
@@ -536,9 +542,15 @@ class CourseController extends Controller
 
     public function editCourse(Request $request, $id)
     {
-        $course = Course::with(['user.profile', 'categoryCourses' => function($query) {
+        $course = Course::with(['user' => function($query) {
+            $query->select('id', 'email');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'categoryCourses' => function($query) {
             $query->orderBy('level');
-        }, 'categoryCourses.category'])->find($id);
+        }, 'categoryCourses.category' => function($query) {
+            $query->select('id', 'name');
+        }])->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -708,10 +720,10 @@ class CourseController extends Controller
         }
     }
 
-    public function adminCourseItem(Request $request, $id)
+    public function adminCourseItem($id)
     {
         $course = Course::with(['courseItems' => function($query) {
-            $query->orderBy('number');
+            $query->select('id', 'course_id', 'name', 'type', 'number', 'video_length')->orderBy('number');
         }])->find($id);
 
         if(empty($course))
@@ -724,7 +736,7 @@ class CourseController extends Controller
 
     public function createCourseItem(Request $request, $id)
     {
-        $course = Course::find($id);
+        $course = Course::select('id', 'name', 'video_length', 'item_count')->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -741,7 +753,9 @@ class CourseController extends Controller
 
     public function editCourseItem(Request $request, $id)
     {
-        $courseItem = CourseItem::with('course')->find($id);
+        $courseItem = CourseItem::with(['course' => function($query) {
+            $query->select('id', 'name', 'video_length', 'item_count');
+        }])->find($id);
 
         if(empty($courseItem))
             return view('backend.errors.404');
