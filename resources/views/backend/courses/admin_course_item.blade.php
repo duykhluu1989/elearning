@@ -12,7 +12,7 @@
                     <a href="{{ action('Backend\CourseController@adminCourse') }}" class="btn btn-default">Quay Lại</a>
                 </div>
                 <div class="col-sm-4">
-                    <span class="form-control no-border"><b>Tổng Số Bài Học:</b> {{ count($course->courseItems) }}</span>
+                    <span class="form-control no-border"><b>Tổng Số Bài Học:</b> {{ $course->item_count }}</span>
                 </div>
                 <div class="col-sm-4">
                     <span class="form-control no-border"><b>Tổng Thời Gian Video:</b> {{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</span>

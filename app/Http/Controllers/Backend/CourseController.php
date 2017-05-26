@@ -723,9 +723,7 @@ class CourseController extends Controller
 
     public function createCourseItem(Request $request, $id)
     {
-        $course = Course::with(['courseItems' => function($query) {
-            $query->select('id', 'course_id', 'number')->orderBy('number', 'desc')->limit(1);
-        }])->find($id);
+        $course = Course::find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -733,11 +731,7 @@ class CourseController extends Controller
         $courseItem = new CourseItem();
         $courseItem->course_id = $course->id;
         $courseItem->type = CourseItem::TYPE_TEXT_DB;
-
-        if(count($course->courseItems) > 0)
-            $courseItem->number = $course->courseItems[0]->number + 1;
-        else
-            $courseItem->number = 1;
+        $courseItem->number = $course->item_count + 1;
 
         $courseItem->course()->associate($course);
 
@@ -798,6 +792,9 @@ class CourseController extends Controller
                         $courseItem->video_length = $duration;
                     }
 
+                    if($create == true)
+                        $courseItem->course->item_count += 1;
+
                     if($courseItem->video_length != $courseItem->getOriginal('video_length'))
                     {
                         if($courseItem->getOriginal('video_length') && $courseItem->course->video_length)
@@ -813,9 +810,9 @@ class CourseController extends Controller
 
                         if($courseItem->course->video_length < 1)
                             $courseItem->course->video_length = null;
-
-                        $courseItem->course->save();
                     }
+
+                    $courseItem->course->save();
 
                     $courseItem->save();
 
