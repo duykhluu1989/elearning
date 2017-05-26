@@ -62,20 +62,22 @@ class UserController extends Controller
 
     public function adminUser(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', true)->orderBy('id', 'desc');
+        $dataProvider = User::with(['profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('user.id', 'user.username', 'user.email', 'user.status')->where('user.admin', true)->orderBy('user.id', 'desc');
 
         $inputs = $request->all();
 
         if(count($inputs) > 0)
         {
             if(!empty($inputs['username']))
-                $dataProvider->where('username', 'like', '%' . $inputs['username'] . '%');
+                $dataProvider->where('user.username', 'like', '%' . $inputs['username'] . '%');
 
             if(!empty($inputs['email']))
-                $dataProvider->where('email', 'like', '%' . $inputs['email'] . '%');
+                $dataProvider->where('user.email', 'like', '%' . $inputs['email'] . '%');
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
-                $dataProvider->where('status', $inputs['status']);
+                $dataProvider->where('user.status', $inputs['status']);
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -92,6 +94,12 @@ class UserController extends Controller
             [
                 'title' => 'Email',
                 'data' => 'email',
+            ],
+            [
+                'title' => 'Họ Tên',
+                'data' => function($row) {
+                    echo $row->profile->name;
+                },
             ],
             [
                 'title' => 'Vai Trò',

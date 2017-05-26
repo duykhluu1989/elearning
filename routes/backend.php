@@ -90,6 +90,12 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'setting', 'SettingController@adminSetting');
 
+        Route::get('setting/paymentMethod', 'PaymentMethodController@adminPaymentMethod');
+
+        Route::match(['get', 'post'], 'setting/paymentMethod/create', 'PaymentMethodController@createPaymentMethod');
+
+        Route::match(['get', 'post'], 'setting/paymentMethod/{id}/edit', 'PaymentMethodController@editPaymentMethod');
+
     });
 
 });

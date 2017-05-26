@@ -388,7 +388,7 @@ class CourseController extends Controller
         }, 'categoryCourses.category' => function($query) {
             $query->select('id', 'name');
         }])
-            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.type', 'course.code')->orderBy('id', 'desc');
+            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.type', 'course.code')->orderBy('course.id', 'desc');
 
         $inputs = $request->all();
 
