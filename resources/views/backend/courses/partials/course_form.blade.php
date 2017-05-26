@@ -230,12 +230,10 @@
 {{ csrf_field() }}
 
 @push('stylesheets')
-    <link rel="stylesheet" href="{{ asset('packages/elfinder/css/elfinder.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/colorbox.css') }}">
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('packages/elfinder/js/elfinder.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.colorbox-min.js') }}"></script>
     <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
     <script type="text/javascript">

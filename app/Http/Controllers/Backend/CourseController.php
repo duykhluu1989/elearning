@@ -613,6 +613,7 @@ class CourseController extends Controller
                 {
                     DB::beginTransaction();
 
+                    $course->image = $inputs['image'];
                     $course->user_id = $inputs['user_id'];
                     $course->name = $inputs['name'];
                     $course->name_en = $inputs['name_en'];

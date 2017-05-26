@@ -114,7 +114,31 @@
             toolbar2: 'print preview media | forecolor backcolor emoticons',
             image_advtab: true,
             nonbreaking_force_tab: true,
-            convert_urls: false
+            convert_urls: false,
+            file_picker_callback : function(callback, value, meta) {
+                tinymce.activeEditor.windowManager.open({
+                    file: '{{ action('Backend\ElFinderController@tinymce') }}',
+                    title: 'Thư Viện',
+                    width: 1200,
+                    height: 600
+                }, {
+                    oninsert: function(file, elf) {
+                        var url, reg, info;
+                        url = file.url;
+                        reg = /\/[^/]+?\/\.\.\//;
+                        while(url.match(reg))
+                            url = url.replace(reg, '/');
+                        info = file.name + ' (' + elf.formatSize(file.size) + ')';
+                        if(meta.filetype == 'file')
+                            callback(url, {text: info, title: info});
+                        if(meta.filetype == 'image')
+                            callback(url, {alt: info});
+                        if(meta.filetype == 'media')
+                            callback(url);
+                    }
+                });
+                return false;
+            }
         });
 
         $('#TypeSelect').change(function() {
