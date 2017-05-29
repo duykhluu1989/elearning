@@ -14,4 +14,12 @@ class Tag extends Model
     {
         return TagCourse::where('tag_id', $this->id)->count('id');
     }
+
+    public function isDeletable()
+    {
+        if($this->countTagCourses() > 0)
+            return false;
+
+        return true;
+    }
 }

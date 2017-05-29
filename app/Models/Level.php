@@ -14,4 +14,12 @@ class Level extends Model
     {
         return Course::where('level_id', $this->id)->count('id');
     }
+
+    public function isDeletable()
+    {
+        if($this->countCourses() > 0)
+            return false;
+
+        return true;
+    }
 }

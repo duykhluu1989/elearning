@@ -109,7 +109,7 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
 
-        if(empty($role) || $role->countUserRoles() > 0 || $role->name == Role::ROLE_ADMINISTRATOR)
+        if(empty($role) || $role->isDeletable() == false)
             return view('backend.errors.404');
 
         $role->delete();
@@ -125,7 +125,7 @@ class RoleController extends Controller
 
         foreach($roles as $role)
         {
-            if($role->countUserRoles() == 0 && $role->name != Role::ROLE_ADMINISTRATOR)
+            if($role->isDeletable() == true)
                 $role->delete();
         }
 

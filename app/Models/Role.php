@@ -23,4 +23,12 @@ class Role extends Model
     {
         return UserRole::where('role_id', $this->id)->count('id');
     }
+
+    public function isDeletable()
+    {
+        if($this->name == Role::ROLE_ADMINISTRATOR || $this->countUserRoles() > 0)
+            return false;
+
+        return true;
+    }
 }

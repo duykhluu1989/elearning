@@ -46,7 +46,7 @@ class DiscountController extends Controller
 
         $gridView = new GridView($dataProvider, $columns);
 
-        return view('backend.paymentMethods.admin_payment_method', [
+        return view('backend.discounts.admin_discount', [
             'gridView' => $gridView,
         ]);
     }
@@ -65,11 +65,46 @@ class DiscountController extends Controller
         if(empty($discount))
             return view('backend.errors.404');
 
-        return $this->saveDiscount($request, $discount);
+        return $this->saveDiscount($request, $discount, false);
     }
 
-    protected function saveDiscount()
+    protected function saveDiscount($request, $discount, $create = true)
     {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
 
+            $validator = Validator::make($inputs, [
+                'code' => 'required|unique:discount,code' . ($create == true ? '' : (',' . $discount->id)),
+            ]);
+
+            if($validator->passes())
+            {
+                $discount->code = strtolower($inputs['code']);
+                $discount->save();
+
+                return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('message', 'Success');
+            }
+            else
+            {
+                if($create == true)
+                    return redirect()->action('Backend\DiscountController@createDiscount')->withErrors($validator)->withInput();
+                else
+                    return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->withErrors($validator)->withInput();
+            }
+        }
+
+        if($create == true)
+        {
+            return view('backend.discounts.create_discount', [
+                'discount' => $discount,
+            ]);
+        }
+        else
+        {
+            return view('backend.discounts.edit_discount', [
+                'discount' => $discount,
+            ]);
+        }
     }
 }

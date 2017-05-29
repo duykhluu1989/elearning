@@ -32,4 +32,9 @@ class CourseItem extends Model
 
         return $type;
     }
+
+    public function isDeletable()
+    {
+        return false;
+    }
 }

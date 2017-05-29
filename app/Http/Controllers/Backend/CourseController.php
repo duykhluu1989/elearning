@@ -220,7 +220,7 @@ class CourseController extends Controller
     {
         $category = Category::find($id);
 
-        if(empty($category) || $category->countCategoryCourses() > 0)
+        if(empty($category) || $category->isDeletable() == false)
             return view('backend.errors.404');
 
         $category->delete();
@@ -236,7 +236,7 @@ class CourseController extends Controller
 
         foreach($categories as $category)
         {
-            if($category->countCategoryCourses() == 0)
+            if($category->isDeletable() == true)
                 $category->delete();
         }
 
@@ -356,7 +356,7 @@ class CourseController extends Controller
     {
         $level = Level::find($id);
 
-        if(empty($level) || $level->countCourses() > 0)
+        if(empty($level) || $level->isDeletable() == false)
             return view('backend.errors.404');
 
         $level->delete();
@@ -372,7 +372,7 @@ class CourseController extends Controller
 
         foreach($levels as $level)
         {
-            if($level->countCourses() == 0)
+            if($level->isDeletable() == true)
                 $level->delete();
         }
 
@@ -1001,7 +1001,7 @@ class CourseController extends Controller
     {
         $tag = Tag::find($id);
 
-        if(empty($tag) || $tag->countTagCourses() > 0)
+        if(empty($tag) || $tag->isDeletable() == false)
             return view('backend.errors.404');
 
         $tag->delete();
@@ -1017,7 +1017,7 @@ class CourseController extends Controller
 
         foreach($tags as $tag)
         {
-            if($tag->countTagCourses() == 0)
+            if($tag->isDeletable() == true)
                 $tag->delete();
         }
 

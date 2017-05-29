@@ -37,4 +37,12 @@ class Category extends Model
     {
         return CategoryCourse::where('category_id', $this->id)->count('id');
     }
+
+    public function isDeletable()
+    {
+        if($this->countCategoryCourses() > 0)
+            return false;
+
+        return true;
+    }
 }
