@@ -5,6 +5,13 @@
 
         @if(!empty($course->id))
             <a href="{{ action('Backend\CourseController@adminCourseItem', ['id' => $course->id]) }}" class="btn btn-primary">Danh Sách Bài Học</a>
+
+            <?php
+            $isDeletable = $course->isDeletable();
+            ?>
+            @if($isDeletable == true)
+                <a href="{{ action('Backend\CourseController@deleteCourse', ['id' => $course->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+            @endif
         @endif
     </div>
     <div class="box-body">
@@ -240,6 +247,10 @@
 
         @if(!empty($course->id))
             <a href="{{ action('Backend\CourseController@adminCourseItem', ['id' => $course->id]) }}" class="btn btn-primary">Danh Sách Bài Học</a>
+
+            @if($isDeletable == true)
+                <a href="{{ action('Backend\CourseController@deleteCourse', ['id' => $course->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+            @endif
         @endif
     </div>
 </div>

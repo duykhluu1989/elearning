@@ -4,9 +4,9 @@
         <a href="{{ action('Backend\CourseController@adminTag') }}" class="btn btn-default">Quay Lại</a>
 
         <?php
-        $countTagCourses = $tag->countTagCourses();
+        $isDeletable = $tag->isDeletable();
         ?>
-        @if(!empty($tag->id) && $countTagCourses == 0)
+        @if(!empty($tag->id) && $isDeletable == 0)
             <a href="{{ action('Backend\CourseController@deleteTag', ['id' => $tag->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
         @endif
     </div>
@@ -27,7 +27,7 @@
         <button type="submit" class="btn btn-primary">{{ empty($tag->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ action('Backend\CourseController@adminTag') }}" class="btn btn-default">Quay lai</a>
 
-        @if(!empty($tag->id) && $countTagCourses == 0)
+        @if(!empty($tag->id) && $isDeletable == 0)
             <a href="{{ action('Backend\CourseController@deleteTag', ['id' => $tag->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
         @endif
     </div>

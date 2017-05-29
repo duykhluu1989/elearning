@@ -78,4 +78,18 @@ class Course extends Model
     {
         return false;
     }
+
+    public function doDelete()
+    {
+        $this->delete();
+
+        foreach($this->categoryCourses as $categoryCourse)
+            $categoryCourse->delete();
+
+        foreach($this->courseItems as $courseItem)
+            $courseItem->delete();
+
+        foreach($this->tagCourses as $tagCourse)
+            $tagCourse->delete();
+    }
 }

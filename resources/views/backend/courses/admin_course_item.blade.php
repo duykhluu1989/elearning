@@ -4,44 +4,40 @@
 
 @section('section')
 
-    <div class="box box-primary">
-        <div class="box-header with-border">
-            <div class="row">
-                <div class="col-sm-4">
-                    <a href="{{ action('Backend\CourseController@createCourseItem', ['id' => $course->id]) }}" class="btn btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Bài Học Mới"><i class="fa fa-plus fa-fw"></i></a>
-                    <a href="{{ action('Backend\CourseController@adminCourse') }}" class="btn btn-default">Quay Lại</a>
-                </div>
-                <div class="col-sm-4">
-                    <span class="form-control no-border"><b>Tổng Số Bài Học:</b> {{ $course->item_count }}</span>
-                </div>
-                <div class="col-sm-4">
-                    <span class="form-control no-border"><b>Tổng Thời Gian Video:</b> {{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="box-body table-responsive no-padding">
-            <table class="table table-striped table-hover table-condensed">
-                <tbody>
-                @foreach($course->courseItems as $courseItem)
-                    <tr>
-                        <th>Bài Học Số {{ $courseItem->number }}</th>
-                        <td>
-                            <a href="{{ action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id]) }}">{{ $courseItem->name }}</a>
-                        </td>
-                        <td>
-                            @if($courseItem->type == \App\Models\CourseItem::TYPE_TEXT_DB)
-                                <i class="fa fa-file-text-o fa-fw"></i>
-                            @else
-                                <i class="fa fa-youtube-play fa-fw"></i>
-                            @endif
-                            {{ \App\Models\CourseItem::getCourseItemType($courseItem->type) }}
-                        </td>
-                        <td>{{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->video_length) }}</td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <?php
+
+    $gridView->setTools([
+        function() use($course) {
+            echo \App\Libraries\Helpers\Html::a(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-plus fa-fw']), [
+                'href' => action('Backend\CourseController@createCourseItem', ['id' => $course->id]),
+                'class' => 'btn btn-primary',
+                'data-container' => 'body',
+                'data-toggle' => 'popover',
+                'data-placement' => 'top',
+                'data-content' => 'Bài Học Mới',
+            ]);
+        },
+        function() {
+            echo \App\Libraries\Helpers\Html::a('Quay Lại', [
+                'href' => action('Backend\CourseController@adminCourse'),
+                'class' => 'btn btn-default',
+            ]);
+        },
+        function() {
+            echo \App\Libraries\Helpers\Html::button(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-trash fa-fw']), [
+                'class' => 'btn btn-primary GridViewCheckBoxControl Confirmation',
+                'data-container' => 'body',
+                'data-toggle' => 'popover',
+                'data-placement' => 'top',
+                'data-content' => 'Xóa',
+                'value' => action('Backend\CourseController@controlDeleteCourseItem'),
+                'style' => 'display: none',
+            ]);
+        },
+    ]);
+
+    $gridView->render();
+
+    ?>
 
 @stop

@@ -769,17 +769,107 @@ class CourseController extends Controller
         }
     }
 
+    public function deleteCourse($id)
+    {
+        $course = Course::with('categoryCourses', 'courseItems', 'tagCourses')->find($id);
+
+        if(empty($course) || $course->isDeletable() == false)
+            return view('backend.errors.404');
+
+        try
+        {
+            DB::beginTransaction();
+
+            $course->doDelete();
+
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('message', 'Error: ' . $e->getMessage());
+        }
+
+        return redirect()->action('Backend\CourseController@adminCourse')->with('message', 'Success');
+    }
+
+    public function controlDeleteCourse(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $courses = Course::with('categoryCourses', 'courseItems', 'tagCourses')->whereIn('id', explode(';', $ids))->get();
+
+        foreach($courses as $course)
+        {
+            if($course->isDeletable() == true)
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $course->doDelete();
+
+                    DB::commit();
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Backend\CourseController@adminCourse')->with('message', 'Error: ' . $e->getMessage());
+                }
+            }
+        }
+
+        return redirect()->action('Backend\CourseController@adminCourse')->with('message', 'Success');
+    }
+
     public function adminCourseItem($id)
     {
-        $course = Course::with(['courseItems' => function($query) {
+        $course = Course::select('id', 'name', 'video_length', 'item_count')->with(['courseItems' => function($query) {
             $query->select('id', 'course_id', 'name', 'type', 'number', 'video_length')->orderBy('number');
         }])->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
 
+        $dataProvider = $course->courseItems;
+
+        $columns = [
+            [
+                'title' => 'Tổng Số Bài Học: ' . $course->item_count,
+                'data' => function($row) {
+                    echo 'Bài Học Số ' . $row->number;
+                },
+            ],
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo Html::a($row->name, [
+                        'href' => action('Backend\CourseController@editCourseItem', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+            [
+                'title' => 'Tổng Thời Gian Video: ' . Utility::formatTimeString($course->video_length),
+                'data' => function($row) {
+                    $type = CourseItem::getCourseItemType($row->type);
+                    if($row->type == CourseItem::TYPE_TEXT_DB)
+                        $iconHtml = Html::i('', ['class' => 'fa fa-file-text-o fa-fw']);
+                    else
+                        $iconHtml = Html::i('', ['class' => 'fa fa-youtube-play fa-fw']);
+                    echo $iconHtml . ' ' . $type . ' ' . Utility::formatTimeString($row->video_length);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
+        $gridView->unsetPagination();
+
         return view('backend.courses.admin_course_item', [
             'course' => $course,
+            'gridView' => $gridView,
         ]);
     }
 
@@ -915,6 +1005,118 @@ class CourseController extends Controller
                 'courseItem' => $courseItem,
             ]);
         }
+    }
+
+    public function deleteCourseItem($id)
+    {
+        $courseItem = CourseItem::with('course')->find($id);
+
+        if(empty($courseItem) || $courseItem->isDeletable() == false)
+            return view('backend.errors.404');
+
+        try
+        {
+            DB::beginTransaction();
+
+            $courseItem->delete();
+
+            if($courseItem->video_length)
+            {
+                $courseItem->course->video_length -= $courseItem->video_length;
+
+                if($courseItem->course->video_length < 1)
+                    $courseItem->course->video_length = null;
+            }
+
+            $courseItem->course->item_count -= 1;
+
+            $courseItem->course->save();
+
+            $higherNumberCourseItems = CourseItem::where('course_id', $courseItem->course_id)
+                ->where('number', '>', $courseItem->number)
+                ->orderBy('number')
+                ->get();
+
+            foreach($higherNumberCourseItems as $higherNumberCourseItem)
+            {
+                $higherNumberCourseItem->number -= 1;
+                $higherNumberCourseItem->save();
+            }
+
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->with('message', 'Error: ' . $e->getMessage());
+        }
+
+        return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $courseItem->course->id])->with('message', 'Success');
+    }
+
+    public function controlDeleteCourseItem(Request $request)
+    {
+        $ids = $request->input('ids');
+        $ids = explode(';', $ids);
+
+        $course = Course::select('course.id', 'course.item_count', 'course.video_length')
+            ->with(['courseItems' => function($query) {
+                $query->orderBy('number');
+            }])
+            ->join('course_item', 'course.id', '=', 'course_item.course_id')
+            ->whereIn('course_item.id', $ids)
+            ->first();
+
+        try
+        {
+            DB::beginTransaction();
+
+            foreach($course->courseItems as $key => $courseItem)
+            {
+                if(in_array($courseItem->id, $ids) && $courseItem->isDeletable() == true)
+                {
+                    $courseItem->delete();
+
+                    if($courseItem->video_length && !empty($course->video_length))
+                    {
+                        $course->video_length -= $courseItem->video_length;
+
+                        if($course->video_length < 1)
+                            $course->video_length = null;
+                    }
+
+                    $course->item_count -= 1;
+
+                    unset($course->courseItems[$key]);
+                }
+            }
+
+            $course->save();
+
+            $number = 1;
+
+            foreach($course->courseItems as $courseItem)
+            {
+                if($courseItem->number != $number)
+                {
+                    $courseItem->number = $number;
+                    $courseItem->save();
+                }
+
+                $number ++;
+            }
+
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $course->id])->with('message', 'Error: ' . $e->getMessage());
+        }
+
+        return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $course->id])->with('message', 'Success');
     }
 
     public function adminTag()

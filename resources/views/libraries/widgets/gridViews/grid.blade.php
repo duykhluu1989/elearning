@@ -55,11 +55,13 @@
                 @endif
             @endforeach
         @endif
-        <div class="box-tools">
+        @if($pagination == true)
+            <div class="box-tools">
 
-            @include('libraries.widgets.gridViews.pagination')
+                @include('libraries.widgets.gridViews.pagination')
 
-        </div>
+            </div>
+        @endif
     </div>
     <div class="box-body table-responsive no-padding">
         <table class="table table-striped table-hover table-condensed">
@@ -95,11 +97,13 @@
             </tbody>
         </table>
     </div>
-    <div class="box-footer">
+    @if($pagination == true)
+        <div class="box-footer">
 
-        @include('libraries.widgets.gridViews.pagination')
+            @include('libraries.widgets.gridViews.pagination')
 
-    </div>
+        </div>
+    @endif
 </div>
 
 @if($checkbox == true)

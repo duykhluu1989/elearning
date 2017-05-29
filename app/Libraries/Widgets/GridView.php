@@ -18,10 +18,14 @@ class GridView
 
     protected $checkbox;
 
+    protected $pagination;
+
     public function __construct($dataProvider, $columns)
     {
         $this->dataProvider = $dataProvider;
         $this->columns = $columns;
+
+        $this->pagination = true;
     }
 
     public function render()
@@ -33,6 +37,7 @@ class GridView
             'filterValues' => $this->filterValues,
             'filters' => $this->filters,
             'checkbox' => $this->checkbox,
+            'pagination' => $this->pagination,
         ]);
     }
 
@@ -55,5 +60,10 @@ class GridView
     public function setCheckbox()
     {
         $this->checkbox = true;
+    }
+
+    public function unsetPagination()
+    {
+        $this->pagination = false;
     }
 }
