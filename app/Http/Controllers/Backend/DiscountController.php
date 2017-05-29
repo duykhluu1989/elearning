@@ -54,6 +54,7 @@ class DiscountController extends Controller
     public function createDiscount(Request $request)
     {
         $discount = new Discount();
+        $discount->status = Discount::STATUS_ACTIVE_DB;
 
         return $this->saveDiscount($request, $discount);
     }
@@ -106,5 +107,17 @@ class DiscountController extends Controller
                 'discount' => $discount,
             ]);
         }
+    }
+
+    public function deleteDiscount($id)
+    {
+
+    }
+
+    public function generateDiscountCode(Request $request)
+    {
+        $number = $request->input('number');
+
+        return Discount::generateCodeByNumberCharacter($number);
     }
 }

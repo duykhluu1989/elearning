@@ -27,4 +27,36 @@ class Discount extends Model
 
         return $status;
     }
+
+    public function isDeletable()
+    {
+        return false;
+    }
+
+    public static function generateCodeByNumberCharacter($number)
+    {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $charactersLength = strlen($characters);
+        $times = 0;
+        $maxTimes = 20;
+
+        do
+        {
+            $randomString = '';
+
+            for($i = 0; $i < $number; $i++)
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+
+            $discount = Discount::where('code', $randomString)->first();
+
+            $times ++;
+        }
+        while(!empty($discount) && $times < $maxTimes);
+
+        if(empty($discount))
+            return $randomString;
+
+        return null;
+    }
 }

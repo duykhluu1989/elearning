@@ -35,6 +35,6 @@ class CourseItem extends Model
 
     public function isDeletable()
     {
-        return true;
+        return false;
     }
 }

@@ -24,6 +24,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('courseTag/autoComplete', 'CourseController@autoCompleteTag');
 
+        Route::post('discount/generateCode', 'DiscountController@generateDiscountCode');
+
         Route::post('user/autoComplete', 'UserController@autoCompleteUser');
 
     });
@@ -85,6 +87,8 @@ Route::group(['namespace' => 'Backend'], function() {
         Route::match(['get', 'post'], 'discount/create', 'DiscountController@createDiscount');
 
         Route::match(['get', 'post'], 'discount/{id}/edit', 'DiscountController@editDiscount');
+
+        Route::get('discount/{id}/delete', 'DiscountController@deleteDiscount');
 
         Route::get('widget', 'WidgetController@adminWidget');
 
