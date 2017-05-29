@@ -159,6 +159,22 @@
                     @endif
                 </div>
             </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>Nhãn <i>(ngăn cách nhiều nhãn bằng dấu ; chấm phẩy)</i></label>
+                    <?php
+                    $tags = '';
+                    foreach($course->tagCourses as $tagCourse)
+                    {
+                        if($tags == '')
+                            $tags = $tagCourse->tag->name;
+                        else
+                            $tags .= ';' . $tagCourse->tag->name;
+                    }
+                    ?>
+                    <input type="text" class="form-control" id="TagInput" name="tags" value="{{ old('tags', $tags) }}" />
+                </div>
+            </div>
         </div>
     </div>
     <div class="box-body">
@@ -231,10 +247,13 @@
 
 @push('stylesheets')
     <link rel="stylesheet" href="{{ asset('assets/css/colorbox.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery.tag-editor.css') }}">
 @endpush
 
 @push('scripts')
     <script src="{{ asset('assets/js/jquery.colorbox-min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.caret.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.tag-editor.min.js') }}"></script>
     <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
     <script type="text/javascript">
         var elFinderSelectedFile;
@@ -335,6 +354,29 @@
                 $('#PointPriceInput').removeAttr('readonly').val(1);
             else
                 $('#PointPriceInput').val('').prop('readonly', 'readonly');
+        });
+
+        $('#TagInput').tagEditor({
+            delimiter: ';',
+            sortable: false,
+            autocomplete: {
+                minLength: 3,
+                delay: 1000,
+                source: function(request, response) {
+                    $.ajax({
+                        url: '{{ action('Backend\CourseController@autoCompleteTag') }}',
+                        type: 'post',
+                        data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
+                        success: function(result) {
+                            if(result)
+                            {
+                                result = JSON.parse(result);
+                                response(result);
+                            }
+                        }
+                    });
+                }
+            }
         });
 
         $('#ElFinderPopupOpen').click(function() {

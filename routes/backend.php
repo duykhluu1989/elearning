@@ -22,6 +22,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('courseCategory/autoComplete', 'CourseController@autoCompleteCategory');
 
+        Route::post('courseTag/autoComplete', 'CourseController@autoCompleteTag');
+
         Route::post('user/autoComplete', 'UserController@autoCompleteUser');
 
     });
@@ -59,6 +61,22 @@ Route::group(['namespace' => 'Backend'], function() {
         Route::match(['get', 'post'], 'course/{id}/courseItem/create', 'CourseController@createCourseItem');
 
         Route::match(['get', 'post'], 'courseItem/{id}/edit', 'CourseController@editCourseItem');
+
+        Route::get('courseTag', 'CourseController@adminTag');
+
+        Route::match(['get', 'post'], 'courseTag/create', 'CourseController@createTag');
+
+        Route::match(['get', 'post'], 'courseTag/{id}/edit', 'CourseController@editTag');
+
+        Route::get('courseTag/{id}/delete', 'CourseController@deleteTag');
+
+        Route::get('courseTag/controlDelete', 'CourseController@controlDeleteTag');
+
+        Route::get('discount', 'DiscountController@adminDiscount');
+
+        Route::match(['get', 'post'], 'discount/create', 'DiscountController@createDiscount');
+
+        Route::match(['get', 'post'], 'discount/{id}/edit', 'DiscountController@editDiscount');
 
         Route::get('widget', 'WidgetController@adminWidget');
 

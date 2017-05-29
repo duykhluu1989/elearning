@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Models\TagCourse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use App\Models\Course;
 use App\Models\CourseItem;
 use App\Models\CategoryCourse;
 use App\Models\User;
+use App\Models\Tag;
 use FFMpeg\FFProbe;
 
 class CourseController extends Controller
@@ -550,7 +552,7 @@ class CourseController extends Controller
             $query->orderBy('level');
         }, 'categoryCourses.category' => function($query) {
             $query->select('id', 'name');
-        }])->find($id);
+        }, 'tagCourses.tag'])->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -677,6 +679,53 @@ class CourseController extends Controller
                         $categoryCourse->course_id = $course->id;
                         $categoryCourse->level = $key + 1;
                         $categoryCourse->save();
+                    }
+
+                    if(!empty($inputs['tags']))
+                    {
+                        $tagNames = explode(';', $inputs['tags']);
+
+                        $tags = Tag::whereIn('name', $tagNames)->pluck('name', 'id')->toArray();
+
+                        if(count($tags) < count($tagNames))
+                        {
+                            $newTags = array();
+
+                            foreach($tagNames as $tagName)
+                            {
+                                if(!empty($tagName))
+                                {
+                                    $key = array_search($tagName, $tags);
+
+                                    if($key === false)
+                                    {
+                                        $newTag = new Tag();
+                                        $newTag->name = $tagName;
+                                        $newTag->save();
+
+                                        $newTags[$newTag->id] = $newTag->name;
+                                    }
+                                }
+                            }
+
+                            $tags = array_merge($tags, $newTags);
+                        }
+
+                        foreach($course->tagCourses as $tagCourse)
+                        {
+                            if(isset($tags[$tagCourse->tag_id]))
+                                unset($tags[$tagCourse->tag_id]);
+                            else
+                                $tagCourse->delete();
+                        }
+
+                        foreach($tags as $tagId => $tag)
+                        {
+                            $tagCourse = new TagCourse();
+                            $tagCourse->tag_id = $tagId;
+                            $tagCourse->course_id = $course->id;
+                            $tagCourse->save();
+                        }
                     }
 
                     DB::commit();
@@ -866,5 +915,121 @@ class CourseController extends Controller
                 'courseItem' => $courseItem,
             ]);
         }
+    }
+
+    public function adminTag()
+    {
+        $dataProvider = Tag::select('id', 'name')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo Html::a($row->name, [
+                        'href' => action('Backend\CourseController@editTag', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
+
+        return view('backend.courses.admin_tag', [
+            'gridView' => $gridView,
+        ]);
+    }
+
+    public function createTag(Request $request)
+    {
+        $tag = new Tag();
+
+        return $this->saveTag($request, $tag);
+    }
+
+    public function editTag(Request $request, $id)
+    {
+        $tag = Tag::find($id);
+
+        if(empty($tag))
+            return view('backend.errors.404');
+
+        return $this->saveTag($request, $tag, false);
+    }
+
+    protected function saveTag($request, $tag, $create = true)
+    {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'name' => 'required|unique:tag,name' . ($create == true ? '' : (',' . $tag->id)),
+            ]);
+
+            if($validator->passes())
+            {
+                $tag->name = strtolower($inputs['name']);
+                $tag->save();
+
+                return redirect()->action('Backend\CourseController@editTag', ['id' => $tag->id])->with('message', 'Success');
+            }
+            else
+            {
+                if($create == true)
+                    return redirect()->action('Backend\CourseController@createTag')->withErrors($validator)->withInput();
+                else
+                    return redirect()->action('Backend\CourseController@editTag', ['id' => $tag->id])->withErrors($validator)->withInput();
+            }
+        }
+
+        if($create == true)
+        {
+            return view('backend.courses.create_tag', [
+                'tag' => $tag,
+            ]);
+        }
+        else
+        {
+            return view('backend.courses.edit_tag', [
+                'tag' => $tag,
+            ]);
+        }
+    }
+
+    public function deleteTag($id)
+    {
+        $tag = Tag::find($id);
+
+        if(empty($tag) || $tag->countTagCourses() > 0)
+            return view('backend.errors.404');
+
+        $tag->delete();
+
+        return redirect()->action('Backend\CourseController@adminTag')->with('message', 'Success');
+    }
+
+    public function controlDeleteTag(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $tags = Tag::whereIn('id', explode(';', $ids))->get();
+
+        foreach($tags as $tag)
+        {
+            if($tag->countTagCourses() == 0)
+                $tag->delete();
+        }
+
+        return redirect()->action('Backend\CourseController@adminTag')->with('message', 'Success');
+    }
+
+    public function autoCompleteTag(Request $request)
+    {
+        $term = $request->input('term');
+
+        $tags = Tag::where('name', 'like', '%' . $term . '%')->limit(Utility::AUTO_COMPLETE_LIMIT)->pluck('name')->toJson();
+
+        return $tags;
     }
 }

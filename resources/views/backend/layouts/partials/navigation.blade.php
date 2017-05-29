@@ -13,7 +13,13 @@
                     <li class="{{ (request()->is('admin/course') ? 'active' : '') }}">
                         <a href="{{ action('Backend\CourseController@adminCourse') }}">Khóa Học</a>
                     </li>
+                    <li class="{{ (request()->is('admin/courseTag') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\CourseController@adminTag') }}">Nhãn</a>
+                    </li>
                 </ul>
+            </li>
+            <li class="{{ (request()->is('admin/discount*') ? 'active' : '') }}">
+                <a href="{{ action('Backend\DiscountController@adminDiscount') }}"><i class="fa fa-tags"></i><span>Mã Giảm Giá</span></a>
             </li>
             <li class="{{ (request()->is('admin/widget*') ? 'active' : '') }}">
                 <a href="{{ action('Backend\WidgetController@adminWidget') }}"><i class="fa fa-th"></i><span>Tiện Ích</span></a>
