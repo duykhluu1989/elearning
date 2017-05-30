@@ -74,6 +74,75 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Loại Giảm Giá</label>
+                            <select class="form-control" id="TypeDropDown" name="type">
+                                <?php
+                                $type = old('type', $discount->type);
+                                ?>
+                                @foreach(\App\Models\Discount::getDiscountType() as $value => $label)
+                                    @if($type == $value)
+                                        <option value="{{ $value }}" selected="selected">{{ $label }}</option>
+                                    @else
+                                        <option value="{{ $value }}">{{ $label }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group{{ $errors->has('value') ? ' has-error': '' }}">
+                            <label>Giá Trị Giảm Giá <i>(bắt buộc)</i></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ValueInput" name="value" required="required" value="{{ old('value', $discount->value) }}" />
+                                <span class="input-group-addon" id="ValueUnit">{{ $type == \App\Models\Discount::TYPE_FIX_AMOUNT_DB ? 'VND' : '%' }}</span>
+                            </div>
+                            @if($errors->has('value'))
+                                <span class="help-block">{{ $errors->first('value') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group{{ $errors->has('value_limit') ? ' has-error': '' }}">
+                            <label>Giá Trị Giảm Giá Tối Đa</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control InputForNumber" id="ValueLimitInput" name="value" value="{{ old('value_limit', $discount->value_limit) }}"<?php echo ($type == \App\Models\Discount::TYPE_FIX_AMOUNT_DB ? ' readonly="readonly"' : ''); ?> />
+                                <span class="input-group-addon">VND</span>
+                            </div>
+                            @if($errors->has('value_limit'))
+                                <span class="help-block">{{ $errors->first('value_limit') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group{{ $errors->has('usage_limit') ? ' has-error': '' }}">
+                            <label>Số Lần Sử Dụng <i>(để trống là không giới hạn)</i></label>
+                            <input type="text" class="form-control" name="usage_limit" value="{{ old('usage_limit', $discount->usage_limit) }}" />
+                            @if($errors->has('usage_limit'))
+                                <span class="help-block">{{ $errors->first('usage_limit') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Thành Viên Được Sử Dụng</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="FixUsageUserCheckBox"<?php echo (old('username', $discount->user_id) ? ' checked="checked"' : ''); ?> />Chỉ Cho Phép Thành Viên Được Chỉ Định Sử Dụng
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group{{ $errors->has('username') ? ' has-error': '' }}">
+                            <label>Thành Viên Chỉ Định</label>
+                            <input type="text" class="form-control" id="UsernameInput" name="username" value="{{ old('username', (!empty($discount->user_id) ? (!empty($discount->user) ? $discount->user->username : '') : '')) }}"<?php echo (old('username', $discount->user_id) ? ' required="required"' : ' readonly="readonly"'); ?> />
+                            @if($errors->has('username'))
+                                <span class="help-block">{{ $errors->first('username') }}</span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="box-footer">
@@ -129,7 +198,63 @@
         });
 
         $('.DateTimePicker').datetimepicker({
-            format: 'Y-m-d H:i'
+            format: 'Y-m-d H:i:s'
         });
+
+        setValueInputFormatNumber();
+
+        $('#TypeDropDown').change(function() {
+            setValueInputFormatNumber();
+        });
+
+        function setValueInputFormatNumber()
+        {
+            if($('#TypeDropDown').val() == '{{ \App\Models\Discount::TYPE_FIX_AMOUNT_DB }}')
+            {
+                $('#ValueUnit').html('VND');
+                $('#ValueInput').val('1').on('keyup', function() {
+                    $(this).val(formatNumber($(this).val(), '.'));
+                });
+                $('#ValueLimitInput').val('').prop('readonly', 'readonly');
+            }
+            else
+            {
+                $('#ValueUnit').html('%');
+                $('#ValueInput').val('1').off('keyup');
+                $('#ValueLimitInput').removeAttr('readonly');
+            }
+        }
+
+        $('#FixUsageUserCheckBox').click(function() {
+            if($(this).prop('checked'))
+                $('#UsernameInput').removeAttr('readonly').prop('required', 'required');
+            else
+                $('#UsernameInput').val('').prop('readonly', 'readonly');
+        });
+
+        $('#UsernameInput').autocomplete({
+            minLength: 3,
+            delay: 1000,
+            source: function(request, response) {
+                $.ajax({
+                    url: '{{ action('Backend\UserController@autoCompleteUser') }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
+                    success: function(result) {
+                        if(result)
+                        {
+                            result = JSON.parse(result);
+                            response(result);
+                        }
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $(this).val(ui.item.username);
+                return false;
+            }
+        }).autocomplete('instance')._renderItem = function(ul, item) {
+            return $('<li>').append('<a>' + item.username + '</a>').appendTo(ul);
+        };
     </script>
 @endpush

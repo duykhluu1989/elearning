@@ -152,7 +152,7 @@
                     <label>Mua Bằng Điểm</label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="can_buy_by_point" id="CanBuyByPointCheckBox" value="can_buy_by_point"<?php echo (old('point_price', $course->point_price) ? ' checked="checked"' : ''); ?> />Cho Phép Mua Khóa Học Bằng Điểm
+                            <input type="checkbox" id="CanBuyByPointCheckBox"<?php echo (old('point_price', $course->point_price) ? ' checked="checked"' : ''); ?> />Cho Phép Mua Khóa Học Bằng Điểm
                         </label>
                     </div>
                 </div>
