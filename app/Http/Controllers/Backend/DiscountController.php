@@ -18,20 +18,18 @@ class DiscountController extends Controller
 
         $columns = [
             [
-                'title' => 'Tên',
+                'title' => 'Mã',
                 'data' => function($row) {
-                    echo Html::a($row->name, [
-                        'href' => action('Backend\PaymentMethodController@editPaymentMethod', ['id' => $row->id]),
+                    echo Html::a($row->code, [
+                        'href' => action('Backend\DiscountController@editDiscount', ['id' => $row->id]),
                     ]);
                 },
             ],
             [
-                'title' => 'Mã',
-                'data' => 'code',
-            ],
-            [
                 'title' => 'Loại',
-                'data' => 'type',
+                'data' => function($row) {
+                    echo Discount::getDiscountType($row->type);
+                },
             ],
             [
                 'title' => 'Trạng Thái',
@@ -63,57 +61,82 @@ class DiscountController extends Controller
         {
             $inputs = $request->all();
 
+            $inputs['value'] = implode('', explode('.', $inputs['value']));
+
+            if(!empty($inputs['minimum_order_amount']))
+                $inputs['minimum_order_amount'] = implode('', explode('.', $inputs['minimum_order_amount']));
+
+            if(!empty($inputs['value_limit']))
+                $inputs['value_limit'] = implode('', explode('.', $inputs['value_limit']));
+
             $validator = Validator::make($inputs, [
-                'code' => 'required|alpha_num|unique:discount,code',
+                'code' => 'required_without_all:create_multi_character_number,create_multi_number|nullable|alpha_num|unique:discount,code',
+                'create_multi_character_number' => 'required_without:code|nullable|integer|min:1',
+                'create_multi_number' => 'required_without:code|nullable|integer|min:1',
+                'minimum_order_amount' => 'nullable|integer|min:1',
                 'start_time' => 'nullable|date',
                 'end_time' => 'nullable|date',
                 'value' => 'required|integer|min:1',
                 'value_limit' => 'nullable|integer|min:1',
                 'usage_limit' => 'nullable|integer|min:1',
+                'usage_unique' => 'nullable|integer|min:1',
+                'campaign_code' => 'nullable|alpha_num|unique:discount,campaign_code',
             ]);
 
             $validator->after(function($validator) use(&$inputs, $discount) {
-               if(!empty($inputs['username']))
-               {
-                   $user = User::select('id')
-                       ->where('username', $inputs['username'])
-                       ->first();
-
-                   if(!empty($user))
-                       $inputs['user_id'] = $user->id;
-               }
-
-
-
-
-                if(!isset($inputs['user_id']))
-                    $validator->errors()->add('user_name', 'Giảng Viên Không Tồn Tại');
-
-                $category = Category::select('id', 'parent_id')->where('name', $inputs['category_name'])->first();
-
-                if(empty($category))
-                    $validator->errors()->add('category_name', 'Chủ Đề Không Tồn Tại');
-                else
+                if(!empty($inputs['username']))
                 {
-                    $categoryIds[] = $category->id;
+                    $user = User::select('id')
+                        ->where('username', $inputs['username'])
+                        ->first();
 
-                    while(!empty($category->parentCategory))
-                    {
-                        $category = $category->parentCategory;
-
-                        $categoryIds[] = $category->id;
-                    }
-
-                    $inputs['categoryIds'] = array_reverse($categoryIds);
+                    if(!empty($user))
+                        $inputs['user_id'] = $user->id;
+                    else
+                        $validator->errors()->add('username', 'Thành Viên Không Tồn Tại');
                 }
+
+                if($inputs['type'] == Discount::TYPE_PERCENTAGE_DB && $inputs['value'] > 99)
+                    $validator->errors()->add('value', 'Phần trăm giảm giá không được lớn hơn 99');
             });
 
             if($validator->passes())
             {
-                $discount->code = strtoupper($inputs['code']);
-                $discount->save();
+                if(!empty($inputs['user_id']))
+                    $discount->user_id = $inputs['user_id'];
 
-                return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('message', 'Success');
+                $discount->minimum_order_amount = $inputs['minimum_order_amount'];
+                $discount->status = $inputs['status'];
+                $discount->start_time = $inputs['start_time'];
+                $discount->end_time = $inputs['end_time'];
+                $discount->type = $inputs['type'];
+                $discount->value = $inputs['value'];
+                $discount->value_limit = $inputs['value_limit'];
+                $discount->usage_limit = $inputs['usage_limit'];
+                $discount->usage_unique = $inputs['usage_unique'];
+                $discount->description = $inputs['description'];
+                $discount->campaign_code = strtoupper($inputs['campaign_code']);
+                $discount->created_at = date('Y-m-d H:i:s');
+
+                if(empty($inputs['create_multi_character_number']) && empty($inputs['create_multi_number']))
+                {
+                    $discount->code = strtoupper($inputs['code']);
+                    $discount->save();
+
+                    return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('message', 'Success');
+                }
+                else
+                {
+                    for($i = 1;$i <= $inputs['create_multi_number'];$i ++)
+                    {
+                        $newDiscount = clone $discount;
+                        $newDiscount->code = Discount::generateCodeByNumberCharacter($inputs['create_multi_character_number']);
+                        if(!empty($newDiscount->code))
+                            $newDiscount->save();
+                    }
+
+                    return redirect()->action('Backend\DiscountController@adminDiscount')->with('message', 'Success');
+                }
             }
             else
                 return redirect()->action('Backend\DiscountController@createDiscount')->withErrors($validator)->withInput();
