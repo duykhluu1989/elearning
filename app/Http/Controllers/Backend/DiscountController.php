@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Libraries\Helpers\Utility;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,7 +15,8 @@ class DiscountController extends Controller
 {
     public function adminDiscount()
     {
-        $dataProvider = Discount::select('id', 'code', 'status', 'type', 'code')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
+        $dataProvider = Discount::select('id', 'code', 'start_time', 'end_time', 'status', 'type', 'value', 'value_limit', 'code', 'used_count', 'campaign_code', 'minimum_order_amount', 'usage_limit')
+            ->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
@@ -26,10 +28,55 @@ class DiscountController extends Controller
                 },
             ],
             [
-                'title' => 'Loại',
+                'title' => 'Giá Trị Đơn Hàng Tối Thiểu',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->minimum_order_amount) . ' VND';
+                },
+            ],
+            [
+                'title' => 'Thời Gian Bắt Đầu',
+                'data' => 'start_time',
+            ],
+            [
+                'title' => 'Thời Gian Kết Thúc',
+                'data' => 'end_time',
+            ],
+            [
+                'title' => 'Loại Giảm Giá',
                 'data' => function($row) {
                     echo Discount::getDiscountType($row->type);
                 },
+            ],
+            [
+                'title' => 'Giá Trị Giảm Giá',
+                'data' => function($row) {
+                    if($row->type == Discount::TYPE_FIX_AMOUNT_DB)
+                        echo Utility::formatNumber($row->value) . ' VND';
+                    else
+                    {
+                        $value = $row->value . ' %';
+                        if(!empty($row->value_limit))
+                            $value .= ' (Tối Đa: ' . Utility::formatNumber($row->value_limit) . ' VND)';
+                        echo $value;
+                    }
+                },
+            ],
+            [
+                'title' => 'Mã Chương Trình',
+                'data' => 'campaign_code',
+            ],
+            [
+                'title' => 'Số Lần Sử Dụng Tổng',
+                'data' => function($row) {
+                    if(empty($row->usage_limit))
+                        echo 'Không Giới Hạn';
+                    else
+                        echo $row->usage_limit;
+                },
+            ],
+            [
+                'title' => 'Đã Sử Dụng',
+                'data' => 'used_count',
             ],
             [
                 'title' => 'Trạng Thái',
