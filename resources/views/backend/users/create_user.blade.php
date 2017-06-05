@@ -34,46 +34,48 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Trạng Thái</label>
-                            <select class="form-control" name="status">
-                                <?php
-                                $status = old('status', $user->status);
-                                ?>
-                                @foreach(\App\Models\User::getUserStatus() as $value => $label)
-                                    <?php
-                                    if($value == \App\Models\User::STATUS_ACTIVE_DB)
-                                        $optionClass = 'text-green';
-                                    else
-                                        $optionClass = 'text-red';
-                                    ?>
-                                    @if($status == $value)
-                                        <option class="{{ $optionClass }}" value="{{ $value }}" selected="selected">{{ $label }}</option>
-                                    @else
-                                        <option class="{{ $optionClass }}" value="{{ $value }}">{{ $label }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
+                            <?php
+                            $status = old('status', $user->status);
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="status" <?php echo ($status == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Models\User::STATUS_ACTIVE_LABEL }}" data-off="{{ \App\Models\User::STATUS_INACTIVE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                </label>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
-                        <div class="form-group{{ $errors->has('admin') ? ' has-error': '' }}">
-                            <label>Thành Viên</label>
-                            <select class="form-control" name="admin">
-                                <?php
-                                $admin = old('admin', $user->admin);
-                                ?>
-                                @foreach(\App\Models\User::getUserAdmin() as $value => $label)
-                                    @if($admin == $value)
-                                        <option value="{{ $value }}" selected="selected">{{ $label }}</option>
-                                    @else
-                                        <option value="{{ $value }}">{{ $label }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            @if($errors->has('admin'))
-                                <span class="help-block">{{ $errors->first('admin') }}</span>
-                            @endif
+                        <div class="form-group">
+                            <label>Quản Trị Viên</label>
+                            <?php
+                            $admin = old('admin', $user->admin);
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="admin" <?php echo ($admin == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                </label>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Công Tác Viên</label>
+                            <?php
+                            $collaborator = old('collaborator', $user->collaborator);
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="collaborator" <?php echo ($collaborator == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('password') ? ' has-error': '' }}">
                             <label>Mật Khẩu <i>(bắt buộc)</i></label>
@@ -92,29 +94,6 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="form-group{{ $errors->has('roles') ? ' has-error': '' }}">
-                            <label>Vai Trò</label>
-                            @if($errors->has('roles'))
-                                <span class="help-block">{{ $errors->first('roles') }}</span>
-                            @endif
-                            <?php
-                            $assignedRoles = array();
-                            $assignedRoles = old('roles', $assignedRoles);
-                            ?>
-                            <div class="row">
-                                @foreach($roles as $id => $name)
-                                    <div class="col-sm-3">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input name="roles[]" type="checkbox" value="{{ $id }}"<?php echo (in_array($id, $assignedRoles) ? ' checked="checked"' : ''); ?> />{{ $name }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="box-footer">
@@ -127,3 +106,11 @@
     </form>
 
 @stop
+
+@push('stylesheets')
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}">
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
+@endpush

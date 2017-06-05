@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
+use App\Libraries\Helpers\Utility;
 
 class Access
 {
@@ -12,7 +12,7 @@ class Access
     {
         $user = auth()->user();
 
-        if($user->status == User::STATUS_INACTIVE_DB)
+        if($user->status == Utility::INACTIVE_DB)
         {
             auth()->logout();
 

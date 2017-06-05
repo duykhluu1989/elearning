@@ -1,6 +1,6 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', \App\Models\User::ADMIN_FALSE_LABEL)
+@section('page_heading', 'Học Viên')
 
 @section('section')
 

@@ -28,10 +28,10 @@
                 <a href="#"><i class="fa fa-user"></i><span>Thành Viên</span></a>
                 <ul class="treeview-menu">
                     <li class="{{ (request()->is('admin/user') ? 'active' : '') }}">
-                        <a href="{{ action('Backend\UserController@adminUser') }}">{{ \App\Models\User::ADMIN_TRUE_LABEL }}</a>
+                        <a href="{{ action('Backend\UserController@adminUser') }}">Quản Trị Viên</a>
                     </li>
                     <li class="{{ (request()->is('admin/userStudent') ? 'active' : '') }}">
-                        <a href="{{ action('Backend\UserController@adminUserStudent') }}">{{ \App\Models\User::ADMIN_FALSE_LABEL }}</a>
+                        <a href="{{ action('Backend\UserController@adminUserStudent') }}">Học Viên</a>
                     </li>
                 </ul>
             </li>

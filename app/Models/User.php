@@ -4,16 +4,12 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Libraries\Helpers\Utility;
 
 class User extends Authenticatable
 {
-    const STATUS_ACTIVE_DB = 1;
-    const STATUS_INACTIVE_DB = 0;
     const STATUS_ACTIVE_LABEL = 'Hợp Lệ';
     const STATUS_INACTIVE_LABEL = 'Trục Xuất';
-
-    const ADMIN_TRUE_LABEL = 'Quản Trị';
-    const ADMIN_FALSE_LABEL = 'Học Viên';
 
     const AVATAR_UPLOAD_PATH = '/uploads/users/avatars';
 
@@ -36,9 +32,9 @@ class User extends Authenticatable
         $user = new User();
         $user->username = 'admin';
         $user->password = Hash::make('123456');
-        $user->status = self::STATUS_ACTIVE_DB;
+        $user->status = Utility::ACTIVE_DB;
         $user->email = 'admin@gmail.com';
-        $user->admin = true;
+        $user->admin = Utility::ACTIVE_DB;
         $user->created_at = date('Y-m-d H:i:s');
         $user->save();
     }
@@ -46,8 +42,8 @@ class User extends Authenticatable
     public static function getUserStatus($value = null)
     {
         $status = [
-            self::STATUS_ACTIVE_DB => self::STATUS_ACTIVE_LABEL,
-            self::STATUS_INACTIVE_DB => self::STATUS_INACTIVE_LABEL,
+            Utility::ACTIVE_DB => self::STATUS_ACTIVE_LABEL,
+            Utility::INACTIVE_DB => self::STATUS_INACTIVE_LABEL,
         ];
 
         if($value !== null && isset($status[$value]))
@@ -59,13 +55,26 @@ class User extends Authenticatable
     public static function getUserAdmin($value = null)
     {
         $admin = [
-            self::STATUS_ACTIVE_DB => self::ADMIN_TRUE_LABEL,
-            self::STATUS_INACTIVE_DB => self::ADMIN_FALSE_LABEL,
+            Utility::ACTIVE_DB => Utility::TRUE_LABEL,
+            Utility::INACTIVE_DB => Utility::FALSE_LABEL,
         ];
 
         if($value !== null && isset($admin[$value]))
             return $admin[$value];
 
         return $admin;
+    }
+
+    public static function getUserCollaborator($value = null)
+    {
+        $collaborator = [
+            Utility::ACTIVE_DB => Utility::TRUE_LABEL,
+            Utility::INACTIVE_DB => Utility::FALSE_LABEL,
+        ];
+
+        if($value !== null && isset($collaborator[$value]))
+            return $collaborator[$value];
+
+        return $collaborator;
     }
 }

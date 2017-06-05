@@ -1,6 +1,6 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', \App\Models\User::ADMIN_TRUE_LABEL)
+@section('page_heading', 'Quản Trị Viên')
 
 @section('section')
 

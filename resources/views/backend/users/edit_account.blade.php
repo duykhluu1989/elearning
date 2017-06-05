@@ -92,6 +92,8 @@
                             </select>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('phone') ? ' has-error': '' }}">
                             <label>Số Điện Thoại</label>
@@ -101,6 +103,8 @@
                             @endif
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('birthday') ? ' has-error': '' }}">
                             <label>Ngày Sinh</label>

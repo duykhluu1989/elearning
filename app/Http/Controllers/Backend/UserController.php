@@ -33,8 +33,8 @@ class UserController extends Controller
                 $credentials = [
                     'email' => $inputs['email'],
                     'password' => $inputs['password'],
-                    'admin' => true,
-                    'status' => User::STATUS_ACTIVE_DB,
+                    'admin' => Utility::ACTIVE_DB,
+                    'status' => Utility::ACTIVE_DB,
                 ];
 
                 $remember = false;
@@ -64,7 +64,7 @@ class UserController extends Controller
     {
         $dataProvider = User::with(['profile' => function($query) {
             $query->select('user_id', 'name');
-        }])->select('user.id', 'user.username', 'user.email', 'user.status')->where('user.admin', true)->orderBy('user.id', 'desc');
+        }])->select('user.id', 'user.username', 'user.email', 'user.status')->where('user.admin', Utility::ACTIVE_DB)->orderBy('user.id', 'desc');
 
         $inputs = $request->all();
 
@@ -112,10 +112,10 @@ class UserController extends Controller
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
                     $status = User::getUserStatus($row->status);
-                    if($row->status == User::STATUS_ACTIVE_DB)
-                        echo Html::span($status, ['class' => 'text-green']);
+                    if($row->status == Utility::ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
                     else
-                        echo Html::span($status, ['class' => 'text-red']);
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
         ];
@@ -149,8 +149,9 @@ class UserController extends Controller
     public function createUser(Request $request)
     {
         $user = new User();
-        $user->status = User::STATUS_ACTIVE_DB;
-        $user->admin = User::STATUS_ACTIVE_DB;
+        $user->status = Utility::ACTIVE_DB;
+        $user->admin = Utility::INACTIVE_DB;
+        $user->collaborator = Utility::INACTIVE_DB;
 
         if($request->isMethod('post'))
         {
@@ -171,22 +172,12 @@ class UserController extends Controller
 
                     $user->username = $inputs['username'];
                     $user->email = $inputs['email'];
-                    $user->status = $inputs['status'];
-                    $user->admin = $inputs['admin'];
+                    $user->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->admin = isset($inputs['admin']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->collaborator = isset($inputs['collaborator']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                     $user->created_at = date('Y-m-d H:i:s');
                     $user->password = Hash::make($inputs['password']);
                     $user->save();
-
-                    if(isset($inputs['roles']))
-                    {
-                        foreach($inputs['roles'] as $roleId)
-                        {
-                            $userRole = new UserRole();
-                            $userRole->user_id = $user->id;
-                            $userRole->role_id = $roleId;
-                            $userRole->save();
-                        }
-                    }
 
                     $profile = new Profile();
                     $profile->user_id = $user->id;
@@ -207,11 +198,8 @@ class UserController extends Controller
                 return redirect()->action('Backend\UserController@createUser')->withErrors($validator)->withInput();
         }
 
-        $roles = Role::pluck('name', 'id');
-
         return view('backend.users.create_user', [
             'user' => $user,
-            'roles' => $roles,
         ]);
     }
 
@@ -262,8 +250,9 @@ class UserController extends Controller
 
                     $user->username = $inputs['username'];
                     $user->email = $inputs['email'];
-                    $user->status = $inputs['status'];
-                    $user->admin = $inputs['admin'];
+                    $user->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->admin = isset($inputs['admin']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->collaborator = isset($inputs['collaborator']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
 
                     if(!empty($inputs['password']))
                         $user->password = Hash::make($inputs['password']);
@@ -331,7 +320,7 @@ class UserController extends Controller
 
     public function adminUserStudent(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', false)->orderBy('id', 'desc');
+        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', Utility::INACTIVE_DB)->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
