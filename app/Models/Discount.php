@@ -8,7 +8,7 @@ class Discount extends Model
 {
     const TYPE_PERCENTAGE_DB = 1;
     const TYPE_FIX_AMOUNT_DB = 0;
-    const TYPE_PERCENTAGE_LABEL = 'Phần trăm';
+    const TYPE_PERCENTAGE_LABEL = 'Phần Trăm';
     const TYPE_FIX_AMOUNT_LABEL = 'Cố Định';
 
     protected $table = 'discount';

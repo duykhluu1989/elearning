@@ -189,6 +189,9 @@ class CourseController extends Controller
                 else
                     $category->slug_en = str_slug($inputs['slug_en']);
 
+                if($create == true)
+                    $category->created_at = date('Y-m-d H:i:s');
+
                 $category->save();
 
                 return redirect()->action('Backend\CourseController@editCategory', ['id' => $category->id])->with('messageSuccess', 'Thành Công');
@@ -658,6 +661,9 @@ class CourseController extends Controller
                         $course->slug_en = str_slug($course->name_en);
                     else
                         $course->slug_en = str_slug($inputs['slug_en']);
+
+                    if($create == true)
+                        $course->created_at = date('Y-m-d H:i:s');
 
                     $course->save();
 

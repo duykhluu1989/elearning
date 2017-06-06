@@ -81,11 +81,11 @@ class DiscountController extends Controller
             [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
-                    $status = Discount::getDiscountStatus($row->status);
-                    if($row->status == Discount::STATUS_ACTIVE_DB)
-                        echo Html::span($status, ['class' => 'text-green']);
+                    $status = Utility::getTrueFalse($row->status);
+                    if($row->status == Utility::ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
                     else
-                        echo Html::span($status, ['class' => 'text-red']);
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
         ];
@@ -100,7 +100,7 @@ class DiscountController extends Controller
     public function createDiscount(Request $request)
     {
         $discount = new Discount();
-        $discount->status = Discount::STATUS_ACTIVE_DB;
+        $discount->status = Utility::ACTIVE_DB;
         $discount->type = Discount::TYPE_FIX_AMOUNT_DB;
         $discount->value = 1;
 
@@ -153,7 +153,7 @@ class DiscountController extends Controller
                     $discount->user_id = $inputs['user_id'];
 
                 $discount->minimum_order_amount = $inputs['minimum_order_amount'];
-                $discount->status = $inputs['status'];
+                $discount->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                 $discount->start_time = $inputs['start_time'];
                 $discount->end_time = $inputs['end_time'];
                 $discount->type = $inputs['type'];
@@ -182,7 +182,7 @@ class DiscountController extends Controller
                             $newDiscount->save();
                     }
 
-                    return redirect()->action('Backend\DiscountController@adminDiscount')->with('message', 'Success');
+                    return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
                 }
             }
             else

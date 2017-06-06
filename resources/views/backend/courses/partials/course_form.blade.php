@@ -67,7 +67,7 @@
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('user_name') ? ' has-error': '' }}">
                     <label>Giảng Viên <i>(bắt buộc)</i></label>
-                    <input type="text" class="form-control" id="UserInput" name="user_name" value="{{ old('user_name', (!empty($course->user_id) ? (!empty($course->user) ? ($course->user->profile->name . ' - ' . $course->user->email) : '') : '')) }}" />
+                    <input type="text" class="form-control" id="UserInput" name="user_name" placeholder="name - email" value="{{ old('user_name', (!empty($course->user_id) ? (!empty($course->user) ? ($course->user->profile->name . ' - ' . $course->user->email) : '') : '')) }}" />
                     @if($errors->has('user_name'))
                         <span class="help-block">{{ $errors->first('user_name') }}</span>
                     @endif
@@ -134,7 +134,7 @@
                     ?>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="highlight" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}" <?php echo ($highlight == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                            <input type="checkbox" name="highlight" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}"<?php echo ($highlight == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                         </label>
                     </div>
                 </div>

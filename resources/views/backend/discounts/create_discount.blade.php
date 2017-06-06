@@ -14,9 +14,21 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Tạo Nhiều Mã</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="CreateMultiCheckBox"<?php echo (old('create_multi_number') ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="CreateOneCodeInputs" style="<?php echo (old('create_multi_number') ? 'display: none' : ''); ?>">
+                    <div class="col-sm-8">
                         <div class="form-group{{ $errors->has('code') ? ' has-error': '' }}">
-                            <label>Mã <i>(bắt buộc nếu không chọn tạo nhiều mã)</i></label>
-                            <input type="text" class="form-control" id="CodeInput" name="code" value="{{ old('code', $discount->code) }}"<?php echo (old('create_multi_number') ? ' readonly="readonly"' : ' required="required"'); ?> />
+                            <label>Mã <i>(bắt buộc)</i></label>
+                            <input type="text" class="form-control" id="CodeInput" name="code" value="{{ old('code', $discount->code) }}"<?php echo (old('create_multi_number') ? '' : ' required="required"'); ?> />
                             @if($errors->has('code'))
                                 <span class="help-block">{{ $errors->first('code') }}</span>
                             @endif
@@ -26,76 +38,50 @@
                         <div class="form-group">
                             <label>Tạo Mã Tự Động <i>(nhập số kí tự của mã: 1 - 255)</i></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="GenerateCodeInput"<?php echo (old('create_multi_number') ? ' readonly="readonly"' : ''); ?> />
+                                <input type="text" class="form-control" id="GenerateCodeInput"<?php echo (old('create_multi_number') ? '' : ''); ?> />
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-primary" id="GenerateCodeButton"<?php echo (old('create_multi_number') ? ' disabled="disabled"' : ''); ?>>Tạo Mã</button>
+                                    <button type="button" class="btn btn-primary" id="GenerateCodeButton">Tạo Mã</button>
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Trạng Thái</label>
-                            <select class="form-control" name="status">
-                                <?php
-                                $status = old('status', $discount->status);
-                                ?>
-                                @foreach(\App\Models\Discount::getDiscountStatus() as $value => $label)
-                                    <?php
-                                    if($value == \App\Models\Category::STATUS_ACTIVE_DB)
-                                        $optionClass = 'text-green';
-                                    else
-                                        $optionClass = 'text-red';
-                                    ?>
-                                    @if($status == $value)
-                                        <option class="{{ $optionClass }}" value="{{ $value }}" selected="selected">{{ $label }}</option>
-                                    @else
-                                        <option class="{{ $optionClass }}" value="{{ $value }}">{{ $label }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Tạo Nhiều Mã</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="CreateMultiCheckBox"<?php echo (old('create_multi_number') ? ' checked="checked"' : ''); ?> />Tạo Nhiều Mã Cùng Thuộc Tính
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
+                </div>
+                <div class="row" id="CreateMultiCodeInputs" style="<?php echo (old('create_multi_number') ? '' : 'display: none'); ?>">
+                    <div class="col-sm-6">
                         <div class="form-group{{ $errors->has('create_multi_character_number') ? ' has-error': '' }}">
-                            <label>Tạo Nhiều Mã - Số Kí Tự</label>
-                            <input type="text" class="form-control" id="CreateMultiCharacterNumberInput" name="create_multi_character_number" value="{{ old('create_multi_character_number') }}"<?php echo (old('create_multi_number') ? ' required="required"' : ' readonly="readonly"'); ?> />
+                            <label>Số Kí Tự Mã <i>(bắt buộc)</i></label>
+                            <input type="text" class="form-control" id="CreateMultiCharacterNumberInput" name="create_multi_character_number" value="{{ old('create_multi_character_number') }}"<?php echo (old('create_multi_number') ? ' required="required"' : ''); ?> />
                             @if($errors->has('create_multi_character_number'))
                                 <span class="help-block">{{ $errors->first('create_multi_character_number') }}</span>
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <div class="form-group{{ $errors->has('create_multi_number') ? ' has-error': '' }}">
-                            <label>Tạo Nhiều Mã - Số Lượng Mã</label>
-                            <input type="text" class="form-control" id="CreateMultiNumberInput" name="create_multi_number" value="{{ old('create_multi_number') }}"<?php echo (old('create_multi_number') ? ' required="required"' : ' readonly="readonly"'); ?> />
+                            <label>Số Lượng Mã <i>(bắt buộc)</i></label>
+                            <input type="text" class="form-control" id="CreateMultiNumberInput" name="create_multi_number" value="{{ old('create_multi_number') }}"<?php echo (old('create_multi_number') ? ' required="required"' : ''); ?> />
                             @if($errors->has('create_multi_number'))
                                 <span class="help-block">{{ $errors->first('create_multi_number') }}</span>
                             @endif
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
-                        <div class="form-group{{ $errors->has('minimum_order_amount') ? ' has-error': '' }}">
-                            <label>Giá Trị Đơn Hàng Tối Thiểu</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control InputForNumber" name="minimum_order_amount" value="{{ old('minimum_order_amount', (!empty($discount->minimum_order_amount) ? \App\Libraries\Helpers\Utility::formatNumber($discount->minimum_order_amount) : '')) }}" />
-                                <span class="input-group-addon">VND</span>
+                        <div class="form-group">
+                            <label>Trạng Thái</label>
+                            <?php
+                            $status = old('status', $discount->status);
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="status" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}"<?php echo ($status == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                </label>
                             </div>
-                            @if($errors->has('minimum_order_amount'))
-                                <span class="help-block">{{ $errors->first('minimum_order_amount') }}</span>
-                            @endif
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('start_time') ? ' has-error': '' }}">
                             <label>Thời Gian Bắt Đầu</label>
@@ -114,21 +100,41 @@
                             @endif
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group{{ $errors->has('minimum_order_amount') ? ' has-error': '' }}">
+                            <label>Giá Trị Đơn Hàng Tối Thiểu</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control InputForNumber" name="minimum_order_amount" value="{{ old('minimum_order_amount', (!empty($discount->minimum_order_amount) ? \App\Libraries\Helpers\Utility::formatNumber($discount->minimum_order_amount) : '')) }}" />
+                                <span class="input-group-addon">VND</span>
+                            </div>
+                            @if($errors->has('minimum_order_amount'))
+                                <span class="help-block">{{ $errors->first('minimum_order_amount') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Loại Giảm Giá</label>
-                            <select class="form-control" id="TypeDropDown" name="type">
-                                <?php
-                                $type = old('type', $discount->type);
-                                ?>
+                            <?php
+                            $type = old('type', $discount->type);
+                            ?>
+                            <div>
                                 @foreach(\App\Models\Discount::getDiscountType() as $value => $label)
                                     @if($type == $value)
-                                        <option value="{{ $value }}" selected="selected">{{ $label }}</option>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="type" checked="checked" value="{{ $value }}">{{ $label }}
+                                        </label>
                                     @else
-                                        <option value="{{ $value }}">{{ $label }}</option>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="type" value="{{ $value }}">{{ $label }}
+                                        </label>
                                     @endif
                                 @endforeach
-                            </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -164,29 +170,35 @@
                             @endif
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label>Thành Viên Được Sử Dụng</label>
+                            <label>Chỉ Cho Phép Thành Viên Chỉ Định Sử Dụng</label>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" id="FixUsageUserCheckBox"<?php echo (old('username', $discount->user_id) ? ' checked="checked"' : ''); ?> />Chỉ Cho Phép Thành Viên Được Chỉ Định Sử Dụng
+                                    <input type="checkbox" id="FixUsageUserCheckBox"<?php echo (old('username', $discount->user_id) ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                </div>
+                <div class="row" id="FixUsageUserUsernameInput" style="<?php echo (old('username', $discount->user_id) ? '' : 'display: none'); ?>">
+                    <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('username') ? ' has-error': '' }}">
-                            <label>Thành Viên Chỉ Định</label>
-                            <input type="text" class="form-control" id="UsernameInput" name="username" value="{{ old('username', (!empty($discount->user_id) ? (!empty($discount->user) ? $discount->user->username : '') : '')) }}"<?php echo (old('username', $discount->user_id) ? ' required="required"' : ' readonly="readonly"'); ?> />
+                            <label>Thành Viên Chỉ Định <i>(bắt buộc)</i></label>
+                            <input type="text" class="form-control" id="UsernameInput" name="username" placeholder="username" value="{{ old('username', (!empty($discount->user_id) ? (!empty($discount->user) ? $discount->user->username : '') : '')) }}"<?php echo (old('username', $discount->user_id) ? ' required="required"' : ''); ?> />
                             @if($errors->has('username'))
                                 <span class="help-block">{{ $errors->first('username') }}</span>
                             @endif
                         </div>
                     </div>
+                </div>
+                <div class="row" id="NoFixUsageUserInputs" style="<?php echo (old('username', $discount->user_id) ? 'display: none' : ''); ?>">
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('usage_unique') ? ' has-error': '' }}">
                             <label>Số Lần Sử Dụng Mỗi Thành Viên <i>(để trống là không giới hạn)</i></label>
-                            <input type="text" class="form-control" id="UsageUniqueInput" name="usage_unique" value="{{ old('usage_unique', $discount->usage_unique) }}"<?php echo (old('username', $discount->user_id) ? ' readonly="readonly"' : ''); ?> />
+                            <input type="text" class="form-control" id="UsageUniqueInput" name="usage_unique" value="{{ old('usage_unique', $discount->usage_unique) }}" />
                             @if($errors->has('usage_unique'))
                                 <span class="help-block">{{ $errors->first('usage_unique') }}</span>
                             @endif
@@ -195,12 +207,14 @@
                     <div class="col-sm-8">
                         <div class="form-group{{ $errors->has('campaign_code') ? ' has-error': '' }}">
                             <label>Mã Chương Trình <i>(mã giảm giá cùng chương trình thì mỗi thành viên chỉ được sử dụng 1 mã)</i></label>
-                            <input type="text" class="form-control" id="CampaignCodeInput" name="campaign_code" value="{{ old('usage_unique', $discount->usage_unique) }}"<?php echo (old('username', $discount->user_id) ? ' readonly="readonly"' : ''); ?> />
+                            <input type="text" class="form-control" id="CampaignCodeInput" name="campaign_code" value="{{ old('usage_unique', $discount->usage_unique) }}" />
                             @if($errors->has('campaign_code'))
                                 <span class="help-block">{{ $errors->first('campaign_code') }}</span>
                             @endif
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>Mô Tả</label>
@@ -222,10 +236,12 @@
 
 @push('stylesheets')
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}">
 @endpush
 
 @push('scripts')
     <script src="{{ asset('assets/js/jquery.datetimepicker.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
     <script type="text/javascript">
         $('#GenerateCodeButton').click(function() {
             var elem = $('#GenerateCodeInput');
@@ -267,7 +283,7 @@
 
         setValueInputFormatNumber(true);
 
-        $('#TypeDropDown').change(function() {
+        $('input[type="radio"][name="type"]').change(function() {
             setValueInputFormatNumber(false);
         });
 
@@ -275,7 +291,7 @@
         {
             var valueInputElem = $('#ValueInput');
 
-            if($('#TypeDropDown').val() == '{{ \App\Models\Discount::TYPE_FIX_AMOUNT_DB }}')
+            if($('input[type="radio"][name="type"]:checked').val() == '{{ \App\Models\Discount::TYPE_FIX_AMOUNT_DB }}')
             {
                 $('#ValueUnit').html('VND');
                 if(init == false)
@@ -295,37 +311,40 @@
             }
         }
 
-        $('#FixUsageUserCheckBox').click(function() {
+        $('#FixUsageUserCheckBox').change(function() {
             if($(this).prop('checked'))
             {
-                $('#UsernameInput').removeAttr('readonly').prop('required', 'required');
-                $('#UsageUniqueInput').val('').prop('readonly', 'readonly');
-                $('#CampaignCodeInput').val('').prop('readonly', 'readonly');
+                $('#UsernameInput').prop('required', 'required');
+                $('#UsageUniqueInput').val('');
+                $('#CampaignCodeInput').val('');
+                $('#FixUsageUserUsernameInput').show();
+                $('#NoFixUsageUserInputs').hide();
             }
             else
             {
-                $('#UsernameInput').val('').removeAttr('required').prop('readonly', 'readonly');
-                $('#UsageUniqueInput').removeAttr('readonly');
-                $('#CampaignCodeInput').removeAttr('readonly');
+                $('#UsernameInput').val('').removeAttr('required');
+                $('#FixUsageUserUsernameInput').hide();
+                $('#NoFixUsageUserInputs').show();
             }
         });
 
-        $('#CreateMultiCheckBox').click(function() {
+        $('#CreateMultiCheckBox').change(function() {
             if($(this).prop('checked'))
             {
-                $('#CreateMultiCharacterNumberInput').removeAttr('readonly').prop('required', 'required').val(1);
-                $('#CreateMultiNumberInput').removeAttr('readonly').prop('required', 'required').val(1);
-                $('#CodeInput').val('').removeAttr('required').prop('readonly', 'readonly');
-                $('#GenerateCodeInput').val('').prop('readonly', 'readonly');
-                $('#GenerateCodeButton').prop('disabled', 'disabled');
+                $('#CreateMultiCharacterNumberInput').prop('required', 'required').val(1);
+                $('#CreateMultiNumberInput').prop('required', 'required').val(1);
+                $('#CodeInput').val('').removeAttr('required');
+                $('#GenerateCodeInput').val('');
+                $('#CreateOneCodeInputs').hide();
+                $('#CreateMultiCodeInputs').show();
             }
             else
             {
-                $('#CreateMultiCharacterNumberInput').val('').removeAttr('required').prop('readonly', 'readonly');
-                $('#CreateMultiNumberInput').val('').removeAttr('required').prop('readonly', 'readonly');
-                $('#CodeInput').removeAttr('readonly').prop('required', 'required');
-                $('#GenerateCodeInput').removeAttr('readonly');
-                $('#GenerateCodeButton').removeAttr('disabled');
+                $('#CreateMultiCharacterNumberInput').val('').removeAttr('required');
+                $('#CreateMultiNumberInput').val('').removeAttr('required');
+                $('#CodeInput').prop('required', 'required');
+                $('#CreateOneCodeInputs').show();
+                $('#CreateMultiCodeInputs').hide();
             }
         });
 
