@@ -17,10 +17,29 @@ use App\Models\Course;
 
 class DiscountController extends Controller
 {
-    public function adminDiscount()
+    public function adminDiscount(Request $request)
     {
         $dataProvider = Discount::select('id', 'code', 'start_time', 'end_time', 'status', 'type', 'value', 'value_limit', 'code', 'used_count', 'campaign_code', 'minimum_order_amount', 'usage_limit')
-            ->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
+            ->orderBy('id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['code']))
+                $dataProvider->where('code', 'like', '%' . $inputs['code'] . '%');
+
+            if(isset($inputs['type']) && $inputs['type'] !== '')
+                $dataProvider->where('type', $inputs['type']);
+
+            if(!empty($inputs['campaign_code']))
+                $dataProvider->where('campaign_code', 'like', '%' . $inputs['campaign_code'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('status', $inputs['status']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
@@ -97,6 +116,32 @@ class DiscountController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
+        $gridView->setFilters([
+            [
+                'title' => 'Mã',
+                'name' => 'code',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Loại Giảm Giá',
+                'name' => 'type',
+                'type' => 'select',
+                'options' => Discount::getDiscountType(),
+            ],
+            [
+                'title' => 'Mã Chương Trình',
+                'name' => 'campaign_code',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
 
         return view('backend.discounts.admin_discount', [
             'gridView' => $gridView,
@@ -315,12 +360,55 @@ class DiscountController extends Controller
 
     public function deleteDiscount($id)
     {
-        $discount = Discount::find($id);
+        $discount = Discount::with('discountApplies')->find($id);
 
         if(empty($discount) || $discount->isDeletable() == false)
             return view('backend.errors.404');
 
-        $discount->delete();
+        try
+        {
+            DB::beginTransaction();
+
+            $discount->doDelete();
+
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('messageError', $e->getMessage());
+        }
+
+        return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
+    }
+
+    public function controlDeleteDiscount(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $discounts = Discount::with('discountApplies')->whereIn('id', explode(';', $ids))->get();
+
+        foreach($discounts as $discount)
+        {
+            if($discount->isDeletable() == true)
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $discount->doDelete();
+
+                    DB::commit();
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageError', $e->getMessage());
+                }
+            }
+        }
 
         return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
     }

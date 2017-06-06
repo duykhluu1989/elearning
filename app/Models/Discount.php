@@ -40,7 +40,18 @@ class Discount extends Model
 
     public function isDeletable()
     {
-        return false;
+        if($this->used_count > 0)
+            return false;
+
+        return true;
+    }
+
+    public function doDelete()
+    {
+        $this->delete();
+
+        foreach($this->discountApplies as $discountApply)
+            $discountApply->delete();
     }
 
     public static function generateCodeByNumberCharacter($number)

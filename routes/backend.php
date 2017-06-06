@@ -92,6 +92,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('discount/{id}/delete', 'DiscountController@deleteDiscount');
 
+        Route::get('discount/controlDelete', 'DiscountController@controlDeleteDiscount');
+
         Route::get('widget', 'WidgetController@adminWidget');
 
         Route::match(['get', 'post'], 'widget/{id}/edit', 'WidgetController@editWidget');
