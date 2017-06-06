@@ -36,6 +36,7 @@ class User extends Authenticatable
         $user->email = 'admin@gmail.com';
         $user->admin = Utility::ACTIVE_DB;
         $user->created_at = date('Y-m-d H:i:s');
+        $user->collaborator = Utility::INACTIVE_DB;
         $user->save();
     }
 

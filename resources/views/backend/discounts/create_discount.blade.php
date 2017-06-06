@@ -164,7 +164,7 @@
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('usage_limit') ? ' has-error': '' }}">
                             <label>Số Lần Sử Dụng Tổng <i>(để trống là không giới hạn)</i></label>
-                            <input type="text" class="form-control" name="usage_limit" value="{{ old('usage_limit', $discount->usage_limit) }}" />
+                            <input type="text" class="form-control InputForNumber" name="usage_limit" value="{{ old('usage_limit', (!empty($discount->usage_limit) ? \App\Libraries\Helpers\Utility::formatNumber($discount->usage_limit) : '')) }}" />
                             @if($errors->has('usage_limit'))
                                 <span class="help-block">{{ $errors->first('usage_limit') }}</span>
                             @endif
@@ -198,7 +198,7 @@
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('usage_unique') ? ' has-error': '' }}">
                             <label>Số Lần Sử Dụng Mỗi Thành Viên <i>(để trống là không giới hạn)</i></label>
-                            <input type="text" class="form-control" id="UsageUniqueInput" name="usage_unique" value="{{ old('usage_unique', $discount->usage_unique) }}" />
+                            <input type="text" class="form-control InputForNumber" id="UsageUniqueInput" name="usage_unique" value="{{ old('usage_unique', (!empty($discount->usage_unique) ? \App\Libraries\Helpers\Utility::formatNumber($discount->usage_unique) : '')) }}" />
                             @if($errors->has('usage_unique'))
                                 <span class="help-block">{{ $errors->first('usage_unique') }}</span>
                             @endif
@@ -207,7 +207,7 @@
                     <div class="col-sm-8">
                         <div class="form-group{{ $errors->has('campaign_code') ? ' has-error': '' }}">
                             <label>Mã Chương Trình <i>(mã giảm giá cùng chương trình thì mỗi thành viên chỉ được sử dụng 1 mã)</i></label>
-                            <input type="text" class="form-control" id="CampaignCodeInput" name="campaign_code" value="{{ old('usage_unique', $discount->usage_unique) }}" />
+                            <input type="text" class="form-control" id="CampaignCodeInput" name="campaign_code" value="{{ old('campaign_code', $discount->campaign_code) }}" />
                             @if($errors->has('campaign_code'))
                                 <span class="help-block">{{ $errors->first('campaign_code') }}</span>
                             @endif

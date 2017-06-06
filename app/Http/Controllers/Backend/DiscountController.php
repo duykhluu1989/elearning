@@ -71,12 +71,14 @@ class DiscountController extends Controller
                     if(empty($row->usage_limit))
                         echo 'Không Giới Hạn';
                     else
-                        echo $row->usage_limit;
+                        echo Utility::formatNumber($row->usage_limit);
                 },
             ],
             [
                 'title' => 'Đã Sử Dụng',
-                'data' => 'used_count',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->used_count);
+                },
             ],
             [
                 'title' => 'Trạng Thái',
@@ -170,7 +172,7 @@ class DiscountController extends Controller
                     $discount->code = strtoupper($inputs['code']);
                     $discount->save();
 
-                    return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('message', 'Success');
+                    return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('messageSuccess', 'Thành Công');
                 }
                 else
                 {
@@ -201,6 +203,28 @@ class DiscountController extends Controller
         if(empty($discount))
             return view('backend.errors.404');
 
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'start_time' => 'nullable|date',
+                'end_time' => 'nullable|date',
+            ]);
+
+            if($validator->passes())
+            {
+                $discount->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                $discount->start_time = $inputs['start_time'];
+                $discount->end_time = $inputs['end_time'];
+                $discount->save();
+
+                return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('messageSuccess', 'Thành Công');
+            }
+            else
+                return redirect()->action('Backend\DiscountController@createDiscount')->withErrors($validator)->withInput();
+        }
+
         return view('backend.discounts.edit_discount', [
             'discount' => $discount,
         ]);
@@ -208,7 +232,14 @@ class DiscountController extends Controller
 
     public function deleteDiscount($id)
     {
+        $discount = Discount::find($id);
 
+        if(empty($discount) || $discount->isDeletable() == false)
+            return view('backend.errors.404');
+
+        $discount->delete();
+
+        return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
     }
 
     public function generateDiscountCode(Request $request)
