@@ -39,7 +39,7 @@
                             ?>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="status" <?php echo ($status == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Models\User::STATUS_ACTIVE_LABEL }}" data-off="{{ \App\Models\User::STATUS_INACTIVE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                    <input type="checkbox" name="status" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}" <?php echo ($status == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Models\User::STATUS_ACTIVE_LABEL }}" data-off="{{ \App\Models\User::STATUS_INACTIVE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                                 </label>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                             ?>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="admin" <?php echo ($admin == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                    <input type="checkbox" name="admin" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}" <?php echo ($admin == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                                 </label>
                             </div>
                         </div>
@@ -63,13 +63,13 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label>Công Tác Viên</label>
+                            <label>Cộng Tác Viên</label>
                             <?php
                             $collaborator = old('collaborator', $user->collaborator);
                             ?>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="collaborator" <?php echo ($collaborator == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                    <input type="checkbox" name="collaborator" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}" <?php echo ($collaborator == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                                 </label>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Tạo Mới</button>
-                <a href="{{ action('Backend\UserController@adminUser') }}" class="btn btn-default">Quay lai</a>
+                <a href="{{ action('Backend\UserController@adminUser') }}" class="btn btn-default">Quay Lại</a>
             </div>
         </div>
         {{ csrf_field() }}

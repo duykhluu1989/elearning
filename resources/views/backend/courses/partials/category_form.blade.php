@@ -48,26 +48,18 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Trạng Thái</label>
-                    <select class="form-control" name="status">
-                        <?php
-                        $status = old('status', $category->status);
-                        ?>
-                        @foreach(\App\Models\Category::getCategoryStatus() as $value => $label)
-                            <?php
-                            if($value == \App\Models\Category::STATUS_ACTIVE_DB)
-                                $optionClass = 'text-green';
-                            else
-                                $optionClass = 'text-red';
-                            ?>
-                            @if($status == $value)
-                                <option class="{{ $optionClass }}" value="{{ $value }}" selected="selected">{{ $label }}</option>
-                            @else
-                                <option class="{{ $optionClass }}" value="{{ $value }}">{{ $label }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    <?php
+                    $status = old('status', $category->status);
+                    ?>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="status" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}" <?php echo ($status == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                        </label>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('order') ? ' has-error': '' }}">
                     <label>Thứ Tự <i>(bắt buộc)</i></label>
@@ -93,7 +85,7 @@
     </div>
     <div class="box-footer">
         <button type="submit" class="btn btn-primary">{{ empty($category->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
-        <a href="{{ action('Backend\CourseController@adminCategory') }}" class="btn btn-default">Quay lai</a>
+        <a href="{{ action('Backend\CourseController@adminCategory') }}" class="btn btn-default">Quay Lại</a>
 
         @if(!empty($category->id) && $isDeletable == true)
             <a href="{{ action('Backend\CourseController@deleteCategory', ['id' => $category->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
@@ -102,7 +94,12 @@
 </div>
 {{ csrf_field() }}
 
+@push('stylesheets')
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}">
+@endpush
+
 @push('scripts')
+    <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
     <script type="text/javascript">
         $('#ParentCategoryInput').autocomplete({
             minLength: 3,

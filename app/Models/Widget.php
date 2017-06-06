@@ -3,15 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Libraries\Helpers\Utility;
 
 class Widget extends Model
 {
     const HOME_SLIDER = 'HOME_SLIDER';
-
-    const STATUS_ACTIVE_DB = 1;
-    const STATUS_INACTIVE_DB = 0;
-    const STATUS_ACTIVE_LABEL = 'Kích Hoạt';
-    const STATUS_INACTIVE_LABEL = 'Vô Hiệu';
 
     const TYPE_SLIDER_DB = 0;
     const TYPE_SLIDER_LABEL = 'Khung Ảnh Trượt';
@@ -31,7 +27,7 @@ class Widget extends Model
             [
                 self::HOME_SLIDER,
                 'Khung Ảnh Trượt Trang Chủ',
-                self::STATUS_ACTIVE_DB,
+                Utility::ACTIVE_DB,
                 self::TYPE_SLIDER_DB,
                 json_encode([
                     [
@@ -78,19 +74,6 @@ class Widget extends Model
             $widget->attribute = $coreWidget[4];
             $widget->save();
         }
-    }
-
-    public static function getWidgetStatus($value = null)
-    {
-        $status = [
-            self::STATUS_ACTIVE_DB => self::STATUS_ACTIVE_LABEL,
-            self::STATUS_INACTIVE_DB => self::STATUS_INACTIVE_LABEL,
-        ];
-
-        if($value !== null && isset($status[$value]))
-            return $status[$value];
-
-        return $status;
     }
 
     public static function getWidgetType($value = null)

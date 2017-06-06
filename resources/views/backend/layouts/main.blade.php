@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/skins/skin-blue.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/sweetalert.css') }}">
     @stack('stylesheets')
 </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
@@ -78,12 +79,29 @@
 <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('assets/js/app.min.js') }}"></script>
+<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('assets/js/backend.js') }}"></script>
 @stack('scripts')
-@if(session('message'))
+@if(session('messageSuccess'))
     <script type="text/javascript">
         $(document).ready(function() {
-            alert('{{ session('message') }}');
+            swal({
+                title: '{{ session('messageSuccess') }}',
+                type: 'success',
+                confirmButtonClass: 'btn-success',
+                allowOutsideClick: true
+            });
+        });
+    </script>
+@elseif(session('messageError'))
+    <script type="text/javascript">
+        $(document).ready(function() {
+            swal({
+                title: '{{ session('messageError') }}',
+                type: 'error',
+                confirmButtonClass: 'btn-danger',
+                allowOutsideClick: true
+            });
         });
     </script>
 @endif

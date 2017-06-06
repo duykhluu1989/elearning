@@ -14,6 +14,19 @@ class Utility
 
     const AUTO_COMPLETE_LIMIT = 20;
 
+    public static function getTrueFalse($value = null)
+    {
+        $trueFalse = [
+            self::ACTIVE_DB => self::TRUE_LABEL,
+            self::INACTIVE_DB => self::FALSE_LABEL,
+        ];
+
+        if($value !== null && isset($trueFalse[$value]))
+            return $trueFalse[$value];
+
+        return $trueFalse;
+    }
+
     public static function getValidImageExt($extensionDot = false)
     {
         if($extensionDot == true)

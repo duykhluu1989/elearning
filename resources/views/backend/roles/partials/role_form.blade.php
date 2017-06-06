@@ -63,7 +63,7 @@
     </div>
     <div class="box-footer">
         <button type="submit" class="btn btn-primary">{{ empty($role->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
-        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Quay lai</a>
+        <a href="{{ action('Backend\RoleController@adminRole') }}" class="btn btn-default">Quay Lại</a>
 
         @if(!empty($role->id) && $isDeletable == true)
             <a href="{{ action('Backend\RoleController@deleteRole', ['id' => $role->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>

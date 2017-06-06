@@ -80,7 +80,7 @@ class RoleController extends Controller
 
                 $role->save();
 
-                return redirect()->action('Backend\RoleController@editRole', ['id' => $role->id])->with('message', 'Success');
+                return redirect()->action('Backend\RoleController@editRole', ['id' => $role->id])->with('messageSuccess', 'Thành Công');
             }
             else
             {
@@ -114,7 +114,7 @@ class RoleController extends Controller
 
         $role->delete();
 
-        return redirect()->action('Backend\RoleController@adminRole')->with('message', 'Success');
+        return redirect()->action('Backend\RoleController@adminRole')->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteRole(Request $request)
@@ -129,6 +129,6 @@ class RoleController extends Controller
                 $role->delete();
         }
 
-        return redirect()->action('Backend\RoleController@adminRole')->with('message', 'Success');
+        return redirect()->action('Backend\RoleController@adminRole')->with('messageSuccess', 'Thành Công');
     }
 }

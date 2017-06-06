@@ -51,30 +51,4 @@ class User extends Authenticatable
 
         return $status;
     }
-
-    public static function getUserAdmin($value = null)
-    {
-        $admin = [
-            Utility::ACTIVE_DB => Utility::TRUE_LABEL,
-            Utility::INACTIVE_DB => Utility::FALSE_LABEL,
-        ];
-
-        if($value !== null && isset($admin[$value]))
-            return $admin[$value];
-
-        return $admin;
-    }
-
-    public static function getUserCollaborator($value = null)
-    {
-        $collaborator = [
-            Utility::ACTIVE_DB => Utility::TRUE_LABEL,
-            Utility::INACTIVE_DB => Utility::FALSE_LABEL,
-        ];
-
-        if($value !== null && isset($collaborator[$value]))
-            return $collaborator[$value];
-
-        return $collaborator;
-    }
 }

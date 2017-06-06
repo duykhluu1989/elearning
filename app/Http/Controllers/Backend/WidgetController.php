@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
+use App\Libraries\Helpers\Utility;
 use App\Models\Widget;
 
 class WidgetController extends Controller
@@ -48,11 +49,11 @@ class WidgetController extends Controller
             [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
-                    $status = Widget::getWidgetStatus($row->status);
-                    if($row->status == Widget::STATUS_ACTIVE_DB)
-                        echo Html::span($status, ['class' => 'text-green']);
+                    $status = Utility::getTrueFalse($row->status);
+                    if($row->status == Utility::ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
                     else
-                        echo Html::span($status, ['class' => 'text-red']);
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
         ];
@@ -74,7 +75,7 @@ class WidgetController extends Controller
                 'title' => 'Trạng Thái',
                 'name' => 'status',
                 'type' => 'select',
-                'options' => Widget::getWidgetStatus(),
+                'options' => Utility::getTrueFalse(),
             ],
         ]);
         $gridView->setFilterValues($inputs);
@@ -110,10 +111,11 @@ class WidgetController extends Controller
             }
 
             $widget->detail = json_encode($details);
+            $widget->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
 
             $widget->save();
 
-            return redirect()->action('Backend\WidgetController@editWidget', ['id' => $widget->id])->with('message', 'Success');
+            return redirect()->action('Backend\WidgetController@editWidget', ['id' => $widget->id])->with('messageSuccess', 'Thành Công');
         }
 
         return view('backend.widgets.edit_widget', [

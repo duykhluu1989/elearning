@@ -23,7 +23,7 @@ class SettingController extends Controller
             $settings[Setting::WEB_DESCRIPTION]->value = $inputs['web_description'];
             $settings[Setting::WEB_DESCRIPTION]->save();
 
-            return redirect()->action('Backend\SettingController@adminSetting')->with('message', 'Success');
+            return redirect()->action('Backend\SettingController@adminSetting')->with('messageSuccess', 'Thành Công');
         }
 
         return view('backend.settings.admin_setting', [

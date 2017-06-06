@@ -78,18 +78,22 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Giới Tính</label>
-                            <select class="form-control" name="gender">
-                                <?php
-                                $gender = old('gender', (!empty($user->profile) ? $user->profile->gender : ''));
-                                ?>
+                            <?php
+                            $gender = old('gender', (!empty($user->profile) ? $user->profile->gender : ''));
+                            ?>
+                            <div>
                                 @foreach(\App\Models\Profile::getProfileGender() as $value => $label)
                                     @if($gender == $value)
-                                        <option value="{{ $value }}" selected="selected">{{ $label }}</option>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="gender" checked="checked" value="{{ $value }}">{{ $label }}
+                                        </label>
                                     @else
-                                        <option value="{{ $value }}">{{ $label }}</option>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="gender" value="{{ $value }}">{{ $label }}
+                                        </label>
                                     @endif
                                 @endforeach
-                            </select>
+                            </div>
                         </div>
                     </div>
                 </div>

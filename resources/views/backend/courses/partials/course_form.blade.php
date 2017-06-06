@@ -76,28 +76,34 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Trạng Thái</label>
-                    <select class="form-control" name="status">
-                        <?php
-                        $status = old('status', $course->status);
-                        ?>
+                    <?php
+                    $status = old('status', $course->status);
+                    ?>
+                    <div>
                         @foreach(\App\Models\Course::getCourseStatus() as $value => $label)
                             <?php
                             if($value == \App\Models\Course::STATUS_PUBLISH_DB)
-                                $optionClass = 'text-green';
+                                $optionClass = 'label label-success';
                             else if($value == \App\Models\Course::STATUS_FINISH_DB)
-                                $optionClass = 'text-light-blue';
+                                $optionClass = 'label label-primary';
                             else
-                                $optionClass = 'text-red';
+                                $optionClass = 'label label-danger';
                             ?>
                             @if($status == $value)
-                                <option class="{{ $optionClass }}" value="{{ $value }}" selected="selected">{{ $label }}</option>
+                                <label class="radio-inline">
+                                    <input type="radio" name="status" checked="checked" value="{{ $value }}"><span class="{{ $optionClass }}">{{ $label }}</span>
+                                </label>
                             @else
-                                <option class="{{ $optionClass }}" value="{{ $value }}">{{ $label }}</option>
+                                <label class="radio-inline">
+                                    <input type="radio" name="status" value="{{ $value }}"><span class="{{ $optionClass }}">{{ $label }}</span>
+                                </label>
                             @endif
                         @endforeach
-                    </select>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('level') ? ' has-error': '' }}">
                     <label>Cấp Độ</label>
@@ -118,23 +124,23 @@
                     @endif
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label>Loại</label>
-                    <select class="form-control" name="type">
-                        <?php
-                        $type = old('type', $course->type);
-                        ?>
-                        @foreach(\App\Models\Course::getCourseType() as $value => $label)
-                            @if($type == $value)
-                                <option value="{{ $value }}" selected="selected">{{ $label }}</option>
-                            @else
-                                <option value="{{ $value }}">{{ $label }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    <label>Nổi Bật</label>
+                    <?php
+                    $highlight = old('highlight', $course->highlight);
+                    ?>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="highlight" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}" <?php echo ($highlight == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                        </label>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('price') ? ' has-error': '' }}">
                     <label>Giá Tiền <i>(Bắt Buộc)</i></label>
@@ -147,12 +153,14 @@
                     @endif
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Mua Bằng Điểm</label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="CanBuyByPointCheckBox"<?php echo (old('point_price', $course->point_price) ? ' checked="checked"' : ''); ?> />Cho Phép Mua Khóa Học Bằng Điểm
+                            <input type="checkbox" id="CanBuyByPointCheckBox"<?php echo (old('point_price', $course->point_price) ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                         </label>
                     </div>
                 </div>
@@ -243,7 +251,7 @@
     </div>
     <div class="box-footer">
         <button type="submit" class="btn btn-primary">{{ empty($course->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
-        <a href="{{ action('Backend\CourseController@adminCourse') }}" class="btn btn-default">Quay lai</a>
+        <a href="{{ action('Backend\CourseController@adminCourse') }}" class="btn btn-default">Quay Lại</a>
 
         @if(!empty($course->id))
             <a href="{{ action('Backend\CourseController@adminCourseItem', ['id' => $course->id]) }}" class="btn btn-primary">Danh Sách Bài Học</a>
@@ -259,6 +267,7 @@
 @push('stylesheets')
     <link rel="stylesheet" href="{{ asset('assets/css/colorbox.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.tag-editor.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}">
 @endpush
 
 @push('scripts')
@@ -266,6 +275,7 @@
     <script src="{{ asset('assets/js/jquery.caret.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.tag-editor.min.js') }}"></script>
     <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
     <script type="text/javascript">
         var elFinderSelectedFile;
 
@@ -360,7 +370,7 @@
             return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
         };
 
-        $('#CanBuyByPointCheckBox').click(function() {
+        $('#CanBuyByPointCheckBox').change(function() {
             if($(this).prop('checked'))
                 $('#PointPriceInput').removeAttr('readonly').val(1);
             else

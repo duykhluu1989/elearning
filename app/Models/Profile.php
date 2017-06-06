@@ -29,8 +29,8 @@ class Profile extends Model
     public static function getProfileGender($value = null)
     {
         $gender = [
-            Utility::ACTIVE_DB => self::GENDER_MALE_LABEL,
-            Utility::INACTIVE_DB => self::STATUS_FEMALE_LABEL,
+            Utility::INACTIVE_DB => self::GENDER_MALE_LABEL,
+            Utility::ACTIVE_DB => self::STATUS_FEMALE_LABEL,
         ];
 
         if($value !== null && isset($gender[$value]))

@@ -18,18 +18,28 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Loại</label>
-                    <select class="form-control" id="TypeSelect" name="type">
-                        <?php
-                        $type = old('type', $courseItem->type);
-                        ?>
+                    <?php
+                    $type = old('type', $courseItem->type);
+                    ?>
+                    <div>
                         @foreach(\App\Models\CourseItem::getCourseItemType() as $value => $label)
+                            <?php
+                            if($value == \App\Models\CourseItem::TYPE_TEXT_DB)
+                                $optionClass = 'fa fa-file-text-o fa-fw';
+                            else
+                                $optionClass = 'fa fa-youtube-play fa-fw';
+                            ?>
                             @if($type == $value)
-                                <option value="{{ $value }}" selected="selected">{{ $label }}</option>
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" checked="checked" value="{{ $value }}"><i class="{{ $optionClass }}"></i>{{ $label }}
+                                </label>
                             @else
-                                <option value="{{ $value }}">{{ $label }}</option>
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" value="{{ $value }}"><i class="{{ $optionClass }}"></i>{{ $label }}
+                                </label>
                             @endif
                         @endforeach
-                    </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -152,7 +162,7 @@
             }
         });
 
-        $('#TypeSelect').change(function() {
+        $('input[type="radio"][name="type"]').change(function() {
             if($(this).val() == '{{ \App\Models\CourseItem::TYPE_TEXT_DB }}')
             {
                 $('.CourseItemVideoTypeInput').each(function() {

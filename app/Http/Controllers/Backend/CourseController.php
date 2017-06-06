@@ -68,11 +68,11 @@ class CourseController extends Controller
             [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
-                    $status = Category::getCategoryStatus($row->status);
-                    if($row->status == Category::STATUS_ACTIVE_DB)
-                        echo Html::span($status, ['class' => 'text-green']);
+                    $status = Utility::getTrueFalse($row->status);
+                    if($row->status == Utility::ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
                     else
-                        echo Html::span($status, ['class' => 'text-red']);
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
         ];
@@ -94,7 +94,7 @@ class CourseController extends Controller
                 'title' => 'Trạng Thái',
                 'name' => 'status',
                 'type' => 'select',
-                'options' => Category::getCategoryStatus(),
+                'options' => Utility::getTrueFalse(),
             ],
         ]);
         $gridView->setFilterValues($inputs);
@@ -107,7 +107,7 @@ class CourseController extends Controller
     public function createCategory(Request $request)
     {
         $category = new Category();
-        $category->status = Category::STATUS_ACTIVE_DB;
+        $category->status = Utility::ACTIVE_DB;
         $category->order = 1;
 
         return $this->saveCategory($request, $category);
@@ -174,7 +174,7 @@ class CourseController extends Controller
             {
                 $category->name = $inputs['name'];
                 $category->name_en = $inputs['name_en'];
-                $category->status = $inputs['status'];
+                $category->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                 $category->order = $inputs['order'];
                 $category->code = strtoupper($inputs['code']);
                 $category->parent_id = $inputs['parent_id'];
@@ -191,7 +191,7 @@ class CourseController extends Controller
 
                 $category->save();
 
-                return redirect()->action('Backend\CourseController@editCategory', ['id' => $category->id])->with('message', 'Success');
+                return redirect()->action('Backend\CourseController@editCategory', ['id' => $category->id])->with('messageSuccess', 'Thành Công');
             }
             else
             {
@@ -225,7 +225,7 @@ class CourseController extends Controller
 
         $category->delete();
 
-        return redirect()->action('Backend\CourseController@adminCategory')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminCategory')->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteCategory(Request $request)
@@ -240,7 +240,7 @@ class CourseController extends Controller
                 $category->delete();
         }
 
-        return redirect()->action('Backend\CourseController@adminCategory')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminCategory')->with('messageSuccess', 'Thành Công');
     }
 
     public function autoCompleteCategory(Request $request)
@@ -327,7 +327,7 @@ class CourseController extends Controller
                 $level->order = $inputs['order'];
                 $level->save();
 
-                return redirect()->action('Backend\CourseController@editLevel', ['id' => $level->id])->with('message', 'Success');
+                return redirect()->action('Backend\CourseController@editLevel', ['id' => $level->id])->with('messageSuccess', 'Thành Công');
             }
             else
             {
@@ -361,7 +361,7 @@ class CourseController extends Controller
 
         $level->delete();
 
-        return redirect()->action('Backend\CourseController@adminLevel')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminLevel')->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteLevel(Request $request)
@@ -376,7 +376,7 @@ class CourseController extends Controller
                 $level->delete();
         }
 
-        return redirect()->action('Backend\CourseController@adminLevel')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminLevel')->with('messageSuccess', 'Thành Công');
     }
 
     public function adminCourse(Request $request)
@@ -390,7 +390,7 @@ class CourseController extends Controller
         }, 'categoryCourses.category' => function($query) {
             $query->select('id', 'name');
         }])
-            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.type', 'course.code')->orderBy('course.id', 'desc');
+            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.highlight', 'course.code')->orderBy('course.id', 'desc');
 
         $inputs = $request->all();
 
@@ -419,8 +419,8 @@ class CourseController extends Controller
             if(isset($inputs['status']) && $inputs['status'] !== '')
                 $dataProvider->where('course.status', $inputs['status']);
 
-            if(isset($inputs['type']) && $inputs['type'] !== '')
-                $dataProvider->where('course.type', $inputs['type']);
+            if(isset($inputs['highlight']) && $inputs['highlight'] !== '')
+                $dataProvider->where('course.highlight', $inputs['highlight']);
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -457,9 +457,13 @@ class CourseController extends Controller
                 },
             ],
             [
-                'title' => 'Loại',
+                'title' => 'Nổi Bật',
                 'data' => function($row) {
-                    echo Course::getCourseType($row->type);
+                    $highlight = Utility::getTrueFalse($row->highlight);
+                    if($row->highlight == Utility::ACTIVE_DB)
+                        echo Html::span($highlight, ['class' => 'label label-success']);
+                    else
+                        echo Html::span($highlight, ['class' => 'label label-danger']);
                 },
             ],
             [
@@ -467,11 +471,11 @@ class CourseController extends Controller
                 'data' => function($row) {
                     $status = Course::getCourseStatus($row->status);
                     if($row->status == Course::STATUS_PUBLISH_DB)
-                        echo Html::span($status, ['class' => 'text-green']);
+                        echo Html::span($status, ['class' => 'label label-success']);
                     else if($row->status == \App\Models\Course::STATUS_FINISH_DB)
-                        echo Html::span($status, ['class' => 'text-light-blue']);
+                        echo Html::span($status, ['class' => 'label label-primary']);
                     else
-                        echo Html::span($status, ['class' => 'text-red']);
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
             [
@@ -513,10 +517,10 @@ class CourseController extends Controller
                 'type' => 'input',
             ],
             [
-                'title' => 'Loại',
-                'name' => 'type',
+                'title' => 'Nổi Bật',
+                'name' => 'highlight',
                 'type' => 'select',
-                'options' => Course::getCourseType(),
+                'options' => Utility::getTrueFalse(),
             ],
             [
                 'title' => 'Trạng Thái',
@@ -536,7 +540,7 @@ class CourseController extends Controller
     {
         $course = new Course();
         $course->status = Course::STATUS_DRAFT_DB;
-        $course->type = Course::TYPE_NORMAL_DB;
+        $course->highlight = Utility::INACTIVE_DB;
         $course->price = 0;
 
         return $this->saveCourse($request, $course);
@@ -640,7 +644,7 @@ class CourseController extends Controller
                     $course->level_id = $inputs['level_id'];
                     $course->short_description = $inputs['short_description'];
                     $course->short_description_en = $inputs['short_description_en'];
-                    $course->type = $inputs['type'];
+                    $course->highlight = isset($inputs['highlight']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
 
                     if(empty($course->published_at) && $course->status == Course::STATUS_PUBLISH_DB)
                         $course->published_at = date('Y-m-d H:i:s');
@@ -730,16 +734,16 @@ class CourseController extends Controller
 
                     DB::commit();
 
-                    return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('message', 'Success');
+                    return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('messageSuccess', 'Thành Công');
                 }
                 catch(\Exception $e)
                 {
                     DB::rollBack();
 
                     if($create == true)
-                        return redirect()->action('Backend\CourseController@createCourse')->withErrors(['category_name' => $e->getMessage()])->withInput();
+                        return redirect()->action('Backend\CourseController@createCourse')->withInput()->with('messageError', $e->getMessage());
                     else
-                        return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->withErrors(['category_name' => $e->getMessage()])->withInput();
+                        return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->withInput()->with('messageError', $e->getMessage());
                 }
             }
             else
@@ -788,10 +792,10 @@ class CourseController extends Controller
         {
             DB::rollBack();
 
-            return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('message', 'Error: ' . $e->getMessage());
+            return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('messageError', $e->getMessage());
         }
 
-        return redirect()->action('Backend\CourseController@adminCourse')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminCourse')->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteCourse(Request $request)
@@ -816,12 +820,12 @@ class CourseController extends Controller
                 {
                     DB::rollBack();
 
-                    return redirect()->action('Backend\CourseController@adminCourse')->with('message', 'Error: ' . $e->getMessage());
+                    return redirect()->action('Backend\CourseController@adminCourse')->with('messageError', $e->getMessage());
                 }
             }
         }
 
-        return redirect()->action('Backend\CourseController@adminCourse')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminCourse')->with('messageSuccess', 'Thành Công');
     }
 
     public function adminCourseItem($id)
@@ -972,16 +976,16 @@ class CourseController extends Controller
 
                     DB::commit();
 
-                    return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->with('message', 'Success');
+                    return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->with('messageSuccess', 'Thành Công');
                 }
                 catch(\Exception $e)
                 {
                     DB::rollBack();
 
                     if($create == true)
-                        return redirect()->action('Backend\CourseController@createCourseItem', ['id' => $courseItem->course_id])->withErrors(['name' => $e->getMessage()])->withInput();
+                        return redirect()->action('Backend\CourseController@createCourseItem', ['id' => $courseItem->course_id])->withInput()->with('messageError', $e->getMessage());
                     else
-                        return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->withErrors(['name' => $e->getMessage()])->withInput();
+                        return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->withInput()->with('messageError', $e->getMessage());
                 }
             }
             else
@@ -1049,10 +1053,10 @@ class CourseController extends Controller
         {
             DB::rollBack();
 
-            return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->with('message', 'Error: ' . $e->getMessage());
+            return redirect()->action('Backend\CourseController@editCourseItem', ['id' => $courseItem->id])->with('messageError', $e->getMessage());
         }
 
-        return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $courseItem->course->id])->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $courseItem->course->id])->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteCourseItem(Request $request)
@@ -1113,10 +1117,10 @@ class CourseController extends Controller
         {
             DB::rollBack();
 
-            return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $course->id])->with('message', 'Error: ' . $e->getMessage());
+            return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $course->id])->with('messageError', $e->getMessage());
         }
 
-        return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $course->id])->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $course->id])->with('messageSuccess', 'Thành Công');
     }
 
     public function adminTag()
@@ -1174,7 +1178,7 @@ class CourseController extends Controller
                 $tag->name = strtolower($inputs['name']);
                 $tag->save();
 
-                return redirect()->action('Backend\CourseController@editTag', ['id' => $tag->id])->with('message', 'Success');
+                return redirect()->action('Backend\CourseController@editTag', ['id' => $tag->id])->with('messageSuccess', 'Thành Công');
             }
             else
             {
@@ -1208,7 +1212,7 @@ class CourseController extends Controller
 
         $tag->delete();
 
-        return redirect()->action('Backend\CourseController@adminTag')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminTag')->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteTag(Request $request)
@@ -1223,7 +1227,7 @@ class CourseController extends Controller
                 $tag->delete();
         }
 
-        return redirect()->action('Backend\CourseController@adminTag')->with('message', 'Success');
+        return redirect()->action('Backend\CourseController@adminTag')->with('messageSuccess', 'Thành Công');
     }
 
     public function autoCompleteTag(Request $request)

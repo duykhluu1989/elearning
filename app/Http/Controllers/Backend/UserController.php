@@ -185,13 +185,13 @@ class UserController extends Controller
 
                     DB::commit();
 
-                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
+                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('messageSuccess', 'Thành Công');
                 }
                 catch(\Exception $e)
                 {
                     DB::rollBack();
 
-                    return redirect()->action('Backend\UserController@createUser')->withErrors(['username' => $e->getMessage()])->withInput();
+                    return redirect()->action('Backend\UserController@createUser')->withInput()->with('messageError', $e->getMessage());
                 }
             }
             else
@@ -297,13 +297,13 @@ class UserController extends Controller
 
                     DB::commit();
 
-                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('message', 'Success');
+                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('messageSuccess', 'Thành Công');
                 }
                 catch(\Exception $e)
                 {
                     DB::rollBack();
 
-                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->withErrors(['username' => $e->getMessage()])->withInput();
+                    return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->withInput()->with('messageError', $e->getMessage());
                 }
             }
             else
@@ -354,7 +354,11 @@ class UserController extends Controller
             [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
-                    echo User::getUserStatus($row->status);
+                    $status = User::getUserStatus($row->status);
+                    if($row->status == Utility::ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
         ];
@@ -447,13 +451,13 @@ class UserController extends Controller
 
                     DB::commit();
 
-                    return redirect()->action('Backend\UserController@editAccount')->with('message', 'Success');
+                    return redirect()->action('Backend\UserController@editAccount')->with('messageSuccess', 'Thành Công');
                 }
                 catch(\Exception $e)
                 {
                     DB::rollBack();
 
-                    return redirect()->action('Backend\UserController@editAccount')->withErrors(['username' => $e->getMessage()])->withInput();
+                    return redirect()->action('Backend\UserController@editAccount')->withInput()->with('messageError', $e->getMessage());
                 }
             }
             else
