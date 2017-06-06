@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Libraries\Helpers\Utility;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
+use App\Libraries\Helpers\Utility;
 use App\Models\Discount;
 use App\Models\User;
+use App\Models\DiscountApply;
+use App\Models\Category;
+use App\Models\Course;
 
 class DiscountController extends Controller
 {
@@ -147,6 +151,31 @@ class DiscountController extends Controller
 
                 if($inputs['type'] == Discount::TYPE_PERCENTAGE_DB && $inputs['value'] > 99)
                     $validator->errors()->add('value', 'Phần trăm giảm giá không được lớn hơn 99');
+
+                if(isset($inputs['discount_applies']))
+                {
+                    foreach($inputs['discount_applies']['target'] as $key => $discountApplyTarget)
+                    {
+                        if($discountApplyTarget == DiscountApply::TARGET_CATEGORY_DB)
+                        {
+                            $category = Category::select('id')->where('name', $inputs['discount_applies']['apply_name'][$key])->first();
+
+                            if(empty($category))
+                                $validator->errors()->add('discount_applies', 'Chủ Đề ' . $inputs['discount_applies']['apply_name'][$key] . ' Không Tồn Tại');
+                            else
+                                $inputs['discount_applies']['apply_id'][$key] = $category->id;
+                        }
+                        else
+                        {
+                            $course = Course::select('id')->where('name', $inputs['discount_applies']['apply_name'][$key])->first();
+
+                            if(empty($course))
+                                $validator->errors()->add('discount_applies', 'Khóa Học ' . $inputs['discount_applies']['apply_name'][$key] . ' Không Tồn Tại');
+                            else
+                                $inputs['discount_applies']['apply_id'][$key] = $course->id;
+                        }
+                    }
+                }
             });
 
             if($validator->passes())
@@ -169,22 +198,74 @@ class DiscountController extends Controller
 
                 if(empty($inputs['create_multi_character_number']) && empty($inputs['create_multi_number']))
                 {
-                    $discount->code = strtoupper($inputs['code']);
-                    $discount->save();
+                    try
+                    {
+                        DB::beginTransaction();
 
-                    return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('messageSuccess', 'Thành Công');
+                        $discount->code = strtoupper($inputs['code']);
+                        $discount->save();
+
+                        if(isset($inputs['discount_applies']))
+                        {
+                            foreach($inputs['discount_applies']['target'] as $key => $discountApplyTarget)
+                            {
+                                $discountApply = new DiscountApply();
+                                $discountApply->discount_id = $discount->id;
+                                $discountApply->apply_id = $inputs['discount_applies']['apply_id'][$key];
+                                $discountApply->target = $discountApplyTarget;
+                                $discountApply->save();
+                            }
+                        }
+
+                        DB::commit();
+
+                        return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('messageSuccess', 'Thành Công');
+                    }
+                    catch(\Exception $e)
+                    {
+                        DB::rollBack();
+
+                        return redirect()->action('Backend\DiscountController@createDiscount')->withInput()->with('messageError', $e->getMessage());
+                    }
                 }
                 else
                 {
-                    for($i = 1;$i <= $inputs['create_multi_number'];$i ++)
+                    try
                     {
-                        $newDiscount = clone $discount;
-                        $newDiscount->code = Discount::generateCodeByNumberCharacter($inputs['create_multi_character_number']);
-                        if(!empty($newDiscount->code))
-                            $newDiscount->save();
-                    }
+                        DB::beginTransaction();
 
-                    return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
+                        for($i = 1;$i <= $inputs['create_multi_number'];$i ++)
+                        {
+                            $newDiscount = clone $discount;
+                            $newDiscount->code = Discount::generateCodeByNumberCharacter($inputs['create_multi_character_number']);
+                            if(!empty($newDiscount->code))
+                            {
+                                $newDiscount->save();
+
+                                if(isset($inputs['discount_applies']))
+                                {
+                                    foreach($inputs['discount_applies']['target'] as $key => $discountApplyTarget)
+                                    {
+                                        $discountApply = new DiscountApply();
+                                        $discountApply->discount_id = $newDiscount->id;
+                                        $discountApply->apply_id = $inputs['discount_applies']['apply_id'][$key];
+                                        $discountApply->target = $discountApplyTarget;
+                                        $discountApply->save();
+                                    }
+                                }
+                            }
+                        }
+
+                        DB::commit();
+
+                        return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
+                    }
+                    catch(\Exception $e)
+                    {
+                        DB::rollBack();
+
+                        return redirect()->action('Backend\DiscountController@createDiscount')->withInput()->with('messageError', $e->getMessage());
+                    }
                 }
             }
             else
@@ -198,7 +279,9 @@ class DiscountController extends Controller
 
     public function editDiscount(Request $request, $id)
     {
-        $discount = Discount::find($id);
+        $discount = Discount::with(['discountApplies.apply' => function($query) {
+            $query->select('id', 'name');
+        }])->find($id);
 
         if(empty($discount))
             return view('backend.errors.404');

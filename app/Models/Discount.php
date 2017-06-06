@@ -20,6 +20,11 @@ class Discount extends Model
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    public function discountApplies()
+    {
+        return $this->hasMany('App\Models\DiscountApply', 'discount_id');
+    }
+
     public static function getDiscountType($value = null)
     {
         $type = [

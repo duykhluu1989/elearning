@@ -132,6 +132,29 @@
                             <span class="form-control no-border">{{ $discount->description }}</span>
                         </div>
                     </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Giới Hạn Áp Dụng Mã</label>
+                            <div class="no-padding">
+                                <table class="table table-bordered table-striped table-hover table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>Loại</th>
+                                        <th>Tên</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($discount->discountApplies as $discountApply)
+                                        <tr>
+                                            <td>{{ \App\Models\DiscountApply::getDiscountApplyTarget($discountApply->target) }}</td>
+                                            <td>{{ $discountApply->apply->name }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="box-footer">

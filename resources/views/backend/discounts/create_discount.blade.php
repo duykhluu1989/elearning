@@ -221,6 +221,55 @@
                             <textarea class="form-control" name="description">{{ old('description', $discount->description) }}</textarea>
                         </div>
                     </div>
+                    <div class="col-sm-12">
+                        <div class="form-group{{ $errors->has('discount_applies') ? ' has-error': '' }}">
+                            <label>Giới Hạn Áp Dụng Mã</label>
+                            @if($errors->has('discount_applies'))
+                                <span class="help-block">{{ $errors->first('discount_applies') }}</span>
+                            @endif
+                            <div class="no-padding">
+                                <table class="table table-bordered table-striped table-hover table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>Loại</th>
+                                        <th>Tên</th>
+                                        <th class="col-sm-1 text-center">
+                                            <button type="button" class="btn btn-primary" id="NewDiscountApplyButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Thêm Đối Tượng Mới"><i class="fa fa-plus fa-fw"></i></button>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="ListDiscountApply">
+                                    <?php
+                                    $discountApplies = old('discount_applies');
+                                    ?>
+                                    @if(!empty($discountApplies))
+                                        @foreach($discountApplies['target'] as $key => $discountApplyTarget)
+                                            <tr>
+                                                <td>
+                                                    <select class="form-control TargetDropDown" name="discount_applies[target][]">
+                                                        @foreach(\App\Models\DiscountApply::getDiscountApplyTarget() as $value => $label)
+                                                            @if($discountApplyTarget == $value)
+                                                                <option selected="selected" value="{{ $value }}">{{ $label }}</option>
+                                                            @else
+                                                                <option value="{{ $value }}">{{ $label }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control{{ $discountApplyTarget == \App\Models\DiscountApply::TARGET_CATEGORY_DB ? ' CategoryNameInput' : ' CourseNameInput' }}" name="discount_applies[apply_name][]" value="{{ $discountApplies['apply_name'][$key] }}" required="required" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-default RemoveDiscountApplyButton"><i class="fa fa-trash-o fa-fw"></i></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="box-footer">
@@ -372,5 +421,93 @@
         }).autocomplete('instance')._renderItem = function(ul, item) {
             return $('<li>').append('<a>' + item.username + '</a>').appendTo(ul);
         };
+
+        $('#NewDiscountApplyButton').click(function() {
+            $('#ListDiscountApply').append('' +
+                '<tr>' +
+                '<td>' +
+                '<select class="form-control TargetDropDown" name="discount_applies[target][]">' +
+                @foreach(\App\Models\DiscountApply::getDiscountApplyTarget() as $value => $label)
+                    '<option value="{{ $value }}">{{ $label }}</option>' +
+                @endforeach
+                '</select>' +
+                '</td>' +
+                '<td>' +
+                '<input type="text" class="form-control CategoryNameInput" name="discount_applies[apply_name][]" required="required" />' +
+                '</td>' +
+                '<td class="text-center">' +
+                '<button type="button" class="btn btn-default RemoveDiscountApplyButton"><i class="fa fa-trash-o fa-fw"></i></button>' +
+                '</td>' +
+                '</tr>' +
+            '');
+        });
+
+        $('#ListDiscountApply').on('click', 'button', function() {
+            if($(this).hasClass('RemoveDiscountApplyButton'))
+                $(this).parent().parent().remove();
+        }).on('change', 'select', function() {
+            if($(this).hasClass('TargetDropDown'))
+            {
+                if($(this).val() == '{{ \App\Models\DiscountApply::TARGET_CATEGORY_DB }}')
+                    $(this).parent().parent().find('input').first().val('').removeClass('CourseNameInput').addClass('CategoryNameInput');
+                else
+                    $(this).parent().parent().find('input').first().val('').removeClass('CategoryNameInput').addClass('CourseNameInput');
+            }
+        }).on('focusin', 'input', function() {
+            if($(this).hasClass('CategoryNameInput'))
+            {
+                $(this).autocomplete({
+                    minLength: 3,
+                    delay: 1000,
+                    source: function(request, response) {
+                        $.ajax({
+                            url: '{{ action('Backend\CourseController@autoCompleteCategory') }}',
+                            type: 'post',
+                            data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
+                            success: function(result) {
+                                if(result)
+                                {
+                                    result = JSON.parse(result);
+                                    response(result);
+                                }
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $(this).val(ui.item.name);
+                        return false;
+                    }
+                }).autocomplete('instance')._renderItem = function(ul, item) {
+                    return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
+                };
+            }
+            else if($(this).hasClass('CourseNameInput'))
+            {
+                $(this).autocomplete({
+                    minLength: 3,
+                    delay: 1000,
+                    source: function(request, response) {
+                        $.ajax({
+                            url: '{{ action('Backend\CourseController@autoCompleteCourse') }}',
+                            type: 'post',
+                            data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
+                            success: function(result) {
+                                if(result)
+                                {
+                                    result = JSON.parse(result);
+                                    response(result);
+                                }
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $(this).val(ui.item.name);
+                        return false;
+                    }
+                }).autocomplete('instance')._renderItem = function(ul, item) {
+                    return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
+                };
+            }
+        });
     </script>
 @endpush

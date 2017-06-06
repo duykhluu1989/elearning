@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Models\TagCourse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -17,6 +16,7 @@ use App\Models\CourseItem;
 use App\Models\CategoryCourse;
 use App\Models\User;
 use App\Models\Tag;
+use App\Models\TagCourse;
 use FFMpeg\FFProbe;
 
 class CourseController extends Controller
@@ -832,6 +832,17 @@ class CourseController extends Controller
         }
 
         return redirect()->action('Backend\CourseController@adminCourse')->with('messageSuccess', 'Thành Công');
+    }
+
+    public function autoCompleteCourse(Request $request)
+    {
+        $term = $request->input('term');
+
+        $builder = Course::select('id', 'name')->where('name', 'like', '%' . $term . '%')->limit(Utility::AUTO_COMPLETE_LIMIT);
+
+        $courses = $builder->get()->toJson();
+
+        return $courses;
     }
 
     public function adminCourseItem($id)

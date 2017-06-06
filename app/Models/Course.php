@@ -56,9 +56,17 @@ class Course extends Model
         return $status;
     }
 
+    public function countDiscountApplies()
+    {
+        return DiscountApply::where('apply_id', $this->id)->where('target', DiscountApply::TARGET_COURSE_DB)->count('id');
+    }
+
     public function isDeletable()
     {
-        return false;
+        if($this->countDiscountApplies() > 0)
+            return false;
+
+        return true;
     }
 
     public function doDelete()
