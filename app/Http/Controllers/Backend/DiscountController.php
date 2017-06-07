@@ -150,6 +150,8 @@ class DiscountController extends Controller
 
     public function createDiscount(Request $request)
     {
+        Utility::setBackUrlCookie($request, '/admin/discount?');
+
         $discount = new Discount();
         $discount->status = Utility::ACTIVE_DB;
         $discount->type = Discount::TYPE_FIX_AMOUNT_DB;
@@ -324,6 +326,8 @@ class DiscountController extends Controller
 
     public function editDiscount(Request $request, $id)
     {
+        Utility::setBackUrlCookie($request, '/admin/discount?');
+
         $discount = Discount::with(['discountApplies.apply' => function($query) {
             $query->select('id', 'name');
         }])->find($id);
@@ -380,7 +384,7 @@ class DiscountController extends Controller
             return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('messageError', $e->getMessage());
         }
 
-        return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
+        return redirect(Utility::getBackUrlCookie(action('Backend\DiscountController@adminDiscount')))->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteDiscount(Request $request)
@@ -410,7 +414,10 @@ class DiscountController extends Controller
             }
         }
 
-        return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\DiscountController@adminDiscount')->with('messageSuccess', 'Thành Công');
     }
 
     public function generateDiscountCode(Request $request)

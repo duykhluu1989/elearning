@@ -148,6 +148,8 @@ class UserController extends Controller
 
     public function createUser(Request $request)
     {
+        Utility::setBackUrlCookie($request, ['/admin/user?', '/admin/userStudent']);
+
         $user = new User();
         $user->status = Utility::ACTIVE_DB;
         $user->admin = Utility::INACTIVE_DB;
@@ -205,6 +207,8 @@ class UserController extends Controller
 
     public function editUser(Request $request, $id)
     {
+        Utility::setBackUrlCookie($request, ['/admin/user?', '/admin/userStudent']);
+
         $user = User::with('userRoles', 'profile')->find($id);
 
         if(empty($user))

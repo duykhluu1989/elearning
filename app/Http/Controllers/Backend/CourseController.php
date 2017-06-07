@@ -106,6 +106,8 @@ class CourseController extends Controller
 
     public function createCategory(Request $request)
     {
+        Utility::setBackUrlCookie($request, '/admin/courseCategory?');
+
         $category = new Category();
         $category->status = Utility::ACTIVE_DB;
         $category->order = 1;
@@ -115,6 +117,8 @@ class CourseController extends Controller
 
     public function editCategory(Request $request, $id)
     {
+        Utility::setBackUrlCookie($request, '/admin/courseCategory?');
+
         $category = Category::find($id);
 
         if(empty($category))
@@ -228,7 +232,7 @@ class CourseController extends Controller
 
         $category->delete();
 
-        return redirect()->action('Backend\CourseController@adminCategory')->with('messageSuccess', 'Thành Công');
+        return redirect(Utility::getBackUrlCookie(action('Backend\CourseController@adminCategory')))->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteCategory(Request $request)
@@ -243,7 +247,10 @@ class CourseController extends Controller
                 $category->delete();
         }
 
-        return redirect()->action('Backend\CourseController@adminCategory')->with('messageSuccess', 'Thành Công');
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\CourseController@adminCategory')->with('messageSuccess', 'Thành Công');
     }
 
     public function autoCompleteCategory(Request $request)
@@ -541,6 +548,8 @@ class CourseController extends Controller
 
     public function createCourse(Request $request)
     {
+        Utility::setBackUrlCookie($request, '/admin/course?');
+
         $course = new Course();
         $course->status = Course::STATUS_DRAFT_DB;
         $course->highlight = Utility::INACTIVE_DB;
@@ -551,6 +560,8 @@ class CourseController extends Controller
 
     public function editCourse(Request $request, $id)
     {
+        Utility::setBackUrlCookie($request, '/admin/course?');
+
         $course = Course::with(['user' => function($query) {
             $query->select('id', 'email');
         }, 'user.profile' => function($query) {
@@ -699,8 +710,6 @@ class CourseController extends Controller
 
                         if(count($tags) < count($tagNames))
                         {
-                            $newTags = array();
-
                             foreach($tagNames as $tagName)
                             {
                                 if(!empty($tagName))
@@ -713,12 +722,10 @@ class CourseController extends Controller
                                         $newTag->name = $tagName;
                                         $newTag->save();
 
-                                        $newTags[$newTag->id] = $newTag->name;
+                                        $tags[$newTag->id] = $newTag->name;
                                     }
                                 }
                             }
-
-                            $tags = array_merge($tags, $newTags);
                         }
 
                         foreach($course->tagCourses as $tagCourse)
@@ -801,7 +808,7 @@ class CourseController extends Controller
             return redirect()->action('Backend\CourseController@editCourse', ['id' => $course->id])->with('messageError', $e->getMessage());
         }
 
-        return redirect()->action('Backend\CourseController@adminCourse')->with('messageSuccess', 'Thành Công');
+        return redirect(Utility::getBackUrlCookie(action('Backend\CourseController@adminCourse')))->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteCourse(Request $request)
@@ -831,7 +838,10 @@ class CourseController extends Controller
             }
         }
 
-        return redirect()->action('Backend\CourseController@adminCourse')->with('messageSuccess', 'Thành Công');
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\CourseController@adminCourse')->with('messageSuccess', 'Thành Công');
     }
 
     public function autoCompleteCourse(Request $request)
@@ -845,8 +855,10 @@ class CourseController extends Controller
         return $courses;
     }
 
-    public function adminCourseItem($id)
+    public function adminCourseItem(Request $request, $id)
     {
+        Utility::setBackUrlCookie($request, '/admin/course?');
+
         $course = Course::select('id', 'name', 'video_length', 'item_count')->with(['courseItems' => function($query) {
             $query->select('id', 'course_id', 'name', 'type', 'number', 'video_length')->orderBy('number');
         }])->find($id);
@@ -1140,9 +1152,19 @@ class CourseController extends Controller
         return redirect()->action('Backend\CourseController@adminCourseItem', ['id' => $course->id])->with('messageSuccess', 'Thành Công');
     }
 
-    public function adminTag()
+    public function adminTag(Request $request)
     {
-        $dataProvider = Tag::select('id', 'name')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
+        $dataProvider = Tag::select('id', 'name')->orderBy('id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['name']))
+                $dataProvider->where('name', 'like', '%' . $inputs['name'] . '%');
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
@@ -1157,6 +1179,14 @@ class CourseController extends Controller
 
         $gridView = new GridView($dataProvider, $columns);
         $gridView->setCheckbox();
+        $gridView->setFilters([
+            [
+                'title' => 'Tên',
+                'name' => 'name',
+                'type' => 'input',
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
 
         return view('backend.courses.admin_tag', [
             'gridView' => $gridView,
@@ -1165,6 +1195,8 @@ class CourseController extends Controller
 
     public function createTag(Request $request)
     {
+        Utility::setBackUrlCookie($request, '/admin/courseTag?');
+
         $tag = new Tag();
 
         return $this->saveTag($request, $tag);
@@ -1172,6 +1204,8 @@ class CourseController extends Controller
 
     public function editTag(Request $request, $id)
     {
+        Utility::setBackUrlCookie($request, '/admin/courseTag?');
+
         $tag = Tag::find($id);
 
         if(empty($tag))
@@ -1229,7 +1263,7 @@ class CourseController extends Controller
 
         $tag->delete();
 
-        return redirect()->action('Backend\CourseController@adminTag')->with('messageSuccess', 'Thành Công');
+        return redirect(Utility::getBackUrlCookie(action('Backend\CourseController@adminTag')))->with('messageSuccess', 'Thành Công');
     }
 
     public function controlDeleteTag(Request $request)
@@ -1244,7 +1278,10 @@ class CourseController extends Controller
                 $tag->delete();
         }
 
-        return redirect()->action('Backend\CourseController@adminTag')->with('messageSuccess', 'Thành Công');
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\CourseController@adminTag')->with('messageSuccess', 'Thành Công');
     }
 
     public function autoCompleteTag(Request $request)

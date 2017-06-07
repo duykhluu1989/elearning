@@ -2,6 +2,7 @@
 
 namespace App\Libraries\Helpers;
 
+use Illuminate\Support\Facades\Cookie;
 use Intervention\Image\Facades\Image;
 
 class Utility
@@ -13,6 +14,8 @@ class Utility
     const FALSE_LABEL = 'Vô Hiệu';
 
     const AUTO_COMPLETE_LIMIT = 20;
+
+    const BACK_URL_COOKIE_NAME = 'back_url';
 
     public static function getTrueFalse($value = null)
     {
@@ -180,5 +183,55 @@ class Utility
         }
 
         return '';
+    }
+
+    public static function setBackUrlCookie($request, $backUrlPaths)
+    {
+        $set = false;
+
+        $referer = $request->headers->get('referer');
+
+        if(!empty($referer))
+        {
+            if(is_array($backUrlPaths))
+            {
+                foreach($backUrlPaths as $backUrlPath)
+                {
+                    $hasPath = strpos($referer, $backUrlPath);
+
+                    if($hasPath !== false)
+                        break;
+                }
+            }
+            else
+                $hasPath = strpos($referer, $backUrlPaths);
+
+            if($hasPath !== false)
+            {
+                Cookie::queue(Cookie::make(self::BACK_URL_COOKIE_NAME, $referer, 10));
+
+                $set = true;
+            }
+            else if(Cookie::get(self::BACK_URL_COOKIE_NAME))
+                $set = true;
+        }
+
+        if($set == false)
+            Cookie::queue(Cookie::forget(self::BACK_URL_COOKIE_NAME));
+    }
+
+    public static function getBackUrlCookie($defaultBackUrl)
+    {
+        $backUrl = Cookie::queued(self::BACK_URL_COOKIE_NAME);
+
+        if(empty($backUrl))
+            $backUrl = Cookie::get(self::BACK_URL_COOKIE_NAME);
+        else
+            $backUrl = $backUrl->getValue();
+
+        if(!empty($backUrl))
+            return $backUrl;
+
+        return $defaultBackUrl;
     }
 }

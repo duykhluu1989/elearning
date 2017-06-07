@@ -19,7 +19,7 @@
         },
         function() {
             echo \App\Libraries\Helpers\Html::a('Quay Lại', [
-                'href' => action('Backend\CourseController@adminCourse'),
+                'href' => \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\CourseController@adminCourse')),
                 'class' => 'btn btn-default',
             ]);
         },

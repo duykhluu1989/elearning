@@ -87,6 +87,8 @@ class WidgetController extends Controller
 
     public function editWidget(Request $request, $id)
     {
+        Utility::setBackUrlCookie($request, '/admin/widget?');
+
         $widget = Widget::find($id);
 
         if(empty($widget))

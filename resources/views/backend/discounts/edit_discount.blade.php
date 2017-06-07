@@ -9,7 +9,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <button type="submit" class="btn btn-primary">Tạo Mới</button>
-                <a href="{{ action('Backend\DiscountController@adminDiscount') }}" class="btn btn-default">Quay Lại</a>
+                <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\DiscountController@adminDiscount')) }}" class="btn btn-default">Quay Lại</a>
 
                 <?php
                 $isDeletable = $discount->isDeletable();
@@ -159,7 +159,7 @@
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Tạo Mới</button>
-                <a href="{{ action('Backend\DiscountController@adminDiscount') }}" class="btn btn-default">Quay Lại</a>
+                <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\DiscountController@adminDiscount')) }}" class="btn btn-default">Quay Lại</a>
 
                 @if(!empty($discount->id) && $isDeletable == true)
                     <a href="{{ action('Backend\DiscountController@deleteDiscount', ['id' => $discount->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>

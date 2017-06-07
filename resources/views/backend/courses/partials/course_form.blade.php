@@ -1,7 +1,7 @@
 <div class="box box-primary">
     <div class="box-header with-border">
         <button type="submit" class="btn btn-primary">{{ empty($course->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
-        <a href="{{ action('Backend\CourseController@adminCourse') }}" class="btn btn-default">Quay Lại</a>
+        <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\CourseController@adminCourse')) }}" class="btn btn-default">Quay Lại</a>
 
         @if(!empty($course->id))
             <a href="{{ action('Backend\CourseController@adminCourseItem', ['id' => $course->id]) }}" class="btn btn-primary">Danh Sách Bài Học</a>
@@ -251,7 +251,7 @@
     </div>
     <div class="box-footer">
         <button type="submit" class="btn btn-primary">{{ empty($course->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
-        <a href="{{ action('Backend\CourseController@adminCourse') }}" class="btn btn-default">Quay Lại</a>
+        <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\CourseController@adminCourse')) }}" class="btn btn-default">Quay Lại</a>
 
         @if(!empty($course->id))
             <a href="{{ action('Backend\CourseController@adminCourseItem', ['id' => $course->id]) }}" class="btn btn-primary">Danh Sách Bài Học</a>

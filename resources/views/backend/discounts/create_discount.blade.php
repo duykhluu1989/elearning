@@ -9,7 +9,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <button type="submit" class="btn btn-primary">Tạo Mới</button>
-                <a href="{{ action('Backend\DiscountController@adminDiscount') }}" class="btn btn-default">Quay Lại</a>
+                <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\DiscountController@adminDiscount')) }}" class="btn btn-default">Quay Lại</a>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -274,7 +274,7 @@
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Tạo Mới</button>
-                <a href="{{ action('Backend\DiscountController@adminDiscount') }}" class="btn btn-default">Quay lai</a>
+                <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\DiscountController@adminDiscount')) }}" class="btn btn-default">Quay Lại</a>
             </div>
         </div>
         {{ csrf_field() }}
