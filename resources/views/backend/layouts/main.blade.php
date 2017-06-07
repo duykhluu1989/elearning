@@ -72,7 +72,7 @@
     </div>
 
     <footer class="main-footer">
-        <strong>Copyright &copy; 2017 <a href="{{ action('Backend\HomeController@home') }}">{{ \App\Models\Setting::getSettings(\App\Models\Setting::WEB_TITLE) }}</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2017 <a href="{{ action('Backend\HomeController@home') }}">{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_TITLE) }}</a>.</strong> All rights reserved.
     </footer>
 </div>
 <script src="{{ asset('assets/js/jquery.min.js') }}"></script>

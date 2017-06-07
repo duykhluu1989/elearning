@@ -10,7 +10,7 @@ class SettingController extends Controller
 {
     public function adminSetting(Request $request)
     {
-        $settings = Setting::getSettings();
+        $settings = Setting::getSettings(Setting::CATEGORY_GENERAL_DB);
 
         if($request->isMethod('post'))
         {
@@ -25,6 +25,24 @@ class SettingController extends Controller
         }
 
         return view('backend.settings.admin_setting', [
+            'settings' => $settings,
+        ]);
+    }
+
+    public function adminSettingCollaborator(Request $request)
+    {
+        $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+
+
+            return redirect()->action('Backend\SettingController@adminSettingCollaborator')->with('messageSuccess', 'Thành Công');
+        }
+
+        return view('backend.settings.admin_setting_collaborator', [
             'settings' => $settings,
         ]);
     }

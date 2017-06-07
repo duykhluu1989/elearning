@@ -33,7 +33,7 @@ class User extends Authenticatable
         $user->username = 'admin';
         $user->password = Hash::make('123456');
         $user->status = Utility::ACTIVE_DB;
-        $user->email = 'admin@gmail.com';
+        $user->email = 'admin@caydenthan.com';
         $user->admin = Utility::ACTIVE_DB;
         $user->created_at = date('Y-m-d H:i:s');
         $user->collaborator = Utility::INACTIVE_DB;

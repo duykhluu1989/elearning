@@ -44,6 +44,9 @@
                     <li class="{{ (request()->is('admin/setting') ? 'active' : '') }}">
                         <a href="{{ action('Backend\SettingController@adminSetting') }}">Tổng quan</a>
                     </li>
+                    <li class="{{ (request()->is('admin/setting/collaborator') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\SettingController@adminSettingCollaborator') }}">Chính Sách Cộng Tác Viên</a>
+                    </li>
                     <li class="{{ (request()->is('admin/setting/paymentMethod') ? 'active' : '') }}">
                         <a href="{{ action('Backend\PaymentMethodController@adminPaymentMethod') }}">Phương Thức Thanh Toán</a>
                     </li>
