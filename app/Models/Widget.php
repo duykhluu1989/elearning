@@ -7,7 +7,7 @@ use App\Libraries\Helpers\Utility;
 
 class Widget extends Model
 {
-    const HOME_SLIDER = 'HOME_SLIDER';
+    const HOME_SLIDER = 'home_slider';
 
     const TYPE_SLIDER_DB = 0;
     const TYPE_SLIDER_LABEL = 'Khung Ảnh Trượt';

@@ -19,26 +19,42 @@ class SettingController extends Controller
         {
             $inputs = $request->all();
 
-            try
+            $inputs[Setting::EXCHANGE_USD_RATE] = implode('', explode('.', $inputs[Setting::EXCHANGE_USD_RATE]));
+            $inputs[Setting::EXCHANGE_POINT_RATE] = implode('', explode('.', $inputs[Setting::EXCHANGE_POINT_RATE]));
+
+            $validator = Validator::make($inputs, [
+                Setting::EXCHANGE_USD_RATE => 'required|integer|min:1',
+                Setting::EXCHANGE_POINT_RATE => 'required|integer|min:1',
+            ]);
+
+            if($validator->passes())
             {
-                DB::beginTransaction();
+                try
+                {
+                    DB::beginTransaction();
 
-                $settings[Setting::WEB_TITLE]->value = $inputs['web_title'];
-                $settings[Setting::WEB_TITLE]->save();
+                    foreach($inputs as $key => $value)
+                    {
+                        if(isset($settings[$key]))
+                        {
+                            $settings[$key]->value = $value;
+                            $settings[$key]->save();
+                        }
+                    }
 
-                $settings[Setting::WEB_DESCRIPTION]->value = $inputs['web_description'];
-                $settings[Setting::WEB_DESCRIPTION]->save();
+                    DB::commit();
 
-                DB::commit();
+                    return redirect()->action('Backend\SettingController@adminSetting')->with('messageSuccess', 'Thành Công');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
 
-                return redirect()->action('Backend\SettingController@adminSetting')->with('messageSuccess', 'Thành Công');
+                    return redirect()->action('Backend\SettingController@adminSetting')->withInput()->with('messageError', $e->getMessage());
+                }
             }
-            catch(\Exception $e)
-            {
-                DB::rollBack();
-
-                return redirect()->action('Backend\SettingController@adminSetting')->withInput()->with('messageError', $e->getMessage());
-            }
+            else
+                return redirect()->action('Backend\SettingController@adminSetting')->withErrors($validator)->withInput();
         }
 
         return view('backend.settings.admin_setting', [
@@ -54,24 +70,24 @@ class SettingController extends Controller
         {
             $inputs = $request->all();
 
-            $inputs['collaborator_silver'][Collaborator::REVENUE_ATTRIBUTE] = implode('', explode('.', $inputs['collaborator_silver'][Collaborator::REVENUE_ATTRIBUTE]));
-            $inputs['collaborator_gold'][Collaborator::REVENUE_ATTRIBUTE] = implode('', explode('.', $inputs['collaborator_gold'][Collaborator::REVENUE_ATTRIBUTE]));
+            $inputs[Setting::COLLABORATOR_SILVER][Collaborator::REVENUE_ATTRIBUTE] = implode('', explode('.', $inputs[Setting::COLLABORATOR_SILVER][Collaborator::REVENUE_ATTRIBUTE]));
+            $inputs[Setting::COLLABORATOR_GOLD][Collaborator::REVENUE_ATTRIBUTE] = implode('', explode('.', $inputs[Setting::COLLABORATOR_GOLD][Collaborator::REVENUE_ATTRIBUTE]));
 
             $validator = Validator::make($inputs, [
-                'collaborator_silver.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_silver.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_silver.' . Collaborator::REVENUE_ATTRIBUTE => 'required|integer|min:1',
-                'collaborator_gold.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_gold.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_gold.' . Collaborator::REVENUE_ATTRIBUTE => 'required|integer|min:1',
-                'collaborator_diamond.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_diamond.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_diamond.' . Collaborator::RERANK_TIME_ATTRIBUTE => 'required|integer|min:1',
-                'collaborator_manager.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_manager.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_manager.' . Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_manager.' . Collaborator::DISCOUNT_DOWNLINE_SET_ATTRIBUTE => 'required|integer|min:1|max:99',
-                'collaborator_manager.' . Collaborator::COMMISSION_DOWNLINE_SET_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_SILVER . '.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_SILVER . '.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_SILVER . '.' . Collaborator::REVENUE_ATTRIBUTE => 'required|integer|min:1',
+                Setting::COLLABORATOR_GOLD . '.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_GOLD . '.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_GOLD . '.' . Collaborator::REVENUE_ATTRIBUTE => 'required|integer|min:1',
+                Setting::COLLABORATOR_DIAMOND . '.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_DIAMOND . '.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_DIAMOND . '.' . Collaborator::RERANK_TIME_ATTRIBUTE => 'required|integer|min:1',
+                Setting::COLLABORATOR_MANAGER . '.' . Collaborator::DISCOUNT_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_MANAGER . '.' . Collaborator::COMMISSION_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_MANAGER . '.' . Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_MANAGER . '.' . Collaborator::DISCOUNT_DOWNLINE_SET_ATTRIBUTE => 'required|integer|min:1|max:99',
+                Setting::COLLABORATOR_MANAGER . '.' . Collaborator::COMMISSION_DOWNLINE_SET_ATTRIBUTE => 'required|integer|min:1|max:99',
             ]);
 
             if($validator->passes())
@@ -80,17 +96,14 @@ class SettingController extends Controller
                 {
                     DB::beginTransaction();
 
-                    $settings[Setting::COLLABORATOR_SILVER]->value = json_encode($inputs['collaborator_silver']);
-                    $settings[Setting::COLLABORATOR_SILVER]->save();
-
-                    $settings[Setting::COLLABORATOR_GOLD]->value = json_encode($inputs['collaborator_gold']);
-                    $settings[Setting::COLLABORATOR_GOLD]->save();
-
-                    $settings[Setting::COLLABORATOR_DIAMOND]->value = json_encode($inputs['collaborator_diamond']);
-                    $settings[Setting::COLLABORATOR_DIAMOND]->save();
-
-                    $settings[Setting::COLLABORATOR_MANAGER]->value = json_encode($inputs['collaborator_manager']);
-                    $settings[Setting::COLLABORATOR_MANAGER]->save();
+                    foreach($inputs as $key => $value)
+                    {
+                        if(isset($settings[$key]))
+                        {
+                            $settings[$key]->value = json_encode($value);
+                            $settings[$key]->save();
+                        }
+                    }
 
                     DB::commit();
 

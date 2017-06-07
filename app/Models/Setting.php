@@ -6,13 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    const WEB_TITLE = 'WEB_TITLE';
-    const WEB_DESCRIPTION = 'WEB_DESCRIPTION';
+    const WEB_TITLE = 'web_title';
+    const WEB_DESCRIPTION = 'web_description';
 
-    const COLLABORATOR_SILVER = 'COLLABORATOR_SILVER';
-    const COLLABORATOR_GOLD = 'COLLABORATOR_GOLD';
-    const COLLABORATOR_DIAMOND = 'COLLABORATOR_DIAMOND';
-    const COLLABORATOR_MANAGER = 'COLLABORATOR_MANAGER';
+    const EXCHANGE_USD_RATE = 'exchange_usd_rate';
+    const EXCHANGE_POINT_RATE = 'exchange_point_rate';
+
+    const COLLABORATOR_SILVER = 'collaborator_silver';
+    const COLLABORATOR_GOLD = 'collaborator_gold';
+    const COLLABORATOR_DIAMOND = 'collaborator_diamond';
+    const COLLABORATOR_MANAGER = 'collaborator_manager';
 
     const TYPE_STRING_DB = 0;
     const TYPE_INT_DB = 1;
@@ -32,6 +35,10 @@ class Setting extends Model
         $coreSettings = [
             [self::WEB_TITLE, 'Tiêu Đề Web', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
             [self::WEB_DESCRIPTION, 'Mô Tả Web', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
+
+            [self::EXCHANGE_USD_RATE, 'Tỉ Lệ Quy Đổi USD', self::TYPE_INT_DB, 22000, self::CATEGORY_GENERAL_DB],
+            [self::EXCHANGE_POINT_RATE, 'Tỉ Lệ Quy Đổi Điểm', self::TYPE_INT_DB, 1000, self::CATEGORY_GENERAL_DB],
+
             [
                 self::COLLABORATOR_SILVER,
                 'Cộng Tác Viên Bạc',

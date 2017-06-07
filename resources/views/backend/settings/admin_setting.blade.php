@@ -15,13 +15,39 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>{{ $settings[\App\Models\Setting::WEB_TITLE]->name }}</label>
-                            <input type="text" class="form-control" name="web_title" value="{{ old('web_title', $settings[\App\Models\Setting::WEB_TITLE]->value) }}" />
+                            <input type="text" class="form-control" name="{{ \App\Models\Setting::WEB_TITLE }}" value="{{ old(\App\Models\Setting::WEB_TITLE, $settings[\App\Models\Setting::WEB_TITLE]->value) }}" />
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>{{ $settings[\App\Models\Setting::WEB_DESCRIPTION]->name }}</label>
-                            <input type="text" class="form-control" name="web_description" value="{{ old('web_description', $settings[\App\Models\Setting::WEB_DESCRIPTION]->value) }}" />
+                            <input type="text" class="form-control" name="{{ \App\Models\Setting::WEB_DESCRIPTION }}" value="{{ old(\App\Models\Setting::WEB_DESCRIPTION, $settings[\App\Models\Setting::WEB_DESCRIPTION]->value) }}" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group{{ $errors->has(\App\Models\Setting::EXCHANGE_USD_RATE) ? ' has-error': '' }}">
+                            <label>{{ $settings[\App\Models\Setting::EXCHANGE_USD_RATE]->name }} <i>(bắt buộc)</i></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control InputForNumber" name="{{ \App\Models\Setting::EXCHANGE_USD_RATE }}" value="{{ old(\App\Models\Setting::EXCHANGE_USD_RATE, \App\Libraries\Helpers\Utility::formatNumber($settings[\App\Models\Setting::EXCHANGE_USD_RATE]->value)) }}" required="required" />
+                                <span class="input-group-addon">VND = 1 USD</span>
+                            </div>
+                            @if($errors->has(\App\Models\Setting::EXCHANGE_USD_RATE))
+                                <span class="help-block">{{ $errors->first(\App\Models\Setting::EXCHANGE_USD_RATE) }}</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group{{ $errors->has(\App\Models\Setting::EXCHANGE_POINT_RATE) ? ' has-error': '' }}">
+                            <label>{{ $settings[\App\Models\Setting::EXCHANGE_POINT_RATE]->name }} <i>(bắt buộc)</i></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control InputForNumber" name="{{ \App\Models\Setting::EXCHANGE_POINT_RATE }}" value="{{ old(\App\Models\Setting::EXCHANGE_POINT_RATE, \App\Libraries\Helpers\Utility::formatNumber($settings[\App\Models\Setting::EXCHANGE_POINT_RATE]->value)) }}" required="required" />
+                                <span class="input-group-addon">VND = 1 Điểm</span>
+                            </div>
+                            @if($errors->has(\App\Models\Setting::EXCHANGE_POINT_RATE))
+                                <span class="help-block">{{ $errors->first(\App\Models\Setting::EXCHANGE_POINT_RATE) }}</span>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -17,7 +17,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group{{ $errors->has('image') ? ' has-error': '' }}">
+                <div class="form-group">
                     <label>Ảnh</label>
                     <div>
                         <button type="button" class="btn btn-default" id="ElFinderPopupOpen"><i class="fa fa-image fa-fw"></i></button>
