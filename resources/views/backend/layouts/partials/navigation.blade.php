@@ -33,6 +33,9 @@
                     <li class="{{ (request()->is('admin/userStudent') ? 'active' : '') }}">
                         <a href="{{ action('Backend\UserController@adminUserStudent') }}">Học Viên</a>
                     </li>
+                    <li class="{{ (request()->is('admin/userCollaborator') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\UserController@adminUserCollaborator') }}">Cộng Tác Viên</a>
+                    </li>
                 </ul>
             </li>
             <li class="{{ (request()->is('admin/role*') ? 'active' : '') }}">
