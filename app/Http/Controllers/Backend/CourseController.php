@@ -611,6 +611,7 @@ class CourseController extends Controller
                         ->join('profile', 'user.id', '=', 'profile.user_id')
                         ->where('user.email', $teacherNameParts[1])
                         ->where('profile.name', $teacherNameParts[0])
+                        ->where('teacher', Utility::ACTIVE_DB)
                         ->first();
 
                     if(!empty($user))

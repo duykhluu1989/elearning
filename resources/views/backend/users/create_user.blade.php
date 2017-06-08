@@ -76,6 +76,36 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Giảng Viên</label>
+                            <?php
+                            $teacher = old('teacher', $user->teacher);
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="teacher" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}"<?php echo ($teacher == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Chuyên Gia</label>
+                            <?php
+                            $expert = old('expert', $user->expert);
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="expert" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}"<?php echo ($expert == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('password') ? ' has-error': '' }}">
                             <label>Mật Khẩu <i>(bắt buộc)</i></label>

@@ -154,6 +154,8 @@ class UserController extends Controller
         $user->status = Utility::ACTIVE_DB;
         $user->admin = Utility::INACTIVE_DB;
         $user->collaborator = Utility::INACTIVE_DB;
+        $user->teacher = Utility::INACTIVE_DB;
+        $user->expert = Utility::INACTIVE_DB;
 
         if($request->isMethod('post'))
         {
@@ -177,6 +179,8 @@ class UserController extends Controller
                     $user->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                     $user->admin = isset($inputs['admin']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                     $user->collaborator = isset($inputs['collaborator']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->teacher = isset($inputs['teacher']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->expert = isset($inputs['expert']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                     $user->created_at = date('Y-m-d H:i:s');
                     $user->password = Hash::make($inputs['password']);
                     $user->save();
@@ -291,6 +295,7 @@ class UserController extends Controller
 
                     $user->profile->first_name = $inputs['first_name'];
                     $user->profile->last_name = $inputs['last_name'];
+                    $user->profile->title = $inputs['title'];
                     $user->profile->name = (!empty($user->profile->last_name) ? ($user->profile->last_name . ' ') : '') . $user->profile->first_name;
                     $user->profile->gender = $inputs['gender'];
                     $user->profile->birthday = $inputs['birthday'];
@@ -516,6 +521,7 @@ class UserController extends Controller
 
                     $user->profile->first_name = $inputs['first_name'];
                     $user->profile->last_name = $inputs['last_name'];
+                    $user->profile->title = $inputs['title'];
                     $user->profile->name = (!empty($user->profile->last_name) ? ($user->profile->last_name . ' ') : '') . $user->profile->first_name;
                     $user->profile->gender = $inputs['gender'];
                     $user->profile->birthday = $inputs['birthday'];
@@ -547,17 +553,19 @@ class UserController extends Controller
     public function autoCompleteUser(Request $request)
     {
         $term = $request->input('term');
-        $except = $request->input('except');
+        $type = $request->input('type');
 
         $builder = User::select('user.id', 'user.username', 'user.email', 'profile.name')
             ->join('profile', 'user.id', '=', 'profile.user_id')
-            ->where('user.username', 'like', '%' . $term . '%')
-            ->orWhere('user.email', 'like', '%' . $term . '%')
-            ->orWhere('profile.name', 'like', '%' . $term . '%')
+            ->where(function($query) use($term) {
+                $query->where('user.username', 'like', '%' . $term . '%')
+                    ->orWhere('user.email', 'like', '%' . $term . '%')
+                    ->orWhere('profile.name', 'like', '%' . $term . '%');
+            })
             ->limit(Utility::AUTO_COMPLETE_LIMIT);
 
-        if(!empty($except))
-            $builder->where('id', '<>', $except);
+        if(!empty($type))
+            $builder->where($type, Utility::ACTIVE_DB);
 
         $users = $builder->get()->toJson();
 

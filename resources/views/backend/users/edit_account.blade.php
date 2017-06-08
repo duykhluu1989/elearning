@@ -77,6 +77,14 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
+                            <label>Chức Danh</label>
+                            <input type="text" class="form-control" name="title" value="{{ old('title', $user->profile->title) }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
                             <label>Giới Tính</label>
                             <?php
                             $gender = old('gender', (!empty($user->profile) ? $user->profile->gender : ''));
