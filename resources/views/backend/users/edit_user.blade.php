@@ -143,7 +143,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                @if($admin == \App\Libraries\Helpers\Utility::ACTIVE_DB)
+                                @if($user->admin == \App\Libraries\Helpers\Utility::ACTIVE_DB)
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Vai Trò</label>

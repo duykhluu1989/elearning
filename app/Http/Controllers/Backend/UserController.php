@@ -14,6 +14,8 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\UserRole;
 use App\Models\Profile;
+use App\Models\Collaborator;
+use App\Models\Setting;
 
 class UserController extends Controller
 {
@@ -189,6 +191,21 @@ class UserController extends Controller
                     $profile->user_id = $user->id;
                     $profile->save();
 
+                    if($user->collaborator == Utility::ACTIVE_DB)
+                    {
+                        $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+                        $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
+
+                        $collaborator = new Collaborator();
+                        $collaborator->user_id = $user->id;
+                        $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
+                        $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
+                        $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
+                        $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
+                        $collaborator->status = Collaborator::STATUS_ACTIVE_DB;
+                        $collaborator->save();
+                    }
+
                     DB::commit();
 
                     return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('messageSuccess', 'Thành Công');
@@ -213,7 +230,7 @@ class UserController extends Controller
     {
         Utility::setBackUrlCookie($request, ['/admin/user?', '/admin/userStudent', '/admin/userCollaborator']);
 
-        $user = User::with('userRoles', 'profile')->find($id);
+        $user = User::with('userRoles', 'profile', 'collaboratorInformation')->find($id);
 
         if(empty($user))
             return view('backend.errors.404');
@@ -303,6 +320,21 @@ class UserController extends Controller
                     $user->profile->address = $inputs['address'];
                     $user->profile->description = $inputs['description'];
                     $user->profile->save();
+
+                    if($user->collaborator == Utility::ACTIVE_DB && empty($user->collaboratorInformation))
+                    {
+                        $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+                        $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
+
+                        $collaborator = new Collaborator();
+                        $collaborator->user_id = $user->id;
+                        $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
+                        $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
+                        $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
+                        $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
+                        $collaborator->status = Collaborator::STATUS_ACTIVE_DB;
+                        $collaborator->save();
+                    }
 
                     DB::commit();
 
