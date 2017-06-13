@@ -473,6 +473,19 @@ class UserController extends Controller
                         echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-edit fa-fw']), [
+                        'href' => action('Backend\CollaboratorController@editCollaborator', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Chỉnh Sửa Cộng Tác Viên',
+                    ]);
+                },
+            ]
         ];
 
         $gridView = new GridView($dataProvider, $columns);
