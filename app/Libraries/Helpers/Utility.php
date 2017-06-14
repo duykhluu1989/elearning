@@ -15,6 +15,8 @@ class Utility
 
     const AUTO_COMPLETE_LIMIT = 20;
 
+    const LARGE_SET_LIMIT = 1000;
+
     const BACK_URL_COOKIE_NAME = 'back_url';
 
     public static function getTrueFalse($value = null)

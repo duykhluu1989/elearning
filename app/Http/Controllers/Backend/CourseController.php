@@ -176,29 +176,169 @@ class CourseController extends Controller
 
             if($validator->passes())
             {
-                $category->name = $inputs['name'];
-                $category->name_en = $inputs['name_en'];
-                $category->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
-                $category->order = $inputs['order'];
-                $category->code = strtoupper($inputs['code']);
-                $category->parent_id = $inputs['parent_id'];
+                try
+                {
+                    DB::beginTransaction();
 
-                if(empty($inputs['slug']))
-                    $category->slug = str_slug($category->name);
-                else
-                    $category->slug = str_slug($inputs['slug']);
+                    $category->name = $inputs['name'];
+                    $category->name_en = $inputs['name_en'];
+                    $category->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $category->order = $inputs['order'];
+                    $category->code = strtoupper($inputs['code']);
+                    $category->parent_id = $inputs['parent_id'];
 
-                if(empty($inputs['slug_en']))
-                    $category->slug_en = str_slug($category->name_en);
-                else
-                    $category->slug_en = str_slug($inputs['slug_en']);
+                    if(empty($inputs['slug']))
+                        $category->slug = str_slug($category->name);
+                    else
+                        $category->slug = str_slug($inputs['slug']);
 
-                if($create == true)
-                    $category->created_at = date('Y-m-d H:i:s');
+                    if(empty($inputs['slug_en']))
+                        $category->slug_en = str_slug($category->name_en);
+                    else
+                        $category->slug_en = str_slug($inputs['slug_en']);
 
-                $category->save();
+                    if($create == true)
+                        $category->created_at = date('Y-m-d H:i:s');
 
-                return redirect()->action('Backend\CourseController@editCategory', ['id' => $category->id])->with('messageSuccess', 'Thành Công');
+                    if($category->parent_id != $category->getOriginal('parent_id'))
+                    {
+                        $categoryIds[] = $category->id;
+
+                        $tempCategory = $category;
+
+                        while(!empty($tempCategory->parent_id))
+                        {
+                            $tempCategory = Category::select('id', 'status', 'parent_id')->find($tempCategory->parent_id);
+
+                            $categoryIds[] = $tempCategory->id;
+                        }
+
+                        $categoryIds = array_reverse($categoryIds);
+
+                        $currentCategoryLevel = count($categoryIds);
+
+                        $page = 1;
+
+                        do
+                        {
+                            $courses = Course::select('course.id')
+                                ->with(['categoryCourses' => function($query) {
+                                    $query->orderBy('level');
+                                }])
+                                ->join('category_course', 'course.id', '=', 'category_course.course_id')
+                                ->where('category_course.category_id', $category->id)
+                                ->paginate(Utility::LARGE_SET_LIMIT, ['*'], 'page', $page);
+
+                            foreach($courses as $course)
+                            {
+                                $isChild = false;
+
+                                $i = 1;
+
+                                foreach($course->categoryCourses as $categoryCourse)
+                                {
+                                    if($categoryCourse->category_id == $category->id)
+                                    {
+                                        $categoryCourse->level = $currentCategoryLevel;
+                                        $categoryCourse->save();
+
+                                        $isChild = true;
+                                    }
+                                    else
+                                    {
+                                        if($isChild == false)
+                                            $categoryCourse->delete();
+                                        else
+                                        {
+                                            $categoryCourse->level = $currentCategoryLevel + $i;
+                                            $categoryCourse->save();
+
+                                            $i ++;
+                                        }
+                                    }
+                                }
+
+                                foreach($categoryIds as $key => $categoryId)
+                                {
+                                    if($categoryId != $category->id)
+                                    {
+                                        $categoryCourse = new CategoryCourse();
+                                        $categoryCourse->category_id = $categoryId;
+                                        $categoryCourse->course_id = $course->id;
+                                        $categoryCourse->level = $key + 1;
+                                        $categoryCourse->save();
+                                    }
+                                }
+                            }
+
+                            $page ++;
+
+                            $countCourses = count($courses);
+                        }
+                        while($countCourses > 0);
+                    }
+
+                    if($category->status != $category->getOriginal('status'))
+                    {
+                        $page = 1;
+
+                        do
+                        {
+                            $courses = Course::select('course.id', 'course.category_status')
+                                ->with(['categoryCourses' => function($query) {
+                                    $query->orderBy('level');
+                                }, 'categoryCourses.category' => function($query) {
+                                    $query->select('id', 'status');
+                                }])
+                                ->join('category_course', 'course.id', '=', 'category_course.course_id')
+                                ->where('category_course.category_id', $category->id)
+                                ->paginate(Utility::LARGE_SET_LIMIT, ['*'], 'page', $page);
+
+                            foreach($courses as $course)
+                            {
+                                $categoryStatus = $category->status;
+
+                                if($categoryStatus == Utility::ACTIVE_DB)
+                                {
+                                    foreach($course->categoryCourses as $categoryCourse)
+                                    {
+                                        if($categoryCourse->category_id != $category->id)
+                                        {
+                                            if($categoryCourse->category->status == Utility::INACTIVE_DB)
+                                            {
+                                                $categoryStatus = $categoryCourse->category->status;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                $course->category_status = $categoryStatus;
+                                $course->save();
+                            }
+
+                            $page ++;
+
+                            $countCourses = count($courses);
+                        }
+                        while($countCourses > 0);
+                    }
+
+                    $category->save();
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\CourseController@editCategory', ['id' => $category->id])->with('messageSuccess', 'Thành Công');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    if($create == true)
+                        return redirect()->action('Backend\CourseController@createCategory')->withInput()->with('messageError', $e->getMessage());
+                    else
+                        return redirect()->action('Backend\CourseController@editCategory', ['id' => $category->id])->withInput()->with('messageError', $e->getMessage());
+                }
             }
             else
             {
@@ -611,7 +751,6 @@ class CourseController extends Controller
                         ->join('profile', 'user.id', '=', 'profile.user_id')
                         ->where('user.email', $teacherNameParts[1])
                         ->where('profile.name', $teacherNameParts[0])
-                        ->where('teacher', Utility::ACTIVE_DB)
                         ->first();
 
                     if(!empty($user))
@@ -621,19 +760,24 @@ class CourseController extends Controller
                 if(!isset($inputs['user_id']))
                     $validator->errors()->add('user_name', 'Giảng Viên Không Tồn Tại');
 
-                $category = Category::select('id', 'parent_id')->where('name', $inputs['category_name'])->first();
+                $category = Category::select('id', 'parent_id', 'status')->where('name', $inputs['category_name'])->first();
 
                 if(empty($category))
                     $validator->errors()->add('category_name', 'Chủ Đề Không Tồn Tại');
                 else
                 {
+                    $inputs['category_status'] = $category->status;
+
                     $categoryIds[] = $category->id;
 
-                    while(!empty($category->parentCategory))
+                    while(!empty($category->parent_id))
                     {
-                        $category = $category->parentCategory;
+                        $category = Category::select('id', 'parent_id', 'status')->find($category->parent_id);
 
                         $categoryIds[] = $category->id;
+
+                        if($inputs['category_status'] == Utility::ACTIVE_DB && $category->status == Utility::INACTIVE_DB)
+                            $inputs['category_status'] = $category->status;
                     }
 
                     $inputs['categoryIds'] = array_reverse($categoryIds);
@@ -660,6 +804,7 @@ class CourseController extends Controller
                     $course->short_description = $inputs['short_description'];
                     $course->short_description_en = $inputs['short_description_en'];
                     $course->highlight = isset($inputs['highlight']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $course->category_status = $inputs['category_status'];
 
                     if(empty($course->published_at) && $course->status == Course::STATUS_PUBLISH_DB)
                         $course->published_at = date('Y-m-d H:i:s');
