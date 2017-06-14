@@ -327,7 +327,7 @@
                 $.ajax({
                     url: '{{ action('Backend\UserController@autoCompleteUser') }}',
                     type: 'post',
-                    data: '_token=' + $('input[name="_token"]').first().val() + '&type=teacher&term=' + request.term,
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
                     success: function(result) {
                         if(result)
                         {

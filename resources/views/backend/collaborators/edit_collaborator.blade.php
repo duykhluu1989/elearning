@@ -139,4 +139,30 @@
 
 @push('scripts')
     <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
+    <script type="text/javascript">
+        $('#ParentInput').autocomplete({
+            minLength: 3,
+            delay: 1000,
+            source: function(request, response) {
+                $.ajax({
+                    url: '{{ action('Backend\UserController@autoCompleteUser') }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&except={{ $collaborator->id }}&term=' + request.term,
+                    success: function(result) {
+                        if(result)
+                        {
+                            result = JSON.parse(result);
+                            response(result);
+                        }
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $(this).val(ui.item.username);
+                return false;
+            }
+        }).autocomplete('instance')._renderItem = function(ul, item) {
+            return $('<li>').append('<a>' + item.username + '</a>').appendTo(ul);
+        };
+    </script>
 @endpush

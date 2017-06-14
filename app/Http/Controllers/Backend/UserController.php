@@ -598,7 +598,7 @@ class UserController extends Controller
     public function autoCompleteUser(Request $request)
     {
         $term = $request->input('term');
-        $type = $request->input('type');
+        $except = $request->input('except');
 
         $builder = User::select('user.id', 'user.username', 'user.email', 'profile.name')
             ->join('profile', 'user.id', '=', 'profile.user_id')
@@ -609,8 +609,8 @@ class UserController extends Controller
             })
             ->limit(Utility::AUTO_COMPLETE_LIMIT);
 
-        if(!empty($type))
-            $builder->where($type, Utility::ACTIVE_DB);
+        if(!empty($except))
+            $builder->where('user.id', '<>', $except);
 
         $users = $builder->get()->toJson();
 
