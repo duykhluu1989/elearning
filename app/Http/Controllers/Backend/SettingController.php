@@ -124,4 +124,13 @@ class SettingController extends Controller
             'settings' => $settings,
         ]);
     }
+
+    public function getSettingCollaboratorValue(Request $request)
+    {
+        $id = $request->input('id');
+
+        $setting = Setting::find($id);
+
+        return $setting->value;
+    }
 }

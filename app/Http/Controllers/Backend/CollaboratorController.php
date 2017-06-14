@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\User;
 use App\Models\Collaborator;
+use App\Models\Setting;
 
 class CollaboratorController extends Controller
 {
@@ -36,8 +37,68 @@ class CollaboratorController extends Controller
                 'commission_percent' => 'required|integer|min:1|max:99',
             ]);
 
+            $validator->after(function($validator) use(&$inputs, $collaborator) {
+                if(!empty($inputs['parent_username']))
+                {
+                    $user = User::select('id')
+                        ->with(['collaboratorInformation' => function($query) {
+                            $query->select('id', 'user_id');
+                        }])
+                        ->where('username', $inputs['parent_username'])
+                        ->first();
+
+                    if(!empty($user))
+                    {
+                        if(!empty($user->collaboratorInformation))
+                            $inputs['parent_id'] = $user->collaboratorInformation->id;
+                        else
+                            $validator->errors()->add('parent_username', 'Thành Viên Không Phải Là Cộng Tác Viên');
+                    }
+                    else
+                        $validator->errors()->add('parent_username', 'Cộng Tác Viên Không Tồn Tại');
+                }
+
+                $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+
+                switch($inputs['rank_id'])
+                {
+                    case $settings[Setting::COLLABORATOR_SILVER]->id:
+
+                        $settingValue = json_decode($settings[\App\Models\Setting::COLLABORATOR_GOLD]->value, true);
+
+                        break;
+
+                    case $settings[Setting::COLLABORATOR_GOLD]->id:
+
+                        $settingValue = json_decode($settings[\App\Models\Setting::COLLABORATOR_DIAMOND]->value, true);
+
+                        break;
+
+                    case $settings[Setting::COLLABORATOR_DIAMOND]->id:
+
+                        $settingValue = json_decode($settings[\App\Models\Setting::COLLABORATOR_MANAGER]->value, true);
+
+                        break;
+
+                    default:
+
+                        $settingValue[Collaborator::DISCOUNT_ATTRIBUTE] = 99;
+                        $settingValue[Collaborator::COMMISSION_ATTRIBUTE] = 99;
+
+                        break;
+                }
+
+                if($inputs['create_discount_percent'] > $settingValue[Collaborator::DISCOUNT_ATTRIBUTE])
+                    $validator->errors()->add('create_discount_percent', 'Mức Giảm Giá Được Tạo Cao Hơn Mức Cho Phép');
+                if($inputs['commission_percent'] > $settingValue[Collaborator::COMMISSION_ATTRIBUTE])
+                    $validator->errors()->add('commission_percent', 'Mức Hoa Hồng Được Hưởng Cao Hơn Mức Cho Phép');
+            });
+
             if($validator->passes())
             {
+                if(!empty($inputs['parent_id']))
+                    $collaborator->collaboratorInformation->parent_id = $inputs['parent_id'];
+
                 $collaborator->collaboratorInformation->status = isset($inputs['status']) ? Collaborator::STATUS_ACTIVE_DB : Collaborator::STATUS_INACTIVE_DB;
                 $collaborator->collaboratorInformation->rank_id = $inputs['rank_id'];
                 $collaborator->collaboratorInformation->create_discount_percent = $inputs['create_discount_percent'];

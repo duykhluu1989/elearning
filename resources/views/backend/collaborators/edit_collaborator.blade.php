@@ -70,7 +70,7 @@
                         <div class="form-group{{ $errors->has('create_discount_percent') ? ' has-error': '' }}">
                             <label>Mức Giảm Giá Được Tạo <i>(bắt buộc)</i></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="create_discount_percent" value="{{ old('create_discount_percent', $collaborator->collaboratorInformation->create_discount_percent) }}" required="required" />
+                                <input type="text" class="form-control" id="CreateDiscountPercentInput" name="create_discount_percent" value="{{ old('create_discount_percent', $collaborator->collaboratorInformation->create_discount_percent) }}" required="required" />
                                 <span class="input-group-addon">%</span>
                             </div>
                             @if($errors->has('create_discount_percent'))
@@ -84,7 +84,7 @@
                         <div class="form-group{{ $errors->has('commission_percent') ? ' has-error': '' }}">
                             <label>Mức Hoa Hồng Được Hưởng <i>(bắt buộc)</i></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="commission_percent" value="{{ old('commission_percent', $collaborator->collaboratorInformation->commission_percent) }}" required="required" />
+                                <input type="text" class="form-control" id="CommissionPercentInput" name="commission_percent" value="{{ old('commission_percent', $collaborator->collaboratorInformation->commission_percent) }}" required="required" />
                                 <span class="input-group-addon">%</span>
                             </div>
                             @if($errors->has('commission_percent'))
@@ -164,5 +164,22 @@
         }).autocomplete('instance')._renderItem = function(ul, item) {
             return $('<li>').append('<a>' + item.username + '</a>').appendTo(ul);
         };
+
+        $('input[type="radio"][name="rank_id"]').change(function() {
+            $.ajax({
+                url: '{{ action('Backend\SettingController@getSettingCollaboratorValue') }}',
+                type: 'post',
+                data: '_token=' + $('input[name="_token"]').first().val() + '&id=' + $('input[type="radio"][name="rank_id"]:checked').val(),
+                success: function(result) {
+                    if(result)
+                    {
+                        result = JSON.parse(result);
+
+                        $('#CreateDiscountPercentInput').val(result['{{ \App\Models\Collaborator::DISCOUNT_ATTRIBUTE }}']);
+                        $('#CommissionPercentInput').val(result['{{ \App\Models\Collaborator::COMMISSION_ATTRIBUTE }}']);
+                    }
+                }
+            });
+        });
     </script>
 @endpush

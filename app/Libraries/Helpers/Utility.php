@@ -214,7 +214,7 @@ class Utility
 
                 $set = true;
             }
-            else if(Cookie::get(self::BACK_URL_COOKIE_NAME))
+            else if(Cookie::get(self::BACK_URL_COOKIE_NAME) && $referer == $request->fullUrl())
                 $set = true;
         }
 

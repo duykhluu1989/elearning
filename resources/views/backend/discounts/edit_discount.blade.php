@@ -8,7 +8,7 @@
 
         <div class="box box-primary">
             <div class="box-header with-border">
-                <button type="submit" class="btn btn-primary">Tạo Mới</button>
+                <button type="submit" class="btn btn-primary">Cập Nhật</button>
                 <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\DiscountController@adminDiscount')) }}" class="btn btn-default">Quay Lại</a>
 
                 <?php
@@ -158,7 +158,7 @@
                 </div>
             </div>
             <div class="box-footer">
-                <button type="submit" class="btn btn-primary">Tạo Mới</button>
+                <button type="submit" class="btn btn-primary">Cập Nhật</button>
                 <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\DiscountController@adminDiscount')) }}" class="btn btn-default">Quay Lại</a>
 
                 @if(!empty($discount->id) && $isDeletable == true)

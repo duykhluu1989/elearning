@@ -30,6 +30,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('user/autoComplete', 'UserController@autoCompleteUser');
 
+        Route::post('setting/collaborator/value', 'SettingController@getSettingCollaboratorValue');
+
     });
 
     Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
