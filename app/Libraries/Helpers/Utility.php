@@ -197,6 +197,8 @@ class Utility
         {
             if(is_array($backUrlPaths))
             {
+                $hasPath = false;
+
                 foreach($backUrlPaths as $backUrlPath)
                 {
                     $hasPath = strpos($referer, $backUrlPath);
@@ -208,7 +210,7 @@ class Utility
             else
                 $hasPath = strpos($referer, $backUrlPaths);
 
-            if($hasPath !== false)
+            if($hasPath !== false && $referer != $request->fullUrl())
             {
                 Cookie::queue(Cookie::make(self::BACK_URL_COOKIE_NAME, $referer, 10));
 
