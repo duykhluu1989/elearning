@@ -95,7 +95,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>
@@ -106,7 +106,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>
@@ -117,7 +117,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>
@@ -128,7 +128,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>
@@ -153,7 +153,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>
@@ -164,7 +164,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>
@@ -175,7 +175,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>
@@ -186,7 +186,7 @@
                             <article>
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <img src="images/hv01.jpg" alt="" class="img-responsive w100p">
+                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
                                     </div>
                                     <div class="col-xs-9">
                                         <h4>Lorem ipsum dolor.</h4>

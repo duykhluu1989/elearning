@@ -9,7 +9,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="index.php" class="navbar-brand">Brand</a>
+                    <a href="{{ action('Frontend\HomeController@home') }}" class="navbar-brand">Brand</a>
                 </div>
 
                 <div class="collapse navbar-collapse js-navbar-collapse">
@@ -91,10 +91,10 @@
                         <li><a href="#modal_dangky" data-toggle="modal">ĐĂNG KÝ </a></li>
                         <li><a href="#modal_dangnhap" data-toggle="modal">ĐĂNG NHẬP</a></li>
                         <li>
-                            <a href="#"><img src="images/vn.jpg" alt="" class="img-responsive"></a>
+                            <a href="#"><img src="{{ asset('themes/images/vn.jpg') }}" alt="" class="img-responsive"></a>
                         </li>
                         <li>
-                            <a href="#"><img src="images/en.jpg" alt="" class="img-responsive"></a>
+                            <a href="#"><img src="{{ asset('themes/images/en.jpg') }}" alt="" class="img-responsive"></a>
                         </li>
                         <li>
                             <div class="btnCart">
@@ -104,7 +104,7 @@
                                     <div class="box_cart_content">
                                         <div class="row pro_item">
                                             <div class="col-xs-3">
-                                                <a href="#"><img src="images/hv01.jpg" alt="" class="img-responsive"></a>
+                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
                                             </div>
                                             <div class="col-xs-9">
                                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...1</p>
@@ -113,7 +113,7 @@
                                         </div>
                                         <div class="row pro_item">
                                             <div class="col-xs-3">
-                                                <a href="#"><img src="images/hv01.jpg" alt="" class="img-responsive"></a>
+                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
                                             </div>
                                             <div class="col-xs-9">
                                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...2</p>
@@ -122,7 +122,7 @@
                                         </div>
                                         <div class="row pro_item">
                                             <div class="col-xs-3">
-                                                <a href="#"><img src="images/hv01.jpg" alt="" class="img-responsive"></a>
+                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
                                             </div>
                                             <div class="col-xs-9">
                                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...3</p>
@@ -131,7 +131,7 @@
                                         </div>
                                         <div class="row pro_item">
                                             <div class="col-xs-3">
-                                                <a href="#"><img src="images/hv01.jpg" alt="" class="img-responsive"></a>
+                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
                                             </div>
                                             <div class="col-xs-9">
                                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...4</p>
@@ -140,7 +140,7 @@
                                         </div>
                                         <div class="row pro_item">
                                             <div class="col-xs-3">
-                                                <a href="#"><img src="images/hv01.jpg" alt="" class="img-responsive"></a>
+                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
                                             </div>
                                             <div class="col-xs-9">
                                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...5</p>
@@ -184,7 +184,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title text-center">Đăng ký <span class="logo_small"><img src="images/logo_small.png" alt="" class="img-responsive"></span></h4>
+                <h4 class="modal-title text-center">Đăng ký <span class="logo_small"><img src="{{ asset('themes/images/logo_small.png') }}" alt="" class="img-responsive"></span></h4>
             </div>
             <div class="modal-body">
                 <form action="" method="POST" role="form" class="frm_dangky">
