@@ -97,12 +97,12 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group{{ $errors->has('description') ? ' has-error': '' }}">
-                                <label>Mô Tả <i>(bắt buộc)</i></label>
-                                @if($errors->has('description'))
-                                    <span class="help-block">{{ $errors->first('description') }}</span>
+                            <div class="form-group{{ $errors->has('content') ? ' has-error': '' }}">
+                                <label>Nội Dung <i>(bắt buộc)</i></label>
+                                @if($errors->has('content'))
+                                    <span class="help-block">{{ $errors->first('content') }}</span>
                                 @endif
-                                <textarea class="form-control TextEditorInput" name="description">{{ old('description', $article->description) }}</textarea>
+                                <textarea class="form-control TextEditorInput" name="content">{{ old('content', $article->content) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -123,8 +123,8 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label>Mô Tả EN</label>
-                                <textarea class="form-control TextEditorInput" name="description_en">{{ old('description_en', $article->description_en) }}</textarea>
+                                <label>Nội Dung EN</label>
+                                <textarea class="form-control TextEditorInput" name="content_en">{{ old('content_en', $article->content_en) }}</textarea>
                             </div>
                         </div>
                     </div>
