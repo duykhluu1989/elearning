@@ -8,6 +8,7 @@ class Setting extends Model
 {
     const WEB_TITLE = 'web_title';
     const WEB_DESCRIPTION = 'web_description';
+    const WEB_KEYWORD = 'web_keyword';
 
     const EXCHANGE_USD_RATE = 'exchange_usd_rate';
     const EXCHANGE_POINT_RATE = 'exchange_point_rate';
@@ -33,8 +34,9 @@ class Setting extends Model
     public static function initCoreSettings()
     {
         $coreSettings = [
-            [self::WEB_TITLE, 'Tiêu Đề Web', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
-            [self::WEB_DESCRIPTION, 'Mô Tả Web', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
+            [self::WEB_TITLE, 'Tiêu Đề Website', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
+            [self::WEB_DESCRIPTION, 'Mô Tả Website', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
+            [self::WEB_KEYWORD, 'Từ Khóa', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
 
             [self::EXCHANGE_USD_RATE, 'Tỉ Lệ Quy Đổi USD', self::TYPE_INT_DB, 22000, self::CATEGORY_GENERAL_DB],
             [self::EXCHANGE_POINT_RATE, 'Tỉ Lệ Quy Đổi Điểm', self::TYPE_INT_DB, 1000, self::CATEGORY_GENERAL_DB],
