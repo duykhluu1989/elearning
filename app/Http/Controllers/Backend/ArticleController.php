@@ -148,7 +148,7 @@ class ArticleController extends Controller
                 'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $article->id)),
             ]);
 
-            $validator->after(function($validator) use(&$inputs, $article, $create) {
+            $validator->after(function($validator) use(&$inputs, $article) {
                 $expertNameParts = explode(' - ', $inputs['user_name']);
 
                 if(count($expertNameParts) == 2)
@@ -326,6 +326,47 @@ class ArticleController extends Controller
 
         if(empty($article))
             return view('backend.errors.404');
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'name' => 'required|unique:course,name,' . $article->id,
+                'name_en' => 'nullable|unique:course,name_en,' . $article->id,
+                'content' => 'required',
+                'slug' => 'nullable|unique:course,slug,' . $article->id,
+                'slug_en' => 'nullable|unique:course,slug_en,' . $article->id,
+            ]);
+
+            if($validator->passes())
+            {
+                $article->image = $inputs['image'];
+                $article->name = $inputs['name'];
+                $article->name_en = $inputs['name_en'];
+                $article->status = $inputs['status'];
+                $article->content = $inputs['content'];
+                $article->content_en = $inputs['content_en'];
+                $article->short_description = $inputs['short_description'];
+                $article->short_description_en = $inputs['short_description_en'];
+
+                if(empty($inputs['slug']))
+                    $article->slug = str_slug($article->name);
+                else
+                    $article->slug = str_slug($inputs['slug']);
+
+                if(empty($inputs['slug_en']))
+                    $article->slug_en = str_slug($article->name_en);
+                else
+                    $article->slug_en = str_slug($inputs['slug_en']);
+
+                $article->save();
+
+                return redirect()->action('Backend\ArticleController@editArticleStatic', ['id' => $article->id])->with('messageSuccess', 'Thành Công');
+            }
+            else
+                return redirect()->action('Backend\ArticleController@editArticleStatic', ['id' => $article->id])->withErrors($validator)->withInput();
+        }
 
         return view('backend.articles.edit_article_static', [
             'article' => $article,

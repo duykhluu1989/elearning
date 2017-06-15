@@ -157,16 +157,17 @@ class CourseController extends Controller
                         {
                             $tempParentCategory = $parentCategory;
 
-                            while(!empty($tempParentCategory->parentCategory))
+                            do
                             {
-                                $tempParentCategory = $tempParentCategory->parentCategory;
-
                                 if($tempParentCategory->id == $category->id)
                                 {
                                     $validator->errors()->add('parent_name', 'Chủ Đề Cha Không Được Là Chủ Đề Con Của Chính Nó');
                                     break;
                                 }
+
+                                $tempParentCategory = $tempParentCategory->parentCategory;
                             }
+                            while(!empty($tempParentCategory));
                         }
 
                         $inputs['parent_id'] = $parentCategory->id;
@@ -755,7 +756,7 @@ class CourseController extends Controller
                 'category_name' => 'required',
             ]);
 
-            $validator->after(function($validator) use(&$inputs, $course, $create) {
+            $validator->after(function($validator) use(&$inputs, $course) {
                 $teacherNameParts = explode(' - ', $inputs['user_name']);
 
                 if(count($teacherNameParts) == 2)

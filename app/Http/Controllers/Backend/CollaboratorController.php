@@ -50,7 +50,23 @@ class CollaboratorController extends Controller
                     if(!empty($user))
                     {
                         if(!empty($user->collaboratorInformation))
+                        {
+                            $tempParentCollaborator = $user->collaboratorInformation;
+
+                            do
+                            {
+                                if($tempParentCollaborator->id == $collaborator->collaboratorInformation->id)
+                                {
+                                    $validator->errors()->add('parent_username', 'Quản Lý Không Được Là Cộng Tác Viên Cấp Dưới Của Chính Nó');
+                                    break;
+                                }
+
+                                $tempParentCollaborator = $tempParentCollaborator->parentCollaborator;
+                            }
+                            while(!empty($tempParentCollaborator));
+
                             $inputs['parent_id'] = $user->collaboratorInformation->id;
+                        }
                         else
                             $validator->errors()->add('parent_username', 'Thành Viên Không Phải Là Cộng Tác Viên');
                     }
