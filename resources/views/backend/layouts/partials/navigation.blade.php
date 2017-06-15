@@ -30,6 +30,9 @@
                     <li class="{{ (request()->is('admin/article') ? 'active' : '') }}">
                         <a href="{{ action('Backend\ArticleController@adminArticle') }}">Bài Viết Chuyên Gia</a>
                     </li>
+                    <li class="{{ (request()->is('admin/articleStatic') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\ArticleController@adminArticleStatic') }}">Trang Tĩnh</a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview{{ (request()->is('admin/user*') ? ' active' : '') }}">

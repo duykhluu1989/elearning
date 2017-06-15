@@ -248,4 +248,87 @@ class ArticleController extends Controller
         else
             return redirect()->action('Backend\ArticleController@adminArticle')->with('messageSuccess', 'Thành Công');
     }
+
+    public function adminArticleStatic(Request $request)
+    {
+        $dataProvider = Article::select('id', 'name', 'status', 'view_count')
+            ->where('type', Article::TYPE_STATIC_ARTICLE_DB)
+            ->orderBy('id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['name']))
+                $dataProvider->where('name', 'like', '%' . $inputs['name'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('status', $inputs['status']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo Html::a($row->name, [
+                        'href' => action('Backend\ArticleController@editArticleStatic', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'data' => function($row) {
+                    $status = Course::getCourseStatus($row->status);
+                    if($row->status == Course::STATUS_PUBLISH_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else if($row->status == Course::STATUS_FINISH_DB)
+                        echo Html::span($status, ['class' => 'label label-primary']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Lượt Xem',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->view_count);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setFilters([
+            [
+                'title' => 'Tên',
+                'name' => 'name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => Course::getCourseStatus(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
+
+        return view('backend.articles.admin_article_static', [
+            'gridView' => $gridView,
+        ]);
+    }
+
+    public function editArticleStatic(Request $request, $id)
+    {
+        Utility::setBackUrlCookie($request, '/admin/articleStatic?');
+
+        $article = Article::where('type', Article::TYPE_STATIC_ARTICLE_DB)->find($id);
+
+        if(empty($article))
+            return view('backend.errors.404');
+
+        return view('backend.articles.edit_article_static', [
+            'article' => $article,
+        ]);
+    }
 }

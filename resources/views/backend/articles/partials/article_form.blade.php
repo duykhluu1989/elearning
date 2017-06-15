@@ -149,13 +149,11 @@
 
 @push('stylesheets')
     <link rel="stylesheet" href="{{ asset('assets/css/colorbox.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}">
 @endpush
 
 @push('scripts')
     <script src="{{ asset('assets/js/jquery.colorbox-min.js') }}"></script>
     <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
     <script type="text/javascript">
         var elFinderSelectedFile;
 
