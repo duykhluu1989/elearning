@@ -65,7 +65,7 @@ class ArticleController extends Controller
                     $status = Course::getCourseStatus($row->status);
                     if($row->status == Course::STATUS_PUBLISH_DB)
                         echo Html::span($status, ['class' => 'label label-success']);
-                    else if($row->status == \App\Models\Course::STATUS_FINISH_DB)
+                    else if($row->status == Course::STATUS_FINISH_DB)
                         echo Html::span($status, ['class' => 'label label-primary']);
                     else
                         echo Html::span($status, ['class' => 'label label-danger']);
@@ -125,7 +125,7 @@ class ArticleController extends Controller
             $query->select('id', 'email');
         }, 'user.profile' => function($query) {
             $query->select('user_id', 'name');
-        }])->find($id);
+        }])->where('type', Article::TYPE_EXPERT_ARTICLE_DB)->find($id);
 
         if(empty($article))
             return view('backend.errors.404');
@@ -220,5 +220,32 @@ class ArticleController extends Controller
                 'article' => $article,
             ]);
         }
+    }
+
+    public function deleteArticle($id)
+    {
+        $article = Article::where('type', Article::TYPE_EXPERT_ARTICLE_DB)->find($id);
+
+        if(empty($article))
+            return view('backend.errors.404');
+
+        $article->delete();
+
+        return redirect(Utility::getBackUrlCookie(action('Backend\ArticleController@adminArticle')))->with('messageSuccess', 'Thành Công');
+    }
+
+    public function controlDeleteArticle(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $articles = Article::whereIn('id', explode(';', $ids))->where('type', Article::TYPE_EXPERT_ARTICLE_DB)->get();
+
+        foreach($articles as $article)
+            $article->delete();
+
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\ArticleController@adminArticle')->with('messageSuccess', 'Thành Công');
     }
 }

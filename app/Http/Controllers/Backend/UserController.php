@@ -432,20 +432,53 @@ class UserController extends Controller
 
     public function adminUserCollaborator(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('collaborator', Utility::ACTIVE_DB)->orderBy('id', 'desc');
+        $dataProvider = User::with(['collaboratorInformation' => function($query) {
+            $query->select('user_id', 'status', 'code', 'rank_id', 'current_revenue', 'current_commission', 'parent_id');
+        }, 'collaboratorInformation.rank' => function($query) {
+            $query->select('id', 'name');
+        }, 'collaboratorInformation.parentCollaborator' => function($query) {
+            $query->select('id', 'user_id');
+        }, 'collaboratorInformation.parentCollaborator.user' => function($query) {
+            $query->select('id', 'username');
+        }])
+            ->select('user.id', 'user.username', 'user.email', 'user.status')
+            ->where('user.collaborator', Utility::ACTIVE_DB)
+            ->orderBy('user.id', 'desc');
 
         $inputs = $request->all();
 
         if(count($inputs) > 0)
         {
             if(!empty($inputs['username']))
-                $dataProvider->where('username', 'like', '%' . $inputs['username'] . '%');
+                $dataProvider->where('user.username', 'like', '%' . $inputs['username'] . '%');
 
             if(!empty($inputs['email']))
-                $dataProvider->where('email', 'like', '%' . $inputs['email'] . '%');
+                $dataProvider->where('user.email', 'like', '%' . $inputs['email'] . '%');
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
-                $dataProvider->where('status', $inputs['status']);
+                $dataProvider->where('user.status', $inputs['status']);
+
+            if(!empty($inputs['code']))
+            {
+                $dataProvider->join('collaborator', 'collaborator.user_id', '=', 'user.id')
+                    ->where('collaborator.code', 'like', '%' . $inputs['code'] . '%');
+            }
+
+            if(!empty($inputs['rank_id']))
+            {
+                $sql = $dataProvider->toSql();
+                if(strpos($sql, 'inner join `collaborator` on') === false)
+                    $dataProvider->join('collaborator', 'collaborator.user_id', '=', 'user.id');
+                $dataProvider->where('collaborator.rank_id', $inputs['rank_id']);
+            }
+
+            if(isset($inputs['collaborator_status']) && $inputs['collaborator_status'] !== '')
+            {
+                $sql = $dataProvider->toSql();
+                if(strpos($sql, 'inner join `collaborator` on') === false)
+                    $dataProvider->join('collaborator', 'collaborator.user_id', '=', 'user.id');
+                $dataProvider->where('collaborator.status', $inputs['collaborator_status']);
+            }
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -469,6 +502,49 @@ class UserController extends Controller
                     $status = User::getUserStatus($row->status);
                     if($row->status == Utility::ACTIVE_DB)
                         echo Html::span($status, ['class' => 'label label-success']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Mã',
+                'data' => function($row) {
+                    echo $row->collaboratorInformation->code;
+                },
+            ],
+            [
+                'title' => 'Cấp Bậc',
+                'data' => function($row) {
+                    echo $row->collaboratorInformation->rank->name;
+                },
+            ],
+            [
+                'title' => 'Doanh Thu Hiện Tại',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->collaboratorInformation->current_revenue) . ' VND';
+                },
+            ],
+            [
+                'title' => 'Hoa Hồng Hiện Tại',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->collaboratorInformation->current_commission) . ' VND';
+                },
+            ],
+            [
+                'title' => 'Quản Lý',
+                'data' => function($row) {
+                    if(!empty($row->collaboratorInformation->parentCollaborator))
+                        echo $row->collaboratorInformation->parentCollaborator->user->username;
+                },
+            ],
+            [
+                'title' => 'Trạng Thái CTV',
+                'data' => function($row) {
+                    $status = Collaborator::getCollaboratorStatus($row->collaboratorInformation->status);
+                    if($row->collaboratorInformation->status == Collaborator::STATUS_ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else if($row->collaboratorInformation->status == Collaborator::STATUS_PENDING_DB)
+                        echo Html::span($status, ['class' => 'label label-warning']);
                     else
                         echo Html::span($status, ['class' => 'label label-danger']);
                 },
@@ -505,6 +581,23 @@ class UserController extends Controller
                 'name' => 'status',
                 'type' => 'select',
                 'options' => User::getUserStatus(),
+            ],
+            [
+                'title' => 'Mã',
+                'name' => 'code',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Cấp Bậc',
+                'name' => 'rank_id',
+                'type' => 'select',
+                'options' => Collaborator::getCollaboratorRank(),
+            ],
+            [
+                'title' => 'Trạng Thái CTV',
+                'name' => 'collaborator_status',
+                'type' => 'select',
+                'options' => Collaborator::getCollaboratorStatus(),
             ],
         ]);
         $gridView->setFilterValues($inputs);

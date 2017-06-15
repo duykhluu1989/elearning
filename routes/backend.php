@@ -112,6 +112,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'article/{id}/edit', 'ArticleController@editArticle');
 
+        Route::get('article/{id}/delete', 'ArticleController@deleteArticle');
+
+        Route::get('article/controlDelete', 'ArticleController@controlDeleteArticle');
+
         Route::get('user', 'UserController@adminUser');
 
         Route::get('userStudent', 'UserController@adminUserStudent');

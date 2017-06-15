@@ -2,6 +2,10 @@
     <div class="box-header with-border">
         <button type="submit" class="btn btn-primary">{{ empty($article->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\ArticleController@adminArticle')) }}" class="btn btn-default">Quay Lại</a>
+
+        @if(!empty($article->id))
+            <a href="{{ action('Backend\ArticleController@deleteArticle', ['id' => $article->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @endif
     </div>
     <div class="box-body">
         <div class="row">
@@ -135,6 +139,10 @@
     <div class="box-footer">
         <button type="submit" class="btn btn-primary">{{ empty($article->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\ArticleController@adminArticle')) }}" class="btn btn-default">Quay Lại</a>
+
+        @if(!empty($article->id))
+            <a href="{{ action('Backend\ArticleController@deleteArticle', ['id' => $article->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @endif
     </div>
 </div>
 {{ csrf_field() }}

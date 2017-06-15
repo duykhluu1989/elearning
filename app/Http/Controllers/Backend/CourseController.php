@@ -540,7 +540,8 @@ class CourseController extends Controller
         }, 'categoryCourses.category' => function($query) {
             $query->select('id', 'name');
         }])
-            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.highlight', 'course.code')->orderBy('course.id', 'desc');
+            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.highlight', 'course.code', 'course.view_count', 'course.bought_count')
+            ->orderBy('course.id', 'desc');
 
         $inputs = $request->all();
 
@@ -622,10 +623,22 @@ class CourseController extends Controller
                     $status = Course::getCourseStatus($row->status);
                     if($row->status == Course::STATUS_PUBLISH_DB)
                         echo Html::span($status, ['class' => 'label label-success']);
-                    else if($row->status == \App\Models\Course::STATUS_FINISH_DB)
+                    else if($row->status == Course::STATUS_FINISH_DB)
                         echo Html::span($status, ['class' => 'label label-primary']);
                     else
                         echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Lượt Xem',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->view_count);
+                },
+            ],
+            [
+                'title' => 'Lượt Mua',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->bought_count);
                 },
             ],
             [

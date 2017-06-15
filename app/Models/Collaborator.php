@@ -43,15 +43,13 @@ class Collaborator extends Model
         return $this->belongsTo('App\Models\Setting', 'rank_id');
     }
 
-    public static function getCollaboratorStatus($value = null, $admin = true)
+    public static function getCollaboratorStatus($value = null)
     {
         $status = [
             self::STATUS_ACTIVE_DB => self::STATUS_ACTIVE_LABEL,
             self::STATUS_INACTIVE_DB => self::STATUS_INACTIVE_LABEL,
+            self::STATUS_PENDING_DB => self::STATUS_PENDING_LABEL,
         ];
-
-        if($admin == true)
-            $status[self::STATUS_PENDING_DB] = self::STATUS_PENDING_LABEL;
 
         if($value !== null && isset($status[$value]))
             return $status[$value];
