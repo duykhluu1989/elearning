@@ -73,7 +73,7 @@
                         </div>
                         <div class="col-sm-12 CourseItemVideoTypeInput" style="{{ $type != \App\Models\CourseItem::TYPE_VIDEO_DB ? 'display: none' : '' }}">
                             <div class="form-group{{ $errors->has('video_path') ? ' has-error': '' }}">
-                                <label>Đường Dẫn Video<i>(bắt buộc)</i></label>
+                                <label>Đường Dẫn Video <i>(bắt buộc)</i></label>
                                 <input type="text" class="form-control" name="video_path" value="{{ old('video_path', ($type == \App\Models\CourseItem::TYPE_VIDEO_DB ? $courseItem->content : '')) }}" />
                                 @if($errors->has('video_path'))
                                     <span class="help-block">{{ $errors->first('video_path') }}</span>

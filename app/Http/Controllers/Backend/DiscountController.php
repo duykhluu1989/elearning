@@ -354,7 +354,7 @@ class DiscountController extends Controller
                 return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->with('messageSuccess', 'Thành Công');
             }
             else
-                return redirect()->action('Backend\DiscountController@createDiscount')->withErrors($validator)->withInput();
+                return redirect()->action('Backend\DiscountController@editDiscount', ['id' => $discount->id])->withErrors($validator)->withInput();
         }
 
         return view('backend.discounts.edit_discount', [

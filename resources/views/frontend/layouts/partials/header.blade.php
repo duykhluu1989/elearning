@@ -11,10 +11,10 @@
                     </button>
                     <a href="{{ action('Frontend\HomeController@home') }}" class="navbar-brand">Brand</a>
                 </div>
-
                 <div class="collapse navbar-collapse js-navbar-collapse">
                     <ul class="nav navbar-nav main_menu">
-                        <li class="dropdown mega-dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="chude.php">CÁC CHỦ ĐỀ <b class="caret"></b></a>
+                        <li class="dropdown mega-dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="chude.php">CÁC CHỦ ĐỀ <b class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu mega-dropdown-menu">
                                 <li class="col-sm-3">
                                     <ul>
@@ -83,9 +83,7 @@
                     <ul class="nav navbar-nav navbar-right lang">
                         <li>
                             <div class="search-button">
-                                <a href="#" class="search-toggle"  data-selector="#header-1">
-                                    <!-- <i class="fa fa-search fa-lg" aria-hidden="true"></i> -->
-                                </a>
+                                <a href="#" class="search-toggle" data-selector="#header-1"></a>
                             </div>
                         </li>
                         <li><a href="#modal_dangky" data-toggle="modal">ĐĂNG KÝ </a></li>

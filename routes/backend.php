@@ -66,6 +66,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('course/controlDelete', 'CourseController@controlDeleteCourse');
 
+        Route::match(['get', 'post'], 'course/{id}/promotionPrice', 'CourseController@setCoursePromotionPrice');
+
         Route::get('course/{id}/courseItem', 'CourseController@adminCourseItem');
 
         Route::match(['get', 'post'], 'course/{id}/courseItem/create', 'CourseController@createCourseItem');

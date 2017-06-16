@@ -42,6 +42,11 @@ class Course extends Model
         return $this->hasMany('App\Models\TagCourse', 'course_id');
     }
 
+    public function promotionPrice()
+    {
+        return $this->hasOne('App\Models\PromotionPrice', 'course_id');
+    }
+
     public static function getCourseStatus($value = null)
     {
         $status = [
@@ -81,5 +86,8 @@ class Course extends Model
 
         foreach($this->tagCourses as $tagCourse)
             $tagCourse->delete();
+
+        if(!empty($this->promotionPrice))
+            $this->promotionPrice->delete();
     }
 }

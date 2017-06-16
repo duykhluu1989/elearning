@@ -24,6 +24,12 @@
                             <input type="text" class="form-control" name="{{ \App\Models\Setting::WEB_DESCRIPTION }}" value="{{ old(\App\Models\Setting::WEB_DESCRIPTION, $settings[\App\Models\Setting::WEB_DESCRIPTION]->value) }}" />
                         </div>
                     </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>{{ $settings[\App\Models\Setting::WEB_KEYWORD]->name }}</label>
+                            <input type="text" class="form-control" name="{{ \App\Models\Setting::WEB_KEYWORD }}" value="{{ old(\App\Models\Setting::WEB_KEYWORD, $settings[\App\Models\Setting::WEB_KEYWORD]->value) }}" />
+                        </div>
+                    </div>
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has(\App\Models\Setting::EXCHANGE_USD_RATE) ? ' has-error': '' }}">
                             <label>{{ $settings[\App\Models\Setting::EXCHANGE_USD_RATE]->name }} <i>(bắt buộc)</i></label>

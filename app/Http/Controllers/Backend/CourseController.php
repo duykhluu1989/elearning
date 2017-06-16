@@ -17,6 +17,7 @@ use App\Models\CategoryCourse;
 use App\Models\User;
 use App\Models\Tag;
 use App\Models\TagCourse;
+use App\Models\PromotionPrice;
 use FFMpeg\FFProbe;
 
 class CourseController extends Controller
@@ -654,7 +655,20 @@ class CourseController extends Controller
                         'data-content' => 'Danh Sách Bài Học',
                     ]);
                 },
-            ]
+            ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-flash fa-fw']), [
+                        'href' => action('Backend\CourseController@setCoursePromotionPrice', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Thiết Lập Giá Khuyến Mãi',
+                    ]);
+                },
+            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);
@@ -948,7 +962,7 @@ class CourseController extends Controller
 
     public function deleteCourse($id)
     {
-        $course = Course::with('categoryCourses', 'courseItems', 'tagCourses')->find($id);
+        $course = Course::with('categoryCourses', 'courseItems', 'tagCourses', 'promotionPrice')->find($id);
 
         if(empty($course) || $course->isDeletable() == false)
             return view('backend.errors.404');
@@ -975,7 +989,7 @@ class CourseController extends Controller
     {
         $ids = $request->input('ids');
 
-        $courses = Course::with('categoryCourses', 'courseItems', 'tagCourses')->whereIn('id', explode(';', $ids))->get();
+        $courses = Course::with('categoryCourses', 'courseItems', 'tagCourses', 'promotionPrice')->whereIn('id', explode(';', $ids))->get();
 
         foreach($courses as $course)
         {
@@ -1013,6 +1027,64 @@ class CourseController extends Controller
         $courses = $builder->get()->toJson();
 
         return $courses;
+    }
+
+    public function setCoursePromotionPrice(Request $request, $id)
+    {
+        Utility::setBackUrlCookie($request, '/admin/course?');
+
+        $course = Course::with('promotionPrice')->select('id', 'name', 'price')->find($id);
+
+        if(empty($course))
+            return view('backend.errors.404');
+
+        if(empty($course->promotionPrice))
+        {
+            $promotionPrice = new PromotionPrice();
+            $promotionPrice->course_id = $course->id;
+            $promotionPrice->status = Utility::ACTIVE_DB;
+            $promotionPrice->price = 0;
+
+            $promotionPrice->course()->associate($course);
+        }
+        else
+            $promotionPrice = $course->promotionPrice;
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $inputs['price'] = implode('', explode('.', $inputs['price']));
+
+            $validator = Validator::make($inputs, [
+                'start_time' => 'required|date',
+                'end_time' => 'required|date',
+                'price' => 'required|integer|min:0',
+            ]);
+
+            $validator->after(function($validator) use(&$inputs, $promotionPrice) {
+                if($promotionPrice->price >= $promotionPrice->course->price)
+                    $validator->errors()->add('price', 'Giá Khuyến Mãi Phải Thấp Hơn Giá Tiền Khóa Học');
+            });
+
+            if($validator->passes())
+            {
+                $promotionPrice->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                $promotionPrice->start_time = $inputs['start_time'];
+                $promotionPrice->end_time = $inputs['end_time'];
+                $promotionPrice->price = $inputs['price'];
+                $promotionPrice->save();
+
+                return redirect()->action('Backend\CourseController@setCoursePromotionPrice', ['id' => $course->id])->with('messageSuccess', 'Thành Công');
+            }
+            else
+                return redirect()->action('Backend\CourseController@setCoursePromotionPrice', ['id' => $course->id])->withErrors($validator)->withInput();
+        }
+
+        return view('backend.courses.set_course_promotion_price', [
+            'course' => $course,
+            'promotionPrice' => $promotionPrice,
+        ]);
     }
 
     public function adminCourseItem(Request $request, $id)
@@ -1106,6 +1178,20 @@ class CourseController extends Controller
                 'content' => 'required_if:type,' . CourseItem::TYPE_TEXT_DB,
                 'video_path' => 'required_if:type,' . CourseItem::TYPE_VIDEO_DB,
             ]);
+
+            $validator->after(function($validator) use(&$inputs) {
+                if($inputs['type'] == CourseItem::TYPE_VIDEO_DB)
+                {
+                    if(file_exists($inputs['video_path']) && is_file($inputs['video_path']))
+                        $validator->errors()->add('video_path', 'Đường Dẫn Video Không Đúng');
+
+                    if(!empty($inputs['video_path_en']))
+                    {
+                        if(file_exists($inputs['video_path_en']) && is_file($inputs['video_path_en']))
+                            $validator->errors()->add('video_path_en', 'Đường Dẫn Video EN Không Đúng');
+                    }
+                }
+            });
 
             if($validator->passes())
             {
