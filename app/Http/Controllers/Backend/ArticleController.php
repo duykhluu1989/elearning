@@ -148,7 +148,7 @@ class ArticleController extends Controller
                 'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $article->id)),
             ]);
 
-            $validator->after(function($validator) use(&$inputs, $article) {
+            $validator->after(function($validator) use(&$inputs) {
                 $expertNameParts = explode(' - ', $inputs['user_name']);
 
                 if(count($expertNameParts) == 2)

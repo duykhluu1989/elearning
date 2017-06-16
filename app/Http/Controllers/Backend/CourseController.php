@@ -410,6 +410,16 @@ class CourseController extends Controller
         return $categories;
     }
 
+    public function setCategoryPromotionPrice(Request $request, $id)
+    {
+        Utility::setBackUrlCookie($request, '/admin/courseCategory?');
+
+
+        return view('backend.courses.set_category_promotion_price', [
+
+        ]);
+    }
+
     public function adminLevel()
     {
         $dataProvider = Level::select('id', 'name', 'name_en', 'order')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
@@ -541,6 +551,8 @@ class CourseController extends Controller
             $query->orderBy('level', 'desc')->limit(1);
         }, 'categoryCourses.category' => function($query) {
             $query->select('id', 'name');
+        }, 'promotionPrice' => function($query) {
+            $query->select('course_id', 'price');
         }])
             ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.highlight', 'course.code', 'course.view_count', 'course.bought_count')
             ->orderBy('course.id', 'desc');
@@ -607,6 +619,13 @@ class CourseController extends Controller
                 'title' => 'Giá Tiền (VND)',
                 'data' => function($row) {
                     echo Utility::formatNumber($row->price);
+                },
+            ],
+            [
+                'title' => 'Giá Khuyến Mãi (VND)',
+                'data' => function($row) {
+                    if(!empty($row->promotionPrice))
+                        echo Utility::formatNumber($row->promotionPrice->price);
                 },
             ],
             [
@@ -770,7 +789,7 @@ class CourseController extends Controller
                 'category_name' => 'required',
             ]);
 
-            $validator->after(function($validator) use(&$inputs, $course) {
+            $validator->after(function($validator) use(&$inputs) {
                 $teacherNameParts = explode(' - ', $inputs['user_name']);
 
                 if(count($teacherNameParts) == 2)
@@ -1063,7 +1082,7 @@ class CourseController extends Controller
             ]);
 
             $validator->after(function($validator) use(&$inputs, $promotionPrice) {
-                if($promotionPrice->price >= $promotionPrice->course->price)
+                if($inputs['price'] >= $promotionPrice->course->price)
                     $validator->errors()->add('price', 'Giá Khuyến Mãi Phải Thấp Hơn Giá Tiền Khóa Học');
             });
 

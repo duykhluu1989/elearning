@@ -183,7 +183,7 @@ class DiscountController extends Controller
                 'campaign_code' => 'nullable|alpha_num|unique:discount,campaign_code',
             ]);
 
-            $validator->after(function($validator) use(&$inputs, $discount) {
+            $validator->after(function($validator) use(&$inputs) {
                 if(!empty($inputs['username']))
                 {
                     $user = User::select('id')

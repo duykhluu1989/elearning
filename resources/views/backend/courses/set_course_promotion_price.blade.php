@@ -74,10 +74,12 @@
 @stop
 
 @push('stylesheets')
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery.datetimepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}">
 @endpush
 
 @push('scripts')
+    <script src="{{ asset('assets/js/jquery.datetimepicker.full.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
     <script type="text/javascript">
         $('.DateTimePicker').datetimepicker({
