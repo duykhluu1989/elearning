@@ -46,7 +46,7 @@ class UserController extends Controller
                 if(auth()->attempt($credentials, $remember))
                     return redirect()->action('Backend\HomeController@home');
                 else
-                    return redirect()->action('Backend\UserController@login')->withErrors(['email' => 'Email or Password is not correct'])->withInput($request->except('password'));
+                    return redirect()->action('Backend\UserController@login')->withErrors(['email' => 'Email Or Password Is Not Correct'])->withInput($request->except('password'));
             }
             else
                 return redirect()->action('Backend\UserController@login')->withErrors($validator)->withInput($request->except('password'));

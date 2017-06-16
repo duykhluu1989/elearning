@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Models\TagCourse;
 use App\Models\PromotionPrice;
+use App\Models\Discount;
 use FFMpeg\FFProbe;
 
 class CourseController extends Controller
@@ -427,9 +428,101 @@ class CourseController extends Controller
     {
         Utility::setBackUrlCookie($request, '/admin/courseCategory?');
 
+        $category = Category::select('id', 'name')->find($id);
+
+        if(empty($category))
+            return view('backend.errors.404');
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $inputs['value'] = implode('', explode('.', $inputs['value']));
+
+            $validator = Validator::make($inputs, [
+                'start_time' => 'required|date',
+                'end_time' => 'required|date',
+                'value' => 'required|integer|min:1',
+                'value_limit' => 'nullable|integer|min:1',
+            ]);
+
+            $validator->after(function($validator) use(&$inputs) {
+                if($inputs['type'] == Discount::TYPE_PERCENTAGE_DB && $inputs['value'] > 99)
+                    $validator->errors()->add('value', 'Phần Trăm Giảm Giá Không Được Lớn Hơn 99');
+            });
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $page = 1;
+
+                    do
+                    {
+                        $courses = Course::select('course.id', 'course.price')
+                            ->with('promotionPrice')
+                            ->join('category_course', 'course.id', '=', 'category_course.course_id')
+                            ->where('category_course.category_id', $category->id)
+                            ->paginate(Utility::LARGE_SET_LIMIT, ['*'], 'page', $page);
+
+                        foreach($courses as $course)
+                        {
+                            if(!empty($course->price))
+                            {
+                                if($inputs['type'] == Discount::TYPE_PERCENTAGE_DB)
+                                {
+                                    $discountPrice = round($course->price * $inputs['value'] / 100);
+                                    if(!empty($inputs['value_limit']) && $inputs['value_limit'] > $discountPrice)
+                                        $discountPrice = $inputs['value_limit'];
+                                    $pmPrice = $course->price - $discountPrice;
+                                }
+                                else
+                                    $pmPrice = $course->price - $inputs['value'];
+
+                                if($pmPrice < 0)
+                                    $pmPrice = 0;
+
+                                if(empty($course->promotionPrice))
+                                {
+                                    $promotionPrice = new PromotionPrice();
+                                    $promotionPrice->course_id = $course->id;
+                                }
+                                else
+                                    $promotionPrice = $course->promotionPrice;
+
+                                $promotionPrice->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                                $promotionPrice->start_time = $inputs['start_time'];
+                                $promotionPrice->end_time = $inputs['end_time'];
+                                $promotionPrice->price = $pmPrice;
+                                $promotionPrice->save();
+                            }
+                        }
+
+                        $page ++;
+
+                        $countCourses = count($courses);
+                    }
+                    while($countCourses > 0);
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\CourseController@setCategoryPromotionPrice', ['id' => $category->id])->withInput()->with('messageSuccess', 'Thành Công');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Backend\CourseController@setCategoryPromotionPrice', ['id' => $category->id])->withInput()->with('messageError', $e->getMessage());
+                }
+            }
+            else
+                return redirect()->action('Backend\CourseController@setCategoryPromotionPrice', ['id' => $category->id])->withErrors($validator)->withInput();
+        }
 
         return view('backend.courses.set_category_promotion_price', [
-
+            'category' => $category,
         ]);
     }
 

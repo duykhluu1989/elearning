@@ -197,7 +197,7 @@ class DiscountController extends Controller
                 }
 
                 if($inputs['type'] == Discount::TYPE_PERCENTAGE_DB && $inputs['value'] > 99)
-                    $validator->errors()->add('value', 'Phần trăm giảm giá không được lớn hơn 99');
+                    $validator->errors()->add('value', 'Phần Trăm Giảm Giá Không Được Lớn Hơn 99');
 
                 if(isset($inputs['discount_applies']))
                 {
