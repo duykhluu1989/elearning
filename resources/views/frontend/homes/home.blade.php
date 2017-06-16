@@ -24,22 +24,26 @@
             <div class="row">
                 <div class="col-lg-12 pad0 text-center">
                     <div class="owl_banner owl-carousel owl-theme">
-                        <div class="item">
-                            <img src="{{ asset('themes/images/banner.jpg') }}" alt="" class="img-responsive">
-                            <div class="banner_text_content hidden-sm hidden-xs">
-                                <h1>LOREM IPSUM DOLOR SIT AMET</h1>
-                                <p>Pellentesque ut rhoncus massa. Fusce rhoncus eu nunc vitae vehicula. Praesent eleifend rutrum condimentum. Phasellus vehicula dignissim mi, ut ultricies mauris vulputate posuere. Donec et tempor tortor. Sed volutpat dolor eget leo tincidunt, nec iaculis risus ullamcorper. Aliquam non felis sed dui eleifend molestie. Suspendisse quis diam sit amet ligula ultricies mattis. </p>
-                                <a href="#" class="btn btn_yellow">Xem Thêm</a>
+                        <?php
+                        $sliderItems = array();
+
+                        if(isset($widgets[\App\Models\Widget::HOME_SLIDER]))
+                        {
+                            if(!empty($widgets[\App\Models\Widget::HOME_SLIDER]->detail))
+                                $sliderItems = json_decode($widgets[\App\Models\Widget::HOME_SLIDER]->detail, true);
+                        }
+                        ?>
+
+                        @foreach($sliderItems as $sliderItem)
+                            <div class="item">
+                                <img src="{{ isset($sliderItem['image']) ? $sliderItem['image'] : '' }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($sliderItem, 'title') }}" class="img-responsive">
+                                <div class="banner_text_content hidden-sm hidden-xs">
+                                    <h1>{{ \App\Libraries\Helpers\Utility::getValueByLocale($sliderItem, 'title') }}</h1>
+                                    <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($sliderItem, 'description') }}</p>
+                                    <a href="{{ isset($sliderItem['url']) ? $sliderItem['url'] : 'javascript:void(0)' }}" class="btn btn_yellow">Xem Thêm</a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <img src="{{ asset('themes/images/banner.jpg') }}" alt="" class="img-responsive">
-                            <div class="banner_text_content hidden-sm hidden-xs">
-                                <h1>LOREM IPSUM DOLOR SIT AMET</h1>
-                                <p>Pellentesque ut rhoncus massa. Fusce rhoncus eu nunc vitae vehicula. Praesent eleifend rutrum condimentum. Phasellus vehicula dignissim mi, ut ultricies mauris vulputate posuere. Donec et tempor tortor. Sed volutpat dolor eget leo tincidunt, nec iaculis risus ullamcorper. Aliquam non felis sed dui eleifend molestie. Suspendisse quis diam sit amet ligula ultricies mattis. </p>
-                                <a href="#" class="btn btn_yellow">Xem Thêm</a>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

@@ -37,5 +37,6 @@
 <script src="{{ asset('themes/js/clamp.js') }}"></script>
 <script src="{{ asset('themes/js/functions.js') }}"></script>
 <script src="{{ asset('themes/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+@stack('scripts')
 </body>
 </html>
