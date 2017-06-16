@@ -863,7 +863,9 @@ class CourseController extends Controller
             $query->orderBy('level');
         }, 'categoryCourses.category' => function($query) {
             $query->select('id', 'name');
-        }, 'tagCourses.tag'])->find($id);
+        }, 'tagCourses.tag', 'promotionPrice' => function($query) {
+            $query->select('id', 'course_id', 'status', 'price');
+        }])->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -976,6 +978,12 @@ class CourseController extends Controller
                         $course->created_at = date('Y-m-d H:i:s');
 
                     $course->save();
+
+                    if(!empty($course->promotionPrice) && $course->promotionPrice->price >= $course->price)
+                    {
+                        $course->promotionPrice->status = Utility::INACTIVE_DB;
+                        $course->promotionPrice->save();
+                    }
 
                     foreach($course->categoryCourses as $categoryCourse)
                     {

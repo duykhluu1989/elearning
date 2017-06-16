@@ -8,9 +8,14 @@ use App\Libraries\Helpers\Utility;
 class Widget extends Model
 {
     const HOME_SLIDER = 'home_slider';
+    const GROUP_FREE_COURSE = 'group_free_course';
+    const GROUP_HIGHLIGHT_COURSE = 'group_highlight_course';
+    const GROUP_DISCOUNT_COURSE = 'group_discount_course';
 
     const TYPE_SLIDER_DB = 0;
+    const TYPE_GROUP_COURSE_DB = 1;
     const TYPE_SLIDER_LABEL = 'Khung Ảnh Trượt';
+    const TYPE_GROUP_COURSE_LABEL = 'Nhóm Khóa Học';
 
     const ATTRIBUTE_TYPE_STRING_DB = 0;
     const ATTRIBUTE_TYPE_INT_DB = 1;
@@ -62,6 +67,45 @@ class Widget extends Model
                     ],
                 ]),
             ],
+            [
+                self::GROUP_FREE_COURSE,
+                'Nhóm Khóa Học Miễn Phí',
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_COURSE_DB,
+                json_encode([
+                    [
+                        'title' => 'Khóa Học',
+                        'name' => 'course_id',
+                        'type' => self::ATTRIBUTE_TYPE_INT_DB,
+                    ],
+                ]),
+            ],
+            [
+                self::GROUP_HIGHLIGHT_COURSE,
+                'Nhóm Khóa Học Nổi Bật',
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_COURSE_DB,
+                json_encode([
+                    [
+                        'title' => 'Khóa Học',
+                        'name' => 'course_id',
+                        'type' => self::ATTRIBUTE_TYPE_INT_DB,
+                    ],
+                ]),
+            ],
+            [
+                self::GROUP_DISCOUNT_COURSE,
+                'Nhóm Khóa Học Giảm Giá',
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_COURSE_DB,
+                json_encode([
+                    [
+                        'title' => 'Khóa Học',
+                        'name' => 'course_id',
+                        'type' => self::ATTRIBUTE_TYPE_INT_DB,
+                    ],
+                ]),
+            ],
         ];
 
         foreach($coreWidgets as $coreWidget)
@@ -80,6 +124,7 @@ class Widget extends Model
     {
         $type = [
             self::TYPE_SLIDER_DB => self::TYPE_SLIDER_LABEL,
+            self::TYPE_GROUP_COURSE_DB => self::TYPE_GROUP_COURSE_LABEL,
         ];
 
         if($value !== null && isset($type[$value]))

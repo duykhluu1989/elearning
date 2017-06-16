@@ -40,7 +40,7 @@
                                 <div class="banner_text_content hidden-sm hidden-xs">
                                     <h1>{{ \App\Libraries\Helpers\Utility::getValueByLocale($sliderItem, 'title') }}</h1>
                                     <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($sliderItem, 'description') }}</p>
-                                    <a href="{{ isset($sliderItem['url']) ? $sliderItem['url'] : 'javascript:void(0)' }}" class="btn btn_yellow">Xem Thêm</a>
+                                    <a href="{{ isset($sliderItem['url']) ? $sliderItem['url'] : 'javascript:void(0)' }}" class="btn btn_yellow">@lang('theme.view_more')</a>
                                 </div>
                             </div>
                         @endforeach

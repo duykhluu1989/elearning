@@ -31,6 +31,10 @@
 
                         @include('backend.widgets.partials.widget_slider_form')
 
+                    @elseif($widget->type == \App\Models\Widget::TYPE_GROUP_COURSE_DB)
+
+                        @include('backend.widgets.partials.widget_group_course_form')
+
                     @endif
 
                 </div>
