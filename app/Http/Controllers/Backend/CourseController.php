@@ -76,6 +76,19 @@ class CourseController extends Controller
                         echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-flash fa-fw']), [
+                        'href' => action('Backend\CourseController@setCategoryPromotionPrice', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Thiết Lập Giá Khuyến Mãi',
+                    ]);
+                },
+            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);

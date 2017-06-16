@@ -3,11 +3,15 @@
         <button type="submit" class="btn btn-primary">{{ empty($category->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\CourseController@adminCategory')) }}" class="btn btn-default">Quay Lại</a>
 
-        <?php
-        $isDeletable = $category->isDeletable();
-        ?>
-        @if(!empty($category->id) && $isDeletable == true)
-            <a href="{{ action('Backend\CourseController@deleteCategory', ['id' => $category->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @if(!empty($category->id))
+            <a href="{{ action('Backend\CourseController@setCategoryPromotionPrice', ['id' => $category->id]) }}" class="btn btn-primary">Thiết Lập Giá Khuyến Mãi</a>
+
+            <?php
+            $isDeletable = $category->isDeletable();
+            ?>
+            @if($isDeletable == true)
+                <a href="{{ action('Backend\CourseController@deleteCategory', ['id' => $category->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+            @endif
         @endif
     </div>
     <div class="box-body">
@@ -87,8 +91,12 @@
         <button type="submit" class="btn btn-primary">{{ empty($category->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\CourseController@adminCategory')) }}" class="btn btn-default">Quay Lại</a>
 
-        @if(!empty($category->id) && $isDeletable == true)
-            <a href="{{ action('Backend\CourseController@deleteCategory', ['id' => $category->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @if(!empty($category->id))
+            <a href="{{ action('Backend\CourseController@setCategoryPromotionPrice', ['id' => $category->id]) }}" class="btn btn-primary">Thiết Lập Giá Khuyến Mãi</a>
+
+            @if($isDeletable == true)
+                <a href="{{ action('Backend\CourseController@deleteCategory', ['id' => $category->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+            @endif
         @endif
     </div>
 </div>

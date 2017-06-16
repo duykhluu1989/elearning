@@ -3,11 +3,13 @@
         <button type="submit" class="btn btn-primary">{{ empty($courseItem->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ action('Backend\CourseController@adminCourseItem', ['id' => $courseItem->course_id]) }}" class="btn btn-default">Quay Lại</a>
 
-        <?php
-        $isDeletable = $courseItem->isDeletable();
-        ?>
-        @if(!empty($courseItem->id) && $isDeletable == true)
-            <a href="{{ action('Backend\CourseController@deleteCourseItem', ['id' => $courseItem->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @if(!empty($courseItem->id))
+            <?php
+            $isDeletable = $courseItem->isDeletable();
+            ?>
+            @if($isDeletable == true)
+                <a href="{{ action('Backend\CourseController@deleteCourseItem', ['id' => $courseItem->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+            @endif
         @endif
     </div>
     <div class="box-body">

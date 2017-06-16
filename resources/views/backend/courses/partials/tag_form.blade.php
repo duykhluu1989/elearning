@@ -3,11 +3,13 @@
         <button type="submit" class="btn btn-primary">{{ empty($tag->id) ? 'Tạo Mới' : 'Cập Nhật' }}</button>
         <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\CourseController@adminTag')) }}" class="btn btn-default">Quay Lại</a>
 
-        <?php
-        $isDeletable = $tag->isDeletable();
-        ?>
-        @if(!empty($tag->id) && $isDeletable == 0)
-            <a href="{{ action('Backend\CourseController@deleteTag', ['id' => $tag->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+        @if(!empty($tag->id))
+            <?php
+            $isDeletable = $tag->isDeletable();
+            ?>
+            @if($isDeletable == 0)
+                <a href="{{ action('Backend\CourseController@deleteTag', ['id' => $tag->id]) }}" class="btn btn-primary pull-right Confirmation">Xóa</a>
+            @endif
         @endif
     </div>
     <div class="box-body">

@@ -46,6 +46,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('courseCategory/controlDelete', 'CourseController@controlDeleteCategory');
 
+        Route::match(['get', 'post'], 'courseCategory/{id}/promotionPrice', 'CourseController@setCategoryPromotionPrice');
+
         Route::get('courseLevel', 'CourseController@adminLevel');
 
         Route::match(['get', 'post'], 'courseLevel/create', 'CourseController@createLevel');
