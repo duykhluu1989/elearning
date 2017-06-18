@@ -35,6 +35,10 @@
 
                         @include('backend.widgets.partials.widget_group_course_form')
 
+                    @elseif($widget->type == \App\Models\Widget::TYPE_ADVERTISE_BANNER_DB)
+
+                        @include('backend.widgets.partials.widget_advertise_banner')
+
                     @endif
 
                 </div>

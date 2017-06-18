@@ -11,11 +11,18 @@ class Widget extends Model
     const GROUP_FREE_COURSE = 'group_free_course';
     const GROUP_HIGHLIGHT_COURSE = 'group_highlight_course';
     const GROUP_DISCOUNT_COURSE = 'group_discount_course';
+    const ADVERTISE_HORIZONTAL_TOP = 'advertise_horizontal_top';
+    const ADVERTISE_VERTICAL_LEFT = 'advertise_vertical_left';
+    const ADVERTISE_VERTICAL_RIGHT = 'advertise_vertical_right';
 
     const TYPE_SLIDER_DB = 0;
     const TYPE_GROUP_COURSE_DB = 1;
+    const TYPE_GROUP_COURSE_CUSTOM_DB = 2;
+    const TYPE_ADVERTISE_BANNER_DB = 3;
     const TYPE_SLIDER_LABEL = 'Khung Ảnh Trượt';
     const TYPE_GROUP_COURSE_LABEL = 'Nhóm Khóa Học';
+    const TYPE_GROUP_COURSE_CUSTOM_LABEL = 'Nhóm Khóa Học Tùy Chọn';
+    const TYPE_ADVERTISE_BANNER_LABEL = 'Biển Quảng Cáo';
 
     const ATTRIBUTE_TYPE_STRING_DB = 0;
     const ATTRIBUTE_TYPE_INT_DB = 1;
@@ -106,6 +113,75 @@ class Widget extends Model
                     ],
                 ]),
             ],
+            [
+                self::ADVERTISE_HORIZONTAL_TOP,
+                'Biển Quảng Cáo Ngang',
+                Utility::ACTIVE_DB,
+                self::TYPE_ADVERTISE_BANNER_DB,
+                json_encode([
+                    [
+                        'title' => 'Ảnh',
+                        'name' => 'image',
+                        'type' => self::ATTRIBUTE_TYPE_IMAGE_DB,
+                    ],
+                    [
+                        'title' => 'Đường Dẫn',
+                        'name' => 'url',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Script',
+                        'name' => 'script',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                ]),
+            ],
+            [
+                self::ADVERTISE_VERTICAL_LEFT,
+                'Biển Quảng Cáo Dọc Trái',
+                Utility::ACTIVE_DB,
+                self::TYPE_ADVERTISE_BANNER_DB,
+                json_encode([
+                    [
+                        'title' => 'Ảnh',
+                        'name' => 'image',
+                        'type' => self::ATTRIBUTE_TYPE_IMAGE_DB,
+                    ],
+                    [
+                        'title' => 'Đường Dẫn',
+                        'name' => 'url',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Script',
+                        'name' => 'script',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                ]),
+            ],
+            [
+                self::ADVERTISE_VERTICAL_RIGHT,
+                'Biển Quảng Cáo Dọc Phải',
+                Utility::ACTIVE_DB,
+                self::TYPE_ADVERTISE_BANNER_DB,
+                json_encode([
+                    [
+                        'title' => 'Ảnh',
+                        'name' => 'image',
+                        'type' => self::ATTRIBUTE_TYPE_IMAGE_DB,
+                    ],
+                    [
+                        'title' => 'Đường Dẫn',
+                        'name' => 'url',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Script',
+                        'name' => 'script',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                ]),
+            ],
         ];
 
         foreach($coreWidgets as $coreWidget)
@@ -125,6 +201,8 @@ class Widget extends Model
         $type = [
             self::TYPE_SLIDER_DB => self::TYPE_SLIDER_LABEL,
             self::TYPE_GROUP_COURSE_DB => self::TYPE_GROUP_COURSE_LABEL,
+            self::TYPE_GROUP_COURSE_CUSTOM_DB => self::TYPE_GROUP_COURSE_CUSTOM_LABEL,
+            self::TYPE_ADVERTISE_BANNER_DB => self::TYPE_ADVERTISE_BANNER_LABEL,
         ];
 
         if($value !== null && isset($type[$value]))
