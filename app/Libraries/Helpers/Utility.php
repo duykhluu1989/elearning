@@ -17,7 +17,10 @@ class Utility
 
     const LARGE_SET_LIMIT = 1000;
 
+    const LANGUAGE_COOKIE_NAME = 'language';
     const BACK_URL_COOKIE_NAME = 'back_url';
+
+    const MINUTE_ONE_MONTH = 43200;
 
     public static function getTrueFalse($value = null)
     {

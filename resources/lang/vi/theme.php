@@ -7,5 +7,7 @@ return [
     'discount_course' => 'Khóa Học Giảm Giá',
     'highlight_course' => 'Khóa Học Nổi Bật',
     'buy' => 'Mua',
+    'sign_in' => 'Đăng Nhập',
+    'sign_up' => 'Đăng Kí',
 
 ];

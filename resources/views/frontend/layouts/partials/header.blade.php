@@ -86,13 +86,13 @@
                                 <a href="#" class="search-toggle" data-selector="#header-1"></a>
                             </div>
                         </li>
-                        <li><a href="#modal_dangky" data-toggle="modal">ĐĂNG KÝ </a></li>
-                        <li><a href="#modal_dangnhap" data-toggle="modal">ĐĂNG NHẬP</a></li>
+                        <li><a href="#modal_dangky" data-toggle="modal">@lang('theme.sign_up')</a></li>
+                        <li><a href="#modal_dangnhap" data-toggle="modal">@lang('theme.sign_in')</a></li>
                         <li>
-                            <a href="#"><img src="{{ asset('themes/images/vn.jpg') }}" alt="" class="img-responsive"></a>
+                            <a href="{{ action('Frontend\HomeController@language', ['locale' => 'vi']) }}"><img src="{{ asset('themes/images/vn.jpg') }}" alt="VN" class="img-responsive"></a>
                         </li>
                         <li>
-                            <a href="#"><img src="{{ asset('themes/images/en.jpg') }}" alt="" class="img-responsive"></a>
+                            <a href="{{ action('Frontend\HomeController@language', ['locale' => 'en']) }}"><img src="{{ asset('themes/images/en.jpg') }}" alt="EN" class="img-responsive"></a>
                         </li>
                         <li>
                             <div class="btnCart">
