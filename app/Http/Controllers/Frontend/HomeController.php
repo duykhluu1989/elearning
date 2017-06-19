@@ -81,7 +81,8 @@ class HomeController extends Controller
         }
 
         $courses = Course::select('id', 'name', 'name_en', 'price', 'image', 'slug', 'slug_en')
-            ->where('status', Course::STATUS_PUBLISH_DB)->whereIn('id', $courseIds)->get();
+            ->where('status', Course::STATUS_PUBLISH_DB)->where('category_status', Utility::ACTIVE_DB)
+            ->whereIn('id', $courseIds)->get();
 
         foreach($courses as $course)
             $groupCourses[$courseGroupCodeByIds[$course->id]][$course->id] = $course;

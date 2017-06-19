@@ -20,6 +20,6 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
     Route::get('language/{locale}', 'HomeController@language');
 
-    Route::get('course/{slug}', 'CourseController@detailCourse');
+    Route::get('course/{id}/{slug}', 'CourseController@detailCourse');
 
 });

@@ -70,7 +70,7 @@
                                             <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
                                             <p>(Aenean hendrerit ipsum)</p>
                                             <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                         </div>
                                     </div>
                                 </div>
@@ -101,7 +101,7 @@
                                             <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
                                             <p>(Aenean hendrerit ipsum)</p>
                                             <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@
                                             <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
                                             <p>(Aenean hendrerit ipsum)</p>
                                             <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                         </div>
                                     </div>
                                 </div>
@@ -268,7 +268,7 @@
                                                 <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
                                                 <p>(Aenean hendrerit ipsum)</p>
                                                 <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
-                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                             </div>
                                         </div>
                                     </div>

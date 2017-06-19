@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Libraries\Helpers\Utility;
 
 class Course extends Model
 {
@@ -89,5 +90,21 @@ class Course extends Model
 
         if(!empty($this->promotionPrice))
             $this->promotionPrice->delete();
+    }
+
+    public function validatePromotionPrice()
+    {
+        if(!empty($this->promotionPrice))
+        {
+            if($this->promotionPrice->status == Utility::ACTIVE_DB)
+            {
+                $time = time();
+
+                if(strtotime($this->promotionPrice->start_time) >= $time && strtotime($this->promotionPrice->end_time) <= $time)
+                    return true;
+            }
+        }
+
+        return false;
     }
 }
