@@ -722,16 +722,16 @@ class CourseController extends Controller
                 'data' => 'code',
             ],
             [
-                'title' => 'Giá Tiền (VND)',
+                'title' => 'Giá Tiền',
                 'data' => function($row) {
-                    echo Utility::formatNumber($row->price);
+                    echo Utility::formatNumber($row->price) . ' VND';
                 },
             ],
             [
-                'title' => 'Giá Khuyến Mãi (VND)',
+                'title' => 'Giá Khuyến Mãi',
                 'data' => function($row) {
                     if(!empty($row->promotionPrice))
-                        echo Utility::formatNumber($row->promotionPrice->price);
+                        echo Utility::formatNumber($row->promotionPrice->price) . ' VND';
                 },
             ],
             [

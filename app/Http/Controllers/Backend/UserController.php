@@ -230,7 +230,9 @@ class UserController extends Controller
     {
         Utility::setBackUrlCookie($request, ['/admin/user?', '/admin/userStudent', '/admin/userCollaborator']);
 
-        $user = User::with('userRoles', 'profile', 'collaboratorInformation')->find($id);
+        $user = User::with(['userRoles', 'profile', 'collaboratorInformation' => function($query) {
+            $query->select('user_id');
+        }, 'studentInformation'])->find($id);
 
         if(empty($user))
             return view('backend.errors.404');
@@ -361,7 +363,10 @@ class UserController extends Controller
 
     public function adminUserStudent(Request $request)
     {
-        $dataProvider = User::select('id', 'username', 'email', 'status')->where('admin', Utility::INACTIVE_DB)->orderBy('id', 'desc');
+        $dataProvider = User::with(['studentInformation' => function($query) {
+            $query->select('user_id', 'course_count', 'total_spent', 'current_point');
+        }])
+            ->select('id', 'username', 'email', 'status')->where('admin', Utility::INACTIVE_DB)->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
@@ -400,6 +405,27 @@ class UserController extends Controller
                         echo Html::span($status, ['class' => 'label label-success']);
                     else
                         echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Số Lượng Khóa Học',
+                'data' => function($row) {
+                    if(!empty($row->studentInformation))
+                        echo Utility::formatNumber($row->studentInformation->course_count);
+                },
+            ],
+            [
+                'title' => 'Tổng Chi Tiêu',
+                'data' => function($row) {
+                    if(!empty($row->studentInformation))
+                        echo Utility::formatNumber($row->studentInformation->total_spent) . ' VND';
+                },
+            ],
+            [
+                'title' => 'Điểm Hiện Tại',
+                'data' => function($row) {
+                    if(!empty($row->studentInformation))
+                        echo Utility::formatNumber($row->studentInformation->current_point);
                 },
             ],
         ];

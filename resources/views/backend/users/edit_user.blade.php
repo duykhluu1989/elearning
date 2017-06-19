@@ -52,6 +52,42 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label>Thời Gian Khởi Tạo</label>
+                                        <span class="form-control no-border">{{ $user->created_at }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Số Lượng Khóa Học</label>
+                                        <span class="form-control no-border">{{ !empty($user->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->course_count) : '' }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Số Lượng Khóa Học Đã Hoàn Thành</label>
+                                        <span class="form-control no-border">{{ !empty($user->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->finish_course_count) : '' }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Tổng Chi Tiêu</label>
+                                        <span class="form-control no-border">{{ !empty($user->studentInformation) ? (\App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->total_spent) . ' VND') : '' }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Điểm Hiện Tại</label>
+                                        <span class="form-control no-border">{{ !empty($user->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->current_point) : '' }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Tổng Điểm</label>
+                                        <span class="form-control no-border">{{ !empty($user->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->total_point) : '' }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label>Trạng Thái</label>
                                         <?php
                                         $status = old('status', $user->status);
