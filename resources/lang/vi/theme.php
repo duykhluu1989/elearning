@@ -18,5 +18,6 @@ return [
     'buy_course' => 'Mua khóa học',
     'add_cart' => 'Thêm vào giỏ hàng',
     'input_discount_code' => 'Nhập mã khuyến mãi',
+    'input' => 'Nhập',
 
 ];

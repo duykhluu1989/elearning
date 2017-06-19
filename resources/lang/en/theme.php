@@ -18,5 +18,6 @@ return [
     'buy_course' => 'Buy course',
     'add_cart' => 'Add to cart',
     'input_discount_code' => 'Enter discount code',
+    'input' => 'Enter',
 
 ];

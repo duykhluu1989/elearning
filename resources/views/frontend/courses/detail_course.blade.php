@@ -4,6 +4,8 @@
 
 @section('section')
 
+    @include('frontend.layouts.partials.header')
+
     @include('frontend.layouts.partials.course_breadcrumb')
 
     <main>
@@ -51,15 +53,15 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                        <h4 class="modal-title">Nhập mã khuyến mãi</h4>
+                                                        <h4 class="modal-title">@lang('theme.input_discount_code')</h4>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form action="" method="POST" class="form-inline" role="form">
+                                                        <form action="" method="post" class="form-inline" role="form">
                                                             <div class="form-group">
                                                                 <label class="sr-only" for="">label</label>
-                                                                <input type="email" class="form-control" id="" placeholder="Nhập mã khuyến mãi">
+                                                                <input type="email" class="form-control" name="discount_code" placeholder="@lang('theme.input_discount_code')">
                                                             </div>
-                                                            <button type="submit" class="btn btnRed">Nhập</button>
+                                                            <button type="submit" class="btn btnRed">@lang('theme.input')</button>
                                                         </form>
                                                     </div>
                                                 </div>

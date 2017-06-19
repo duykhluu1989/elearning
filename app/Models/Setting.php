@@ -18,12 +18,19 @@ class Setting extends Model
     const COLLABORATOR_DIAMOND = 'collaborator_diamond';
     const COLLABORATOR_MANAGER = 'collaborator_manager';
 
+    const FACEBOOK_APP_ID = 'facebook_app_id';
+    const FACEBOOK_APP_SECRET = 'facebook_app_secret';
+    const FACEBOOK_GRAPH_VERSION = 'facebook_graph_version';
+
+    const GOOGLE_CLIENT_ID = 'google_client_id';
+
     const TYPE_STRING_DB = 0;
     const TYPE_INT_DB = 1;
     const TYPE_JSON_DB = 2;
 
     const CATEGORY_GENERAL_DB = 0;
     const CATEGORY_COLLABORATOR_DB = 1;
+    const CATEGORY_SOCIAL_DB = 2;
 
     protected static $settings = null;
 
@@ -40,6 +47,11 @@ class Setting extends Model
 
             [self::EXCHANGE_USD_RATE, 'Tỉ Lệ Quy Đổi USD', self::TYPE_INT_DB, 22000, self::CATEGORY_GENERAL_DB],
             [self::EXCHANGE_POINT_RATE, 'Tỉ Lệ Quy Đổi Điểm', self::TYPE_INT_DB, 1000, self::CATEGORY_GENERAL_DB],
+
+            [self::FACEBOOK_APP_ID, 'Facebook App Id', self::TYPE_STRING_DB, '', self::CATEGORY_SOCIAL_DB],
+            [self::FACEBOOK_APP_SECRET, 'Facebook App Secret', self::TYPE_STRING_DB, '', self::CATEGORY_SOCIAL_DB],
+            [self::FACEBOOK_GRAPH_VERSION, 'Facebook Graph Version', self::TYPE_STRING_DB, 'v2.9', self::CATEGORY_SOCIAL_DB],
+            [self::GOOGLE_CLIENT_ID, 'Google Client Id', self::TYPE_STRING_DB, '', self::CATEGORY_SOCIAL_DB],
 
             [
                 self::COLLABORATOR_SILVER,

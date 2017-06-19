@@ -150,6 +150,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'setting/collaborator', 'SettingController@adminSettingCollaborator');
 
+        Route::match(['get', 'post'], 'setting/social', 'SettingController@adminSettingSocial');
+
         Route::get('setting/paymentMethod', 'PaymentMethodController@adminPaymentMethod');
 
         Route::match(['get', 'post'], 'setting/paymentMethod/create', 'PaymentMethodController@createPaymentMethod');
