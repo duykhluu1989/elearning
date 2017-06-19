@@ -11,7 +11,7 @@ class CourseController extends Controller
 
     }
 
-    public function detailCourse($id)
+    public function detailCourse($slug)
     {
 
     }

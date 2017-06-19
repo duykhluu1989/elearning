@@ -62,7 +62,7 @@
                                 <div class="item">
                                     <div class="box_item">
                                         <div class="border"></div>
-                                        <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id]) }}"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
+                                        <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
                                         <div class="ticker">
                                             <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                         </div>
@@ -70,7 +70,7 @@
                                             <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
                                             <p>(Aenean hendrerit ipsum)</p>
                                             <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                 <div class="item">
                                     <div class="box_item">
                                         <div class="border"></div>
-                                        <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id]) }}"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
+                                        <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
                                         <div class="ticker">
                                             <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                         </div>
@@ -101,7 +101,7 @@
                                             <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
                                             <p>(Aenean hendrerit ipsum)</p>
                                             <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                         </div>
                                     </div>
                                 </div>
@@ -124,7 +124,7 @@
                                 <div class="item">
                                     <div class="box_item">
                                         <div class="border"></div>
-                                        <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id]) }}"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
+                                        <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
                                         <div class="ticker">
                                             <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                         </div>
@@ -132,7 +132,7 @@
                                             <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
                                             <p>(Aenean hendrerit ipsum)</p>
                                             <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                         </div>
                                     </div>
                                 </div>
@@ -235,320 +235,51 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </section>
 
-        <section class="relative">
-            <div class="container">
-                <div class="qc_left hidden-sm hidden-xs">
-                    <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                    <a href="#" class="btnClose"></a>
-                </div>
-                <div class="qc_right hidden-xs hidden-sm">
-                    <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                    <a href="#" class="btnClose"></a>
-                </div>
+        @for($i = 1;$i <= 3;$i ++)
+            <?php
+            $details = array();
 
-                <div class="row">
-                    <h3 class="title_line">KHÓA HỌC MARKETING</h3>
-                    <div class="col-lg-12">
-                        <div class="owl_markerting owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img09.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
+            if(isset($widgets[\App\Models\Widget::GROUP_CUSTOM_COURSE . '_' . $i]))
+            {
+                if(!empty($widgets[\App\Models\Widget::GROUP_CUSTOM_COURSE . '_' . $i]->detail))
+                    $details = json_decode($widgets[\App\Models\Widget::GROUP_CUSTOM_COURSE . '_' . $i]->detail, true);
+            }
+            ?>
 
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img10.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
+            <section class="relative">
+                <div class="container">
+                    <div class="row">
+                        <h3 class="title_line">{{ isset($details['custom_detail']) ? \App\Libraries\Helpers\Utility::getValueByLocale($details['custom_detail'], 'title') : '' }}</h3>
+                        <div class="col-lg-12">
+                            <div class="owl_markerting owl-carousel owl-theme">
 
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img11.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
+                                @foreach($groupCourses[\App\Models\Widget::GROUP_CUSTOM_COURSE . '_' . $i] as $course)
+                                    <div class="item">
+                                        <div class="box_item">
+                                            <div class="border"></div>
+                                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
+                                            <div class="ticker">
+                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
+                                            </div>
+                                            <div class="box_item_content">
+                                                <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
+                                                <p>(Aenean hendrerit ipsum)</p>
+                                                <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
+                                @endforeach
 
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img12.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img09.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
-            </div>
-        </section>
-
-        <section class="relative">
-            <div class="container">
-                <div class="row mt60">
-                    <div class="qc_left hidden-sm hidden-xs">
-                        <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                        <a href="#" class="btnClose"></a>
-                    </div>
-                    <div class="qc_right hidden-xs hidden-sm">
-                        <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                        <a href="#" class="btnClose"></a>
-                    </div>
-
-                    <h3 class="title_line">KHÓA HỌC BÁN HÀNG</h3>
-                    <div class="col-lg-12">
-                        <div class="owl_banhang owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img12.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img13.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img14.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img15.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img12.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="relative">
-            <div class="container">
-                <div class="qc_left hidden-sm hidden-xs">
-                    <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                    <a href="#" class="btnClose"></a>
-                </div>
-                <div class="qc_right hidden-xs hidden-sm">
-                    <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                    <a href="#" class="btnClose"></a>
-                </div>
-
-                <div class="row mt60">
-                    <h3 class="title_line">KHÓA HỌC QUẢN TRỊ NGÂN HÀNG THƯƠNG MẠI</h3>
-                    <div class="col-lg-12">
-                        <div class="owl_QTNHTM owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img17.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img18.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img19.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img20.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="box_item">
-                                    <div class="border"></div>
-                                    <a href="#"><img src="{{ asset('themes/images/img17.jpg') }}" alt="" class="img-responsive"></a>
-                                    <div class="ticker">
-                                        <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                    </div>
-                                    <div class="box_item_content">
-                                        <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                        <p>(Aenean hendrerit ipsum)</p>
-                                        <p class="gia">500.000 VNĐ</p>
-                                        <a href="#" class="btn btn_yellow btnMua">Mua</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt60">
-                    <div class="col-lg-12 text-center">
-                        <a href="#" class="btn btnShowall">Liệt kê tất cả các khóa học <i class="fa fa-angle-double-down fa-lg" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
+        @endfor
 
         <section class="vechungtoi bg_gray">
             <div class="container-fluid">
