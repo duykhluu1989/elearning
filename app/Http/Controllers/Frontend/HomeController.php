@@ -19,6 +19,9 @@ class HomeController extends Controller
             Widget::GROUP_DISCOUNT_COURSE,
         ];
 
+        for($i = 1;$i <= 3;$i ++)
+            $widgetCodes[] = Widget::GROUP_CUSTOM_COURSE . '_' . $i;
+
         $wgs = Widget::select('code', 'detail')->where('status', Utility::ACTIVE_DB)->whereIn('code', $widgetCodes)->get();
 
         $widgets = array();
@@ -42,23 +45,26 @@ class HomeController extends Controller
             Widget::GROUP_DISCOUNT_COURSE,
         ];
 
+        for($i = 1;$i <= 3;$i ++)
+            $groupCodes[] = Widget::GROUP_CUSTOM_COURSE . '_' . $i;
+
         $courseIds = array();
 
-        $groupCourses = [
-            Widget::GROUP_FREE_COURSE => array(),
-            Widget::GROUP_HIGHLIGHT_COURSE => array(),
-            Widget::GROUP_DISCOUNT_COURSE => array(),
-        ];
+        $groupCourses = array();
 
         $courseGroupCodeByIds = array();
 
         foreach($groupCodes as $groupCode)
         {
+            $groupCourses[$groupCode] = array();
+
             if(isset($widgets[$groupCode]))
             {
                 if(!empty($widgets[$groupCode]->detail))
                 {
                     $courseItems = json_decode($widgets[$groupCode]->detail, true);
+
+                    unset($courseItems['custom_detail']);
 
                     if(count($courseItems) > 0)
                     {

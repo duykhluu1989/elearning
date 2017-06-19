@@ -100,6 +100,9 @@ class WidgetController extends Controller
 
             $details = array();
 
+            if(isset($inputs['custom_detail']))
+                $details['custom_detail'] = $inputs['custom_detail'];
+
             if(isset($inputs['detail']))
             {
                 foreach($inputs['detail'] as $attribute => $attributeItems)

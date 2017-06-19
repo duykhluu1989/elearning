@@ -11,6 +11,7 @@ class Widget extends Model
     const GROUP_FREE_COURSE = 'group_free_course';
     const GROUP_HIGHLIGHT_COURSE = 'group_highlight_course';
     const GROUP_DISCOUNT_COURSE = 'group_discount_course';
+    const GROUP_CUSTOM_COURSE = 'group_custom_course';
     const ADVERTISE_HORIZONTAL_TOP = 'advertise_horizontal_top';
     const ADVERTISE_VERTICAL_LEFT = 'advertise_vertical_left';
     const ADVERTISE_VERTICAL_RIGHT = 'advertise_vertical_right';
@@ -183,6 +184,23 @@ class Widget extends Model
                 ]),
             ],
         ];
+
+        for($i = 1;$i <= 3;$i ++)
+        {
+            $coreWidgets[] = [
+                self::GROUP_CUSTOM_COURSE . '_' . $i,
+                'Nhóm Khóa Học Tùy Chọn ' . $i,
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_COURSE_CUSTOM_DB,
+                json_encode([
+                    [
+                        'title' => 'Khóa Học',
+                        'name' => 'course_id',
+                        'type' => self::ATTRIBUTE_TYPE_INT_DB,
+                    ],
+                ]),
+            ];
+        }
 
         foreach($coreWidgets as $coreWidget)
         {

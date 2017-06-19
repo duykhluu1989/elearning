@@ -27,19 +27,42 @@
                         </div>
                     </div>
 
-                    @if($widget->type == \App\Models\Widget::TYPE_SLIDER_DB)
+                    <?php
+                    switch($widget->type)
+                    {
+                        case \App\Models\Widget::TYPE_SLIDER_DB:
+                            ?>
 
-                        @include('backend.widgets.partials.widget_slider_form')
+                            @include('backend.widgets.partials.widget_slider_form')
 
-                    @elseif($widget->type == \App\Models\Widget::TYPE_GROUP_COURSE_DB)
+                            <?php
+                            break;
 
-                        @include('backend.widgets.partials.widget_group_course_form')
+                        case \App\Models\Widget::TYPE_GROUP_COURSE_DB:
+                            ?>
 
-                    @elseif($widget->type == \App\Models\Widget::TYPE_ADVERTISE_BANNER_DB)
+                            @include('backend.widgets.partials.widget_group_course_form')
 
-                        @include('backend.widgets.partials.widget_advertise_banner')
+                            <?php
+                            break;
 
-                    @endif
+                        case \App\Models\Widget::TYPE_GROUP_COURSE_CUSTOM_DB:
+                            ?>
+
+                            @include('backend.widgets.partials.widget_group_course_custom_form')
+
+                            <?php
+                            break;
+
+                        case \App\Models\Widget::TYPE_ADVERTISE_BANNER_DB:
+                            ?>
+
+                            @include('backend.widgets.partials.widget_advertise_banner_form')
+
+                            <?php
+                            break;
+                    }
+                    ?>
 
                 </div>
             </div>
