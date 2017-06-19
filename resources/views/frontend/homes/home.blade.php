@@ -1,6 +1,6 @@
 @extends('frontend.layouts.main')
 
-@section('page_heading', 'Home')
+@section('page_heading', trans('theme.home'))
 
 @section('section')
 

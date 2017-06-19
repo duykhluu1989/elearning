@@ -100,7 +100,7 @@ class Course extends Model
             {
                 $time = time();
 
-                if(strtotime($this->promotionPrice->start_time) >= $time && strtotime($this->promotionPrice->end_time) <= $time)
+                if(strtotime($this->promotionPrice->start_time) <= $time && strtotime($this->promotionPrice->end_time) >= $time)
                     return true;
             }
         }

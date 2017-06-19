@@ -1,6 +1,10 @@
 @extends('frontend.layouts.main')
 
-@section('page_heading', 'Home')
+@section('og_description', \App\Libraries\Helpers\Utility::getValueByLocale($course, 'short_description'))
+
+@section('og_image', $course->image)
+
+@section('page_heading', \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name'))
 
 @section('section')
 
@@ -75,8 +79,8 @@
                                             <p>@lang('theme.video_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</b></span></p>
                                         @endif
                                     </div>
-                                    <a class="btn btn_face" href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i> Chia sẽ</a>
-                                    <a class="btn btn_face" href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Thích</a>
+
+                                    <div class="fb-like" data-href="{{ request()->url() }}" data-layout="button" data-action="like" data-size="large" data-show-faces="false" data-share="true"></div>
                                 </div>
                                 <div class="col-lg-4">
                                 </div>

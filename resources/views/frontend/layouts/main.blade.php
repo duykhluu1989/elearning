@@ -7,6 +7,11 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="description" content="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_DESCRIPTION) }}" />
     <meta name="keywords" content="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_KEYWORD) }}" />
+    <meta property="og:url" content="@yield('og_url', request()->url())" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_TITLE) }} | @yield('page_heading')" />
+    <meta property="og:description" content="@yield('og_description', \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_DESCRIPTION))" />
+    <meta property="og:image" content="@yield('og_image', asset('themes/favicons/favicon-32x32.png'))" />
     <meta name="theme-color" content="#ffffff">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('themes/favicons/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" href="{{ asset('themes/favicons/favicon-32x32.png') }}" sizes="32x32">
