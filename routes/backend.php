@@ -30,6 +30,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('user/autoComplete', 'UserController@autoCompleteUser');
 
+        Route::post('certificate/autoComplete', 'CertificateController@autoCompleteCertificate');
+
         Route::post('setting/collaborator/value', 'SettingController@getSettingCollaboratorValue');
 
     });
@@ -153,6 +155,12 @@ Route::group(['namespace' => 'Backend'], function() {
         Route::get('certificate/{id}/delete', 'CertificateController@deleteCertificate');
 
         Route::get('certificate/controlDelete', 'CertificateController@controlDeleteCertificate');
+
+        Route::get('certificateApply', 'CertificateController@adminCertificateApply');
+
+        Route::match(['get', 'post'], 'certificateApply/create', 'CertificateController@createCertificateApply');
+
+        Route::match(['get', 'post'], 'certificateApply/{id}/edit', 'CertificateController@editCertificateApply');
 
         Route::get('user', 'UserController@adminUser');
 

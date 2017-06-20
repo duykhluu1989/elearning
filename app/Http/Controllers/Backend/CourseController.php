@@ -895,6 +895,7 @@ class CourseController extends Controller
                 'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $course->id)),
                 'code' => 'required|alpha_num|unique:course,code' . ($create == true ? '' : (',' . $course->id)),
                 'category_name' => 'required',
+                'level_id' => 'required',
             ]);
 
             $validator->after(function($validator) use(&$inputs) {

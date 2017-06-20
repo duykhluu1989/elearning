@@ -107,8 +107,8 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('level') ? ' has-error': '' }}">
-                    <label>Cấp Độ</label>
-                    <select class="form-control" name="level_id">
+                    <label>Cấp Độ <i>(Bắt Buộc)</i></label>
+                    <select class="form-control" name="level_id" required="required">
                         <?php
                         $levelId = old('level_id', $course->level_id);
                         ?>

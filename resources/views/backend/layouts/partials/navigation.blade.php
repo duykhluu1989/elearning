@@ -44,6 +44,9 @@
                     <li class="{{ (request()->is('admin/certificate') ? 'active' : '') }}">
                         <a href="{{ action('Backend\CertificateController@adminCertificate') }}">Chứng Chỉ</a>
                     </li>
+                    <li class="{{ (request()->is('admin/certificateApply') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\CertificateController@adminCertificateApply') }}">Đăng Kí Cấp Chứng Chỉ</a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview{{ (request()->is('admin/user*') ? ' active' : '') }}">
