@@ -35,6 +35,9 @@
                     </li>
                 </ul>
             </li>
+            <li class="{{ (request()->is('admin/advice*') ? 'active' : '') }}">
+                <a href="{{ action('Backend\CaseAdviceController@adminCaseAdvice') }}"><i class="fa fa-balance-scale"></i><span>Tư Vấn</span></a>
+            </li>
             <li class="treeview{{ (request()->is('admin/user*') ? ' active' : '') }}">
                 <a href="#"><i class="fa fa-user"></i><span>Thành Viên</span></a>
                 <ul class="treeview-menu">

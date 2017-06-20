@@ -1311,7 +1311,7 @@ class CourseController extends Controller
         return $this->saveCourseItem($request, $courseItem, false);
     }
 
-    protected function saveCourseItem($request, CourseItem $courseItem, $create = true)
+    protected function saveCourseItem($request, $courseItem, $create = true)
     {
         if($request->isMethod('post'))
         {

@@ -124,6 +124,26 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'articleStatic/{id}/edit', 'ArticleController@editArticleStatic');
 
+        Route::get('advice', 'CaseAdviceController@adminCaseAdvice');
+
+        Route::match(['get', 'post'], 'advice/create', 'CaseAdviceController@createCaseAdvice');
+
+        Route::match(['get', 'post'], 'advice/{id}/edit', 'CaseAdviceController@editCaseAdvice');
+
+        //Route::get('advice/{id}/delete', 'CaseAdviceController@deleteArticle');
+
+        //Route::get('advice/controlDelete', 'CaseAdviceController@controlDeleteArticle');
+
+        Route::get('advice/{id}/adviceStep', 'CaseAdviceController@adminCaseAdviceStep');
+
+        Route::match(['get', 'post'], 'advice/{id}/adviceStep/create', 'CaseAdviceController@createCaseAdviceStep');
+
+        Route::match(['get', 'post'], 'adviceStep/{id}/edit', 'CaseAdviceController@editCaseAdviceStep');
+
+        //Route::get('courseItem/{id}/delete', 'CourseController@deleteCourseItem');
+
+        //Route::get('courseItem/controlDelete', 'CourseController@controlDeleteCourseItem');
+
         Route::get('user', 'UserController@adminUser');
 
         Route::get('userStudent', 'UserController@adminUserStudent');
