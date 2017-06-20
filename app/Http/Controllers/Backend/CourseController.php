@@ -1224,8 +1224,8 @@ class CourseController extends Controller
     {
         Utility::setBackUrlCookie($request, '/admin/course?');
 
-        $course = Course::select('id', 'name', 'video_length', 'item_count')->with(['courseItems' => function($query) {
-            $query->select('id', 'course_id', 'name', 'type', 'number', 'video_length')->orderBy('number');
+        $course = Course::select('id', 'name', 'video_length', 'item_count', 'audio_length')->with(['courseItems' => function($query) {
+            $query->select('id', 'course_id', 'name', 'type', 'number', 'video_length', 'audio_length')->orderBy('number');
         }])->find($id);
 
         if(empty($course))
@@ -1249,14 +1249,25 @@ class CourseController extends Controller
                 },
             ],
             [
-                'title' => 'Tổng Thời Gian Video: ' . Utility::formatTimeString($course->video_length),
+                'title' => 'Loại',
                 'data' => function($row) {
                     $type = CourseItem::getCourseItemType($row->type);
                     if($row->type == CourseItem::TYPE_TEXT_DB)
                         $iconHtml = Html::i('', ['class' => 'fa fa-file-text-o fa-fw']);
-                    else
+                    else if($row->type == CourseItem::TYPE_VIDEO_DB)
                         $iconHtml = Html::i('', ['class' => 'fa fa-youtube-play fa-fw']);
-                    echo $iconHtml . ' ' . $type . ' ' . Utility::formatTimeString($row->video_length);
+                    else
+                        $iconHtml = Html::i('', ['class' => 'fa fa-volume-up fa-fw']);
+                    echo $iconHtml . ' ' . $type;
+                },
+            ],
+            [
+                'title' => 'Tổng Thời Gian Video: ' . Utility::formatTimeString($course->video_length) . ' | Tổng Thời Gian Audio: ' .  Utility::formatTimeString($course->audio_length),
+                'data' => function($row) {
+                    if($row->type == CourseItem::TYPE_VIDEO_DB)
+                        echo Utility::formatTimeString($row->video_length);
+                    else
+                        echo Utility::formatTimeString($row->audio_length);
                 },
             ],
         ];
@@ -1273,7 +1284,7 @@ class CourseController extends Controller
 
     public function createCourseItem(Request $request, $id)
     {
-        $course = Course::select('id', 'name', 'video_length', 'item_count')->find($id);
+        $course = Course::select('id', 'name', 'video_length', 'item_count', 'audio_length')->find($id);
 
         if(empty($course))
             return view('backend.errors.404');
@@ -1291,7 +1302,7 @@ class CourseController extends Controller
     public function editCourseItem(Request $request, $id)
     {
         $courseItem = CourseItem::with(['course' => function($query) {
-            $query->select('id', 'name', 'video_length', 'item_count');
+            $query->select('id', 'name', 'video_length', 'item_count', 'audio_length');
         }])->find($id);
 
         if(empty($courseItem))
@@ -1309,19 +1320,19 @@ class CourseController extends Controller
             $validator = Validator::make($inputs, [
                 'name' => 'required',
                 'content' => 'required_if:type,' . CourseItem::TYPE_TEXT_DB,
-                'video_path' => 'required_if:type,' . CourseItem::TYPE_VIDEO_DB,
+                'file_path' => 'required_if:type,' . CourseItem::TYPE_VIDEO_DB . ',' . CourseItem::TYPE_AUDIO_DB,
             ]);
 
             $validator->after(function($validator) use(&$inputs) {
-                if($inputs['type'] == CourseItem::TYPE_VIDEO_DB)
+                if($inputs['type'] != CourseItem::TYPE_TEXT_DB)
                 {
-                    if(file_exists($inputs['video_path']) && is_file($inputs['video_path']))
-                        $validator->errors()->add('video_path', 'Đường Dẫn Video Không Đúng');
+                    if(!file_exists($inputs['file_path']) || !is_file($inputs['file_path']))
+                        $validator->errors()->add('file_path', 'Đường Dẫn File Không Đúng');
 
-                    if(!empty($inputs['video_path_en']))
+                    if(!empty($inputs['file_path_en']))
                     {
-                        if(file_exists($inputs['video_path_en']) && is_file($inputs['video_path_en']))
-                            $validator->errors()->add('video_path_en', 'Đường Dẫn Video EN Không Đúng');
+                        if(file_exists($inputs['file_path_en']) && is_file($inputs['file_path_en']))
+                            $validator->errors()->add('file_path_en', 'Đường Dẫn File EN Không Đúng');
                     }
                 }
             });
@@ -1341,11 +1352,12 @@ class CourseController extends Controller
                         $courseItem->content = $inputs['content'];
                         $courseItem->content_en = $inputs['content_en'];
                         $courseItem->video_length = null;
+                        $courseItem->audio_length = null;
                     }
                     else
                     {
-                        $courseItem->content = $inputs['video_path'];
-                        $courseItem->content_en = $inputs['video_path_en'];
+                        $courseItem->content = $inputs['file_path'];
+                        $courseItem->content_en = $inputs['file_path_en'];
 
                         $ffprobe = FFProbe::create([
                             'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
@@ -1355,7 +1367,16 @@ class CourseController extends Controller
                         if($duration < 1)
                             $duration = null;
 
-                        $courseItem->video_length = $duration;
+                        if($courseItem->type == CourseItem::TYPE_VIDEO_DB)
+                        {
+                            $courseItem->video_length = $duration;
+                            $courseItem->audio_length = null;
+                        }
+                        else
+                        {
+                            $courseItem->audio_length = $duration;
+                            $courseItem->video_length = null;
+                        }
                     }
 
                     if($create == true)
@@ -1376,6 +1397,23 @@ class CourseController extends Controller
 
                         if($courseItem->course->video_length < 1)
                             $courseItem->course->video_length = null;
+                    }
+
+                    if($courseItem->audio_length != $courseItem->getOriginal('audio_length'))
+                    {
+                        if($courseItem->getOriginal('audio_length') && $courseItem->course->audio_length)
+                            $courseItem->course->audio_length -= $courseItem->getOriginal('audio_length');
+
+                        if($courseItem->audio_length)
+                        {
+                            if($courseItem->course->audio_length)
+                                $courseItem->course->audio_length += $courseItem->audio_length;
+                            else
+                                $courseItem->course->audio_length = $courseItem->audio_length;
+                        }
+
+                        if($courseItem->course->audio_length < 1)
+                            $courseItem->course->audio_length = null;
                     }
 
                     $courseItem->course->save();
@@ -1440,6 +1478,14 @@ class CourseController extends Controller
                     $courseItem->course->video_length = null;
             }
 
+            if($courseItem->audio_length)
+            {
+                $courseItem->course->audio_length -= $courseItem->audio_length;
+
+                if($courseItem->course->audio_length < 1)
+                    $courseItem->course->audio_length = null;
+            }
+
             $courseItem->course->item_count -= 1;
 
             $courseItem->course->save();
@@ -1472,7 +1518,7 @@ class CourseController extends Controller
         $ids = $request->input('ids');
         $ids = explode(';', $ids);
 
-        $course = Course::select('course.id', 'course.item_count', 'course.video_length')
+        $course = Course::select('course.id', 'course.item_count', 'course.video_length', 'course.audio_length')
             ->with(['courseItems' => function($query) {
                 $query->orderBy('number');
             }])
@@ -1496,6 +1542,14 @@ class CourseController extends Controller
 
                         if($course->video_length < 1)
                             $course->video_length = null;
+                    }
+
+                    if($courseItem->audio_length && !empty($course->audio_length))
+                    {
+                        $course->audio_length -= $courseItem->audio_length;
+
+                        if($course->audio_length < 1)
+                            $course->audio_length = null;
                     }
 
                     $course->item_count -= 1;

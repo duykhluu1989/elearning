@@ -28,8 +28,10 @@
                             <?php
                             if($value == \App\Models\CourseItem::TYPE_TEXT_DB)
                                 $optionClass = 'fa fa-file-text-o fa-fw';
-                            else
+                            else if($value == \App\Models\CourseItem::TYPE_VIDEO_DB)
                                 $optionClass = 'fa fa-youtube-play fa-fw';
+                            else
+                                $optionClass = 'fa fa-volume-up fa-fw';
                             ?>
                             @if($type == $value)
                                 <label class="radio-inline">
@@ -73,12 +75,12 @@
                                 <textarea class="form-control TextEditorInput" name="content">{{ old('content', ($type == \App\Models\CourseItem::TYPE_TEXT_DB ? $courseItem->content : '')) }}</textarea>
                             </div>
                         </div>
-                        <div class="col-sm-12 CourseItemVideoTypeInput" style="{{ $type != \App\Models\CourseItem::TYPE_VIDEO_DB ? 'display: none' : '' }}">
-                            <div class="form-group{{ $errors->has('video_path') ? ' has-error': '' }}">
-                                <label>Đường Dẫn Video <i>(bắt buộc)</i></label>
-                                <input type="text" class="form-control" name="video_path" value="{{ old('video_path', ($type == \App\Models\CourseItem::TYPE_VIDEO_DB ? $courseItem->content : '')) }}" />
-                                @if($errors->has('video_path'))
-                                    <span class="help-block">{{ $errors->first('video_path') }}</span>
+                        <div class="col-sm-12 CourseItemFileTypeInput" style="{{ $type == \App\Models\CourseItem::TYPE_TEXT_DB ? 'display: none' : '' }}">
+                            <div class="form-group{{ $errors->has('file_path') ? ' has-error': '' }}">
+                                <label>Đường Dẫn File <i>(bắt buộc)</i></label>
+                                <input type="text" class="form-control" name="file_path" value="{{ old('file_path', ($type != \App\Models\CourseItem::TYPE_TEXT_DB ? $courseItem->content : '')) }}" />
+                                @if($errors->has('file_path'))
+                                    <span class="help-block">{{ $errors->first('file_path') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -98,10 +100,10 @@
                                 <textarea class="form-control TextEditorInput" name="content_en">{{ old('content_en', ($type == \App\Models\CourseItem::TYPE_TEXT_DB ? $courseItem->content_en : '')) }}</textarea>
                             </div>
                         </div>
-                        <div class="col-sm-12 CourseItemVideoTypeInput" style="{{ $type != \App\Models\CourseItem::TYPE_VIDEO_DB ? 'display: none' : '' }}">
+                        <div class="col-sm-12 CourseItemFileTypeInput" style="{{ $type == \App\Models\CourseItem::TYPE_TEXT_DB ? 'display: none' : '' }}">
                             <div class="form-group">
-                                <label>Đường Dẫn Video EN</label>
-                                <input type="text" class="form-control" name="video_path_en" value="{{ old('video_path_en', ($type == \App\Models\CourseItem::TYPE_VIDEO_DB ? $courseItem->content_en : '')) }}" />
+                                <label>Đường Dẫn File EN</label>
+                                <input type="text" class="form-control" name="file_path_en" value="{{ old('file_path_en', ($type != \App\Models\CourseItem::TYPE_TEXT_DB ? $courseItem->content_en : '')) }}" />
                             </div>
                         </div>
                     </div>
@@ -167,7 +169,7 @@
         $('input[type="radio"][name="type"]').change(function() {
             if($(this).val() == '{{ \App\Models\CourseItem::TYPE_TEXT_DB }}')
             {
-                $('.CourseItemVideoTypeInput').each(function() {
+                $('.CourseItemFileTypeInput').each(function() {
                     $(this).hide();
                 });
 
@@ -181,7 +183,7 @@
                     $(this).hide();
                 });
 
-                $('.CourseItemVideoTypeInput').each(function() {
+                $('.CourseItemFileTypeInput').each(function() {
                     $(this).show();
                 });
             }
