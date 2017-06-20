@@ -33,8 +33,11 @@ class CaseAdvice extends Model
         return $type;
     }
 
-    public function isDeletable()
+    public function doDelete()
     {
-        return false;
+        $this->delete();
+
+        foreach($this->caseAdviceSteps as $caseAdviceStep)
+            $caseAdviceStep->delete();
     }
 }

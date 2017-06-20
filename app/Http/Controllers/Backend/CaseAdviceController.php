@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -74,6 +75,19 @@ class CaseAdviceController extends Controller
                         echo Html::span($status, ['class' => 'label label-success']);
                     else
                         echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-list-ul fa-fw']), [
+                        'href' => action('Backend\CaseAdviceController@adminCaseAdviceStep', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Danh Sách Bước Giải Quyết',
+                    ]);
                 },
             ],
         ];
@@ -205,11 +219,60 @@ class CaseAdviceController extends Controller
         }
     }
 
+    public function deleteCaseAdvice($id)
+    {
+        $case = CaseAdvice::with('caseAdviceSteps')->find($id);
 
+        if(empty($case))
+            return view('backend.errors.404');
 
+        try
+        {
+            DB::beginTransaction();
 
+            $case->doDelete();
 
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
 
+            return redirect()->action('Backend\CaseAdviceController@editCaseAdvice', ['id' => $case->id])->with('messageError', $e->getMessage());
+        }
+
+        return redirect(Utility::getBackUrlCookie(action('Backend\CaseAdviceController@adminCaseAdvice')))->with('messageSuccess', 'Thành Công');
+    }
+
+    public function controlDeleteCaseAdvice(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $cases = CaseAdvice::with('caseAdviceSteps')->whereIn('id', explode(';', $ids))->get();
+
+        foreach($cases as $case)
+        {
+            try
+            {
+                DB::beginTransaction();
+
+                $case->doDelete();
+
+                DB::commit();
+            }
+            catch(\Exception $e)
+            {
+                DB::rollBack();
+
+                return redirect()->action('Backend\CaseAdviceController@adminCaseAdvice')->with('messageError', $e->getMessage());
+            }
+        }
+
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\CaseAdviceController@adminCaseAdvice')->with('messageSuccess', 'Thành Công');
+    }
 
     public function adminCaseAdviceStep(Request $request, $id)
     {
@@ -244,6 +307,7 @@ class CaseAdviceController extends Controller
             [
                 'title' => 'Loại',
                 'data' => function($row) {
+                    echo CaseAdviceStep::getCaseAdviceStepType($row->type);
                 },
             ],
         ];
@@ -289,6 +353,55 @@ class CaseAdviceController extends Controller
 
     protected function saveCaseAdviceStep($request, $caseStep, $create = true)
     {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'content' => 'required',
+            ]);
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $caseStep->content = $inputs['content'];
+                    $caseStep->content_en = $inputs['content_en'];
+                    $caseStep->type = $inputs['type'];
+
+                    if($create == true)
+                    {
+                        $caseStep->caseAdvice->step_count += 1;
+                        $caseStep->caseAdvice->save();
+                    }
+
+                    $caseStep->save();
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\CaseAdviceController@editCaseAdviceStep', ['id' => $caseStep->id])->with('messageSuccess', 'Thành Công');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    if($create == true)
+                        return redirect()->action('Backend\CaseAdviceController@createCaseAdviceStep', ['id' => $caseStep->case_id])->withInput()->with('messageError', $e->getMessage());
+                    else
+                        return redirect()->action('Backend\CaseAdviceController@editCaseAdviceStep', ['id' => $caseStep->id])->withInput()->with('messageError', $e->getMessage());
+                }
+            }
+            else
+            {
+                if($create == true)
+                    return redirect()->action('Backend\CaseAdviceController@createCaseAdviceStep', ['id' => $caseStep->case_id])->withErrors($validator)->withInput();
+                else
+                    return redirect()->action('Backend\CaseAdviceController@editCaseAdviceStep', ['id' => $caseStep->id])->withErrors($validator)->withInput();
+            }
+        }
+
         if($create == true)
         {
             return view('backend.caseAdvices.create_case_advice_step', [
@@ -301,5 +414,101 @@ class CaseAdviceController extends Controller
                 'caseStep' => $caseStep,
             ]);
         }
+    }
+
+    public function deleteCaseAdviceStep($id)
+    {
+        $caseStep = CaseAdviceStep::with('caseAdvice')->find($id);
+
+        if(empty($caseStep))
+            return view('backend.errors.404');
+
+        try
+        {
+            DB::beginTransaction();
+
+            $caseStep->delete();
+
+            $caseStep->caseAdvice->step_count -= 1;
+
+            $caseStep->caseAdvice->save();
+
+            $higherCaseAdviceSteps = CaseAdviceStep::where('case_id', $caseStep->case_id)
+                ->where('step', '>', $caseStep->step)
+                ->orderBy('step')
+                ->get();
+
+            foreach($higherCaseAdviceSteps as $higherCaseAdviceStep)
+            {
+                $higherCaseAdviceStep->step -= 1;
+                $higherCaseAdviceStep->save();
+            }
+
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return redirect()->action('Backend\CaseAdviceController@editCaseAdviceStep', ['id' => $caseStep->id])->with('messageError', $e->getMessage());
+        }
+
+        return redirect()->action('Backend\CaseAdviceController@adminCaseAdviceStep', ['id' => $caseStep->caseAdvice->id])->with('messageSuccess', 'Thành Công');
+    }
+
+    public function controlDeleteCaseAdviceStep(Request $request)
+    {
+        $ids = $request->input('ids');
+        $ids = explode(';', $ids);
+
+        $case = CaseAdvice::select('case_advice.id', 'case_advice.step_count')
+            ->with(['caseAdviceSteps' => function($query) {
+                $query->orderBy('step');
+            }])
+            ->join('case_advice_step', 'case_advice.id', '=', 'case_advice_step.case_id')
+            ->whereIn('case_advice_step.id', $ids)
+            ->first();
+
+        try
+        {
+            DB::beginTransaction();
+
+            foreach($case->caseAdviceSteps as $key => $caseAdviceStep)
+            {
+                if(in_array($caseAdviceStep->id, $ids))
+                {
+                    $caseAdviceStep->delete();
+
+                    $case->step_count -= 1;
+
+                    unset($case->caseAdviceSteps[$key]);
+                }
+            }
+
+            $case->save();
+
+            $step = 1;
+
+            foreach($case->caseAdviceSteps as $caseAdviceStep)
+            {
+                if($caseAdviceStep->step != $step)
+                {
+                    $caseAdviceStep->step = $step;
+                    $caseAdviceStep->save();
+                }
+
+                $step ++;
+            }
+
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return redirect()->action('Backend\CaseAdviceController@adminCaseAdviceStep', ['id' => $case->id])->with('messageError', $e->getMessage());
+        }
+
+        return redirect()->action('Backend\CaseAdviceController@adminCaseAdviceStep', ['id' => $case->id])->with('messageSuccess', 'Thành Công');
     }
 }

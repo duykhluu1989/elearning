@@ -9,7 +9,7 @@ class CaseAdviceStep extends Model
     const TYPE_FREE_DB = 0;
     const TYPE_CHARGE_DB = 1;
     const TYPE_FREE_LABEL = 'Miễn Phí';
-    const TYPE_CHARGE_LABEL = 'Tính Phí';
+    const TYPE_CHARGE_LABEL = 'Thu Phí';
 
     protected $table = 'case_advice_step';
 
@@ -31,10 +31,5 @@ class CaseAdviceStep extends Model
             return $type[$value];
 
         return $type;
-    }
-
-    public function isDeletable()
-    {
-        return false;
     }
 }

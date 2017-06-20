@@ -130,9 +130,9 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'advice/{id}/edit', 'CaseAdviceController@editCaseAdvice');
 
-        //Route::get('advice/{id}/delete', 'CaseAdviceController@deleteArticle');
+        Route::get('advice/{id}/delete', 'CaseAdviceController@deleteCaseAdvice');
 
-        //Route::get('advice/controlDelete', 'CaseAdviceController@controlDeleteArticle');
+        Route::get('advice/controlDelete', 'CaseAdviceController@controlDeleteCaseAdvice');
 
         Route::get('advice/{id}/adviceStep', 'CaseAdviceController@adminCaseAdviceStep');
 
@@ -140,9 +140,9 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'adviceStep/{id}/edit', 'CaseAdviceController@editCaseAdviceStep');
 
-        //Route::get('courseItem/{id}/delete', 'CourseController@deleteCourseItem');
+        Route::get('adviceStep/{id}/delete', 'CaseAdviceController@deleteCaseAdviceStep');
 
-        //Route::get('courseItem/controlDelete', 'CourseController@controlDeleteCourseItem');
+        Route::get('adviceStep/controlDelete', 'CaseAdviceController@controlDeleteCaseAdviceStep');
 
         Route::get('user', 'UserController@adminUser');
 
