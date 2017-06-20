@@ -144,6 +144,16 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('adviceStep/controlDelete', 'CaseAdviceController@controlDeleteCaseAdviceStep');
 
+        Route::get('certificate', 'CertificateController@adminCertificate');
+
+        Route::match(['get', 'post'], 'certificate/create', 'CertificateController@createCertificate');
+
+        Route::match(['get', 'post'], 'certificate/{id}/edit', 'CertificateController@editCertificate');
+
+        Route::get('certificate/{id}/delete', 'CertificateController@deleteCertificate');
+
+        Route::get('certificate/controlDelete', 'CertificateController@controlDeleteCertificate');
+
         Route::get('user', 'UserController@adminUser');
 
         Route::get('userStudent', 'UserController@adminUserStudent');

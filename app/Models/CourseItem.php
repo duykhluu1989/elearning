@@ -38,6 +38,9 @@ class CourseItem extends Model
 
     public function isDeletable()
     {
-        return false;
+        if($this->course->countUserCourses() > 0)
+            return false;
+
+        return true;
     }
 }

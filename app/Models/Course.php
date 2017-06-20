@@ -67,9 +67,14 @@ class Course extends Model
         return DiscountApply::where('apply_id', $this->id)->where('target', DiscountApply::TARGET_COURSE_DB)->count('id');
     }
 
+    public function countUserCourses()
+    {
+        return UserCourse::where('course_id', $this->id)->count('id');
+    }
+
     public function isDeletable()
     {
-        if($this->countDiscountApplies() > 0)
+        if($this->countDiscountApplies() > 0 || $this->countUserCourses() > 0)
             return false;
 
         return true;
