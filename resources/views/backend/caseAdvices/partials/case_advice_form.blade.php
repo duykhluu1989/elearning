@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('name') ? ' has-error': '' }}">
-                    <label>Tên <i>(bắt buộc)</i></label>
+                    <label>Tình Huống <i>(bắt buộc)</i></label>
                     <input type="text" class="form-control" name="name" required="required" value="{{ old('name', $case->name) }}" />
                     @if($errors->has('name'))
                         <span class="help-block">{{ $errors->first('name') }}</span>
@@ -22,7 +22,7 @@
             </div>
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label>Tên EN</label>
+                    <label>Tình Huống EN</label>
                     <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $case->name_en) }}" />
                 </div>
             </div>

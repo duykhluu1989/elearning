@@ -42,7 +42,7 @@ class CaseAdviceController extends Controller
 
         $columns = [
             [
-                'title' => 'Tên',
+                'title' => 'Tình Huống',
                 'data' => function($row) {
                     echo Html::a($row->name, [
                         'href' => action('Backend\CaseAdviceController@editCaseAdvice', ['id' => $row->id]),
@@ -96,7 +96,7 @@ class CaseAdviceController extends Controller
         $gridView->setCheckbox();
         $gridView->setFilters([
             [
-                'title' => 'Tên',
+                'title' => 'Tình Huống',
                 'name' => 'name',
                 'type' => 'input',
             ],

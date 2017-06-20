@@ -38,8 +38,13 @@
             <li class="{{ (request()->is('admin/advice*') ? 'active' : '') }}">
                 <a href="{{ action('Backend\CaseAdviceController@adminCaseAdvice') }}"><i class="fa fa-university"></i><span>Tư Vấn</span></a>
             </li>
-            <li class="{{ (request()->is('admin/certificate*') ? 'active' : '') }}">
-                <a href="{{ action('Backend\CertificateController@adminCertificate') }}"><i class="fa fa-certificate"></i><span>Chứng Chỉ</span></a>
+            <li class="treeview{{ (request()->is('admin/certificate*') ? ' active' : '') }}">
+                <a href="#"><i class="fa fa-certificate"></i><span>Chứng Chỉ</span></a>
+                <ul class="treeview-menu">
+                    <li class="{{ (request()->is('admin/certificate') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\CertificateController@adminCertificate') }}">Chứng Chỉ</a>
+                    </li>
+                </ul>
             </li>
             <li class="treeview{{ (request()->is('admin/user*') ? ' active' : '') }}">
                 <a href="#"><i class="fa fa-user"></i><span>Thành Viên</span></a>
