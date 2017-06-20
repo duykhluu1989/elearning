@@ -15,15 +15,20 @@ class Widget extends Model
     const ADVERTISE_HORIZONTAL_TOP = 'advertise_horizontal_top';
     const ADVERTISE_VERTICAL_LEFT = 'advertise_vertical_left';
     const ADVERTISE_VERTICAL_RIGHT = 'advertise_vertical_right';
+    const GROUP_STAFF_TEACHER = 'group_staff_teacher';
+    const GROUP_STAFF_EXPERT = 'group_staff_expert';
+    const GROUP_STAFF_STUDENT = 'group_staff_student';
 
     const TYPE_SLIDER_DB = 0;
     const TYPE_GROUP_COURSE_DB = 1;
     const TYPE_GROUP_COURSE_CUSTOM_DB = 2;
     const TYPE_ADVERTISE_BANNER_DB = 3;
+    const TYPE_GROUP_STAFF_DB = 4;
     const TYPE_SLIDER_LABEL = 'Khung Ảnh Trượt';
     const TYPE_GROUP_COURSE_LABEL = 'Nhóm Khóa Học';
     const TYPE_GROUP_COURSE_CUSTOM_LABEL = 'Nhóm Khóa Học Tùy Chọn';
     const TYPE_ADVERTISE_BANNER_LABEL = 'Biển Quảng Cáo';
+    const TYPE_GROUP_STAFF_LABEL = 'Đội Ngũ Tiêu Biểu';
 
     const ATTRIBUTE_TYPE_STRING_DB = 0;
     const ATTRIBUTE_TYPE_INT_DB = 1;
@@ -183,6 +188,115 @@ class Widget extends Model
                     ],
                 ]),
             ],
+            [
+                self::GROUP_STAFF_EXPERT,
+                'Góc Nhìn Chuyên Gia',
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_STAFF_DB,
+                json_encode([
+                    [
+                        'title' => 'Ảnh',
+                        'name' => 'image',
+                        'type' => self::ATTRIBUTE_TYPE_IMAGE_DB,
+                    ],
+                    [
+                        'title' => 'Tên',
+                        'name' => 'name',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Trích Dẫn',
+                        'name' => 'quote',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Trích Dẫn EN',
+                        'name' => 'quote_en',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Đường Dẫn',
+                        'name' => 'url',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                ]),
+            ],
+            [
+                self::GROUP_STAFF_TEACHER,
+                'Đội Ngũ Giảng Viên',
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_STAFF_DB,
+                json_encode([
+                    [
+                        'title' => 'Ảnh',
+                        'name' => 'image',
+                        'type' => self::ATTRIBUTE_TYPE_IMAGE_DB,
+                    ],
+                    [
+                        'title' => 'Tên',
+                        'name' => 'name',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Trích Dẫn',
+                        'name' => 'quote',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Trích Dẫn EN',
+                        'name' => 'quote_en',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Đường Dẫn',
+                        'name' => 'url',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                ]),
+            ],
+            [
+                self::GROUP_STAFF_STUDENT,
+                'Học Viên Nói Về Chúng Tôi',
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_STAFF_DB,
+                json_encode([
+                    [
+                        'title' => 'Ảnh',
+                        'name' => 'image',
+                        'type' => self::ATTRIBUTE_TYPE_IMAGE_DB,
+                    ],
+                    [
+                        'title' => 'Tên',
+                        'name' => 'name',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Trích Dẫn',
+                        'name' => 'quote',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Trích Dẫn EN',
+                        'name' => 'quote_en',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Nội Dung',
+                        'name' => 'description',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Nội Dung EN',
+                        'name' => 'description_en',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Đường Dẫn',
+                        'name' => 'url',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                ]),
+            ],
         ];
 
         for($i = 1;$i <= 3;$i ++)
@@ -221,6 +335,7 @@ class Widget extends Model
             self::TYPE_GROUP_COURSE_DB => self::TYPE_GROUP_COURSE_LABEL,
             self::TYPE_GROUP_COURSE_CUSTOM_DB => self::TYPE_GROUP_COURSE_CUSTOM_LABEL,
             self::TYPE_ADVERTISE_BANNER_DB => self::TYPE_ADVERTISE_BANNER_LABEL,
+            self::TYPE_GROUP_STAFF_DB => self::TYPE_GROUP_STAFF_LABEL,
         ];
 
         if($value !== null && isset($type[$value]))

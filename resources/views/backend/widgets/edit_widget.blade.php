@@ -61,6 +61,14 @@
 
                             <?php
                             break;
+
+                        case \App\Models\Widget::TYPE_GROUP_STAFF_DB:
+                            ?>
+
+                            @include('backend.widgets.partials.widget_slider_form')
+
+                            <?php
+                            break;
                     }
                     ?>
 

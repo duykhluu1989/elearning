@@ -78,8 +78,8 @@
                                         @if(!empty($course->video_length))
                                             <p>@lang('theme.video_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</b></span></p>
                                         @endif
-                                        @if(!empty($course->video_length))
-                                            <p>@lang('theme.video_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</b></span></p>
+                                        @if(!empty($course->audio_length))
+                                            <p>@lang('theme.audio_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->audio_length) }}</b></span></p>
                                         @endif
                                     </div>
 
