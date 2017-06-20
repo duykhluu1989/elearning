@@ -13,6 +13,7 @@ return [
     'teacher' => 'Teacher',
     'course_item_count' => 'Number of lectures',
     'video_length' => 'Video duration',
+    'audio_length' => 'Audio duration',
     'course_description' => 'Introduction',
     'course_description_title' => 'Course description',
     'buy_course' => 'Buy course',

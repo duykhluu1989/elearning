@@ -13,6 +13,7 @@ return [
     'teacher' => 'Giảng dạy bởi',
     'course_item_count' => 'Số lượng bài giảng',
     'video_length' => 'Thời lượng Video',
+    'audio_length' => 'Thời Lượng Audio',
     'course_description' => 'Giới thiệu',
     'course_description_title' => 'Mô tả về khóa học',
     'buy_course' => 'Mua khóa học',
