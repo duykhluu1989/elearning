@@ -188,6 +188,12 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('role/controlDelete', 'RoleController@controlDeleteRole');
 
+        Route::get('theme/menu', 'ThemeController@adminMenu');
+
+        Route::post('theme/menu/create', 'ThemeController@createMenu');
+
+        Route::match(['get', 'post'], 'theme/menu/{id}/edit', 'ThemeController@editMenu');
+
         Route::match(['get', 'post'], 'setting', 'SettingController@adminSetting');
 
         Route::match(['get', 'post'], 'setting/collaborator', 'SettingController@adminSettingCollaborator');

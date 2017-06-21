@@ -24,9 +24,12 @@
                 </div>
             </div>
             <div class="col-sm-12">
-                <div class="form-group">
+                <div class="form-group{{ $errors->has('name_en') ? ' has-error': '' }}">
                     <label>Tên EN</label>
                     <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $certificate->name_en) }}" />
+                    @if($errors->has('name_en'))
+                        <span class="help-block">{{ $errors->first('name_en') }}</span>
+                    @endif
                 </div>
             </div>
             <div class="col-sm-12">
