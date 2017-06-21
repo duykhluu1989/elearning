@@ -162,6 +162,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'certificateApply/{id}/edit', 'CertificateController@editCertificateApply');
 
+        Route::get('certificateApply/controlSetStatus', 'CertificateController@controlSetStatusCertificateApply');
+
+        Route::get('certificateApply/exportExcel', 'CertificateController@controlExportExcelCertificateApply');
+
         Route::get('user', 'UserController@adminUser');
 
         Route::get('userStudent', 'UserController@adminUserStudent');

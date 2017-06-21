@@ -174,6 +174,16 @@
                         window.location = $(this).val() + '?ids=' + ids;
                 }
             });
+
+            $('.GridViewFilterControl').click(function() {
+                if($(this).val() != '')
+                {
+                    var queries = $('#FilterForm').serialize();
+
+                    if(queries != '')
+                        window.location = $(this).val() + '?' + queries;
+                }
+            });
         </script>
     @endpush
 @endif

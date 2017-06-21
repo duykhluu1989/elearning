@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -219,33 +220,7 @@ class CertificateController extends Controller
             ->select('certificate_apply.id', 'certificate_apply.name', 'certificate_apply.status', 'certificate_apply.certificate_id', 'certificate_apply.phone', 'certificate_apply.created_at')
             ->orderBy('id', 'desc');
 
-        $inputs = $request->all();
-
-        if(count($inputs) > 0)
-        {
-            if(!empty($inputs['name']))
-                $dataProvider->where('certificate_apply.name', 'like', '%' . $inputs['name'] . '%');
-
-            if(!empty($inputs['certificate_name']))
-            {
-                $dataProvider->join('certificate', 'certificate.id', '=', 'certificate_apply.certificate_id')
-                    ->where('certificate.name', 'like', '%' . $inputs['certificate_name'] . '%');
-            }
-
-            if(!empty($inputs['certificate_code']))
-            {
-                $sql = $dataProvider->toSql();
-                if(strpos($sql, 'inner join `certificate` on') === false)
-                    $dataProvider->join('certificate', 'certificate.id', '=', 'certificate_apply.certificate_id');
-                $dataProvider->where('certificate.code', 'like', '%' . $inputs['certificate_code'] . '%');
-            }
-
-            if(!empty($inputs['phone']))
-                $dataProvider->where('certificate_apply.phone', 'like', '%' . $inputs['phone'] . '%');
-
-            if(isset($inputs['status']) && $inputs['status'] !== '')
-                $dataProvider->where('certificate_apply.status', $inputs['status']);
-        }
+        $this->setDataSourceFilter($request, $dataProvider);
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
 
@@ -320,11 +295,42 @@ class CertificateController extends Controller
                 'options' => CertificateApply::getCertificateApplyStatus(),
             ],
         ]);
-        $gridView->setFilterValues($inputs);
+        $gridView->setFilterValues($request->all());
 
         return view('backend.certificates.admin_certificate_apply', [
             'gridView' => $gridView,
         ]);
+    }
+
+    protected function setDataSourceFilter($request, $dataProvider)
+    {
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['name']))
+                $dataProvider->where('certificate_apply.name', 'like', '%' . $inputs['name'] . '%');
+
+            if(!empty($inputs['certificate_name']))
+            {
+                $dataProvider->join('certificate', 'certificate.id', '=', 'certificate_apply.certificate_id')
+                    ->where('certificate.name', 'like', '%' . $inputs['certificate_name'] . '%');
+            }
+
+            if(!empty($inputs['certificate_code']))
+            {
+                $sql = $dataProvider->toSql();
+                if(strpos($sql, 'inner join `certificate` on') === false)
+                    $dataProvider->join('certificate', 'certificate.id', '=', 'certificate_apply.certificate_id');
+                $dataProvider->where('certificate.code', 'like', '%' . $inputs['certificate_code'] . '%');
+            }
+
+            if(!empty($inputs['phone']))
+                $dataProvider->where('certificate_apply.phone', 'like', '%' . $inputs['phone'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('certificate_apply.status', $inputs['status']);
+        }
     }
 
     public function createCertificateApply(Request $request)
@@ -407,5 +413,80 @@ class CertificateController extends Controller
                 'apply' => $apply,
             ]);
         }
+    }
+
+    public function controlSetStatusCertificateApply(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $applies = CertificateApply::whereIn('id', explode(';', $ids))->get();
+
+        foreach($applies as $apply)
+        {
+            if($apply->status == Utility::INACTIVE_DB)
+            {
+                $apply->status = Utility::ACTIVE_DB;
+                $apply->save();
+            }
+        }
+
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\CertificateController@adminCertificateApply')->with('messageSuccess', 'Thành Công');
+    }
+
+    public function controlExportExcelCertificateApply(Request $request)
+    {
+        $exportData[] = [
+            'Tên',
+            'Chứng Chỉ',
+            'Mã Chứng Chỉ',
+            'Số Điện Thoại',
+            'Thời Gian Đăng Kí',
+            'Trạng Thái',
+        ];
+
+        $dataProvider = CertificateApply::with(['certificate' => function($query) {
+            $query->select('id', 'name', 'code');
+        }])
+            ->select('certificate_apply.id', 'certificate_apply.name', 'certificate_apply.status', 'certificate_apply.certificate_id', 'certificate_apply.phone', 'certificate_apply.created_at')
+            ->orderBy('id', 'desc');
+
+        $this->setDataSourceFilter($request, $dataProvider);
+
+        $page = 1;
+
+        do
+        {
+            $applies = $dataProvider->paginate(Utility::LARGE_SET_LIMIT, ['*'], 'page', $page);
+
+            foreach($applies as $apply)
+            {
+                $exportData[] = [
+                    $apply->name,
+                    $apply->certificate->name,
+                    $apply->certificate->code,
+                    $apply->phone,
+                    $apply->created_at,
+                    CertificateApply::getCertificateApplyStatus($apply->status),
+                ];
+            }
+
+            $page ++;
+
+            $countApplies = count($applies);
+        }
+        while($countApplies > 0);
+
+        Excel::create('export-' . time(), function($excel) use($exportData) {
+
+            $excel->sheet('sheet1', function($sheet) use($exportData) {
+
+                $sheet->fromArray($exportData, null, 'A1', true, false);
+
+            });
+
+        })->export('xls');
     }
 }

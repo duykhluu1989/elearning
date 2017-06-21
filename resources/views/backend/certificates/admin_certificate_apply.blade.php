@@ -17,6 +17,27 @@
                 'data-content' => 'Đăng Kí Mới',
             ]);
         },
+        function() {
+            echo \App\Libraries\Helpers\Html::button(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-download fa-fw']), [
+                'class' => 'btn btn-primary GridViewFilterControl Confirmation',
+                'data-container' => 'body',
+                'data-toggle' => 'popover',
+                'data-placement' => 'top',
+                'data-content' => 'Xuất Dữ Liệu Ra Excel',
+                'value' => action('Backend\CertificateController@controlExportExcelCertificateApply'),
+            ]);
+        },
+        function() {
+            echo \App\Libraries\Helpers\Html::button(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-check fa-fw']), [
+                'class' => 'btn btn-primary GridViewCheckBoxControl Confirmation',
+                'data-container' => 'body',
+                'data-toggle' => 'popover',
+                'data-placement' => 'top',
+                'data-content' => 'Đã Thi',
+                'value' => action('Backend\CertificateController@controlSetStatusCertificateApply'),
+                'style' => 'display: none',
+            ]);
+        },
     ]);
 
     $gridView->render();
