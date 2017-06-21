@@ -79,6 +79,11 @@
 
         $('#NewMenuButton').click(function() {
             $('#MenuModalTitle').html('Menu Mới');
+
+            $('#MenuModalForm').find('input').each(function() {
+                $(this).val('');
+            });
+
             $('#MenuModal').modal('show');
         });
 
@@ -109,6 +114,10 @@
                             if(newMenuModalFormElem.find('span[class="help-block"]').length < 1)
                             {
                                 $('#MenuModal').modal('hide');
+
+                                newMenuModalFormElem.find('input').each(function() {
+                                    $(this).val('');
+                                });
                             }
                         }
                     }
