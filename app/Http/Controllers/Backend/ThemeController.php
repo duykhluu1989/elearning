@@ -13,10 +13,13 @@ class ThemeController extends Controller
 {
     public function adminMenu()
     {
+        $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target')->whereNull('parent_id')->orderBy('position')->get();
+
         $menu = new Menu();
         $menu->type = Menu::TYPE_CATEGORY_DB;
 
         return view('backend.themes.admin_menu', [
+            'rootMenus' => $rootMenus,
             'menu' => $menu,
         ]);
     }
@@ -85,6 +88,7 @@ class ThemeController extends Controller
                 $menu->name = $inputs['name'];
                 $menu->name_en = $inputs['name_en'];
                 $menu->url = $inputs['url'];
+                $menu->type = $inputs['type'];
 
                 if(!empty($inputs['target']))
                 {

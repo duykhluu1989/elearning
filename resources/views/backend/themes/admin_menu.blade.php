@@ -4,12 +4,21 @@
 
 @section('section')
 
-    <div class="box box-primary">
+    <div class="box box-primary" id="AdminMenuDiv">
         <div class="box-header with-border">
-            <button class="btn btn-primary" id="NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
-        </div>
-        <div class="box-body no-padding">
+            <button type="submit" class="btn btn-primary">Cập Nhật</button>
 
+            <button class="btn btn-primary pull-right NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
+        </div>
+        <div class="box-body" id="ListMenuItem">
+
+            @include('backend.themes.partials.list_menu', ['listMenus' => $rootMenus])
+
+        </div>
+        <div class="box-footer">
+            <button type="submit" class="btn btn-primary">Cập Nhật</button>
+
+            <button class="btn btn-primary pull-right NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
         </div>
     </div>
     {{ csrf_field() }}
@@ -30,7 +39,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-primary" id="MenuModalSubmitButton">Lưu</button>
+                    <button type="button" class="btn btn-primary" id="MenuModalSubmitButton"></button>
                 </div>
             </div>
         </div>
@@ -40,6 +49,12 @@
 
 @push('scripts')
     <script type="text/javascript">
+        $('#ListMenuItem').sortable({
+            items: '.media',
+            revert: true,
+            cursor: 'move'
+        });
+
         $('#MenuModalForm').on('change', 'input[type="radio"][name="type"]', function() {
             var nameFormGroupElem = $('#NameFormGroup');
 
@@ -77,8 +92,9 @@
             }
         });
 
-        $('#NewMenuButton').click(function() {
+        $('.NewMenuButton').click(function() {
             $('#MenuModalTitle').html('Menu Mới');
+            $('#MenuModalSubmitButton').html('Tạo Mới');
 
             clearForm();
 
@@ -122,6 +138,35 @@
 
                                 clearForm();
                             }
+                        }
+                    }
+                });
+            }
+        });
+
+        $('.EditMenuButton').click(function() {
+            if($(this).val() != '')
+            {
+                $('#AdminMenuDiv').first().append('' +
+                    '<div class="overlay">' +
+                    '<i class="fa fa-refresh fa-spin"></i>' +
+                    '</div>' +
+                '');
+
+                $('#MenuModalTitle').html('Chỉnh Sửa Menu');
+                $('#MenuModalSubmitButton').html('Cập Nhật');
+
+                $.ajax({
+                    url: $(this).val(),
+                    type: 'get',
+                    success: function(result) {
+                        if(result)
+                        {
+                            $('#MenuModalForm').html(result);
+
+                            $('#AdminMenuDiv').find('div[class="overlay"]').first().remove();
+
+                            $('#MenuModal').modal('show');
                         }
                     }
                 });

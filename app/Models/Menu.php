@@ -27,6 +27,11 @@ class Menu extends Model
         return $this->belongsTo('App\Models\Menu', 'parent_id');
     }
 
+    public function childrenMenus()
+    {
+        return $this->hasMany('App\Models\Menu', 'parent_id');
+    }
+
     public function targetInformation()
     {
         if($this->target == self::TARGET_CATEGORY_DB)
@@ -55,5 +60,22 @@ class Menu extends Model
     public function isDeletable()
     {
         return true;
+    }
+
+    public function getMenuTitle()
+    {
+        $title = '';
+
+        if(!empty($this->name))
+            $title .= $this->name . ' - ';
+
+        if(!empty($this->url))
+            $title .= $this->url;
+        else if(!empty($this->targetInformation))
+            $title .= $this->targetInformation->name;
+        else
+            $title .= 'Tất Cả Chủ Đề';
+
+        return $title;
     }
 }
