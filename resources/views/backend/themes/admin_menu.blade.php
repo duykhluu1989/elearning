@@ -10,9 +10,9 @@
 
             <button class="btn btn-primary pull-right NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
         </div>
-        <div class="box-body" id="ListMenuItem">
+        <div class="box-body">
 
-            @include('backend.themes.partials.list_menu', ['listMenus' => $rootMenus])
+            @include('backend.themes.partials.list_menu', ['listMenus' => $rootMenus, 'listClass' => 'ListMenuItem'])
 
         </div>
         <div class="box-footer">
@@ -47,12 +47,31 @@
 
 @stop
 
+@push('stylesheets')
+    <style type="text/css">
+        .ListMenuItem, .ListMenuItem ul {
+            list-style-type: none;
+        }
+
+        .MenuItemPlaceholder {
+            outline: 1px dashed #4183C4;
+        }
+    </style>
+@endpush
+
 @push('scripts')
+    <script src="{{ asset('assets/js/jquery.mjs.nestedSortable.js') }}"></script>
     <script type="text/javascript">
-        $('#ListMenuItem').sortable({
-            items: '.media',
-            revert: true,
-            cursor: 'move'
+        $('.ListMenuItem').nestedSortable({
+            forcePlaceholderSize: true,
+            handle: 'div',
+            items: 'li',
+            placeholder: 'MenuItemPlaceholder',
+            tolerance: 'pointer',
+            toleranceElement: '> div',
+            isTree: true,
+            expandOnHover: 700,
+            listType: 'ul'
         });
 
         $('#MenuModalForm').on('change', 'input[type="radio"][name="type"]', function() {
