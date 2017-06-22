@@ -80,12 +80,17 @@
         $('#NewMenuButton').click(function() {
             $('#MenuModalTitle').html('Menu Mới');
 
-            $('#MenuModalForm').find('input').each(function() {
-                $(this).val('');
-            });
+            clearForm();
 
             $('#MenuModal').modal('show');
         });
+
+        function clearForm()
+        {
+            $('#MenuModalForm').find('input[type="text"]').each(function() {
+                $(this).val('');
+            });
+        }
 
         $('#MenuModalSubmitButton').click(function() {
             var newMenuModalFormElem = $('#MenuModalForm');
@@ -115,9 +120,7 @@
                             {
                                 $('#MenuModal').modal('hide');
 
-                                newMenuModalFormElem.find('input').each(function() {
-                                    $(this).val('');
-                                });
+                                clearForm();
                             }
                         }
                     }

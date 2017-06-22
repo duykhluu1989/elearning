@@ -15,6 +15,9 @@ class Menu extends Model
     const TYPE_STATIC_LINK_LABEL = 'Đường Dẫn Tĩnh';
     const TYPE_CATEGORY_AUTO_LABEL = 'Chủ Đề Tự Động';
 
+    const TARGET_CATEGORY_DB = 'category';
+    const TARGET_STATIC_ARTICLE_DB = 'article';
+
     protected $table = 'menu';
 
     public $timestamps = false;
@@ -22,6 +25,16 @@ class Menu extends Model
     public function parentMenu()
     {
         return $this->belongsTo('App\Models\Menu', 'parent_id');
+    }
+
+    public function targetInformation()
+    {
+        if($this->target == self::TARGET_CATEGORY_DB)
+            return $this->belongsTo('App\Models\Category', 'target_id');
+        else if($this->target == self::TARGET_STATIC_ARTICLE_DB)
+            return $this->belongsTo('App\Models\Article', 'target_id');
+        else
+            return null;
     }
 
     public static function getMenuType($value = null)
