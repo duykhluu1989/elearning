@@ -11,8 +11,18 @@ use App\Models\Article;
 
 class ThemeController extends Controller
 {
-    public function adminMenu()
+    public function adminMenu(Request $request)
     {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            echo '<pre>';
+            print_r($inputs);
+            echo '</pre>';
+            exit();
+        }
+
         $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target')->whereNull('parent_id')->orderBy('position')->get();
 
         $menu = new Menu();
@@ -112,5 +122,25 @@ class ThemeController extends Controller
         return view('backend.themes.partials.menu_form', [
             'menu' => $menu,
         ]);
+    }
+
+    public function getMenuHtml(Request $request)
+    {
+        $id = $request->input('id');
+
+        if(empty($id))
+            $menu = Menu::select('id', 'name', 'url', 'target_id', 'target')->orderBy('id', 'desc')->first();
+        else
+            $menu = Menu::select('id', 'name', 'url', 'target_id', 'target')->find($id);
+
+        if(!empty($menu))
+        {
+            return view('backend.themes.partials.get_menu', [
+                'menu' => $menu,
+                'id' => $id,
+            ]);
+        }
+
+        return '';
     }
 }

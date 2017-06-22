@@ -12,7 +12,7 @@
         </div>
         <div class="box-body">
 
-            @include('backend.themes.partials.list_menu', ['listMenus' => $rootMenus, 'listClass' => 'ListMenuItem'])
+            @include('backend.themes.partials.list_menu', ['listMenus' => $rootMenus, 'listId' => 'ListMenuItem'])
 
         </div>
         <div class="box-footer">
@@ -49,7 +49,7 @@
 
 @push('stylesheets')
     <style type="text/css">
-        .ListMenuItem, .ListMenuItem ul {
+        #ListMenuItem, #ListMenuItem ul {
             list-style-type: none;
         }
 
@@ -62,7 +62,7 @@
 @push('scripts')
     <script src="{{ asset('assets/js/jquery.mjs.nestedSortable.js') }}"></script>
     <script type="text/javascript">
-        $('.ListMenuItem').nestedSortable({
+        $('#ListMenuItem').nestedSortable({
             forcePlaceholderSize: true,
             handle: 'div',
             items: 'li',
@@ -113,7 +113,7 @@
 
         $('.NewMenuButton').click(function() {
             $('#MenuModalTitle').html('Menu Mới');
-            $('#MenuModalSubmitButton').html('Tạo Mới');
+            $('#MenuModalSubmitButton').html('Tạo Mới').val('create');
             $('#MenuModalForm').prop('action', '{{ action('Backend\ThemeController@createMenu') }}');
 
             clearForm();
@@ -129,10 +129,10 @@
         }
 
         $('#MenuModalSubmitButton').click(function() {
-            var newMenuModalFormElem = $('#MenuModalForm');
+            var menuModalFormElem = $('#MenuModalForm');
 
-            if(newMenuModalFormElem[0].checkValidity() == false)
-                newMenuModalFormElem[0].reportValidity();
+            if(menuModalFormElem[0].checkValidity() == false)
+                menuModalFormElem[0].reportValidity();
             else
             {
                 $('#MenuModalContent').first().append('' +
@@ -142,18 +142,41 @@
                 '');
 
                 $.ajax({
-                    url: newMenuModalFormElem.attr('action'),
+                    url: menuModalFormElem.attr('action'),
                     type: 'post',
-                    data: '_token=' + $('input[name="_token"]').first().val() + '&' + newMenuModalFormElem.serialize(),
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&' + menuModalFormElem.serialize(),
                     success: function(result) {
                         if(result)
                         {
-                            newMenuModalFormElem.html(result);
+                            menuModalFormElem.html(result);
 
                             $('#MenuModalContent').find('div[class="overlay"]').first().remove();
 
-                            if(newMenuModalFormElem.find('span[class="help-block"]').length < 1)
+                            if(menuModalFormElem.find('span[class="help-block"]').length < 1)
                             {
+                                var menuModalSubmitButton = $('#MenuModalSubmitButton');
+                                var menuId = '';
+                                if(menuModalSubmitButton.val() != 'create')
+                                {
+                                    var menuModalSubmitButtonValArr = menuModalSubmitButton.val().split('_');
+                                    menuId = menuModalSubmitButtonValArr[1];
+                                }
+
+                                $.ajax({
+                                    url: '{{ action('Backend\ThemeController@getMenuHtml') }}',
+                                    type: 'post',
+                                    data: '_token=' + $('input[name="_token"]').first().val() + '&id=' + menuId,
+                                    success: function(result) {
+                                        if(result)
+                                        {
+                                            if(menuModalSubmitButton.val() == 'create')
+                                                $('#ListMenuItem').append(result);
+                                            else
+                                                $('#EditMenuButton_' + menuId).parent().parent().html(result);
+                                        }
+                                    }
+                                });
+
                                 $('#MenuModal').modal('hide');
 
                                 clearForm();
@@ -167,6 +190,8 @@
         $('.EditMenuButton').click(function() {
             if($(this).val() != '')
             {
+                var elemIdArr = $(this).attr('id').split('_');
+
                 $('#AdminMenuDiv').first().append('' +
                     '<div class="overlay">' +
                     '<i class="fa fa-refresh fa-spin"></i>' +
@@ -174,7 +199,7 @@
                 '');
 
                 $('#MenuModalTitle').html('Chỉnh Sửa Menu');
-                $('#MenuModalSubmitButton').html('Cập Nhật');
+                $('#MenuModalSubmitButton').html('Cập Nhật').val('edit_' + elemIdArr[1]);
                 $('#MenuModalForm').prop('action', $(this).val());
 
                 $.ajax({

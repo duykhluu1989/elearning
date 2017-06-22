@@ -32,6 +32,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('certificate/autoComplete', 'CertificateController@autoCompleteCertificate');
 
+        Route::post('theme/menu/html', 'ThemeController@getMenuHtml');
+
         Route::post('setting/collaborator/value', 'SettingController@getSettingCollaboratorValue');
 
     });
@@ -188,7 +190,7 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('role/controlDelete', 'RoleController@controlDeleteRole');
 
-        Route::get('theme/menu', 'ThemeController@adminMenu');
+        Route::match(['get', 'post'], 'theme/menu', 'ThemeController@adminMenu');
 
         Route::post('theme/menu/create', 'ThemeController@createMenu');
 
