@@ -95,6 +95,7 @@
         $('.NewMenuButton').click(function() {
             $('#MenuModalTitle').html('Menu Mới');
             $('#MenuModalSubmitButton').html('Tạo Mới');
+            $('#MenuModalForm').prop('action', '{{ action('Backend\ThemeController@createMenu') }}');
 
             clearForm();
 
@@ -122,7 +123,7 @@
                 '');
 
                 $.ajax({
-                    url: '{{ action('Backend\ThemeController@createMenu') }}',
+                    url: newMenuModalFormElem.attr('action'),
                     type: 'post',
                     data: '_token=' + $('input[name="_token"]').first().val() + '&' + newMenuModalFormElem.serialize(),
                     success: function(result) {
@@ -155,6 +156,7 @@
 
                 $('#MenuModalTitle').html('Chỉnh Sửa Menu');
                 $('#MenuModalSubmitButton').html('Cập Nhật');
+                $('#MenuModalForm').prop('action', $(this).val());
 
                 $.ajax({
                     url: $(this).val(),

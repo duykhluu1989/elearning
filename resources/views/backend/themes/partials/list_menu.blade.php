@@ -1,8 +1,8 @@
 @foreach($listMenus as $listMenu)
     <div class="media">
-        <div class="media-left"></div>
+        <div class="media-left">&nbsp;</div>
         <div class="media-body">
-            <span class="form-control no-border" style="background: transparent">
+            <span class="form-control no-border no-padding" style="background: transparent">
                 <span class="col-sm-6">
                     <span class="input-group">
                         <span class="form-control">
