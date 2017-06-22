@@ -57,9 +57,12 @@ class Menu extends Model
         return $type;
     }
 
-    public function isDeletable()
+    public function doDelete()
     {
-        return true;
+        $this->delete();
+
+        foreach($this->childrenMenus as $menu)
+            $menu->doDelete();
     }
 
     public function getMenuTitle()

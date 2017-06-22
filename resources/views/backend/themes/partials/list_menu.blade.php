@@ -6,6 +6,9 @@
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default EditMenuButton" id="EditMenuButton_{{ $listMenu->id }}" value="{{ action('Backend\ThemeController@editMenu', ['id' => $listMenu->id]) }}"><i class="fa fa-pencil fa-fw"></i></button>
                 </span>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default DeleteMenuButton Confirmation" id="DeleteMenuButton_{{ $listMenu->id }}" value="{{ action('Backend\ThemeController@deleteMenu', ['id' => $listMenu->id]) }}"><i class="fa fa-trash fa-fw"></i></button>
+                </span>
                 <input type="hidden" name="parent_id[{{ $listMenu->id }}]" value="{{ $listMenu->parent_id }}" />
             </div>
 

@@ -4,24 +4,28 @@
 
 @section('section')
 
-    <div class="box box-primary" id="AdminMenuDiv">
-        <div class="box-header with-border">
-            <button type="submit" class="btn btn-primary">Cập Nhật</button>
+    <form action="{{ action('Backend\ThemeController@adminMenu') }}" method="post" id="AdminMenuForm">
 
-            <button class="btn btn-primary pull-right NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
+        <div class="box box-primary" id="AdminMenuDiv">
+            <div class="box-header with-border">
+                <button type="submit" class="btn btn-primary">Cập Nhật</button>
+
+                <button type="button" class="btn btn-primary pull-right NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
+            </div>
+            <div class="box-body">
+
+                @include('backend.themes.partials.list_menu', ['listMenus' => $rootMenus, 'listId' => 'ListMenuItem'])
+
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Cập Nhật</button>
+
+                <button type="button" class="btn btn-primary pull-right NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
+            </div>
         </div>
-        <div class="box-body">
+        {{ csrf_field() }}
 
-            @include('backend.themes.partials.list_menu', ['listMenus' => $rootMenus, 'listId' => 'ListMenuItem'])
-
-        </div>
-        <div class="box-footer">
-            <button type="submit" class="btn btn-primary">Cập Nhật</button>
-
-            <button class="btn btn-primary pull-right NewMenuButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Menu Mới"><i class="fa fa-plus fa-fw"></i></button>
-        </div>
-    </div>
-    {{ csrf_field() }}
+    </form>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="MenuModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -65,6 +69,7 @@
         $('#ListMenuItem').nestedSortable({
             forcePlaceholderSize: true,
             handle: 'div',
+            helper:	'clone',
             items: 'li',
             placeholder: 'MenuItemPlaceholder',
             tolerance: 'pointer',
@@ -72,7 +77,83 @@
             isTree: true,
             expandOnHover: 700,
             listType: 'ul'
+        }).on('click', 'button', function() {
+            if($(this).hasClass('EditMenuButton'))
+            {
+                if($(this).val() != '')
+                {
+                    var elemIdArr = $(this).prop('id').split('_');
+
+                    $('#AdminMenuDiv').first().append('' +
+                        '<div class="overlay">' +
+                        '<i class="fa fa-refresh fa-spin"></i>' +
+                        '</div>' +
+                    '');
+
+                    $('#MenuModalTitle').html('Chỉnh Sửa Menu');
+                    $('#MenuModalSubmitButton').html('Cập Nhật').val('edit_' + elemIdArr[1]);
+                    $('#MenuModalForm').prop('action', $(this).val());
+
+                    $.ajax({
+                        url: $(this).val(),
+                        type: 'get',
+                        success: function(result) {
+                            if(result)
+                            {
+                                $('#MenuModalForm').html(result);
+
+                                $('#AdminMenuDiv').find('div[class="overlay"]').first().remove();
+
+                                $('#MenuModal').modal('show');
+                            }
+                        }
+                    });
+                }
+            }
+            else if($(this).hasClass('DeleteMenuButton'))
+            {
+                if($(this).val() != '')
+                {
+                    var elem = $(this);
+
+                    $('#AdminMenuDiv').first().append('' +
+                        '<div class="overlay">' +
+                        '<i class="fa fa-refresh fa-spin"></i>' +
+                        '</div>' +
+                    '');
+
+                    $.ajax({
+                        url: $(this).val(),
+                        type: 'get',
+                        success: function(result) {
+                            if(result)
+                            {
+                                elem.parent().parent().parent().remove();
+
+                                $('#AdminMenuDiv').find('div[class="overlay"]').first().remove();
+                            }
+                        }
+                    });
+                }
+            }
         });
+
+        $('#AdminMenuForm').submit(function(e) {
+            $('#ListMenuItem').children().each(function() {
+                updateMenuParentIdValue($(this), '');
+            });
+        });
+
+        function updateMenuParentIdValue(currentElem, parentId)
+        {
+            currentElem.find('input[type="hidden"]').first().val(parentId);
+
+            var elemIdArr = currentElem.find('button[type="button"]').first().prop('id').split('_');
+
+            currentElem.find('ul').first().children().each(function() {
+                updateMenuParentIdValue($(this), elemIdArr[1]);
+            });
+        }
 
         $('#MenuModalForm').on('change', 'input[type="radio"][name="type"]', function() {
             var nameFormGroupElem = $('#NameFormGroup');
@@ -142,7 +223,7 @@
                 '');
 
                 $.ajax({
-                    url: menuModalFormElem.attr('action'),
+                    url: menuModalFormElem.prop('action'),
                     type: 'post',
                     data: '_token=' + $('input[name="_token"]').first().val() + '&' + menuModalFormElem.serialize(),
                     success: function(result) {
@@ -181,38 +262,6 @@
 
                                 clearForm();
                             }
-                        }
-                    }
-                });
-            }
-        });
-
-        $('.EditMenuButton').click(function() {
-            if($(this).val() != '')
-            {
-                var elemIdArr = $(this).attr('id').split('_');
-
-                $('#AdminMenuDiv').first().append('' +
-                    '<div class="overlay">' +
-                    '<i class="fa fa-refresh fa-spin"></i>' +
-                    '</div>' +
-                '');
-
-                $('#MenuModalTitle').html('Chỉnh Sửa Menu');
-                $('#MenuModalSubmitButton').html('Cập Nhật').val('edit_' + elemIdArr[1]);
-                $('#MenuModalForm').prop('action', $(this).val());
-
-                $.ajax({
-                    url: $(this).val(),
-                    type: 'get',
-                    success: function(result) {
-                        if(result)
-                        {
-                            $('#MenuModalForm').html(result);
-
-                            $('#AdminMenuDiv').find('div[class="overlay"]').first().remove();
-
-                            $('#MenuModal').modal('show');
                         }
                     }
                 });

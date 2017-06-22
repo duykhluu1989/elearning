@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -17,10 +18,43 @@ class ThemeController extends Controller
         {
             $inputs = $request->all();
 
-            echo '<pre>';
-            print_r($inputs);
-            echo '</pre>';
-            exit();
+            $validator = Validator::make($inputs, [
+                'parent_id' => 'nullable|array',
+            ]);
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $i = 1;
+
+                    foreach($inputs['parent_id'] as $id => $parentId)
+                    {
+                        if(empty($parentId))
+                            $parentId = 'NULL';
+
+                        DB::statement('
+                            UPDATE `menu`
+                            SET `position` = ' . $i . ', `parent_id` = ' . $parentId . '
+                            WHERE `id` = ' . $id
+                        );
+
+                        $i ++;
+                    }
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\ThemeController@adminMenu')->with('messageSuccess', 'Thành Công');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Backend\ThemeController@adminMenu')->with('messageError', $e->getMessage());
+                }
+            }
         }
 
         $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target')->whereNull('parent_id')->orderBy('position')->get();
@@ -38,14 +72,20 @@ class ThemeController extends Controller
     {
         $menu = new Menu();
         $menu->type = Menu::TYPE_CATEGORY_DB;
-        $menu->position = Menu::whereNull('parent_id')->count('id') + 1;
+        $menu->position = Menu::max('position') + 1;
 
         return $this->saveMenu($request, $menu);
     }
 
     public function editMenu(Request $request, $id)
     {
+        if($request->isMethod('get') && $request->ajax() == false)
+            return view('backend.errors.404');
+
         $menu = Menu::find($id);
+
+        if(empty($menu))
+            return '';
 
         return $this->saveMenu($request, $menu);
     }
@@ -142,5 +182,33 @@ class ThemeController extends Controller
         }
 
         return '';
+    }
+
+    public function deleteMenu(Request $request, $id)
+    {
+        if($request->ajax() == false)
+            return view('backend.errors.404');
+
+        $menu = Menu::find($id);
+
+        if(empty($menu))
+            return '';
+
+        try
+        {
+            DB::beginTransaction();
+
+            $menu->doDelete();
+
+            DB::commit();
+
+            return 'success';
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return '';
+        }
     }
 }

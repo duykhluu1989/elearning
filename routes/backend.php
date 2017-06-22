@@ -196,6 +196,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'theme/menu/{id}/edit', 'ThemeController@editMenu');
 
+        Route::get('theme/menu/{id}/delete', 'ThemeController@deleteMenu');
+
         Route::match(['get', 'post'], 'setting', 'SettingController@adminSetting');
 
         Route::match(['get', 'post'], 'setting/collaborator', 'SettingController@adminSettingCollaborator');
