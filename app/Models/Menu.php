@@ -36,10 +36,8 @@ class Menu extends Model
     {
         if($this->target == self::TARGET_CATEGORY_DB)
             return $this->belongsTo('App\Models\Category', 'target_id');
-        else if($this->target == self::TARGET_STATIC_ARTICLE_DB)
-            return $this->belongsTo('App\Models\Article', 'target_id');
         else
-            return null;
+            return $this->belongsTo('App\Models\Article', 'target_id');
     }
 
     public static function getMenuType($value = null)
