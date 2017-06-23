@@ -101,7 +101,10 @@ class Menu extends Model
             ->get();
 
         foreach($rootMenus as $rootMenu)
-            $rootMenu->lazyLoadChildrenMenus();
+        {
+            
+                $rootMenu->lazyLoadChildrenMenus();
+        }
 
         return $rootMenus;
     }
@@ -110,6 +113,8 @@ class Menu extends Model
     {
         $this->load(['childrenMenus' => function($query) {
             $query->select('id', 'parent_id', 'name', 'url', 'target_id', 'target', 'type')->orderBy('position');
+        }, 'targetInformation' => function($query) {
+            $query->select('id', 'name', 'name_en', 'slug', 'slug_en');
         }]);
 
         if(count($this->childrenMenus) > 0)

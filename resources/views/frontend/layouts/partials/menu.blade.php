@@ -20,7 +20,7 @@ $rootMenus = \App\Models\Menu::getMenuTree();
 
                 @if($countChildrenMenu2 > 0)
 
-                    <li class="col-sm-3">
+                    <li class="col-sm-2">
                         <ul>
                             <li class="dropdown-header">{{ $childMenu->getMenuTitle(false) }}</li>
 
