@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Libraries\Helpers\Utility;
 
 class Menu extends Model
 {
@@ -63,20 +64,58 @@ class Menu extends Model
             $menu->doDelete();
     }
 
-    public function getMenuTitle()
+    public function getMenuTitle($backend = true)
     {
-        $title = '';
+        if($backend == true)
+        {
+            $title = '';
 
-        if(!empty($this->name))
-            $title .= $this->name . ' - ';
+            if(!empty($this->name))
+                $title .= $this->name . ' - ';
 
-        if(!empty($this->url))
-            $title .= $this->url;
-        else if(!empty($this->targetInformation))
-            $title .= $this->targetInformation->name;
+            if(!empty($this->url))
+                $title .= $this->url;
+            else if(!empty($this->targetInformation))
+                $title .= $this->targetInformation->name;
+            else
+                $title .= trans('theme.all_category');
+        }
         else
-            $title .= 'Tất Cả Chủ Đề';
+        {
+            if(!empty($this->name))
+                $title = Utility::getValueByLocale($this, 'name');
+            else if(!empty($this->targetInformation))
+                $title = Utility::getValueByLocale($this->targetInformation, 'name');
+            else
+                $title = trans('theme.all_category');
+        }
 
         return $title;
+    }
+
+    public static function getMenuTree()
+    {
+        $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target', 'type')
+            ->whereNull('parent_id')
+            ->orderBy('position')
+            ->get();
+
+        foreach($rootMenus as $rootMenu)
+            $rootMenu->lazyLoadChildrenMenus();
+
+        return $rootMenus;
+    }
+
+    public function lazyLoadChildrenMenus()
+    {
+        $this->load(['childrenMenus' => function($query) {
+            $query->select('id', 'parent_id', 'name', 'url', 'target_id', 'target', 'type')->orderBy('position');
+        }]);
+
+        if(count($this->childrenMenus) > 0)
+        {
+            foreach($this->childrenMenus as $childMenu)
+                $childMenu->lazyLoadChildrenMenus();
+        }
     }
 }

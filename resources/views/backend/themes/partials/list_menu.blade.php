@@ -13,12 +13,6 @@
                 <input type="hidden" name="parent_id[{{ $listMenu->id }}]" value="{{ $listMenu->parent_id }}" />
             </div>
 
-            <?php
-            $listMenu->load(['childrenMenus' => function($query) {
-                $query->select('id', 'parent_id', 'name', 'url', 'target_id', 'target', 'type')->orderBy('position');
-            }]);
-            ?>
-
             @if(count($listMenu->childrenMenus) > 0)
 
                 @include('backend.themes.partials.list_menu', ['listMenus' => $listMenu->childrenMenus, 'listId' => ''])

@@ -5,7 +5,7 @@ return [
     'view_more' => 'View more',
     'free_course' => 'Free courses',
     'discount_course' => 'Discount courses',
-    'highlight_course' => 'Highlight Courses',
+    'highlight_course' => 'Highlight courses',
     'buy' => 'Buy',
     'sign_in' => 'Sign in',
     'sign_up' => 'Sign up',
@@ -20,5 +20,6 @@ return [
     'add_cart' => 'Add to cart',
     'input_discount_code' => 'Enter discount code',
     'input' => 'Enter',
+    'all_category' => 'All categories',
 
 ];

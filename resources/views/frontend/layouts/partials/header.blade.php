@@ -13,6 +13,12 @@
                 </div>
                 <div class="collapse navbar-collapse js-navbar-collapse">
                     <ul class="nav navbar-nav main_menu">
+                        <?php
+                        $rootMenus = \App\Models\Menu::getMenuTree();
+                        ?>
+
+                        @include('frontend.layouts.partials.menu', ['listMenus' => $rootMenus, 'itemClass' => 'dropdown mega-dropdown'])
+
                         <li class="dropdown mega-dropdown">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="chude.php">CÁC CHỦ ĐỀ <b class="caret"></b></a>
                             <ul role="menu" class="dropdown-menu mega-dropdown-menu">

@@ -20,5 +20,6 @@ return [
     'add_cart' => 'Thêm vào giỏ hàng',
     'input_discount_code' => 'Nhập mã khuyến mãi',
     'input' => 'Nhập',
+    'all_category' => 'Tất cả chủ đề',
 
 ];
