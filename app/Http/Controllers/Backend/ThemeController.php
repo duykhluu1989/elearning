@@ -87,10 +87,10 @@ class ThemeController extends Controller
         if(empty($menu))
             return '';
 
-        return $this->saveMenu($request, $menu);
+        return $this->saveMenu($request, $menu, false);
     }
 
-    protected function saveMenu($request, $menu)
+    protected function saveMenu($request, $menu, $create = true)
     {
         if($request->isMethod('post'))
         {
@@ -152,6 +152,11 @@ class ThemeController extends Controller
                 }
 
                 $menu->save();
+
+                return view('backend.themes.partials.get_menu', [
+                    'menu' => $menu,
+                    'create' => $create,
+                ]);
             }
             else
                 return view('backend.themes.partials.menu_form', [
@@ -162,26 +167,6 @@ class ThemeController extends Controller
         return view('backend.themes.partials.menu_form', [
             'menu' => $menu,
         ]);
-    }
-
-    public function getMenuHtml(Request $request)
-    {
-        $id = $request->input('id');
-
-        if(empty($id))
-            $menu = Menu::select('id', 'name', 'url', 'target_id', 'target')->orderBy('id', 'desc')->first();
-        else
-            $menu = Menu::select('id', 'name', 'url', 'target_id', 'target')->find($id);
-
-        if(!empty($menu))
-        {
-            return view('backend.themes.partials.get_menu', [
-                'menu' => $menu,
-                'id' => $id,
-            ]);
-        }
-
-        return '';
     }
 
     public function deleteMenu(Request $request, $id)

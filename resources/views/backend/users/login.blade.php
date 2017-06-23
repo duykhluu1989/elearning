@@ -19,7 +19,7 @@
         <form action="{{ action('Backend\UserController@login') }}" method="post">
             <div class="form-group{{ $errors->has('email') ? ' has-error': '' }}">
                 <label>Email</label>
-                <input type="email" class="form-control" name="email" required="required" value="{{ old('email') }}" />
+                <input type="email" class="form-control" name="email" required="required" value="{{ old('email') }}" autofocus="autofocus" />
                 @if($errors->has('email'))
                     <span class="help-block">{{ $errors->first('email') }}</span>
                 @endif

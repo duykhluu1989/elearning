@@ -229,11 +229,9 @@
                     success: function(result) {
                         if(result)
                         {
-                            menuModalFormElem.html(result);
-
-                            $('#MenuModalContent').find('div[class="overlay"]').first().remove();
-
-                            if(menuModalFormElem.find('span[class="help-block"]').length < 1)
+                            if(result.indexOf('<span class="help-block">') != -1)
+                                menuModalFormElem.html(result);
+                            else
                             {
                                 var menuModalSubmitButton = $('#MenuModalSubmitButton');
                                 var menuId = '';
@@ -243,25 +241,17 @@
                                     menuId = menuModalSubmitButtonValArr[1];
                                 }
 
-                                $.ajax({
-                                    url: '{{ action('Backend\ThemeController@getMenuHtml') }}',
-                                    type: 'post',
-                                    data: '_token=' + $('input[name="_token"]').first().val() + '&id=' + menuId,
-                                    success: function(result) {
-                                        if(result)
-                                        {
-                                            if(menuModalSubmitButton.val() == 'create')
-                                                $('#ListMenuItem').append(result);
-                                            else
-                                                $('#EditMenuButton_' + menuId).parent().parent().html(result);
-                                        }
-                                    }
-                                });
+                                if(menuModalSubmitButton.val() == 'create')
+                                    $('#ListMenuItem').append(result);
+                                else
+                                    $('#EditMenuButton_' + menuId).parent().parent().html(result);
 
                                 $('#MenuModal').modal('hide');
 
                                 clearForm();
                             }
+
+                            $('#MenuModalContent').find('div[class="overlay"]').first().remove();
                         }
                     }
                 });

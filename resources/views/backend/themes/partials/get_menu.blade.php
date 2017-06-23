@@ -1,4 +1,4 @@
-@if(empty($id))
+@if($create)
     <li>
         <div class="input-group">
 @endif
@@ -12,7 +12,7 @@
             </span>
             <input type="hidden" name="parent_id[{{ $menu->id }}]" value="{{ $menu->parent_id }}" />
 
-@if(empty($id))
+@if($create)
         </div>
     </li>
 @endif

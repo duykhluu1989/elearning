@@ -32,8 +32,6 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('certificate/autoComplete', 'CertificateController@autoCompleteCertificate');
 
-        Route::post('theme/menu/html', 'ThemeController@getMenuHtml');
-
         Route::post('setting/collaborator/value', 'SettingController@getSettingCollaboratorValue');
 
     });
