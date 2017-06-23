@@ -101,10 +101,7 @@ class Menu extends Model
             ->get();
 
         foreach($rootMenus as $rootMenu)
-        {
-            
-                $rootMenu->lazyLoadChildrenMenus();
-        }
+            $rootMenu->lazyLoadChildrenMenus();
 
         return $rootMenus;
     }
@@ -116,6 +113,34 @@ class Menu extends Model
         }, 'targetInformation' => function($query) {
             $query->select('id', 'name', 'name_en', 'slug', 'slug_en');
         }]);
+
+        if($this->type == self::TYPE_CATEGORY_AUTO_DB)
+        {
+            if(empty($this->target_id))
+            {
+                $categories = Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
+                    ->with(['childrenCategories' => function($query) {
+                        $query->select('id', 'name', 'name_en', 'slug', 'slug_en', 'parent_id');
+                    }])
+                    ->where('status', Utility::ACTIVE_DB)
+                    ->whereNull('parent_id')
+                    ->orderBy('order', 'desc')
+                    ->get();
+            }
+            else
+            {
+                $categories = Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
+                    ->with(['childrenCategories' => function($query) {
+                        $query->select('id', 'name', 'name_en', 'slug', 'slug_en', 'parent_id');
+                    }])
+                    ->where('status', Utility::ACTIVE_DB)
+                    ->where('parent_id', $this->target_id)
+                    ->orderBy('order', 'desc')
+                    ->get();
+            }
+
+            $this->auto_categories = $categories;
+        }
 
         if(count($this->childrenMenus) > 0)
         {

@@ -15,6 +15,11 @@ class Category extends Model
         return $this->belongsTo('App\Models\Category', 'parent_id');
     }
 
+    public function childrenCategories()
+    {
+        return $this->hasMany('App\Models\Category', 'parent_id');
+    }
+
     public function countChildrenCategories()
     {
         return Category::where('parent_id', $this->id)->count('id');
