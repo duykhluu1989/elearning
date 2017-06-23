@@ -60,6 +60,10 @@
         .MenuItemPlaceholder {
             outline: 1px dashed #4183C4;
         }
+
+        .mjs-nestedSortable-error {
+            background: #fbe3e4;
+        }
     </style>
 @endpush
 
@@ -67,6 +71,8 @@
     <script src="{{ asset('assets/js/jquery.mjs.nestedSortable.js') }}"></script>
     <script type="text/javascript">
         $('#ListMenuItem').nestedSortable({
+            maxLevels: 3,
+            revert: 250,
             forcePlaceholderSize: true,
             handle: 'div',
             helper:	'clone',

@@ -118,4 +118,14 @@ class Menu extends Model
                 $childMenu->lazyLoadChildrenMenus();
         }
     }
+
+    public function getMenuUrl()
+    {
+        if(!empty($this->url))
+            return $this->url;
+        else if(!empty($this->targetInformation))
+            return Utility::getValueByLocale($this->targetInformation, 'slug');
+        else
+            return 'javascript:void(0)';
+    }
 }

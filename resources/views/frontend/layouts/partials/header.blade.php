@@ -13,78 +13,9 @@
                 </div>
                 <div class="collapse navbar-collapse js-navbar-collapse">
                     <ul class="nav navbar-nav main_menu">
-                        <?php
-                        $rootMenus = \App\Models\Menu::getMenuTree();
-                        ?>
 
-                        @include('frontend.layouts.partials.menu', ['listMenus' => $rootMenus, 'itemClass' => 'dropdown mega-dropdown'])
+                        @include('frontend.layouts.partials.menu')
 
-                        <li class="dropdown mega-dropdown">
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="chude.php">CÁC CHỦ ĐỀ <b class="caret"></b></a>
-                            <ul role="menu" class="dropdown-menu mega-dropdown-menu">
-                                <li class="col-sm-3">
-                                    <ul>
-                                        <li><a href="#">Men Collection</a></li>
-                                        <li><a href="#">View all Collection</a></li>
-                                    </ul>
-                                </li>
-                                <li class="col-sm-3">
-                                    <ul>
-                                        <li class="dropdown-header">Features</li>
-                                        <li><a href="#">Auto Carousel</a></li>
-                                        <li><a href="#">Carousel Control</a></li>
-                                        <li><a href="#">Left & Right Navigation</a></li>
-                                        <li><a href="#">Four Columns Grid</a></li>
-                                        <li class="dropdown-header">Fonts</li>
-                                        <li><a href="#">Glyphicon</a></li>
-                                        <li><a href="#">Google Fonts</a></li>
-                                    </ul>
-                                </li>
-                                <li class="col-sm-3">
-                                    <ul>
-                                        <li class="dropdown-header">Plus</li>
-                                        <li><a href="#">Navbar Inverse</a></li>
-                                        <li><a href="#">Pull Right Elements</a></li>
-                                        <li><a href="#">Coloured Headers</a></li>
-                                        <li><a href="#">Primary Buttons & Default</a></li>
-                                    </ul>
-                                </li>
-                                <li class="col-sm-3">
-                                    <ul>
-                                        <li class="dropdown-header">Much more</li>
-                                        <li><a href="#">Easy to Customize</a></li>
-                                        <li><a href="#">Calls to action</a></li>
-                                        <li><a href="#">Custom Fonts</a></li>
-                                        <li><a href="#">Slide down on Hover</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown mega-dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="ungdung.php">ỨNG DỤNG <b class="caret"></b></a>
-                            <ul role="menu" class="dropdown-menu mega-dropdown-menu">
-                                <li><a href="#">Lorem ipsum dolor2.</a></li>
-                                <li><a href="#">Lorem ipsum dolor sit.</a></li>
-                                <li><a href="#">Lorem ipsum dolor sit amet.</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown mega-dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="gioithieu.php">GIỚI THIỆU <b class="caret"></b></a>
-                            <ul role="menu" class="dropdown-menu mega-dropdown-menu">
-                                <li><a href="#">Lorem ipsum dolor.</a></li>
-                                <li><a href="#">Lorem ipsum dolor sit.</a></li>
-                                <li><a href="#">Lorem ipsum dolor sit amet.</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown mega-dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="huongdanthanhtoan.php">HƯỚNG DẪN THANH TOÁN</a></li>
-                        <li class="dropdown mega-dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="trogiup.php">TRỢ GIÚP <b class="caret"></b></a>
-                            <ul role="menu" class="dropdown-menu mega-dropdown-menu">
-                                <li><a href="#">Lorem ipsum dolor.</a></li>
-                                <li><a href="#">Lorem ipsum dolor sit.</a></li>
-                                <li><a href="#">Lorem ipsum dolor sit amet.</a></li>
-                            </ul>
-                        </li>
-                        <li><a data-toggle="dropdown" class="dropdown-toggle" href="hoptacgiangday.html">HỢP TÁC GIẢNG DẠY</a></li>
-                        <li><a data-toggle="dropdown" class="dropdown-toggle" href="quitrinhmuahang.html">QUY TRÌNH MUA HÀNG</a></li>
-                        <li><a data-toggle="dropdown" class="dropdown-toggle" href="congtacvien.html">CỘNG TÁC VIÊN</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right lang">
                         <li>
