@@ -163,7 +163,7 @@
                 nameFormGroupElem.find('label').first().html('Tên <i>(bắt buộc)</i>');
                 nameFormGroupElem.find('input').first().prop('required', 'required');
                 $('#UrlFormGroup').show().find('input').first().prop('required', 'required');
-                $('#TargetNameFormGroup').hide().find('input').first().removeAttr('required').val('');
+                $('#TargetNameFormGroup').hide().find('input').first().removeAttr('required').val('').removeClass('CategoryNameInput').removeClass('StaticArticleNameInput');
             }
             else
             {
@@ -177,18 +177,75 @@
                 if($(this).val() == '{{ \App\Models\Menu::TYPE_CATEGORY_DB }}')
                 {
                     targetNameFormGroupElem.find('label').first().html('{{ \App\Models\Menu::TYPE_CATEGORY_LABEL }} <i>(bắt buộc)</i>');
-                    targetNameFormGroupElem.find('input').first().prop('required', 'required');
+                    targetNameFormGroupElem.find('input').first().prop('required', 'required').addClass('CategoryNameInput').removeClass('StaticArticleNameInput');
                 }
                 else if($(this).val() == '{{ \App\Models\Menu::TYPE_STATIC_ARTICLE_DB }}')
                 {
                     targetNameFormGroupElem.find('label').first().html('{{ \App\Models\Menu::TYPE_STATIC_ARTICLE_LABEL }} <i>(bắt buộc)</i>');
-                    targetNameFormGroupElem.find('input').first().prop('required', 'required');
+                    targetNameFormGroupElem.find('input').first().prop('required', 'required').addClass('StaticArticleNameInput').removeClass('CategoryNameInput');
                 }
                 else
                 {
                     targetNameFormGroupElem.find('label').first().html('{{ \App\Models\Menu::TYPE_CATEGORY_LABEL }}');
-                    targetNameFormGroupElem.find('input').first().removeAttr('required');
+                    targetNameFormGroupElem.find('input').first().removeAttr('required').addClass('CategoryNameInput').removeClass('StaticArticleNameInput');
                 }
+            }
+        }).on('focusin', 'input', function() {
+            if($(this).hasClass('CategoryNameInput'))
+            {
+                $(this).autocomplete({
+                    appendTo: '#MenuModalForm',
+                    minLength: 3,
+                    delay: 1000,
+                    source: function(request, response) {
+                        $.ajax({
+                            url: '{{ action('Backend\CourseController@autoCompleteCategory') }}',
+                            type: 'post',
+                            data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
+                            success: function(result) {
+                                if(result)
+                                {
+                                    result = JSON.parse(result);
+                                    response(result);
+                                }
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $(this).val(ui.item.name);
+                        return false;
+                    }
+                }).autocomplete('instance')._renderItem = function(ul, item) {
+                    return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
+                };
+            }
+            else if($(this).hasClass('StaticArticleNameInput'))
+            {
+                $(this).autocomplete({
+                    appendTo: '#MenuModalForm',
+                    minLength: 3,
+                    delay: 1000,
+                    source: function(request, response) {
+                        $.ajax({
+                            url: '{{ action('Backend\ArticleController@autoCompleteArticleStatic') }}',
+                            type: 'post',
+                            data: '_token=' + $('input[name="_token"]').first().val() + '&term=' + request.term,
+                            success: function(result) {
+                                if(result)
+                                {
+                                    result = JSON.parse(result);
+                                    response(result);
+                                }
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $(this).val(ui.item.name);
+                        return false;
+                    }
+                }).autocomplete('instance')._renderItem = function(ul, item) {
+                    return $('<li>').append('<a>' + item.name + '</a>').appendTo(ul);
+                };
             }
         });
 

@@ -3,6 +3,7 @@
         <li>
             <div class="input-group">
                 <span class="form-control">{{ $listMenu->getMenuTitle() }}</span>
+                <span class="input-group-addon">{{ \App\Models\Menu::getMenuType($listMenu->type) }}</span>
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default EditMenuButton" id="EditMenuButton_{{ $listMenu->id }}" value="{{ action('Backend\ThemeController@editMenu', ['id' => $listMenu->id]) }}"><i class="fa fa-pencil fa-fw"></i></button>
                 </span>
@@ -14,7 +15,7 @@
 
             <?php
             $listMenu->load(['childrenMenus' => function($query) {
-                $query->select('id', 'parent_id', 'name', 'url', 'target_id', 'target')->orderBy('position');
+                $query->select('id', 'parent_id', 'name', 'url', 'target_id', 'target', 'type')->orderBy('position');
             }]);
             ?>
 

@@ -372,4 +372,15 @@ class ArticleController extends Controller
             'article' => $article,
         ]);
     }
+
+    public function autoCompleteArticleStatic(Request $request)
+    {
+        $term = $request->input('term');
+
+        $builder = Article::select('id', 'name')->where('name', 'like', '%' . $term . '%')->where('type', Article::TYPE_STATIC_ARTICLE_DB)->limit(Utility::AUTO_COMPLETE_LIMIT);
+
+        $articles = $builder->get()->toJson();
+
+        return $articles;
+    }
 }

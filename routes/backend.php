@@ -26,6 +26,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('courseTag/autoComplete', 'CourseController@autoCompleteTag');
 
+        Route::post('articleStatic/autoComplete', 'ArticleController@autoCompleteArticleStatic');
+
         Route::post('discount/generateCode', 'DiscountController@generateDiscountCode');
 
         Route::post('user/autoComplete', 'UserController@autoCompleteUser');

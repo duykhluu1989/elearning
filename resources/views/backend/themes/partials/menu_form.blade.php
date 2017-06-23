@@ -59,7 +59,7 @@ $type = request()->input('type', $menu->type);
                     echo \App\Models\Menu::TYPE_CATEGORY_LABEL;
                 ?>
             </label>
-            <input type="text" class="form-control" name="target_name" value="{{ request()->input('target_name') }}"<?php echo (($type == \App\Models\Menu::TYPE_CATEGORY_DB || $type == \App\Models\Menu::TYPE_STATIC_ARTICLE_DB) ? ' required="required"' : ''); ?> />
+            <input type="text" class="form-control{{ (($type == \App\Models\Menu::TYPE_CATEGORY_DB || $type == \App\Models\Menu::TYPE_CATEGORY_AUTO_DB) ? ' CategoryNameInput' : ($type == \App\Models\Menu::TYPE_STATIC_ARTICLE_DB ? ' StaticArticleNameInput' : '')) }}" name="target_name" value="{{ request()->input('target_name', (!empty($menu->targetInformation) ? $menu->targetInformation->name : '')) }}"<?php echo (($type == \App\Models\Menu::TYPE_CATEGORY_DB || $type == \App\Models\Menu::TYPE_STATIC_ARTICLE_DB) ? ' required="required"' : ''); ?> />
             @if($errors->has('target_name'))
                 <span class="help-block">{{ $errors->first('target_name') }}</span>
             @endif

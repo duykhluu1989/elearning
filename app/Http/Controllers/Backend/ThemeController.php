@@ -57,7 +57,7 @@ class ThemeController extends Controller
             }
         }
 
-        $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target')->whereNull('parent_id')->orderBy('position')->get();
+        $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target', 'type')->whereNull('parent_id')->orderBy('position')->get();
 
         $menu = new Menu();
         $menu->type = Menu::TYPE_CATEGORY_DB;
