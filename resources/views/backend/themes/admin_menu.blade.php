@@ -90,7 +90,7 @@
                 {
                     var elemIdArr = $(this).prop('id').split('_');
 
-                    $('#AdminMenuDiv').first().append('' +
+                    $('#AdminMenuDiv').append('' +
                         '<div class="overlay">' +
                         '<i class="fa fa-refresh fa-spin"></i>' +
                         '</div>' +
@@ -122,7 +122,7 @@
                 {
                     var elem = $(this);
 
-                    $('#AdminMenuDiv').first().append('' +
+                    $('#AdminMenuDiv').append('' +
                         '<div class="overlay">' +
                         '<i class="fa fa-refresh fa-spin"></i>' +
                         '</div>' +
@@ -279,7 +279,7 @@
                 menuModalFormElem[0].reportValidity();
             else
             {
-                $('#MenuModalContent').first().append('' +
+                $('#MenuModalContent').append('' +
                     '<div class="overlay">' +
                     '<i class="fa fa-refresh fa-spin"></i>' +
                     '</div>' +

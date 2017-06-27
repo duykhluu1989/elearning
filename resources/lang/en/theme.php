@@ -21,5 +21,7 @@ return [
     'input_discount_code' => 'Enter discount code',
     'input' => 'Enter',
     'all_category' => 'All categories',
+    'username' => 'Username',
+    'password' => 'Password',
 
 ];

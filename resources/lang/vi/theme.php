@@ -21,5 +21,7 @@ return [
     'input_discount_code' => 'Nhập mã khuyến mãi',
     'input' => 'Nhập',
     'all_category' => 'Tất cả chủ đề',
+    'username' => 'Tên đăng nhập',
+    'password' => 'Mật khẩu',
 
 ];

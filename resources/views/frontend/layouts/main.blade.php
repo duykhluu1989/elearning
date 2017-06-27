@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ asset('themes/owlcarousel/assets/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('themes/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('themes/css/mobile.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/sweetalert.css') }}">
     @stack('stylesheets')
 </head>
 <body>
@@ -52,6 +53,7 @@
 <script src="{{ asset('themes/js/clamp.js') }}"></script>
 <script src="{{ asset('themes/js/functions.js') }}"></script>
 <script src="{{ asset('themes/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 @stack('scripts')
 </body>
 </html>

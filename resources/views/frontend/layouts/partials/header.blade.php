@@ -23,8 +23,14 @@
                                 <a href="#" class="search-toggle" data-selector="#header-1"></a>
                             </div>
                         </li>
-                        <li><a href="#modal_dangky" data-toggle="modal">@lang('theme.sign_up')</a></li>
-                        <li><a href="#modal_dangnhap" data-toggle="modal">@lang('theme.sign_in')</a></li>
+
+                        @if(auth()->guest())
+
+                            <li><a href="#modal_dangky" data-toggle="modal">@lang('theme.sign_up')</a></li>
+                            <li><a href="#modal_dangnhap" data-toggle="modal">@lang('theme.sign_in')</a></li>
+
+                        @endif
+
                         <li>
                             <a href="{{ action('Frontend\HomeController@language', ['locale' => 'vi']) }}"><img src="{{ asset('themes/images/vn.jpg') }}" alt="VN" class="img-responsive"></a>
                         </li>
@@ -114,80 +120,140 @@
     </div>
 </header>
 
-<div id="modal_dangky" class="modal fade modal_general" data-backdrop="static" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title text-center">Đăng ký <span class="logo_small"><img src="{{ asset('themes/images/logo_small.png') }}" alt="" class="img-responsive"></span></h4>
-            </div>
-            <div class="modal-body">
-                <form action="" method="POST" role="form" class="frm_dangky">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="" placeholder="Họ và tên">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" id="" placeholder="Mật khẩu">
-                    </div>
-                    <div class="form-group">
-                        <p class="text-center"><a class="btn-link" href="sample.php">Hướng dẫn đăng ký</a></p>
-                    </div>
-                    <button type="submit" class="btn btn-block btnDangky">ĐĂNG KÝ</button>
-                    <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i> ĐĂNG NHẬP BẰNG FACEBOOK</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+@if(auth()->guest())
 
-<div id="modal_dangnhap" class="modal fade modal_general" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title text-center">Đăng nhập</h4>
-            </div>
-            <div class="modal-body">
-                <form action="" method="POST" role="form" class="frm_dangky">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" id="" placeholder="Mật khẩu">
-                    </div>
-                    <button type="submit" class="btn btn-block btnDangky"><i class="fa fa-sign-in" aria-hidden="true"></i> ĐĂNG NHẬP</button>
-                    <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i> ĐĂNG NHẬP BẰNG FACEBOOK</button>
-                    <div class="form-group">
-                        <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">Quên mật khẩu đăng nhập?</a></p>
-                    </div>
-                    <div class="modal-footer">
-                        <p class="text-center"><a href="#modal_dangky" class="btn-link" data-toggle="modal">Chưa có tài khoản? Đăng ký</a></p>
-                    </div>
-                </form>
+    <div id="modal_dangky" class="modal fade modal_general" data-backdrop="static" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center">@lang('theme.sign_up') <span class="logo_small"><img src="{{ asset('themes/images/logo_small.png') }}" alt="Logo" class="img-responsive"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ action('Frontend\UserController@register') }}" method="POST" role="form" class="frm_dangky" id="SignUpForm">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="username" placeholder="@lang('theme.username')">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="email" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')">
+                        </div>
+                        <div class="form-group">
+                            <p class="text-center"><a class="btn-link" href="sample.php">Hướng dẫn đăng ký</a></p>
+                        </div>
+                        <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
+                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i> ĐĂNG NHẬP BẰNG FACEBOOK</button>
+                        {{ csrf_field() }}
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="modal_quenMK" class="modal fade modal_general" data-backdrop="static" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title text-center">Lấy lại mật khẩu</h4>
-            </div>
-            <div class="modal-body">
-                <p>Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan.vn sẽ gửi email hướng dẫn bạn khôi phục mật khẩu</p>
-                <form action="" method="POST" role="form" class="frm_dangky">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="" placeholder="Email của bạn">
-                    </div>
-                    <button type="submit" class="btn btn-block btnDangky">Tiếp tục →</button>
-                </form>
+    <div id="modal_dangnhap" class="modal fade modal_general" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center">Đăng nhập</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" role="form" class="frm_dangky">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="" placeholder="Mật khẩu">
+                        </div>
+                        <button type="submit" class="btn btn-block btnDangky"><i class="fa fa-sign-in" aria-hidden="true"></i> ĐĂNG NHẬP</button>
+                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i> ĐĂNG NHẬP BẰNG FACEBOOK</button>
+                        <div class="form-group">
+                            <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">Quên mật khẩu đăng nhập?</a></p>
+                        </div>
+                        <div class="modal-footer">
+                            <p class="text-center"><a href="#modal_dangky" class="btn-link" data-toggle="modal">Chưa có tài khoản? Đăng ký</a></p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div id="modal_quenMK" class="modal fade modal_general" data-backdrop="static" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center">Lấy lại mật khẩu</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan.vn sẽ gửi email hướng dẫn bạn khôi phục mật khẩu</p>
+                    <form action="" method="POST" role="form" class="frm_dangky">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="" placeholder="Email của bạn">
+                        </div>
+                        <button type="submit" class="btn btn-block btnDangky">Tiếp tục →</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script type="text/javascript">
+            $('#SignUpForm').submit(function(e) {
+                e.preventDefault();
+
+                var formElem = $(this);
+
+                formElem.find('input').each(function() {
+                    $(this).parent().removeClass('has-error').find('span[class="help-block"]').first().remove();
+                });
+
+                $.ajax({
+                    url: '{{ action('Frontend\UserController@register') }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&' + formElem.serialize(),
+                    success: function(result) {
+                        if(result)
+                        {
+                            if(result == 'Success')
+                            {
+                                $('#modal_dangky').modal('hide');
+
+                                swal({
+                                    title: 'Đăng kí thành công',
+                                    type: 'success',
+                                    confirmButtonClass: 'btn-success',
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false
+                                });
+
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 3000);
+                            }
+                            else
+                            {
+                                result = JSON.parse(result);
+
+                                for(var name in result)
+                                {
+                                    if(result.hasOwnProperty(name))
+                                    {
+                                        formElem.find('input[name="' + name + '"]').first().parent().addClass('has-error').append('' +
+                                            '<span class="help-block">' + result[name][0] + '</span>' +
+                                        '');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+    @endpush
+
+@endif

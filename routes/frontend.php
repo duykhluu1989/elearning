@@ -8,6 +8,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
         Route::post('login', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@login']);
 
+        Route::post('register', 'UserController@register');
+
     });
 
     Route::group(['middleware' => ['auth', 'access']], function() {
