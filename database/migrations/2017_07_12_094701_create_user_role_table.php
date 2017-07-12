@@ -6,27 +6,17 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUserRoleTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('user_role', function (Blueprint $table) {
-            //
+        Schema::create('user_role', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('role_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('user_role', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('user_role');
     }
 }

@@ -6,27 +6,20 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCaseAdviceStepTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('case_advice_step', function (Blueprint $table) {
-            //
+        Schema::create('case_advice_step', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('case_id');
+            $table->string('content', 1000)->nullable();
+            $table->string('content_en', 1000)->nullable();
+            $table->unsignedInteger('step')->default(1);
+            $table->unsignedTinyInteger('type')->default(0);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('case_advice_step', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('case_advice_step');
     }
 }

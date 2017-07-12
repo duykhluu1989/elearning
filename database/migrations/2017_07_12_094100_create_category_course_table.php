@@ -6,27 +6,18 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCategoryCourseTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('category_course', function (Blueprint $table) {
-            //
+        Schema::create('category_course', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('category_id');
+            $table->unsignedInteger('course_id');
+            $table->unsignedInteger('level')->default(1);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('category_course', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('category_course');
     }
 }

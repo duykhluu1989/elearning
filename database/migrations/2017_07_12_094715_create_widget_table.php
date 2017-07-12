@@ -6,27 +6,21 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateWidgetTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('widget', function (Blueprint $table) {
-            //
+        Schema::create('widget', function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 255);
+            $table->string('code', 255);
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->unsignedTinyInteger('type')->default(0);
+            $table->text('attribute')->nullable();
+            $table->text('detail')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('widget', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('widget');
     }
 }

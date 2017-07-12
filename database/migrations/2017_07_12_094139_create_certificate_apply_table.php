@@ -6,27 +6,20 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCertificateApplyTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('certificate_apply', function (Blueprint $table) {
-            //
+        Schema::create('certificate_apply', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('certificate_id');
+            $table->string('name', 255);
+            $table->string('phone', 20);
+            $table->unsignedInteger('status')->default(0);
+            $table->dateTime('created_at');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('certificate_apply', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('certificate_apply');
     }
 }

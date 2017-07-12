@@ -6,27 +6,27 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCollaboratorTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('collaborator', function (Blueprint $table) {
-            //
+        Schema::create('collaborator', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->string('code', 40);
+            $table->unsignedInteger('rank_id');
+            $table->double('current_revenue')->unsigned()->default(0);
+            $table->double('current_commission')->unsigned()->default(0);
+            $table->double('total_revenue')->unsigned()->default(0);
+            $table->double('total_commission')->unsigned()->default(0);
+            $table->dateTime('upranked_at')->nullable();
+            $table->double('create_discount_percent')->unsigned()->default(1);
+            $table->double('commission_percent')->unsigned()->default(1);
+            $table->unsignedInteger('parent_id')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('collaborator', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('collaborator');
     }
 }

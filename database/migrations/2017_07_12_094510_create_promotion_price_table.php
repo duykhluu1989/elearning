@@ -6,27 +6,20 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePromotionPriceTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('promotion_price', function (Blueprint $table) {
-            //
+        Schema::create('promotion_price', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('course_id');
+            $table->unsignedTinyInteger('status')->default(0);
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->double('price')->unsigned()->default(0);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('promotion_price', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('promotion_price');
     }
 }

@@ -6,27 +6,18 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCourseReviewTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('course_review', function (Blueprint $table) {
-            //
+        Schema::create('course_review', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('course_id');
+            $table->string('detail', 1000);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('course_review', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('course_review');
     }
 }

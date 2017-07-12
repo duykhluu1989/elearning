@@ -6,27 +6,18 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateLevelTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('level', function (Blueprint $table) {
-            //
+        Schema::create('level', function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 255);
+            $table->string('name_en', 255)->nullable();
+            $table->unsignedInteger('order')->default(1);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('level', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('level');
     }
 }

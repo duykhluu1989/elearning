@@ -6,27 +6,20 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUserCourseTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('user_course', function (Blueprint $table) {
-            //
+        Schema::create('user_course', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('course_id');
+            $table->unsignedInteger('course_item_tracking');
+            $table->unsignedInteger('last_course_item')->nullable();
+            $table->unsignedInteger('order_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('user_course', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('user_course');
     }
 }

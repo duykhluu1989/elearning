@@ -6,27 +6,18 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateDiscountApplyTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('discount_apply', function (Blueprint $table) {
-            //
+        Schema::create('discount_apply', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('discount_id');
+            $table->unsignedInteger('apply_id');
+            $table->string('target', 255);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('discount_apply', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('discount_apply');
     }
 }

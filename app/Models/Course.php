@@ -112,4 +112,57 @@ class Course extends Model
 
         return false;
     }
+
+    public function setCategory(Category $category)
+    {
+        if($this->category_id != $category->id)
+        {
+            $this->category_id = $category->id;
+
+            if($category->status == Utility::INACTIVE_DB || $category->parent_status == Utility::INACTIVE_DB)
+                $categoryStatus = Utility::INACTIVE_DB;
+            else
+                $categoryStatus = Utility::ACTIVE_DB;
+
+            $categoryIds = [$category->id];
+
+            while(!empty($category->parent_id))
+            {
+                $parentCategory = Category::select('id', 'parent_id')->find($category->parent_id);
+
+                $categoryIds[] = $parentCategory->id;
+
+                $category = $parentCategory;
+            }
+
+            $categoryIds = array_reverse($categoryIds);
+
+            foreach($this->categoryCourses as $categoryCourse)
+            {
+                $key = array_search($categoryCourse->category_id, $categoryIds);
+
+                if($key !== false)
+                {
+                    $categoryCourse->level = $key + 1;
+                    $categoryCourse->save();
+
+                    unset($categoryIds[$key]);
+                }
+                else
+                    $categoryCourse->delete();
+            }
+
+            foreach($categoryIds as $key => $categoryId)
+            {
+                $categoryCourse = new CategoryCourse();
+                $categoryCourse->category_id = $categoryId;
+                $categoryCourse->course_id = $this->id;
+                $categoryCourse->level = $key + 1;
+                $categoryCourse->save();
+            }
+
+            $this->category_status = $categoryStatus;
+            $this->save();
+        }
+    }
 }

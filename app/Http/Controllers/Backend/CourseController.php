@@ -792,28 +792,12 @@ class CourseController extends Controller
                 if(!isset($inputs['user_id']))
                     $validator->errors()->add('user_name', 'Giảng Viên Không Tồn Tại');
 
-                $category = Category::select('id', 'parent_id', 'status')->where('name', $inputs['category_name'])->first();
+                $category = Category::select('id', 'parent_id', 'status', 'parent_status')->where('name', $inputs['category_name'])->first();
 
                 if(empty($category))
                     $validator->errors()->add('category_name', 'Chủ Đề Không Tồn Tại');
                 else
-                {
-                    $inputs['category_status'] = $category->status;
-
-                    $categoryIds[] = $category->id;
-
-                    while(!empty($category->parent_id))
-                    {
-                        $category = Category::select('id', 'parent_id', 'status')->find($category->parent_id);
-
-                        $categoryIds[] = $category->id;
-
-                        if($inputs['category_status'] == Utility::ACTIVE_DB && $category->status == Utility::INACTIVE_DB)
-                            $inputs['category_status'] = $category->status;
-                    }
-
-                    $inputs['categoryIds'] = array_reverse($categoryIds);
-                }
+                    $inputs['category'] = $category;
             });
 
             if($validator->passes())
@@ -836,7 +820,6 @@ class CourseController extends Controller
                     $course->short_description = $inputs['short_description'];
                     $course->short_description_en = $inputs['short_description_en'];
                     $course->highlight = isset($inputs['highlight']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
-                    $course->category_status = $inputs['category_status'];
 
                     if(empty($course->published_at) && $course->status == Course::STATUS_PUBLISH_DB)
                         $course->published_at = date('Y-m-d H:i:s');
@@ -862,29 +845,7 @@ class CourseController extends Controller
                         $course->promotionPrice->save();
                     }
 
-                    foreach($course->categoryCourses as $categoryCourse)
-                    {
-                        $key = array_search($categoryCourse->category_id, $inputs['categoryIds']);
-
-                        if($key !== false)
-                        {
-                            $categoryCourse->level = $key + 1;
-                            $categoryCourse->save();
-
-                            unset($inputs['categoryIds'][$key]);
-                        }
-                        else
-                            $categoryCourse->delete();
-                    }
-
-                    foreach($inputs['categoryIds'] as $key => $categoryId)
-                    {
-                        $categoryCourse = new CategoryCourse();
-                        $categoryCourse->category_id = $categoryId;
-                        $categoryCourse->course_id = $course->id;
-                        $categoryCourse->level = $key + 1;
-                        $categoryCourse->save();
-                    }
+                    $course->setCategory($inputs['category']);
 
                     if(!empty($inputs['tags']))
                     {

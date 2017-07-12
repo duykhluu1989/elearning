@@ -6,27 +6,22 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePaymentMethodTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('payment_method', function (Blueprint $table) {
-            //
+        Schema::create('payment_method', function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 255);
+            $table->string('name_en', 255)->nullable();
+            $table->unsignedTinyInteger('status')->default(0);
+            $table->unsignedTinyInteger('type')->default(0);
+            $table->string('code', 40);
+            $table->text('detail')->nullable();
+            $table->unsignedInteger('order')->default(1);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('payment_method', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('payment_method');
     }
 }

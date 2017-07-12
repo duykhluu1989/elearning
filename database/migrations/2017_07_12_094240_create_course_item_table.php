@@ -6,27 +6,24 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCourseItemTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('course_item', function (Blueprint $table) {
-            //
+        Schema::create('course_item', function(Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('course_id');
+            $table->string('name', 255);
+            $table->string('name_en', 255)->nullable();
+            $table->unsignedTinyInteger('type')->default(0);
+            $table->text('content');
+            $table->text('content_en')->nullable();
+            $table->unsignedInteger('number')->default(1);
+            $table->unsignedInteger('video_length')->nullable();
+            $table->unsignedInteger('audio_length')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('course_item', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('course_item');
     }
 }

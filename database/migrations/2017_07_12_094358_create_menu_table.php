@@ -6,27 +6,23 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMenuTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::table('menu', function (Blueprint $table) {
-            //
+        Schema::create('menu', function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 255)->nullable();
+            $table->string('name_en', 255)->nullable();
+            $table->unsignedInteger('parent_id')->nullable();
+            $table->string('url', 1000)->nullable();
+            $table->unsignedInteger('target_id')->nullable();
+            $table->string('target', 255)->nullable();
+            $table->unsignedTinyInteger('type')->default(0);
+            $table->unsignedInteger('position')->default(1);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('menu', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('menu');
     }
 }
