@@ -88,7 +88,7 @@
                                 call_user_func($column['data'], $row);
                                 ?>
                             @else
-                                {{ $row->$column['data'] }}
+                                {{ $row->{$column['data']} }}
                             @endif
                         </td>
                     @endforeach

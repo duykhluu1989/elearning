@@ -125,6 +125,7 @@ class CourseController extends Controller
 
         $category = new Category();
         $category->status = Utility::ACTIVE_DB;
+        $category->parent_status = Utility::ACTIVE_DB;
         $category->order = 1;
 
         return $this->saveCategory($request, $category);
@@ -529,14 +530,12 @@ class CourseController extends Controller
             $query->select('id');
         }, 'user.profile' => function($query) {
             $query->select('user_id', 'name');
-        }, 'categoryCourses' => function($query) {
-            $query->orderBy('level', 'desc');
-        }, 'categoryCourses.category' => function($query) {
+        }, 'category' => function($query) {
             $query->select('id', 'name');
         }, 'promotionPrice' => function($query) {
             $query->select('course_id', 'price');
         }])
-            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.highlight', 'course.code', 'course.view_count', 'course.bought_count')
+            ->select('course.id', 'course.name', 'course.user_id', 'course.price', 'course.status', 'course.highlight', 'course.code', 'course.view_count', 'course.bought_count', 'course.category_id')
             ->orderBy('course.id', 'desc');
 
         $inputs = $request->all();
@@ -590,7 +589,7 @@ class CourseController extends Controller
             [
                 'title' => 'Chủ Đề',
                 'data' => function($row) {
-                    echo $row->categoryCourses[0]->category->name;
+                    echo $row->category->name;
                 },
             ],
             [
@@ -722,6 +721,7 @@ class CourseController extends Controller
         $course = new Course();
         $course->status = Course::STATUS_DRAFT_DB;
         $course->highlight = Utility::INACTIVE_DB;
+        $course->category_status = Utility::ACTIVE_DB;
         $course->price = 0;
 
         return $this->saveCourse($request, $course);

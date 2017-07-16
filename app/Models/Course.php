@@ -33,6 +33,11 @@ class Course extends Model
         return $this->hasMany('App\Models\CategoryCourse', 'course_id');
     }
 
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category', 'category_id');
+    }
+
     public function courseItems()
     {
         return $this->hasMany('App\Models\CourseItem', 'course_id');
