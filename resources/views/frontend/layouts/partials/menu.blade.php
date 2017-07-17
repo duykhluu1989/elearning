@@ -22,6 +22,12 @@ $rootMenus = \App\Models\Menu::getMenuTree();
 
                     @foreach($rootMenu->auto_categories as $autoCategory)
                         <?php
+                        $autoCategory->load(['childrenCategories' => function($query) {
+                            $query->select('id', 'parent_id', 'name', 'name_en', 'slug', 'slug_en')
+                                ->where('status', \App\Libraries\Helpers\Utility::ACTIVE_DB)
+                                ->where('parent_status', \App\Libraries\Helpers\Utility::ACTIVE_DB)
+                                ->orderBy('order', 'desc');
+                        }]);
                         $countChildrenCategory = count($autoCategory->childrenCategories);
                         ?>
 

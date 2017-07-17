@@ -123,6 +123,7 @@ class Menu extends Model
                         $query->select('id', 'name', 'name_en', 'slug', 'slug_en', 'parent_id');
                     }])
                     ->where('status', Utility::ACTIVE_DB)
+                    ->where('parent_status', Utility::ACTIVE_DB)
                     ->whereNull('parent_id')
                     ->orderBy('order', 'desc')
                     ->get();
@@ -134,6 +135,7 @@ class Menu extends Model
                         $query->select('id', 'name', 'name_en', 'slug', 'slug_en', 'parent_id');
                     }])
                     ->where('status', Utility::ACTIVE_DB)
+                    ->where('parent_status', Utility::ACTIVE_DB)
                     ->where('parent_id', $this->target_id)
                     ->orderBy('order', 'desc')
                     ->get();

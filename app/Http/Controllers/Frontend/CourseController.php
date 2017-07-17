@@ -15,9 +15,7 @@ class CourseController extends Controller
             $query->select('id');
         }, 'user.profile' => function($query) {
             $query->select('user_id', 'name');
-        }, 'categoryCourses' => function($query) {
-            $query->orderBy('level', 'desc');
-        }, 'categoryCourses.category' => function($query) {
+        }, 'category' => function($query) {
             $query->select('id', 'name', 'name_en');
         }, 'promotionPrice' => function($query) {
             $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
