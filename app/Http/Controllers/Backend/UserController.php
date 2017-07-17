@@ -164,10 +164,10 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'username' => 'required|alpha_dash|unique:user,username',
-                'email' => 'required|email|unique:user,email',
-                'password' => 'required|alpha_dash|min:6',
-                're_password' => 'required|alpha_dash|min:6|same:password',
+                'username' => 'required|alpha_dash|min:4|max:255|unique:user,username',
+                'email' => 'required|email|max:255|unique:user,email',
+                'password' => 'required|alpha_dash|min:6|max:32',
+                're_password' => 'required|alpha_dash|min:6|max:32|same:password',
             ]);
 
             if($validator->passes())
@@ -242,10 +242,10 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'username' => 'required|alpha_dash|unique:user,username,' . $user->id,
+                'username' => 'required|alpha_dash|min:4|max:255|unique:user,username,' . $user->id,
                 'email' => 'required|email|unique:user,email,' . $user->id,
-                'password' => 'nullable|alpha_dash|min:6',
-                're_password' => 'nullable|alpha_dash|min:6|same:password',
+                'password' => 'nullable|alpha_dash|min:6|max:32',
+                're_password' => 'nullable|alpha_dash|min:6|max:32|same:password',
                 'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
                 'first_name' => 'required_with:last_name',
                 'phone' => 'nullable|numeric',
@@ -642,10 +642,10 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'username' => 'required|alpha_dash|unique:user,username,' . $user->id,
-                'email' => 'required|email|unique:user,email,' . $user->id,
-                'password' => 'nullable|alpha_dash|min:6',
-                're_password' => 'nullable|alpha_dash|min:6|same:password',
+                'username' => 'required|alpha_dash|min:4|max:255|unique:user,username,' . $user->id,
+                'email' => 'required|email|max:255|unique:user,email,' . $user->id,
+                'password' => 'nullable|alpha_dash|min:6|max:32',
+                're_password' => 'nullable|alpha_dash|min:6|max:32|same:password',
                 'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
                 'first_name' => 'required_with:last_name',
                 'phone' => 'nullable|numeric',

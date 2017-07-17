@@ -58,9 +58,9 @@ class UserController extends Controller
         $inputs = $request->all();
 
         $validator = Validator::make($inputs, [
-            'username' => 'required||alpha_dash|unique:user,username',
-            'email' => 'required|email|unique:user,email',
-            'password' => 'required|alpha_dash|min:6',
+            'username' => 'required||alpha_dash|min:4|max:255|unique:user,username',
+            'email' => 'required|email|max:255|unique:user,email',
+            'password' => 'required|alpha_dash|min:6|max:32',
         ]);
 
         if($validator->passes())
