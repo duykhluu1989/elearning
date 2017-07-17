@@ -20,7 +20,9 @@ return [
     'add_cart' => 'Thêm vào giỏ hàng',
     'input' => 'Nhập',
     'all_category' => 'Tất cả chủ đề',
-    'username' => 'Tên tài khoản',
+    'name' => 'Họ và tên',
     'password' => 'Mật khẩu',
+    'sign_in_with_facebook' => 'Đăng nhập bằng facebook',
+    'sign_in_fail' => 'Email hoặc mật khẩu không đúng',
 
 ];

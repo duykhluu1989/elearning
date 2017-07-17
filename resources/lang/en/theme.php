@@ -20,7 +20,9 @@ return [
     'add_cart' => 'Add to cart',
     'input' => 'Enter',
     'all_category' => 'All categories',
-    'username' => 'Username',
+    'name' => 'Name',
     'password' => 'Password',
+    'sign_in_with_facebook' => 'Sign in with facebook',
+    'sign_in_fail' => 'Email or password is not correct',
 
 ];

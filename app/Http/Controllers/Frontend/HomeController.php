@@ -53,8 +53,6 @@ class HomeController extends Controller
 
         $groupCourses = array();
 
-        $courseGroupCodeByIds = array();
-
         foreach($groupCodes as $groupCode)
         {
             $groupCourses[$groupCode] = array();
@@ -73,7 +71,6 @@ class HomeController extends Controller
                         {
                             $courseIds[] = $courseItem['course_id'];
                             $groupCourses[$groupCode][$courseItem['course_id']] = '';
-                            $courseGroupCodeByIds[$courseItem['course_id']] = $groupCode;
                         }
                     }
                 }
@@ -89,14 +86,27 @@ class HomeController extends Controller
             ->whereIn('id', $courseIds)->get();
 
         foreach($courses as $course)
-            $groupCourses[$courseGroupCodeByIds[$course->id]][$course->id] = $course;
-
-        foreach($groupCourses as $code => $courses)
         {
-            foreach($courses as $key => $course)
+            foreach($groupCourses as $code => $preSetCourses)
             {
-                if(empty($course))
-                    unset($groupCourses[$code][$key]);
+                foreach($preSetCourses as $courseId => $preSetCourse)
+                {
+                    if($courseId == $course->id)
+                    {
+                        $groupCourses[$code][$courseId] = $course;
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        foreach($groupCourses as $code => $setCourses)
+        {
+            foreach($setCourses as $courseId => $setCourse)
+            {
+                if(empty($setCourse))
+                    unset($groupCourses[$code][$courseId]);
             }
         }
 

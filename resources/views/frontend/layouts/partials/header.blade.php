@@ -132,7 +132,7 @@
                 <div class="modal-body">
                     <form action="{{ action('Frontend\UserController@register') }}" method="POST" role="form" class="frm_dangky" id="SignUpForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="username" placeholder="@lang('theme.username')">
+                            <input type="text" class="form-control" name="name" placeholder="@lang('theme.name')">
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" name="email" placeholder="Email">
@@ -144,7 +144,7 @@
                             <p class="text-center"><a class="btn-link" href="sample.php">Hướng dẫn đăng ký</a></p>
                         </div>
                         <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
-                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i> ĐĂNG NHẬP BẰNG FACEBOOK</button>
+                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
                         {{ csrf_field() }}
                     </form>
                 </div>
@@ -157,18 +157,18 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title text-center">Đăng nhập</h4>
+                    <h4 class="modal-title text-center">@lang('theme.sign_in')</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST" role="form" class="frm_dangky">
+                    <form action="{{ action('Frontend\UserController@login') }}" method="POST" role="form" class="frm_dangky" id="SignInForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="" placeholder="Email">
+                            <input type="text" class="form-control" name="email" placeholder="Email">
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control" id="" placeholder="Mật khẩu">
+                            <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')">
                         </div>
-                        <button type="submit" class="btn btn-block btnDangky"><i class="fa fa-sign-in" aria-hidden="true"></i> ĐĂNG NHẬP</button>
-                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i> ĐĂNG NHẬP BẰNG FACEBOOK</button>
+                        <button type="submit" class="btn btn-block btnDangky"><i class="fa fa-sign-in" aria-hidden="true"></i>@lang('theme.sign_in')</button>
+                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
                         <div class="form-group">
                             <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">Quên mật khẩu đăng nhập?</a></p>
                         </div>
@@ -235,6 +235,43 @@
                                     location.reload();
                                 }, 3000);
                             }
+                            else
+                            {
+                                result = JSON.parse(result);
+
+                                for(var name in result)
+                                {
+                                    if(result.hasOwnProperty(name))
+                                    {
+                                        formElem.find('input[name="' + name + '"]').first().parent().addClass('has-error').append('' +
+                                            '<span class="help-block">' + result[name][0] + '</span>' +
+                                        '');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            $('#SignInForm').submit(function(e) {
+                e.preventDefault();
+
+                var formElem = $(this);
+
+                formElem.find('input').each(function() {
+                    $(this).parent().removeClass('has-error').find('span[class="help-block"]').first().remove();
+                });
+
+                $.ajax({
+                    url: '{{ action('Frontend\UserController@login') }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&' + formElem.serialize(),
+                    success: function(result) {
+                        if(result)
+                        {
+                            if(result == 'Success')
+                                location.reload();
                             else
                             {
                                 result = JSON.parse(result);

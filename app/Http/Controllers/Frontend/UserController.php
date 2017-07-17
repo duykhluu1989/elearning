@@ -15,35 +15,28 @@ class UserController extends Controller
 {
     public function login(Request $request)
     {
-        if($request->isMethod('post'))
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if($validator->passes())
         {
-            $inputs = $request->all();
+            $credentials = [
+                'email' => $inputs['email'],
+                'password' => $inputs['password'],
+                'status' => Utility::ACTIVE_DB,
+            ];
 
-            $validator = Validator::make($inputs, [
-                'email' => 'required|email',
-                'password' => 'required',
-            ]);
-
-            if($validator->passes())
-            {
-                $credentials = [
-                    'email' => $inputs['email'],
-                    'password' => $inputs['password'],
-                    'status' => Utility::ACTIVE_DB,
-                ];
-
-                $remember = false;
-                if(isset($inputs['remember']))
-                    $remember = true;
-
-                if(auth()->attempt($credentials, $remember))
-                    return redirect()->action('Frontend\HomeController@home');
-                else
-                    return redirect()->action('Frontend\UserController@login')->withErrors(['email' => 'Email or Password is not correct'])->withInput($request->except('password'));
-            }
+            if(auth()->attempt($credentials))
+                return 'Success';
             else
-                return redirect()->action('Frontend\UserController@login')->withErrors($validator)->withInput($request->except('password'));
+                return json_encode(['email' => [trans('theme.sign_in_fail')]]);
         }
+        else
+            return json_encode(['email' => [trans('theme.sign_in_fail')]]);
     }
 
     public function logout()
@@ -58,7 +51,7 @@ class UserController extends Controller
         $inputs = $request->all();
 
         $validator = Validator::make($inputs, [
-            'username' => 'required||alpha_dash|min:4|max:255|unique:user,username',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:user,email',
             'password' => 'required|alpha_dash|min:6|max:32',
         ]);
@@ -70,7 +63,7 @@ class UserController extends Controller
                 DB::beginTransaction();
 
                 $user = new User();
-                $user->username = $inputs['username'];
+                $user->username = explode('@', $inputs['email'])[0];
                 $user->email = $inputs['email'];
                 $user->status = Utility::ACTIVE_DB;
                 $user->admin = Utility::INACTIVE_DB;
@@ -83,6 +76,8 @@ class UserController extends Controller
 
                 $profile = new Profile();
                 $profile->user_id = $user->id;
+                $profile->first_name = $inputs['name'];
+                $profile->name = $inputs['name'];
                 $profile->save();
 
                 DB::commit();
@@ -95,7 +90,7 @@ class UserController extends Controller
             {
                 DB::rollBack();
 
-                return json_encode(['username' => $e->getMessage()]);
+                return json_encode(['username' => [$e->getMessage()]]);
             }
         }
         else
