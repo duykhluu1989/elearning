@@ -102,4 +102,9 @@ class HomeController extends Controller
         else
             return redirect($referer)->withCookie(Utility::LANGUAGE_COOKIE_NAME, 'en', Utility::MINUTE_ONE_MONTH);
     }
+
+    public function refreshCsrfToken()
+    {
+        return csrf_token();
+    }
 }

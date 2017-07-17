@@ -22,6 +22,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
     Route::get('language/{locale}', 'HomeController@language');
 
+    Route::post('refreshCsrfToken', 'HomeController@refreshCsrfToken');
+
     Route::get('course/{id}/{slug}', 'CourseController@detailCourse');
 
 });

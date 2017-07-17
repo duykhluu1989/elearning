@@ -55,5 +55,25 @@
 <script src="{{ asset('themes/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 @stack('scripts')
+<script type="text/javascript">
+    if($('input[name="_token"]').length > 0)
+    {
+        setInterval(function() {
+            $.ajax({
+                url: '{{ action('Frontend\HomeController@refreshCsrfToken') }}',
+                type: 'post',
+                data: '_token=' + $('input[name="_token"]').first().val(),
+                success: function(result) {
+                    if(result)
+                    {
+                        $('input[name="_token"]').each(function() {
+                            $(this).val(result);
+                        });
+                    }
+                }
+            });
+        }, 60000);
+    }
+</script>
 </body>
 </html>
