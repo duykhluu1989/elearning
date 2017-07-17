@@ -47,7 +47,7 @@
                                         <?php
                                         $routeName = $method . ' - ' . $route->uri();
                                         ?>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <div class="checkbox">
                                                 <label>
                                                     <input name="permission[]" type="checkbox" value="{{ $routeName }}"<?php echo (in_array($routeName, $allowedRoutes) ? ' checked="checked"' : ''); ?> />{{ $routeName }}

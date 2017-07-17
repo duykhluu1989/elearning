@@ -35,19 +35,6 @@
                     </div>
                 </div>
             </div>
-            <div class="box-header with-border">
-                <h3 class="box-title">Google</h3>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>{{ $settings[\App\Models\Setting::GOOGLE_CLIENT_ID]->name }}</label>
-                            <input type="text" class="form-control" name="{{ \App\Models\Setting::GOOGLE_CLIENT_ID }}" value="{{ old(\App\Models\Setting::GOOGLE_CLIENT_ID, $settings[\App\Models\Setting::GOOGLE_CLIENT_ID]->value) }}" />
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
             </div>

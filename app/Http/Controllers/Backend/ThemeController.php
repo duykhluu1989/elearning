@@ -19,7 +19,7 @@ class ThemeController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'parent_id' => 'nullable|array',
+                'parent_id' => 'required|array',
             ]);
 
             if($validator->passes())
