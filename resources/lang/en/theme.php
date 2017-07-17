@@ -18,7 +18,6 @@ return [
     'course_description_title' => 'Course description',
     'buy_course' => 'Buy course',
     'add_cart' => 'Add to cart',
-    'input_discount_code' => 'Enter discount code',
     'input' => 'Enter',
     'all_category' => 'All categories',
     'username' => 'Username',

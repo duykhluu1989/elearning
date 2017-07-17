@@ -80,12 +80,25 @@ class HomeController extends Controller
             }
         }
 
-        $courses = Course::select('id', 'name', 'name_en', 'price', 'image', 'slug', 'slug_en')
-            ->where('status', Course::STATUS_PUBLISH_DB)->where('category_status', Utility::ACTIVE_DB)
+        $courses = Course::select('id', 'name', 'name_en', 'price', 'image', 'slug', 'slug_en', 'category_id')
+            ->with(['category' => function($query) {
+                $query->select('id', 'name', 'name_en');
+            }, 'promotionPrice' => function($query) {
+                $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+            }])->where('status', Course::STATUS_PUBLISH_DB)->where('category_status', Utility::ACTIVE_DB)
             ->whereIn('id', $courseIds)->get();
 
         foreach($courses as $course)
             $groupCourses[$courseGroupCodeByIds[$course->id]][$course->id] = $course;
+
+        foreach($groupCourses as $code => $courses)
+        {
+            foreach($courses as $key => $course)
+            {
+                if(empty($course))
+                    unset($groupCourses[$code][$key]);
+            }
+        }
 
         return $groupCourses;
     }

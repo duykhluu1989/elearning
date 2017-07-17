@@ -18,10 +18,9 @@ return [
     'course_description_title' => 'Mô tả về khóa học',
     'buy_course' => 'Mua khóa học',
     'add_cart' => 'Thêm vào giỏ hàng',
-    'input_discount_code' => 'Nhập mã khuyến mãi',
     'input' => 'Nhập',
     'all_category' => 'Tất cả chủ đề',
-    'username' => 'Tên đăng nhập',
+    'username' => 'Tên tài khoản',
     'password' => 'Mật khẩu',
 
 ];

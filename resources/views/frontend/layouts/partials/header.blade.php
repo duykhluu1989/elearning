@@ -9,7 +9,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="{{ action('Frontend\HomeController@home') }}" class="navbar-brand">Brand</a>
+                    <a href="{{ action('Frontend\HomeController@home') }}" class="navbar-brand"></a>
                 </div>
                 <div class="collapse navbar-collapse js-navbar-collapse">
                     <ul class="nav navbar-nav main_menu">

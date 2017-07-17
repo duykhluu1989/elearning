@@ -50,7 +50,6 @@
                                     @if($bought == false)
                                         <a href="#" class="btn btn-lg btnMuaKH"><i class="fa fa-cart-plus" aria-hidden="true"></i>@lang('theme.buy_course')</a>
                                         <a href="#" class="btn btn-lg btnThemGH"><i class="fa fa-plus-square-o" aria-hidden="true"></i>@lang('theme.add_cart')</a>
-                                        <p><a class="btn btn-link btn_nhapmaKM" href="#" data-toggle="modal" data-target="#modal_NhapMKM">@lang('theme.input_discount_code')</a></p>
 
                                         <div id="modal_NhapMKM" class="modal fade" tabindex="-1" role="dialog">
                                             <div class="modal-dialog modal-sm">
