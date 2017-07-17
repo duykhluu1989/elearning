@@ -24,5 +24,6 @@ return [
     'password' => 'Mật khẩu',
     'sign_in_with_facebook' => 'Đăng nhập bằng facebook',
     'sign_in_fail' => 'Email hoặc mật khẩu không đúng',
+    'not_have_account' => 'Chưa có tài khoản? Đăng ký',
 
 ];

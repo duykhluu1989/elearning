@@ -144,7 +144,7 @@
                             <p class="text-center"><a class="btn-link" href="sample.php">Hướng dẫn đăng ký</a></p>
                         </div>
                         <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
-                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
+                        <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
                         {{ csrf_field() }}
                     </form>
                 </div>
@@ -168,12 +168,12 @@
                             <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')">
                         </div>
                         <button type="submit" class="btn btn-block btnDangky"><i class="fa fa-sign-in" aria-hidden="true"></i>@lang('theme.sign_in')</button>
-                        <button type="button" class="btn btn-block btnDangnhap"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
+                        <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
                         <div class="form-group">
                             <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">Quên mật khẩu đăng nhập?</a></p>
                         </div>
                         <div class="modal-footer">
-                            <p class="text-center"><a href="#modal_dangky" class="btn-link" data-toggle="modal">Chưa có tài khoản? Đăng ký</a></p>
+                            <p class="text-center"><a href="#modal_dangky" class="btn-link" data-toggle="modal">@lang('theme.not_have_account')</a></p>
                         </div>
                     </form>
                 </div>
