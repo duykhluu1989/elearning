@@ -190,7 +190,7 @@
                 </div>
                 <div class="modal-body">
                     <p>@lang('theme.retrieve_password_description')</p>
-                    <form action="{{ action('Frontend\UserController@retrivePassword') }}" method="POST" role="form" class="frm_dangky" id="ForgetPasswordForm">
+                    <form action="{{ action('Frontend\UserController@retrievePassword') }}" method="POST" role="form" class="frm_dangky" id="ForgetPasswordForm">
                         <div class="form-group">
                             <input type="text" class="form-control" name="email" placeholder="Email" required="required">
                         </div>
@@ -224,7 +224,7 @@
                                 $('#modal_dangky').modal('hide');
 
                                 swal({
-                                    title: 'Đăng kí thành công',
+                                    title: '@lang('theme.sign_up_success')',
                                     type: 'success',
                                     allowEscapeKey: false,
                                     showConfirmButton: false
@@ -300,7 +300,7 @@
                 });
 
                 $.ajax({
-                    url: '{{ action('Frontend\UserController@retrivePassword') }}',
+                    url: '{{ action('Frontend\UserController@retrievePassword') }}',
                     type: 'post',
                     data: '_token=' + $('input[name="_token"]').first().val() + '&' + formElem.serialize(),
                     success: function(result) {
@@ -308,7 +308,12 @@
                         {
                             if(result == 'Success')
                             {
+                                $('#modal_quenMK').modal('hide');
 
+                                swal({
+                                    title: '@lang('theme.retrieve_password_email')',
+                                    type: 'success'
+                                });
                             }
                             else
                             {

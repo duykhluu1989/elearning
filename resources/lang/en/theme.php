@@ -23,11 +23,13 @@ return [
     'name' => 'Name',
     'password' => 'Password',
     'sign_in_with_facebook' => 'Sign in with facebook',
-    'sign_in_fail' => 'Email or password is not correct',
+    'sign_in_fail' => 'Input data is invalid',
     'not_have_account' => 'Don\'t have account? Sign up',
-    'system_error' => 'System occured an error, please try again',
+    'system_error' => 'System occurred an error, please try again',
     'forget_password' => 'Forget password?',
     'retrieve_password' => 'Retrieve password',
     'retrieve_password_description' => 'To retrieve your password, enter your login email in the box below. Then caydenthan.vn will send you an email to recover your password',
+    'sign_up_success' => 'Sign up success',
+    'retrieve_password_email' => 'Please check your email to recover password',
 
 ];

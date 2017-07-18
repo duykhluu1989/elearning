@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -14,6 +15,7 @@ use App\Models\Setting;
 use Facebook\Facebook;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
+use Firebase\JWT\JWT;
 
 class UserController extends Controller
 {
@@ -217,7 +219,7 @@ class UserController extends Controller
         return '';
     }
 
-    public function retrivePassword(Request $request)
+    public function retrievePassword(Request $request)
     {
         $inputs = $request->all();
 
@@ -227,14 +229,73 @@ class UserController extends Controller
 
         if($validator->passes())
         {
+            $user = User::where('email', $inputs['email'])->first();
 
+            if(empty($user))
+                return json_encode(['email' => [trans('theme.sign_in_fail')]]);
+
+            if($user->status == Utility::INACTIVE_DB)
+                return json_encode(['email' => [trans('theme.sign_in_fail')]]);
+
+            $time = time();
+
+            $claims = [
+                'sub' => $user->id,
+                'iat' => $time,
+                'exp' => $time + Utility::SECOND_ONE_HOUR,
+                'iss' => app('request')->getUri(),
+                'jti' => md5($user->id . $time),
+            ];
+
+            $token = JWT::encode($claims, env('APP_KEY'));
+
+            try
+            {
+                $user->password = $token;
+                $user->save();
+
+                $loginLink = action('Frontend\UserController@loginWithToken', ['token' => $token]);
+
+                Mail::send('frontend.emails.retrieve_password', ['loginLink' => $loginLink], function($message) use($user) {
+
+                    $message->from('admin@caydenthan.vn', Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE));
+                    $message->to($user->email, $user->profile->name);
+                    $message->subject(Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE) . ' | ' . trans('theme.retrieve_password'));
+
+                });
+
+                return 'Success';
+            }
+            catch(\Exception $e)
+            {
+                return json_encode(['email' => [trans('theme.system_error')]]);
+            }
         }
         else
             return json_encode($validator->errors()->messages());
     }
 
-    public function loginWithLink()
+    public function loginWithToken($token)
     {
+        try
+        {
+            $decoded = JWT::decode($token, env('APP_KEY'), ['HS256']);
 
+            $user = User::where('id', $decoded->sub)->where('status', Utility::ACTIVE_DB)->first();
+
+            if(!empty($user) && $user->password == $token)
+            {
+                $user->password = null;
+                $user->save();
+
+                auth()->login($user);
+            }
+        }
+        catch(\Exception $e)
+        {
+
+        }
+
+        return redirect()->action('Frontend\HomeController@home');
     }
 }

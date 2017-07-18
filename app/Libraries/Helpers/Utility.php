@@ -22,6 +22,8 @@ class Utility
 
     const MINUTE_ONE_MONTH = 43200;
 
+    const SECOND_ONE_HOUR = 3600;
+
     public static function getTrueFalse($value = null)
     {
         $trueFalse = [
