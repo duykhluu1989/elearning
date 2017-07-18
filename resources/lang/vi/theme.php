@@ -25,6 +25,9 @@ return [
     'sign_in_with_facebook' => 'Đăng nhập bằng facebook',
     'sign_in_fail' => 'Email hoặc mật khẩu không đúng',
     'not_have_account' => 'Chưa có tài khoản? Đăng ký',
-    'systemError' => 'Hệ thống xảy ra lỗi, vui lòng thử lại',
+    'system_error' => 'Hệ thống xảy ra lỗi, vui lòng thử lại',
+    'forget_password' => 'Quên mật khẩu đăng nhập?',
+    'retrieve_password' => 'Lấy lại mật khẩu',
+    'retrieve_password_description' => 'Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan.vn sẽ gửi email hướng dẫn bạn khôi phục mật khẩu',
 
 ];

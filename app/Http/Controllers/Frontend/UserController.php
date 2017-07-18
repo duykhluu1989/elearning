@@ -126,11 +126,11 @@ class UserController extends Controller
             }
             catch(FacebookResponseException $e)
             {
-                return trans('theme.systemError');
+                return trans('theme.system_error');
             }
             catch(FacebookSDKException $e)
             {
-                return trans('theme.systemError');
+                return trans('theme.system_error');
             }
 
             if(isset($userNode['email']))
@@ -195,7 +195,7 @@ class UserController extends Controller
                 {
                     DB::rollBack();
 
-                    return trans('theme.systemError');
+                    return trans('theme.system_error');
                 }
             }
             else if($user->status == Utility::INACTIVE_DB)
@@ -215,5 +215,26 @@ class UserController extends Controller
         }
 
         return '';
+    }
+
+    public function retrivePassword(Request $request)
+    {
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'email' => 'required|email',
+        ]);
+
+        if($validator->passes())
+        {
+
+        }
+        else
+            return json_encode($validator->errors()->messages());
+    }
+
+    public function loginWithLink()
+    {
+
     }
 }

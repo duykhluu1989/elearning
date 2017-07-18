@@ -25,6 +25,9 @@ return [
     'sign_in_with_facebook' => 'Sign in with facebook',
     'sign_in_fail' => 'Email or password is not correct',
     'not_have_account' => 'Don\'t have account? Sign up',
-    'systemError' => 'System occured an error, please try again',
+    'system_error' => 'System occured an error, please try again',
+    'forget_password' => 'Forget password?',
+    'retrieve_password' => 'Retrieve password',
+    'retrieve_password_description' => 'To retrieve your password, enter your login email in the box below. Then caydenthan.vn will send you an email to recover your password',
 
 ];

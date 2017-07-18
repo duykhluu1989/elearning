@@ -132,13 +132,13 @@
                 <div class="modal-body">
                     <form action="{{ action('Frontend\UserController@register') }}" method="POST" role="form" class="frm_dangky" id="SignUpForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="name" placeholder="@lang('theme.name')">
+                            <input type="text" class="form-control" name="name" placeholder="@lang('theme.name')" required="required">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="email" placeholder="Email">
+                            <input type="text" class="form-control" name="email" placeholder="Email" required="required">
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')">
+                            <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')" required="required">
                         </div>
                         <div class="form-group">
                             <p class="text-center"><a class="btn-link" href="sample.php">Hướng dẫn đăng ký</a></p>
@@ -162,15 +162,15 @@
                 <div class="modal-body">
                     <form action="{{ action('Frontend\UserController@login') }}" method="POST" role="form" class="frm_dangky" id="SignInForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="email" placeholder="Email">
+                            <input type="text" class="form-control" name="email" placeholder="Email" required="required">
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')">
+                            <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')" required="required">
                         </div>
                         <button type="submit" class="btn btn-block btnDangky"><i class="fa fa-sign-in" aria-hidden="true"></i>@lang('theme.sign_in')</button>
                         <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
                         <div class="form-group">
-                            <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">Quên mật khẩu đăng nhập?</a></p>
+                            <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">@lang('theme.forget_password')</a></p>
                         </div>
                         <div class="modal-footer">
                             <p class="text-center"><a href="#modal_dangky" class="btn-link" data-toggle="modal">@lang('theme.not_have_account')</a></p>
@@ -186,15 +186,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title text-center">Lấy lại mật khẩu</h4>
+                    <h4 class="modal-title text-center">@lang('theme.retrieve_password')</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan.vn sẽ gửi email hướng dẫn bạn khôi phục mật khẩu</p>
-                    <form action="" method="POST" role="form" class="frm_dangky">
+                    <p>@lang('theme.retrieve_password_description')</p>
+                    <form action="{{ action('Frontend\UserController@retrivePassword') }}" method="POST" role="form" class="frm_dangky" id="ForgetPasswordForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="" placeholder="Email của bạn">
+                            <input type="text" class="form-control" name="email" placeholder="Email" required="required">
                         </div>
-                        <button type="submit" class="btn btn-block btnDangky">Tiếp tục →</button>
+                        <button type="submit" class="btn btn-block btnDangky">@lang('theme.retrieve_password')</button>
                     </form>
                 </div>
             </div>
@@ -271,6 +271,45 @@
                         {
                             if(result == 'Success')
                                 location.reload();
+                            else
+                            {
+                                result = JSON.parse(result);
+
+                                for(var name in result)
+                                {
+                                    if(result.hasOwnProperty(name))
+                                    {
+                                        formElem.find('input[name="' + name + '"]').first().parent().addClass('has-error').append('' +
+                                            '<span class="help-block">' + result[name][0] + '</span>' +
+                                        '');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            $('#ForgetPasswordForm').submit(function(e) {
+                e.preventDefault();
+
+                var formElem = $(this);
+
+                formElem.find('input').each(function() {
+                    $(this).parent().removeClass('has-error').find('span[class="help-block"]').first().remove();
+                });
+
+                $.ajax({
+                    url: '{{ action('Frontend\UserController@retrivePassword') }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&' + formElem.serialize(),
+                    success: function(result) {
+                        if(result)
+                        {
+                            if(result == 'Success')
+                            {
+
+                            }
                             else
                             {
                                 result = JSON.parse(result);
