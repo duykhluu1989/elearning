@@ -31,5 +31,6 @@ return [
     'retrieve_password_description' => 'Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan.vn sẽ gửi email hướng dẫn bạn khôi phục mật khẩu',
     'sign_up_success' => 'Đăng kí thành công',
     'retrieve_password_email' => 'Vui lòng kiểm tra email để khôi phục mật khẩu',
+    'expert' => 'Góc nhìn chuyên gia',
 
 ];

@@ -31,5 +31,6 @@ return [
     'retrieve_password_description' => 'To retrieve your password, enter your login email in the box below. Then caydenthan.vn will send you an email to recover your password',
     'sign_up_success' => 'Sign up success',
     'retrieve_password_email' => 'Please check your email to recover password',
+    'expert' => 'Expert say',
 
 ];

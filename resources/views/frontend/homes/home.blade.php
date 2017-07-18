@@ -226,39 +226,26 @@
                     @endif
                 </div>
                 <div class="row">
-                    <h3 class="title_line">Góc nhìn Giảng viên</h3>
+                    <h3 class="title_line">@lang('theme.expert')</h3>
                     <div class="col-lg-12">
                         <div class="owl_chuyengia owl-carousel owl-theme">
-                            <div class="item">
-                                <p class="name">Chuyên gia Phạm Chi Lan</p>
-                                <a href="#"><img src="{{ asset('themes/images/cg01.jpg') }}" alt="" class="img-responsive"></a>
-                                <p>Chuyên gia Phạm Chi Lan: Mở rộng hạn điền sẽ là chìa khóa...</p>
-                            </div>
-                            <div class="item">
-                                <p class="name">TS Cấn Văn Lực</p>
-                                <a href="#"><img src="{{ asset('themes/images/cg02.jpg') }}" alt="" class="img-responsive"></a>
-                                <p>Thiếu vốn trung dài hạn khiến áp lực tăng lãi suất rất lớn</p>
-                            </div>
-                            <div class="item">
-                                <p class="name">TS. Nguyễn Trí Hiếu</p>
-                                <a href="#"><img src="{{ asset('themes/images/cg03.jpg') }}" alt="" class="img-responsive"></a>
-                                <p>Chặn đà rơi tỷ giá</p>
-                            </div>
-                            <div class="item">
-                                <p class="name">TS.LS. Bùi Quang Tín</p>
-                                <a href="#"><img src="{{ asset('themes/images/cg04.jpg') }}" alt="" class="img-responsive"></a>
-                                <p>Ồ ạt phát hành chứng chỉ tiền gửi “siêu lãi suất“</p>
-                            </div>
-                            <div class="item">
-                                <p class="name">GS.TS Trần Ngọc Thơ</p>
-                                <a href="#"><img src="{{ asset('themes/images/cg05.jpg') }}" alt="" class="img-responsive"></a>
-                                <p>Dầu giảm 1 USD, tạo ra bao nhiêu việc làm?</p>
-                            </div>
-                            <div class="item">
-                                <p class="name">Chuyên gia Phạm Chi Lan</p>
-                                <a href="#"><img src="{{ asset('themes/images/cg01.jpg') }}" alt="" class="img-responsive"></a>
-                                <p>Chuyên gia Phạm Chi Lan: Mở rộng hạn điền sẽ là chìa khóa...</p>
-                            </div>
+                            <?php
+                            $expertItems = array();
+
+                            if(isset($widgets[\App\Models\Widget::GROUP_STAFF_EXPERT]))
+                            {
+                                if(!empty($widgets[\App\Models\Widget::GROUP_STAFF_EXPERT]->detail))
+                                    $expertItems = json_decode($widgets[\App\Models\Widget::GROUP_STAFF_EXPERT]->detail, true);
+                            }
+                            ?>
+
+                            @foreach($expertItems as $expertItem)
+                                <div class="item">
+                                    <p class="name">{{ $expertItem['name'] }}</p>
+                                    <a href="{{ $expertItem['url'] }}"><img src="{{ $expertItem['image'] }}" alt="{{ $expertItem['name'] }}" class="img-responsive"></a>
+                                    <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($expertItem, 'quote') }}</p>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
