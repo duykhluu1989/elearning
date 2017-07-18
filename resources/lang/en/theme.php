@@ -25,5 +25,6 @@ return [
     'sign_in_with_facebook' => 'Sign in with facebook',
     'sign_in_fail' => 'Email or password is not correct',
     'not_have_account' => 'Don\'t have account? Sign up',
+    'systemError' => 'System occured an error, please try again',
 
 ];

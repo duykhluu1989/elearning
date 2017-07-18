@@ -25,5 +25,6 @@ return [
     'sign_in_with_facebook' => 'Đăng nhập bằng facebook',
     'sign_in_fail' => 'Email hoặc mật khẩu không đúng',
     'not_have_account' => 'Chưa có tài khoản? Đăng ký',
+    'systemError' => 'Hệ thống xảy ra lỗi, vui lòng thử lại',
 
 ];

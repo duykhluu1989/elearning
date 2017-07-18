@@ -226,7 +226,6 @@
                                 swal({
                                     title: 'Đăng kí thành công',
                                     type: 'success',
-                                    confirmButtonClass: 'btn-success',
                                     allowEscapeKey: false,
                                     showConfirmButton: false
                                 });
@@ -290,6 +289,43 @@
                     }
                 });
             });
+
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_APP_ID) }}',
+                    cookie: true,
+                    xfbml: true,
+                    version: '{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_GRAPH_VERSION) }}'
+                });
+
+                $('.SignInWithFacebook').click(function() {
+                    FB.login(function(response) {
+                        if(response.status === 'connected')
+                        {
+                            $.ajax({
+                                url: '{{ action('Frontend\UserController@loginWithFacebook') }}',
+                                type: 'post',
+                                data: '_token=' + $('input[name="_token"]').first().val() + '&access_token=' + response.authResponse.accessToken,
+                                success: function(result) {
+                                    if(result)
+                                    {
+                                        if(result == 'Success')
+                                            location.reload();
+                                        else
+                                        {
+                                            swal({
+                                                title: result,
+                                                type: 'error',
+                                                confirmButtonClass: 'btn-success'
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, {scope: 'public_profile,email'});
+                });
+            };
         </script>
     @endpush
 

@@ -6,7 +6,9 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
         Route::post('login', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@login']);
 
-        Route::post('register', 'UserController@register');
+        Route::post('loginWithFacebook', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@loginWithFacebook']);
+
+        Route::post('register', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@register']);
 
     });
 

@@ -17,6 +17,10 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
+    protected $casts = [
+        'open_id' => 'array',
+    ];
+
     public function profile()
     {
         return $this->hasOne('App\Models\Profile', 'user_id');

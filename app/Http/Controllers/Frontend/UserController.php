@@ -10,6 +10,10 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Setting;
+use Facebook\Facebook;
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
 
 class UserController extends Controller
 {
@@ -95,5 +99,121 @@ class UserController extends Controller
         }
         else
             return json_encode($validator->errors()->messages());
+    }
+
+    public function loginWithFacebook(Request $request)
+    {
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'access_token' => 'required',
+        ]);
+
+        if($validator->passes())
+        {
+            $fb = new Facebook([
+                'app_id' => Setting::getSettings(Setting::CATEGORY_SOCIAL_DB, Setting::FACEBOOK_APP_ID),
+                'app_secret' => Setting::getSettings(Setting::CATEGORY_SOCIAL_DB, Setting::FACEBOOK_APP_SECRET),
+                'default_graph_version' => Setting::getSettings(Setting::CATEGORY_SOCIAL_DB, Setting::FACEBOOK_GRAPH_VERSION),
+            ]);
+
+            $fb->setDefaultAccessToken($inputs['access_token']);
+
+            try
+            {
+                $response = $fb->get('/me?fields=id,first_name,last_name,email,birthday,gender');
+                $userNode = $response->getDecodedBody();
+            }
+            catch(FacebookResponseException $e)
+            {
+                return trans('theme.systemError');
+            }
+            catch(FacebookSDKException $e)
+            {
+                return trans('theme.systemError');
+            }
+
+            if(isset($userNode['email']))
+                $email = $userNode['email'];
+            else
+                $email = $userNode['id'] . '@facebook.com';
+
+            $user = User::where('email', $email)->first();
+
+            if(!isset($user))
+                $user = User::where('open_id', '"facebook":"' . $userNode['id'] . '"')->first();
+
+            if(!isset($user))
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $user = new User();
+                    $user->username = explode('@', $email)[0];
+                    $user->email = $email;
+                    $user->status = Utility::ACTIVE_DB;
+                    $user->admin = Utility::INACTIVE_DB;
+                    $user->collaborator = Utility::INACTIVE_DB;
+                    $user->teacher = Utility::INACTIVE_DB;
+                    $user->expert = Utility::INACTIVE_DB;
+                    $user->created_at = date('Y-m-d H:i:s');
+
+                    $openId = $user->open_id;
+                    $openId['facebook'] = $userNode['id'];
+                    $user->open_id = $openId;
+
+                    $user->save();
+
+                    $profile = new Profile();
+                    $profile->user_id = $user->id;
+                    $profile->first_name = $userNode['first_name'];
+                    $profile->last_name = $userNode['last_name'];
+                    $profile->name = trim($profile->last_name . ' ' . $profile->first_name);
+
+                    if(isset($userNode['gender']))
+                    {
+                        if($userNode['gender'] == 'male')
+                            $profile->gender = Utility::INACTIVE_DB;
+                        else if($userNode['gender'] == 'female')
+                            $profile->gender = Utility::ACTIVE_DB;
+                    }
+
+                    if(isset($userNode['birthday']))
+                    {
+                        $birthdayTimestamp = strtotime($userNode['birthday']);
+
+                        if($birthdayTimestamp)
+                            $profile->birthday = date('Y-m-d', $birthdayTimestamp);
+                    }
+
+                    $profile->save();
+
+                    DB::commit();
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return trans('theme.systemError');
+                }
+            }
+            else if($user->status == Utility::INACTIVE_DB)
+                return trans('theme.sign_in_fail');
+            else if(!isset($user->open_id['facebook']))
+            {
+                $openId = $user->open_id;
+                $openId['facebook'] = $userNode['id'];
+                $user->open_id = $openId;
+
+                $user->save();
+            }
+
+            auth()->login($user);
+
+            return 'Success';
+        }
+
+        return '';
     }
 }
