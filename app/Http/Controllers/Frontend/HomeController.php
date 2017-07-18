@@ -18,6 +18,9 @@ class HomeController extends Controller
             Widget::GROUP_FREE_COURSE,
             Widget::GROUP_HIGHLIGHT_COURSE,
             Widget::GROUP_DISCOUNT_COURSE,
+            Widget::ADVERTISE_HORIZONTAL_TOP,
+            Widget::ADVERTISE_VERTICAL_LEFT,
+            Widget::ADVERTISE_VERTICAL_RIGHT,
         ];
 
         for($i = 1;$i <= 3;$i ++)

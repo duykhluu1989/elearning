@@ -168,12 +168,62 @@
         <section class="chuyengia bg_gray">
             <div class="container">
                 <div class="qc_left hidden-sm hidden-xs">
-                    <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                    <a href="#" class="btnClose"></a>
+                    <?php
+                    $adVerticalLeftItem = null;
+
+                    if(isset($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]))
+                    {
+                        if(!empty($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]->detail))
+                        {
+                            $adVerticalLeftItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]->detail, true);
+
+                            $randomKey = array_rand($adVerticalLeftItems);
+
+                            $adVerticalLeftItem = $adVerticalLeftItems[$randomKey];
+                        }
+                    }
+                    ?>
+
+                    @if($adVerticalLeftItem)
+                        @if(isset($adVerticalLeftItem['script']))
+                            <?php echo $adVerticalLeftItem['script']; ?>
+                        @else
+                            <a href="{{ $adVerticalLeftItem['url'] }}"><img src="{{ $adVerticalLeftItem['image'] }}" alt="Advertiser" class="img-responsive"></a>
+                        @endif
+                        <a href="#" class="btnClose"></a>
+                    @else
+                        <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
+                        <a href="#" class="btnClose"></a>
+                    @endif
                 </div>
                 <div class="qc_right hidden-xs hidden-sm">
-                    <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="" class="img-responsive"></a>
-                    <a href="#" class="btnClose"></a>
+                    <?php
+                    $adVerticalRightItem = null;
+
+                    if(isset($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]))
+                    {
+                        if(!empty($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]->detail))
+                        {
+                            $adVerticalRightItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]->detail, true);
+
+                            $randomKey = array_rand($adVerticalRightItems);
+
+                            $adVerticalRightItem = $adVerticalRightItems[$randomKey];
+                        }
+                    }
+                    ?>
+
+                    @if($adVerticalRightItem)
+                        @if(isset($adVerticalRightItem['script']))
+                            <?php echo $adVerticalRightItem['script']; ?>
+                        @else
+                            <a href="{{ $adVerticalRightItem['url'] }}"><img src="{{ $adVerticalRightItem['image'] }}" alt="Advertiser" class="img-responsive"></a>
+                        @endif
+                        <a href="#" class="btnClose"></a>
+                    @else
+                        <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
+                        <a href="#" class="btnClose"></a>
+                    @endif
                 </div>
                 <div class="row">
                     <h3 class="title_line">Góc nhìn Giảng viên</h3>
