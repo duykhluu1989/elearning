@@ -453,43 +453,35 @@
 
         <section class="tuvanphapluat">
             <div class="container-fluid">
-                <h2 class="title_line">TƯ VẤN KINH TẾ VÀ PHÁP LUẬT MIỄN PHÍ</h2>
+                <h2 class="title_line">@lang('theme.case_advice')</h2>
                 <div class="col-lg-6 boxright_vechungtoi boxmH">
                     <div class="row">
                         <div class="col-lg-4"></div>
                         <div class="col-lg-8">
-                            <img src="{{ asset('themes/images/i_money.png') }}" alt="" class="img-responsive">
+                            <img src="{{ asset('themes/images/i_money.png') }}" alt="Economy" class="img-responsive">
                             <ul class="list_tuvankt">
-                                <li><a href="">✓ Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
-                                <li><a href="">✓ Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi. Aliquam ornare mauris faucibus, accumsan orci cursus, scelerisque nulla. </a></li>
-                                <li><a href="">✓ Donec tincidunt, mi nec porta porttitor, tellus arcu ultricies erat, ac iaculis arcu odio sed turpis. </a></li>
-                                <li><a href="">✓ Pellentesque ac ante mollis, consequat neque nec, scelerisque dui. </a></li>
-                                <li><a href="">✓ Pellentesque rutrum tellus justo, a lobortis leo fringilla vitae.</a></li>
-                                <li><a href="">✓ Vivamus at magna non felis posuere ultrices. Vestibulum at lectus turpis. Donec elementum odio id quam auctor efficitur.</a></li>
+                                @foreach($caseAdviceEconomies as $caseAdviceEconomy)
+                                    <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'name') }}</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-6 boxleft_vechungtoi boxmH display_table">
                     <div class="table_content">
                         <div class="row">
                             <div class="col-lg-8">
-                                <img src="{{ asset('themes/images/i_balance.png') }}" alt="" class="img-responsive">
+                                <img src="{{ asset('themes/images/i_balance.png') }}" alt="Law" class="img-responsive">
                                 <ul class="list_tuvanpl">
-                                    <li><a href="">✓ Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
-                                    <li><a href="">✓ Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi. Aliquam ornare mauris faucibus, accumsan orci cursus, scelerisque nulla. </a></li>
-                                    <li><a href="">✓ Donec tincidunt, mi nec porta porttitor, tellus arcu ultricies erat, ac iaculis arcu odio sed turpis. </a></li>
-                                    <li><a href="">✓ Pellentesque ac ante mollis, consequat neque nec, scelerisque dui. </a></li>
-                                    <li><a href="">✓ Pellentesque rutrum tellus justo, a lobortis leo fringilla vitae.</a></li>
-                                    <li><a href="">✓ Vivamus at magna non felis posuere ultrices. Vestibulum at lectus turpis. Donec elementum odio id quam auctor efficitur.</a></li>
+                                    @foreach($caseAdviceLaws as $caseAdviceLaw)
+                                        <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceLaw, 'name') }}</a></li>
+                                    @endforeach
                                 </ul>
                             </div>
                             <div class="col-lg-4"></div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -547,23 +539,18 @@
 
         <section class="capchungchikh bg_gray">
             <div class="container">
-                <h3 class="title_line">CẤP CHỨNG CHỈ KHOÁ HỌC</h3>
+                <h3 class="title_line">@lang('theme.certificate')</h3>
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <ul class="list_khoahoc">
-                            <li><a href="">✓ Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
-                            <li><a href="">✓ Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi. Aliquam ornare mauris faucibus, accumsan orci cursus, scelerisque nulla. </a></li>
-                            <li><a href="">✓ Donec tincidunt, mi nec porta porttitor, tellus arcu ultricies erat, ac iaculis arcu odio sed turpis. </a></li>
-                            <li><a href="">✓ Pellentesque ac ante mollis, consequat neque nec, scelerisque dui. </a></li>
-                            <li><a href="">✓ Pellentesque rutrum tellus justo, a lobortis leo fringilla vitae.</a></li>
-                            <li><a href="">✓ Vivamus at magna non felis posuere ultrices. Vestibulum at lectus turpis. Donec elementum odio id quam auctor efficitur.</a></li>
+                            @foreach($certificates as $certificate)
+                                <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($certificate, 'name') }}</a></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
-
-
     </main>
 
 @stop

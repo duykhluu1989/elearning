@@ -9,6 +9,8 @@ use App\Libraries\Helpers\Utility;
 use App\Models\Widget;
 use App\Models\Course;
 use App\Models\Category;
+use App\Models\CaseAdvice;
+use App\Models\Certificate;
 
 class HomeController extends Controller
 {
@@ -46,10 +48,33 @@ class HomeController extends Controller
             ->orderBy('order', 'desc')
             ->get();
 
+        $caseAdviceEconomies = CaseAdvice::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('type', CaseAdvice::TYPE_ECONOMY_DB)
+            ->where('status', Utility::ACTIVE_DB)
+            ->orderBy('order', 'desc')
+            ->limit(6)
+            ->get();
+
+        $caseAdviceLaws = CaseAdvice::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('type', CaseAdvice::TYPE_LAW_DB)
+            ->where('status', Utility::ACTIVE_DB)
+            ->orderBy('order', 'desc')
+            ->limit(6)
+            ->get();
+
+        $certificates = Certificate::select('id', 'name', 'name_en')
+            ->where('status', Utility::ACTIVE_DB)
+            ->orderBy('order', 'desc')
+            ->limit(6)
+            ->get();
+
         return view('frontend.homes.home', [
             'widgets' => $widgets,
             'groupCourses' => $groupCourses,
             'rootCategories' => $rootCategories,
+            'caseAdviceEconomies' => $caseAdviceEconomies,
+            'caseAdviceLaws' => $caseAdviceLaws,
+            'certificates' => $certificates,
         ]);
     }
 

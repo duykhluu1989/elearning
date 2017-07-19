@@ -35,5 +35,7 @@ return [
     'student' => 'Student talk about us',
     'teacher_staff' => 'Teacher staff',
     'category_list' => 'List categories',
+    'case_advice' => 'Economic and legal advice',
+    'certificate' => 'Certificate of course',
 
 ];

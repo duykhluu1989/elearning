@@ -35,5 +35,7 @@ return [
     'student' => 'Học viên nói gì về chúng tôi',
     'teacher_staff' => 'Đội ngũ giảng viên',
     'category_list' => 'Danh mục chủ đề',
+    'case_advice' => 'Tư vấn kinh tế và pháp luật',
+    'certificate' => 'Cấp chứng chỉ khóa học',
 
 ];
