@@ -32,5 +32,7 @@ return [
     'sign_up_success' => 'Sign up success',
     'retrieve_password_email' => 'Please check your email to recover password',
     'expert' => 'Expert say',
+    'student' => 'Student talk about us',
+    'teacher_staff' => 'Teacher staff',
 
 ];

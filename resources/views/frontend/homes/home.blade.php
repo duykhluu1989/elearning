@@ -188,12 +188,12 @@
                         @if(isset($adVerticalLeftItem['script']))
                             <?php echo $adVerticalLeftItem['script']; ?>
                         @else
-                            <a href="{{ $adVerticalLeftItem['url'] }}"><img src="{{ $adVerticalLeftItem['image'] }}" alt="Advertiser" class="img-responsive"></a>
+                            <a href="{{ isset($adVerticalLeftItem['url']) ? $adVerticalLeftItem['url'] : 'javascript:void(0)' }}"><img src="{{ isset($adVerticalLeftItem['image']) ? $adVerticalLeftItem['image'] : '' }}" alt="Advertiser" class="img-responsive"></a>
                         @endif
-                        <a href="#" class="btnClose"></a>
+                        <a href="javascript:void(0)" class="btnClose"></a>
                     @else
-                        <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
-                        <a href="#" class="btnClose"></a>
+                        <a href="javascript:void(0)"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
+                        <a href="javascript:void(0)" class="btnClose"></a>
                     @endif
                 </div>
                 <div class="qc_right hidden-xs hidden-sm">
@@ -217,12 +217,12 @@
                         @if(isset($adVerticalRightItem['script']))
                             <?php echo $adVerticalRightItem['script']; ?>
                         @else
-                            <a href="{{ $adVerticalRightItem['url'] }}"><img src="{{ $adVerticalRightItem['image'] }}" alt="Advertiser" class="img-responsive"></a>
+                            <a href="{{ isset($adVerticalRightItem['url']) ? $adVerticalRightItem['url'] : 'javascript:void(0)' }}"><img src="{{ isset($adVerticalRightItem['image']) ? $adVerticalRightItem['image'] : '' }}" alt="Advertiser" class="img-responsive"></a>
                         @endif
-                        <a href="#" class="btnClose"></a>
+                        <a href="javascript:void(0)" class="btnClose"></a>
                     @else
-                        <a href="#"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
-                        <a href="#" class="btnClose"></a>
+                        <a href="javascript:void(0)"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
+                        <a href="javascript:void(0)" class="btnClose"></a>
                     @endif
                 </div>
                 <div class="row">
@@ -241,8 +241,8 @@
 
                             @foreach($expertItems as $expertItem)
                                 <div class="item">
-                                    <p class="name">{{ $expertItem['name'] }}</p>
-                                    <a href="{{ $expertItem['url'] }}"><img src="{{ $expertItem['image'] }}" alt="{{ $expertItem['name'] }}" class="img-responsive"></a>
+                                    <p class="name">{{ isset($expertItem['name']) ? $expertItem['name'] : '' }}</p>
+                                    <a href="{{ isset($expertItem['url']) ? $expertItem['url'] : 'javascript:void(0)' }}"><img src="{{ isset($expertItem['image']) ? $expertItem['image'] : '' }}" alt="{{ isset($expertItem['name']) ? $expertItem['name'] : '' }}" class="img-responsive"></a>
                                     <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($expertItem, 'quote') }}</p>
                                 </div>
                             @endforeach
@@ -320,9 +320,15 @@
                                                 <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                             </div>
                                             <div class="box_item_content">
-                                                <p>Duis eget vulputate eros. Donec vehicula egetctus</p>
-                                                <p>(Aenean hendrerit ipsum)</p>
-                                                <p class="gia">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</p>
+                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}</p>
+                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
+                                                <p class="gia">
+                                                    @if($course->validatePromotionPrice())
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . ' VND' }}
+                                                    @else
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}
+                                                    @endif
+                                                </p>
                                                 <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
                                             </div>
                                         </div>
@@ -352,145 +358,78 @@
                                 </ul>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="col-lg-6 boxright_vechungtoi boxmH">
                     <div class="row">
                         <div class="col-lg-8">
-                            <h2>HỌC VIÊN NÓI GÌ VỀ CHÚNG TÔI</h2>
+                            <h2>@lang('theme.student')</h2>
                             <div class="owl_vechungtoi owl-carousel owl-theme">
-                                <div class="item">
-                                    <div class="row">
-                                        <div class="col-lg-4 text-center">
-                                            <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive">
-                                        </div>
-                                        <div class="col-lg-8">
-                                            <h4>Aenean hendrerit ipsum ac risus finibus</h4>
-                                            <p>Donec nec odio sed nisi gravida malesuada. Praesent vestibulum, ligula quis consequat malesuada</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <p>Pellentesque ut rhoncus massa. Fusce rhoncus eu nunc vitae vehicula. Praesent eleifend rutrum condimentum. Phasellus vehicula dignissim mi, ut ultricies mauris vulputate posuere. Donec et tempor tortor. Sed volutpat dolor eget leo tincidunt, nec iaculis risus ullamcorper. Aliquam non felis sed dui eleifend molestie. Suspendisse quis diam sit amet ligula ultricies mattis. Morbi pharetra dictum ligula, ut imperdiet lacus posuere sed. Sed fermentum ante non sem gravida convallis.</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php
+                                $studentItems = array();
 
-                                <div class="item">
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive">
-                                        </div>
-                                        <div class="col-lg-8">
-                                            <h4>Aenean hendrerit ipsum ac risus finibus</h4>
-                                            <p>Donec nec odio sed nisi gravida malesuada. Praesent vestibulum, ligula quis consequat malesuada</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <p>Pellentesque ut rhoncus massa. Fusce rhoncus eu nunc vitae vehicula. Praesent eleifend rutrum condimentum. Phasellus vehicula dignissim mi, ut ultricies mauris vulputate posuere. Donec et tempor tortor. Sed volutpat dolor eget leo tincidunt, nec iaculis risus ullamcorper. Aliquam non felis sed dui eleifend molestie. Suspendisse quis diam sit amet ligula ultricies mattis. Morbi pharetra dictum ligula, ut imperdiet lacus posuere sed. Sed fermentum ante non sem gravida convallis.</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                if(isset($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]))
+                                {
+                                    if(!empty($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]->detail))
+                                        $studentItems = json_decode($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]->detail, true);
+                                }
+                                ?>
 
-                                <div class="item">
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive">
+                                @foreach($studentItems as $studentItem)
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-lg-4 text-center">
+                                                <a href="{{ isset($studentItem['url']) ? $studentItem['url'] : 'javascript:void(0)' }}">
+                                                    <img src="{{ isset($studentItem['image']) ? $studentItem['image'] : '' }}" alt="{{ isset($studentItem['name']) ? $studentItem['name'] : '' }}" class="img-responsive">
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <h4>{{ isset($studentItem['name']) ? $studentItem['name'] : '' }}</h4>
+                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($studentItem, 'quote') }}</p>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-8">
-                                            <h4>Aenean hendrerit ipsum ac risus finibus</h4>
-                                            <p>Donec nec odio sed nisi gravida malesuada. Praesent vestibulum, ligula quis consequat malesuada</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <p>Pellentesque ut rhoncus massa. Fusce rhoncus eu nunc vitae vehicula. Praesent eleifend rutrum condimentum. Phasellus vehicula dignissim mi, ut ultricies mauris vulputate posuere. Donec et tempor tortor. Sed volutpat dolor eget leo tincidunt, nec iaculis risus ullamcorper. Aliquam non felis sed dui eleifend molestie. Suspendisse quis diam sit amet ligula ultricies mattis. Morbi pharetra dictum ligula, ut imperdiet lacus posuere sed. Sed fermentum ante non sem gravida convallis.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="item">
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive">
-                                        </div>
-                                        <div class="col-lg-8">
-                                            <h4>Aenean hendrerit ipsum ac risus finibus</h4>
-                                            <p>Donec nec odio sed nisi gravida malesuada. Praesent vestibulum, ligula quis consequat malesuada</p>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($studentItem, 'description') }}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <p>Pellentesque ut rhoncus massa. Fusce rhoncus eu nunc vitae vehicula. Praesent eleifend rutrum condimentum. Phasellus vehicula dignissim mi, ut ultricies mauris vulputate posuere. Donec et tempor tortor. Sed volutpat dolor eget leo tincidunt, nec iaculis risus ullamcorper. Aliquam non felis sed dui eleifend molestie. Suspendisse quis diam sit amet ligula ultricies mattis. Morbi pharetra dictum ligula, ut imperdiet lacus posuere sed. Sed fermentum ante non sem gravida convallis.</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                         <div class="col-lg-4"></div>
                     </div>
-
                 </div>
             </div>
         </section>
 
         <section class="giaovien">
             <div class="container">
-                <h3 class="title_line">ĐỘI NGŨ GIẢNG VIÊN</h3>
+                <h3 class="title_line">@lang('theme.teacher_staff')</h3>
                 <p class="text-center mb60"> Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="owl_giaovien owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="box_item_gv">
-                                    <a href="#">
-                                        <img src="{{ asset('themes/images/gv01.png') }}" alt="" class="img-responsive">
-                                        <p class="box_item_content_gv">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                                    </a>
+                            <?php
+                            $teacherItems = array();
+
+                            if(isset($widgets[\App\Models\Widget::GROUP_STAFF_TEACHER]))
+                            {
+                                if(!empty($widgets[\App\Models\Widget::GROUP_STAFF_TEACHER]->detail))
+                                    $teacherItems = json_decode($widgets[\App\Models\Widget::GROUP_STAFF_TEACHER]->detail, true);
+                            }
+                            ?>
+
+                            @foreach($teacherItems as $teacherItem)
+                                <div class="item">
+                                    <div class="box_item_gv">
+                                        <a href="{{ isset($teacherItem['url']) ? $teacherItem['url'] : 'javascript:void(0)' }}">
+                                            <img src="{{ isset($teacherItem['image']) ? $teacherItem['image'] : '' }}" alt="{{ isset($teacherItem['name']) ? $teacherItem['name'] : '' }}" class="img-responsive">
+                                            <p class="box_item_content_gv">{{ \App\Libraries\Helpers\Utility::getValueByLocale($teacherItem, 'quote') }}</p>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="box_item_gv">
-                                    <a href="#">
-                                        <img src="{{ asset('themes/images/gv02.png') }}" alt="" class="img-responsive">
-                                        <p class="box_item_content_gv">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="box_item_gv">
-                                    <a href="#">
-                                        <img src="{{ asset('themes/images/gv03.png') }}" alt="" class="img-responsive">
-                                        <p class="box_item_content_gv">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="box_item_gv">
-                                    <a href="#">
-                                        <img src="{{ asset('themes/images/gv04.png') }}" alt="" class="img-responsive">
-                                        <p class="box_item_content_gv">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="box_item_gv">
-                                    <a href="#">
-                                        <img src="{{ asset('themes/images/gv05.png') }}" alt="" class="img-responsive">
-                                        <p class="box_item_content_gv">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="box_item_gv">
-                                    <a href="#">
-                                        <img src="{{ asset('themes/images/gv01.png') }}" alt="" class="img-responsive">
-                                        <p class="box_item_content_gv">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                                    </a>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

@@ -22,6 +22,8 @@ class HomeController extends Controller
             Widget::ADVERTISE_VERTICAL_LEFT,
             Widget::ADVERTISE_VERTICAL_RIGHT,
             Widget::GROUP_STAFF_EXPERT,
+            Widget::GROUP_STAFF_STUDENT,
+            Widget::GROUP_STAFF_TEACHER,
         ];
 
         for($i = 1;$i <= 3;$i ++)

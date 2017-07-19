@@ -32,5 +32,7 @@ return [
     'sign_up_success' => 'Đăng kí thành công',
     'retrieve_password_email' => 'Vui lòng kiểm tra email để khôi phục mật khẩu',
     'expert' => 'Góc nhìn chuyên gia',
+    'student' => 'Học viên nói gì về chúng tôi',
+    'teacher_staff' => 'Đội ngũ giảng viên',
 
 ];
