@@ -2,13 +2,51 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
+use App\Libraries\Widgets\GridView;
 use App\Models\Course;
 use App\Models\UserCourse;
+use App\Models\Category;
 
 class CourseController extends Controller
 {
+    public function detailCategory(Request $request, $id, $slug)
+    {
+        $category = Category::select('id', 'name', 'name_en', 'parent_id')
+            ->where('id', $id)
+            ->where('status', Utility::ACTIVE_DB)
+            ->where('parent_status', Utility::ACTIVE_DB)
+            ->where(function($query) use($slug) {
+                $query->where('slug', $slug)->orWhere('slug_en', $slug);
+            })->first();
+
+        if(empty($category))
+            return view('frontend.errors.404');
+
+        $listCategories = Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('status', Utility::ACTIVE_DB)
+            ->where('parent_status', Utility::ACTIVE_DB)
+            ->where('parent_id', $category->parent_id)
+            ->orderBy('order', 'desc')
+            ->get();
+
+        $courses = Course::select('course.*')
+            ->join('category_course', 'course.id', '=', 'category_course.course_id')
+            ->where('category_course.category_id', $category->id)
+            ->where('course.status', Course::STATUS_PUBLISH_DB)
+            ->where('course.category_status', Utility::ACTIVE_DB)
+            ->orderBy('course.order', 'desc')
+            ->paginate(GridView::ROWS_PER_PAGE);
+
+        return view('frontend.courses.detail_category', [
+            'category' => $category,
+            'courses' => $courses,
+            'listCategories' => $listCategories,
+        ]);
+    }
+
     public function detailCourse($id, $slug)
     {
         $course = Course::with(['user' => function($query) {

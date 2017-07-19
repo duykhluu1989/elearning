@@ -39,7 +39,7 @@ $rootMenus = \App\Models\Menu::getMenuTree();
 
                                     @foreach($autoCategory->childrenCategories as $childCategory)
 
-                                        <li><a href="{{ \App\Libraries\Helpers\Utility::getValueByLocale($childCategory, 'slug') }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($childCategory, 'name') }}</a></li>
+                                        <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $childCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($childCategory, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($childCategory, 'name') }}</a></li>
 
                                     @endforeach
 
@@ -48,7 +48,7 @@ $rootMenus = \App\Models\Menu::getMenuTree();
 
                         @else
 
-                            <li><a href="{{ \App\Libraries\Helpers\Utility::getValueByLocale($autoCategory, 'slug') }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($autoCategory, 'name') }}</a></li>
+                            <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $autoCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($autoCategory, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($autoCategory, 'name') }}</a></li>
 
                         @endif
 
@@ -76,7 +76,7 @@ $rootMenus = \App\Models\Menu::getMenuTree();
 
                                     @foreach($childMenu->auto_categories as $childAutoCategory)
 
-                                        <li><a href="{{ \App\Libraries\Helpers\Utility::getValueByLocale($childAutoCategory, 'slug') }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($childAutoCategory, 'name') }}</a></li>
+                                        <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $childAutoCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($childAutoCategory, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($childAutoCategory, 'name') }}</a></li>
 
                                     @endforeach
 
@@ -84,7 +84,7 @@ $rootMenus = \App\Models\Menu::getMenuTree();
 
                                 @foreach($childMenu->childrenMenus as $childMenu2)
 
-                                    <li><a href="{{ $childMenu2->getMenuUrl() }}">{{ $childMenu2->getMenuTitle(false) }}</a></li>
+                                    <li><a href="{{ $childMenu2->getMenuUrl() }}">- {{ $childMenu2->getMenuTitle(false) }}</a></li>
 
                                 @endforeach
 
@@ -93,7 +93,7 @@ $rootMenus = \App\Models\Menu::getMenuTree();
 
                     @else
 
-                        <li><a href="{{ $childMenu->getMenuUrl() }}">{{ $childMenu->getMenuTitle(false) }}</a></li>
+                        <li><a href="{{ $childMenu->getMenuUrl() }}">- {{ $childMenu->getMenuTitle(false) }}</a></li>
 
                     @endif
 

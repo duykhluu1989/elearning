@@ -156,7 +156,12 @@ class Menu extends Model
         if(!empty($this->url))
             return $this->url;
         else if(!empty($this->targetInformation))
-            return Utility::getValueByLocale($this->targetInformation, 'slug');
+        {
+            if($this->target == self::TARGET_CATEGORY_DB)
+                return action('Frontend\CourseController@detailCategory', ['id' => $this->target_id, 'slug' => Utility::getValueByLocale($this->targetInformation, 'slug')]);
+            else
+                return Utility::getValueByLocale($this->targetInformation, 'slug');
+        }
         else
             return 'javascript:void(0)';
     }

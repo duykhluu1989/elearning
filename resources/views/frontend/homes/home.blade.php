@@ -443,7 +443,7 @@
                     <div class="col-lg-8 col-lg-offset-2">
                         <ul class="list_khoahoc">
                             @foreach($rootCategories as $rootCategory)
-                                <li><a href="">✓{{ \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'name') }}</a></li>
+                                <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'slug')]) }}">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'name') }}</a></li>
                             @endforeach
                         </ul>
                     </div>

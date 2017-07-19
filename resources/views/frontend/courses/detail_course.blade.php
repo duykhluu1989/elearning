@@ -48,28 +48,8 @@
                                 <div class="col-lg-8">
 
                                     @if($bought == false)
-                                        <a href="#" class="btn btn-lg btnMuaKH"><i class="fa fa-cart-plus" aria-hidden="true"></i>@lang('theme.buy_course')</a>
-                                        <a href="#" class="btn btn-lg btnThemGH"><i class="fa fa-plus-square-o" aria-hidden="true"></i>@lang('theme.add_cart')</a>
-
-                                        <div id="modal_NhapMKM" class="modal fade" tabindex="-1" role="dialog">
-                                            <div class="modal-dialog modal-sm">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                        <h4 class="modal-title">@lang('theme.input_discount_code')</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="" method="post" class="form-inline" role="form">
-                                                            <div class="form-group">
-                                                                <label class="sr-only" for="">label</label>
-                                                                <input type="email" class="form-control" name="discount_code" placeholder="@lang('theme.input_discount_code')">
-                                                            </div>
-                                                            <button type="submit" class="btn btnRed">@lang('theme.input')</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <a href="javascript:void(0)" class="btn btn-lg btnMuaKH"><i class="fa fa-cart-plus" aria-hidden="true"></i>@lang('theme.buy_course')</a>
+                                        <a href="javascript:void(0)" class="btn btn-lg btnThemGH"><i class="fa fa-plus-square-o" aria-hidden="true"></i>@lang('theme.add_cart')</a>
                                     @endif
 
                                     <div class="box_sl_baigiang">
