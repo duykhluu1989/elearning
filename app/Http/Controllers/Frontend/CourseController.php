@@ -37,7 +37,7 @@ class CourseController extends Controller
             ->where('category_course.category_id', $category->id)
             ->where('course.status', Course::STATUS_PUBLISH_DB)
             ->where('course.category_status', Utility::ACTIVE_DB)
-            ->orderBy('course.order', 'desc')
+            ->orderBy('course.published_at', 'desc')
             ->paginate(GridView::ROWS_PER_PAGE);
 
         return view('frontend.courses.detail_category', [

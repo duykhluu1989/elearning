@@ -37,5 +37,7 @@ return [
     'category_list' => 'Danh mục chủ đề',
     'case_advice' => 'Tư vấn kinh tế và pháp luật',
     'certificate' => 'Cấp chứng chỉ khóa học',
+    'all_course' => 'Tất cả khóa học',
+    'sort_by' => 'Sắp xếp theo',
 
 ];

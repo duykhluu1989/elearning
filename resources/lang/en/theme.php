@@ -37,5 +37,7 @@ return [
     'category_list' => 'List categories',
     'case_advice' => 'Economic and legal advice',
     'certificate' => 'Certificate of course',
+    'all_course' => 'All courses',
+    'sort_by' => 'Sort by',
 
 ];
