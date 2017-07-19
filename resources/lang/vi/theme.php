@@ -34,5 +34,6 @@ return [
     'expert' => 'Góc nhìn chuyên gia',
     'student' => 'Học viên nói gì về chúng tôi',
     'teacher_staff' => 'Đội ngũ giảng viên',
+    'category_list' => 'Danh mục chủ đề',
 
 ];

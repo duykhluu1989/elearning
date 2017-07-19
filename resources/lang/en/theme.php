@@ -34,5 +34,6 @@ return [
     'expert' => 'Expert say',
     'student' => 'Student talk about us',
     'teacher_staff' => 'Teacher staff',
+    'category_list' => 'List categories',
 
 ];

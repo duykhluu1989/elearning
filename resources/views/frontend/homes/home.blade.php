@@ -438,16 +438,13 @@
 
         <section class="dmkh bg_gray">
             <div class="container">
-                <h3 class="title_line">DANH MỤC KHOÁ HỌC</h3>
+                <h3 class="title_line">@lang('theme.category_list')</h3>
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <ul class="list_khoahoc">
-                            <li><a href="">✓ Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
-                            <li><a href="">✓ Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi. Aliquam ornare mauris faucibus, accumsan orci cursus, scelerisque nulla. </a></li>
-                            <li><a href="">✓ Donec tincidunt, mi nec porta porttitor, tellus arcu ultricies erat, ac iaculis arcu odio sed turpis. </a></li>
-                            <li><a href="">✓ Pellentesque ac ante mollis, consequat neque nec, scelerisque dui. </a></li>
-                            <li><a href="">✓ Pellentesque rutrum tellus justo, a lobortis leo fringilla vitae.</a></li>
-                            <li><a href="">✓ Vivamus at magna non felis posuere ultrices. Vestibulum at lectus turpis. Donec elementum odio id quam auctor efficitur.</a></li>
+                            @foreach($rootCategories as $rootCategory)
+                                <li><a href="">✓{{ \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'name') }}</a></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Widget;
 use App\Models\Course;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
@@ -38,9 +39,17 @@ class HomeController extends Controller
 
         $groupCourses = $this->prepareGroupCourseData($widgets);
 
+        $rootCategories = Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('status', Utility::ACTIVE_DB)
+            ->where('parent_status', Utility::ACTIVE_DB)
+            ->whereNull('parent_id')
+            ->orderBy('order', 'desc')
+            ->get();
+
         return view('frontend.homes.home', [
             'widgets' => $widgets,
             'groupCourses' => $groupCourses,
+            'rootCategories' => $rootCategories,
         ]);
     }
 
