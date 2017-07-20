@@ -63,13 +63,41 @@
                                     <div class="row">
                                         <div class="col-lg-12 text-center">
                                             <ul class="pagination">
-                                                <li><a href="#">&laquo;</a></li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li><a href="#">4</a></li>
-                                                <li><a href="#">5</a></li>
-                                                <li><a href="#">&raquo;</a></li>
+                                                @if($courses->lastPage() > 1)
+                                                    @if($courses->currentPage() > 1)
+                                                        <li><a href="{{ $courses->previousPageUrl() }}">&laquo;</a></li>
+                                                        <li><a href="{{ $courses->url(1) }}">1</a></li>
+                                                    @endif
+
+                                                    @for($i = 2;$i >= 1;$i --)
+                                                        @if($courses->currentPage() - $i > 1)
+                                                            @if($courses->currentPage() - $i > 2 && $i == 2)
+                                                                <li>...</li>
+                                                                <li><a href="{{ $courses->url($courses->currentPage() - $i) }}">{{ $courses->currentPage() - $i }}</a></li>
+                                                            @else
+                                                                <li><a href="{{ $courses->url($courses->currentPage() - $i) }}">{{ $courses->currentPage() - $i }}</a></li>
+                                                            @endif
+                                                        @endif
+                                                    @endfor
+
+                                                    <li class="active"><a href="javascript:void(0)">{{ $courses->currentPage() }}</a></li>
+
+                                                    @for($i = 1;$i <= 2;$i ++)
+                                                        @if($courses->currentPage() + $i < $courses->lastPage())
+                                                            @if($courses->currentPage() + $i < $courses->lastPage() - 1 && $i == 2)
+                                                                <li><a href="{{ $courses->url($courses->currentPage() + $i) }}">{{ $courses->currentPage() + $i }}</a></li>
+                                                                <li>...</li>
+                                                            @else
+                                                                <li><a href="{{ $courses->url($courses->currentPage() + $i) }}">{{ $courses->currentPage() + $i }}</a></li>
+                                                            @endif
+                                                        @endif
+                                                    @endfor
+
+                                                    @if($courses->currentPage() < $courses->lastPage())
+                                                        <li><a href="{{ $courses->url($courses->lastPage()) }}">{{ $courses->lastPage() }}</a></li>
+                                                        <li><a href="{{ $courses->nextPageUrl() }}">&raquo;</a></li>
+                                                    @endif
+                                                @endif
                                             </ul>
                                         </div>
                                     </div>

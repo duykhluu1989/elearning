@@ -52,20 +52,20 @@ class HomeController extends Controller
             ->where('type', CaseAdvice::TYPE_ECONOMY_DB)
             ->where('status', Utility::ACTIVE_DB)
             ->orderBy('order', 'desc')
-            ->limit(6)
+            ->limit(Utility::FRONTEND_ROWS_PER_PAGE)
             ->get();
 
         $caseAdviceLaws = CaseAdvice::select('id', 'name', 'name_en', 'slug', 'slug_en')
             ->where('type', CaseAdvice::TYPE_LAW_DB)
             ->where('status', Utility::ACTIVE_DB)
             ->orderBy('order', 'desc')
-            ->limit(6)
+            ->limit(Utility::FRONTEND_ROWS_PER_PAGE)
             ->get();
 
         $certificates = Certificate::select('id', 'name', 'name_en')
             ->where('status', Utility::ACTIVE_DB)
             ->orderBy('order', 'desc')
-            ->limit(6)
+            ->limit(Utility::FRONTEND_ROWS_PER_PAGE)
             ->get();
 
         return view('frontend.homes.home', [

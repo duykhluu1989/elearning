@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
-use App\Libraries\Widgets\GridView;
 use App\Models\Course;
 use App\Models\UserCourse;
 use App\Models\Category;
@@ -58,7 +57,7 @@ class CourseController extends Controller
         else
             $sort = null;
 
-        $courses = $builder->paginate(GridView::ROWS_PER_PAGE);
+        $courses = $builder->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
 
         return view('frontend.courses.detail_category', [
             'category' => $category,

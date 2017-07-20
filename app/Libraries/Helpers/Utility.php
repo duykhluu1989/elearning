@@ -24,6 +24,8 @@ class Utility
 
     const SECOND_ONE_HOUR = 3600;
 
+    const FRONTEND_ROWS_PER_PAGE = 6;
+
     public static function getTrueFalse($value = null)
     {
         $trueFalse = [
