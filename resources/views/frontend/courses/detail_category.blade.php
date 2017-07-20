@@ -55,7 +55,7 @@
                                                 <div class="ticker2">
                                                     <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                                 </div>
-                                                <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">@lang('theme.preview')</a>
+                                                <a href="javascript:void(0)" class="btn btnYellow btn-block PreviewCourse" id="PreviewCourse_{{ $course->id }}">@lang('theme.preview')</a>
                                                 <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btnRed btn-block">@lang('theme.view_detail')</a>
                                             </div>
                                         </div>
@@ -150,3 +150,8 @@
     </div>
 
 @stop
+
+@push('scripts')
+    <script type="text/javascript">
+    </script>
+@endpush

@@ -6,7 +6,9 @@
                     <li>
                         <a href="{{ action('Frontend\HomeController@home') }}"><i class="fa fa-home" aria-hidden="true"></i>@lang('theme.home')</a>
                     </li>
-                    <li><a href="#">{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</a></li>
+                    @foreach($course->categoryCourses as $categoryCourse)
+                        <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $categoryCourse->category->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($categoryCourse->category, 'slug')]) }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($categoryCourse->category, 'name') }}</a></li>
+                    @endforeach
                     <li class="active">{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}</li>
                 </ol>
                 <h1>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}</h1>

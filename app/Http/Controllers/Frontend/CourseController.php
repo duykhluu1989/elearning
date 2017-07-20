@@ -23,6 +23,17 @@ class CourseController extends Controller
         if(empty($category))
             return view('frontend.errors.404');
 
+        $parentCategories = array();
+
+        $tempCategory = $category;
+        while(!empty($tempCategory->parentCategory))
+        {
+            $parentCategories[] = $tempCategory->parentCategory;
+            $tempCategory = $tempCategory->parentCategory;
+        }
+
+        $parentCategories = array_reverse($parentCategories);
+
         $listCategories = Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
             ->where('status', Utility::ACTIVE_DB)
             ->where('parent_status', Utility::ACTIVE_DB)
@@ -63,6 +74,7 @@ class CourseController extends Controller
             'category' => $category,
             'courses' => $courses,
             'listCategories' => $listCategories,
+            'parentCategories' => $parentCategories,
             'sort' => $sort,
         ]);
     }
