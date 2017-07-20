@@ -13,7 +13,7 @@
                         <div class="col-xs-9">
                             <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($cartItem, 'name') }}</p>
                             <p class="price">
-                                @if($course->validatePromotionPrice())
+                                @if($cartItem->validatePromotionPrice())
                                     {{ \App\Libraries\Helpers\Utility::formatNumber($cartItem->promotionPrice->price) . 'đ' }}
                                     <?php
                                     $cart['totalPrice'] += $cartItem->promotionPrice->price;

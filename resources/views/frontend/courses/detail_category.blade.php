@@ -122,6 +122,8 @@
 
 @stop
 
+@include('frontend.courses.partials.add_cart_item')
+
 @push('scripts')
     <script type="text/javascript">
         $('.PreviewCourse').click(function() {
