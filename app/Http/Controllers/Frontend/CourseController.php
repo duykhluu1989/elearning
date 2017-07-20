@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Course;
@@ -76,6 +77,45 @@ class CourseController extends Controller
             'listCategories' => $listCategories,
             'parentCategories' => $parentCategories,
             'sort' => $sort,
+        ]);
+    }
+
+    public function previewCourse(Request $request, $id, $slug)
+    {
+        //if($request->ajax() == false)
+            //return view('frontend.errors.404');
+
+        $course = Course::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'promotionPrice' => function($query) {
+            $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+        }])
+            ->select('id', 'user_id', 'name', 'name_en', 'price', 'video_length', 'image', 'item_count', 'audio_length')
+            ->where('id', $id)
+            ->where('status', Course::STATUS_PUBLISH_DB)
+            ->where('category_status', Utility::ACTIVE_DB)
+            ->where(function($query) use($slug) {
+                $query->where('slug', $slug)->orWhere('slug_en', $slug);
+            })->first();
+
+        if(empty($course))
+            return view('frontend.errors.404');
+
+        $bought = false;
+
+        if(auth()->user())
+        {
+            $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
+
+            if(!empty($userCourse))
+                $bought = true;
+        }
+
+        return view('frontend.courses.partials.preview_course', [
+            'bought' => $bought,
+            'course' => $course,
         ]);
     }
 

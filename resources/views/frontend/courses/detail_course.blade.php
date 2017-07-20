@@ -10,7 +10,7 @@
 
     @include('frontend.layouts.partials.header')
 
-    @include('frontend.layouts.partials.course_breadcrumb')
+    @include('frontend.courses.partials.course_breadcrumb')
 
     <main>
         <section class="ct_khoahoc">

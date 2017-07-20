@@ -8,7 +8,7 @@
 
     @include('frontend.layouts.partials.header')
 
-    @include('frontend.layouts.partials.category_breadcrumb')
+    @include('frontend.courses.partials.category_breadcrumb')
 
     <main>
         <section class="khoahoc bg_gray">
@@ -55,7 +55,7 @@
                                                 <div class="ticker2">
                                                     <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                                 </div>
-                                                <a href="javascript:void(0)" class="btn btnYellow btn-block PreviewCourse" id="PreviewCourse_{{ $course->id }}">@lang('theme.preview')</a>
+                                                <a href="javascript:void(0)" class="btn btnYellow btn-block PreviewCourse" data-url="{{ action('Frontend\CourseController@previewCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">@lang('theme.preview')</a>
                                                 <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btnRed btn-block">@lang('theme.view_detail')</a>
                                             </div>
                                         </div>
@@ -112,39 +112,10 @@
 
     <div id="modal_xemKH" class="modal fade bs-example-modal-lg">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title text-center">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-5 display_table boxmH">
-                            <div class="table_content">
-                                <img src="images/img_giohang.png" alt="" class="img-responsive">
-                            </div>
-                        </div>
-                        <div class="col-lg-7 boxmH">
-                            <div class="box_info_khoahoc">
-                                <p class="big_price"><i class="fa fa-tags" aria-hidden="true"></i> <span class="new_price">599,000đ</span> - <span class="sale">(600,000đ)</span> <span class="sale_percent">-26%</span></p>
-                                <div class="row">
-                                    <div class="col-lg-8">
-                                        <a href="#" class="btn btn-lg btnMuaKH"><i class="fa fa-cart-plus" aria-hidden="true"></i> MUA KHOÁ HỌC</a>
-                                        <a href="#" class="btn btn-lg btnThemGH"><i class="fa fa-plus-square-o" aria-hidden="true"></i></i> THÊM VÀO GIỎ HÀNG</a>
-                                        <div class="box_sl_baigiang">
-                                            <p>Số lượng bài giảng: <span><b>75</b></span></p>
-                                            <p>Thời lượng video: <span><b>12h57p</b></span></p>
-                                        </div>
-                                        <a class="btn btn_face mb10" href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i> Chia sẽ</a>
-                                        <a class="btn btn_face" href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Thích</a>
-                                    </div>
-                                    <div class="col-lg-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-content" id="ModalXemHKContent">
+
+                @include('frontend.courses.partials.preview_course', ['course' => null])
+
             </div>
         </div>
     </div>
@@ -153,5 +124,31 @@
 
 @push('scripts')
     <script type="text/javascript">
+        $('.PreviewCourse').click(function() {
+            if($(this).data('url') != '')
+            {
+                $.ajax({
+                    url: $(this).data('url'),
+                    type: 'get',
+                    success: function(result) {
+                        if(result)
+                        {
+                            $('#ModalXemHKContent').html(result);
+
+                            try
+                            {
+                                FB.XFBML.parse();
+                            }
+                            catch(exception)
+                            {
+
+                            }
+
+                            $('#modal_xemKH').modal('show');
+                        }
+                    }
+                });
+            }
+        });
     </script>
 @endpush
