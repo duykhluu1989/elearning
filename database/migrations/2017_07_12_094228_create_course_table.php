@@ -34,7 +34,7 @@ class CreateCourseTable extends Migration
             $table->unsignedInteger('view_count')->default(0);
             $table->unsignedTinyInteger('category_status')->default(0);
             $table->unsignedInteger('audio_length')->nullable();
-            $table->unsignedInteger('category_id');
+            $table->unsignedInteger('category_id')->nullable();
         });
     }
 

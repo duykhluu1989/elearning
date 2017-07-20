@@ -37,9 +37,9 @@
                             @if($bought == false)
                                 <p class="big_price"><i class="fa fa-tags" aria-hidden="true"></i>
                                     @if($course->validatePromotionPrice())
-                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . ' VND' }}</span> - <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }})</span> <span class="sale_percent">-{{ round(($course->price - $course->promotionPrice->price) * 100 / $course->price) }}%</span>
+                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}</span> - <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }})</span> <span class="sale_percent">-{{ round(($course->price - $course->promotionPrice->price) * 100 / $course->price) }}%</span>
                                     @else
-                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}</span>
+                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}</span>
                                     @endif
                                 </p>
                             @endif

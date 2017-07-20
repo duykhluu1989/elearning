@@ -39,5 +39,10 @@ return [
     'certificate' => 'Cấp chứng chỉ khóa học',
     'all_course' => 'Tất cả khóa học',
     'sort_by' => 'Sắp xếp theo',
+    'newest' => 'Mới nhất',
+    'highlight' => 'Nổi bật',
+    'promotion' => 'Khuyến mãi',
+    'view_detail' => 'Xem chi tiết',
+    'preview' => 'Xem nhanh',
 
 ];

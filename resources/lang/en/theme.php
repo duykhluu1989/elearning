@@ -36,8 +36,13 @@ return [
     'teacher_staff' => 'Teacher staff',
     'category_list' => 'List categories',
     'case_advice' => 'Economic and legal advice',
-    'certificate' => 'Certificate of course',
+    'certificate' => 'Issue certificate',
     'all_course' => 'All courses',
     'sort_by' => 'Sort by',
+    'newest' => 'Newest',
+    'highlight' => 'Highlight',
+    'promotion' => 'Promotion',
+    'view_detail' => 'View detail',
+    'preview' => 'Preview',
 
 ];

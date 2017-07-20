@@ -29,327 +29,37 @@
                             <ul class="nav nav-tabs tabs_khoahoc">
                                 <li><a class="disabled" href="javascript:void(0)"><h3>@lang('theme.all_course')</h3></a></li>
                                 <li><a class="disabled" href="javascript:void(0)">@lang('theme.sort_by')</a></li>
-                                <li class="active"><a data-toggle="tab" href="#section_moinhat">Mới nhất</a></li>
-                                <li><a data-toggle="tab" href="#section_noibat">Nổi bật</a></li>
-                                <li><a data-toggle="tab" href="#section_khuyenmai">Khuyến mãi</a></li>
+                                <li<?php echo ($sort == null ? ' class="active"' : '') ?>><a class="disabled" href="{{ $sort == null ? 'javascript:void(0)' : action('Frontend\CourseController@detailCategory', ['id' => $category->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($category, 'slug')]) }}">@lang('theme.newest')</a></li>
+                                <li<?php echo ($sort == 'highlight' ? ' class="active"' : '') ?>><a class="disabled" href="{{ $sort == 'highlight' ? 'javascript:void(0)' : action('Frontend\CourseController@detailCategory', ['id' => $category->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($category, 'slug'), 'sort' => 'highlight']) }}">@lang('theme.highlight')</a></li>
+                                <li<?php echo ($sort == 'promotion' ? ' class="active"' : '') ?>><a class="disabled" href="{{ $sort == 'promotion' ? 'javascript:void(0)' : action('Frontend\CourseController@detailCategory', ['id' => $category->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($category, 'slug'), 'sort' => 'promotion']) }}">@lang('theme.promotion')</a></li>
                             </ul>
                             <div class="tab-content">
-                                <div id="section_moinhat" class="tab-pane fade in active">
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
+                                <div class="tab-pane fade in active">
+                                    @foreach($courses as $course)
+                                        <div class="row item_khoahoc">
+                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive w100p"></a>
                                             </div>
-                                            <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">Xem nhanh</a>
-                                            <a href="chitietkhoahoc.php" class="btn btnRed btn-block">Xem chi tiết</a>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <h4><a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}</a></h4>
+                                                <p class="name_gv">{{ $course->user->profile->name }}</p>
+                                                <p class="price">
+                                                    @if($course->validatePromotionPrice())
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                    @else
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
+                                                    @endif
+                                                </p>
                                             </div>
-                                            <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">Xem nhanh</a>
-                                            <a href="chitietkhoahoc.php" class="btn btnRed btn-block">Xem chi tiết</a>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                            <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">Xem nhanh</a>
-                                            <a href="chitietkhoahoc.php" class="btn btnRed btn-block">Xem chi tiết</a>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                            <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">Xem nhanh</a>
-                                            <a href="chitietkhoahoc.php" class="btn btnRed btn-block">Xem chi tiết</a>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                            <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">Xem nhanh</a>
-                                            <a href="chitietkhoahoc.php" class="btn btnRed btn-block">Xem chi tiết</a>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                            <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">Xem nhanh</a>
-                                            <a href="chitietkhoahoc.php" class="btn btnRed btn-block">Xem chi tiết</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-12 text-center">
-                                            <ul class="pagination">
-                                                <li><a href="#">&laquo;</a></li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li><a href="#">4</a></li>
-                                                <li><a href="#">5</a></li>
-                                                <li><a href="#">&raquo;</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="section_noibat" class="tab-pane fade">
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
+                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                                <div class="ticker2">
+                                                    <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
+                                                </div>
+                                                <a href="#modal_xemKH" class="btn btnYellow btn-block" data-toggle="modal">@lang('theme.preview')</a>
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btnRed btn-block">@lang('theme.view_detail')</a>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-12 text-center">
-                                            <ul class="pagination">
-                                                <li><a href="#">&laquo;</a></li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li><a href="#">4</a></li>
-                                                <li><a href="#">5</a></li>
-                                                <li><a href="#">&raquo;</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="section_khuyenmai" class="tab-pane fade">
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row item_khoahoc">
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <a href="chitietkhoahoc.php"><img src="images/img_giohang.png" alt="" class="img-responsive w100p"></a>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <h4><a href="chitietkhoahoc.php">Thành thạo Bootstrap qua 10 website và kiếm tiền từ công việc Freelancer</a></h4>
-                                            <p class="name_gv">Nguyễn Đức Việt</p>
-                                            <p class="price">599,000đ</p>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                            <div class="ticker2">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> 800</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> 200</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    @endforeach
                                     <div class="row">
                                         <div class="col-lg-12 text-center">
                                             <ul class="pagination">
@@ -369,7 +79,6 @@
                     </div>
                 </div>
             </div>
-
         </section>
     </main>
 

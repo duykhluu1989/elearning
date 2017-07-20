@@ -71,9 +71,9 @@
                                             <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                             <p class="gia">
                                                 @if($course->validatePromotionPrice())
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . ' VND' }}
+                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
                                                 @else
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}
+                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                 @endif
                                             </p>
                                             <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
@@ -108,9 +108,9 @@
                                             <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                             <p class="gia">
                                                 @if($course->validatePromotionPrice())
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . ' VND' }}
+                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
                                                 @else
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}
+                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                 @endif
                                             </p>
                                             <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
@@ -145,9 +145,9 @@
                                             <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                             <p class="gia">
                                                 @if($course->validatePromotionPrice())
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . ' VND' }}
+                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
                                                 @else
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}
+                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                 @endif
                                             </p>
                                             <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
@@ -315,7 +315,7 @@
                                     <div class="item">
                                         <div class="box_item">
                                             <div class="border"></div>
-                                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'title') }}" class="img-responsive"></a>
+                                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
                                             <div class="ticker">
                                                 <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                             </div>
@@ -324,9 +324,9 @@
                                                 <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                                 <p class="gia">
                                                     @if($course->validatePromotionPrice())
-                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . ' VND' }}
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
                                                     @else
-                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . ' VND' }}
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                     @endif
                                                 </p>
                                                 <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">@lang('theme.buy')</a>
