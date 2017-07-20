@@ -20,6 +20,11 @@ class Cart
         return isset($this->$attribute) ? $this->$attribute : null;
     }
 
+    public function __isset($attribute)
+    {
+        return isset($this->$attribute);
+    }
+
     public function addCartItem($courseId)
     {
         if(empty($this->cartItems) || !in_array($courseId, $this->cartItems))

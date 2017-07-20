@@ -44,5 +44,6 @@ return [
     'promotion' => 'Promotion',
     'view_detail' => 'View detail',
     'preview' => 'Preview',
+    'total_price' => 'Total price',
 
 ];

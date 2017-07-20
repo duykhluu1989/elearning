@@ -37,78 +37,10 @@
                         <li>
                             <a href="{{ action('Frontend\HomeController@language', ['locale' => 'en']) }}"><img src="{{ asset('themes/images/en.jpg') }}" alt="EN" class="img-responsive"></a>
                         </li>
-                        <li>
-                            <div class="btnCart">
-                                <span class="sum">2</span>
-                                <div class="box_cart">
-                                    <div class="arrow_top"></div>
-                                    <div class="box_cart_content">
-                                        <div class="row pro_item">
-                                            <div class="col-xs-3">
-                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
-                                            </div>
-                                            <div class="col-xs-9">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...1</p>
-                                                <p class="price">500.000đ</p>
-                                            </div>
-                                        </div>
-                                        <div class="row pro_item">
-                                            <div class="col-xs-3">
-                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
-                                            </div>
-                                            <div class="col-xs-9">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...2</p>
-                                                <p class="price">500.000đ</p>
-                                            </div>
-                                        </div>
-                                        <div class="row pro_item">
-                                            <div class="col-xs-3">
-                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
-                                            </div>
-                                            <div class="col-xs-9">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...3</p>
-                                                <p class="price">500.000đ</p>
-                                            </div>
-                                        </div>
-                                        <div class="row pro_item">
-                                            <div class="col-xs-3">
-                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
-                                            </div>
-                                            <div class="col-xs-9">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...4</p>
-                                                <p class="price">500.000đ</p>
-                                            </div>
-                                        </div>
-                                        <div class="row pro_item">
-                                            <div class="col-xs-3">
-                                                <a href="#"><img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive"></a>
-                                            </div>
-                                            <div class="col-xs-9">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec pellentesque ...5</p>
-                                                <p class="price">500.000đ</p>
-                                            </div>
-                                        </div>
+                        <li id="CartDetail">
 
-                                    </div>
+                            @include('frontend.orders.cart', ['cart' => \App\Http\Controllers\Frontend\OrderController::getFullCart()])
 
-                                    <div class="row row_tongtien">
-                                        <div class="col-xs-6">
-                                            <p>TỔNG TIỀN</p>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <p class="price pull-right">500.000đ</p>
-                                        </div>
-                                    </div>
-                                    <div class="row row_cart_bottom">
-                                        <div class="col-xs-6">
-                                            <a href="giohang.php" class="btn btn-block btnGiohang">GIỎ HÀNG</a>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <a href="thanhtoan.php" class="btn btn-block btnThanhtoan">THANH TOÁN</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </li>
                     </ul>
                     <form action="" class="search-box">

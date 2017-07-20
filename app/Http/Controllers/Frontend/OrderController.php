@@ -31,23 +31,25 @@ class OrderController extends Controller
             if(empty($course))
                 return '';
 
-            $cart = $this->getCart();
+            $cart = self::getCart();
             $cart->addCartItem($inputs['course_id']);
             $cart->save();
 
-            $this->setCookieCartToken($cart->token);
+            self::setCookieCartToken($cart->token);
 
-            return $cart;
+            return view('frontend.orders.cart', [
+                'cart' => self::generateFullCart($cart),
+            ]);
         }
         else
             return '';
     }
 
-    protected function getCart()
+    protected static function getCart()
     {
         $cart = null;
 
-        $token = $this->getCookieCartToken();
+        $token = self::getCookieCartToken();
 
         if(!empty($token))
             $cart = Cart::find($token);
@@ -58,13 +60,43 @@ class OrderController extends Controller
             return $cart;
     }
 
-    protected function getCookieCartToken()
+    protected static function generateFullCart($cart)
+    {
+        $fullCart = [
+            'countItem' => 0,
+            'totalPrice' => 0,
+            'cartItems' => array(),
+        ];
+
+        if(!empty($cart->cartItems))
+        {
+            $courses = Course::with(['promotionPrice' => function($query) {
+                $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+            }])->select('id', 'name', 'name_en', 'price', 'image', 'slug', 'slug_en')
+                ->whereIn('id', $cart->cartItems)
+                ->get();
+
+            $fullCart['countItem'] = count($courses);
+            $fullCart['cartItems'] = $courses;
+        }
+
+        return $fullCart;
+    }
+
+    protected static function getCookieCartToken()
     {
         return request()->cookie(Cart::CART_TOKEN_COOKIE_NAME);
     }
 
-    protected function setCookieCartToken($token)
+    protected static function setCookieCartToken($token)
     {
-        Cookie::queue(Cookie::make(Cart::CART_TOKEN_COOKIE_NAME, $token, Utility::SECOND_ONE_HOUR));
+        Cookie::queue(Cookie::make(Cart::CART_TOKEN_COOKIE_NAME, $token, Utility::SECOND_ONE_HOUR / 60));
+    }
+
+    public static function getFullCart()
+    {
+        $cart = self::getCart();
+
+        return self::generateFullCart($cart);
     }
 }

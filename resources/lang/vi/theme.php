@@ -44,5 +44,6 @@ return [
     'promotion' => 'Khuyến mãi',
     'view_detail' => 'Xem chi tiết',
     'preview' => 'Xem nhanh',
+    'total_price' => 'Tổng tiền',
 
 ];
