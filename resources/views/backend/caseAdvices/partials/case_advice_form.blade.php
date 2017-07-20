@@ -162,21 +162,4 @@
 
 @push('scripts')
     <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
-    <script type="text/javascript">
-        setInterval(function() {
-            $.ajax({
-                url: '{{ action('Backend\HomeController@refreshCsrfToken') }}',
-                type: 'post',
-                data: '_token=' + $('input[name="_token"]').first().val(),
-                success: function(result) {
-                    if(result)
-                    {
-                        $('input[name="_token"]').each(function() {
-                            $(this).val(result);
-                        });
-                    }
-                }
-            });
-        }, 60000);
-    </script>
 @endpush

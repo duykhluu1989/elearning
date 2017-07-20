@@ -106,5 +106,25 @@
         });
     </script>
 @endif
+<script type="text/javascript">
+    if($('input[name="_token"]').length > 0)
+    {
+        setInterval(function() {
+            $.ajax({
+                url: '{{ action('Frontend\HomeController@refreshCsrfToken') }}',
+                type: 'post',
+                data: '_token=' + $('input[name="_token"]').first().val(),
+                success: function(result) {
+                    if(result)
+                    {
+                        $('input[name="_token"]').each(function() {
+                            $(this).val(result);
+                        });
+                    }
+                }
+            });
+        }, 60000);
+    }
+</script>
 </body>
 </html>

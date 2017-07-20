@@ -60,7 +60,7 @@
     {
         setInterval(function() {
             $.ajax({
-                url: '{{ action('Frontend\HomeController@refreshCsrfToken') }}',
+                url: '{{ action('Backend\HomeController@refreshCsrfToken') }}',
                 type: 'post',
                 data: '_token=' + $('input[name="_token"]').first().val(),
                 success: function(result) {
