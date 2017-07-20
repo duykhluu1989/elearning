@@ -771,7 +771,6 @@ class CourseController extends Controller
                 'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $course->id)),
                 'code' => 'required|alpha_num|unique:course,code' . ($create == true ? '' : (',' . $course->id)),
                 'category_name' => 'required',
-                'level_id' => 'required',
             ]);
 
             $validator->after(function($validator) use(&$inputs) {
@@ -816,7 +815,12 @@ class CourseController extends Controller
                     $course->description_en = $inputs['description_en'];
                     $course->point_price = $inputs['point_price'];
                     $course->code = strtoupper($inputs['code']);
-                    $course->level_id = $inputs['level_id'];
+
+                    if(empty($inputs['level_id']))
+                        $course->level_id = null;
+                    else
+                        $course->level_id = $inputs['level_id'];
+
                     $course->short_description = $inputs['short_description'];
                     $course->short_description_en = $inputs['short_description_en'];
                     $course->highlight = isset($inputs['highlight']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;

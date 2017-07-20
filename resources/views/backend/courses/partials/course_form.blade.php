@@ -106,9 +106,10 @@
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group{{ $errors->has('level') ? ' has-error': '' }}">
-                    <label>Cấp Độ <i>(Bắt Buộc)</i></label>
-                    <select class="form-control" name="level_id" required="required">
+                <div class="form-group">
+                    <label>Cấp Độ</label>
+                    <option value=""></option>
+                    <select class="form-control" name="level_id">
                         <?php
                         $levelId = old('level_id', $course->level_id);
                         ?>
@@ -120,9 +121,6 @@
                             @endif
                         @endforeach
                     </select>
-                    @if($errors->has('level'))
-                        <span class="help-block">{{ $errors->first('level') }}</span>
-                    @endif
                 </div>
             </div>
         </div>

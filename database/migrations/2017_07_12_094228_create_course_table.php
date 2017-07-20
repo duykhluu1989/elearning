@@ -22,7 +22,7 @@ class CreateCourseTable extends Migration
             $table->string('slug_en', 255)->nullable();
             $table->string('code', 40);
             $table->unsignedInteger('video_length')->nullable();
-            $table->unsignedInteger('level_id');
+            $table->unsignedInteger('level_id')->nullable();
             $table->string('short_description', 1000)->nullable();
             $table->string('short_description_en', 1000)->nullable();
             $table->unsignedTinyInteger('highlight')->default(0);
