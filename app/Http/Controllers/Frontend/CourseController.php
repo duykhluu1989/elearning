@@ -82,8 +82,8 @@ class CourseController extends Controller
 
     public function previewCourse(Request $request, $id, $slug)
     {
-        //if($request->ajax() == false)
-            //return view('frontend.errors.404');
+        if($request->ajax() == false)
+            return view('frontend.errors.404');
 
         $course = Course::with(['user' => function($query) {
             $query->select('id');
