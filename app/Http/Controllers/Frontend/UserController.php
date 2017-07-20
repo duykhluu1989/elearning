@@ -290,12 +290,12 @@ class UserController extends Controller
 
                 auth()->login($user);
             }
+
+            return redirect()->action('Frontend\HomeController@home');
         }
         catch(\Exception $e)
         {
-
+            return view('frontend.errors.404');
         }
-
-        return redirect()->action('Frontend\HomeController@home');
     }
 }

@@ -34,4 +34,6 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
     Route::get('course/{id}/{slug}', 'CourseController@detailCourse');
 
+    Route::get('cart/addItem', 'OrderController@addCartItem');
+
 });

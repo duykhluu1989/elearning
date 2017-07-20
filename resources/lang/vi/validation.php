@@ -119,6 +119,7 @@ return [
     'attributes'           => [
         'password' => 'mật khẩu',
         'name' => 'họ và tên',
+        'course' => 'khóa học',
     ],
 
 ];
