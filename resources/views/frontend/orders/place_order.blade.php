@@ -46,7 +46,7 @@
                                 <div class="col-lg-12">
                                     <div class="frm_maKM">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="" placeholder="@lang('theme.input_discount_code')">
+                                            <input type="text" class="form-control" name="discount_code" placeholder="@lang('theme.input_discount_code')">
                                         </div>
                                         <button type="submit" class="btn btn-lg btn-block btnRed">@lang('theme.use_discount_code')</button>
                                     </div>
@@ -78,55 +78,71 @@
                             <p>@lang('theme.bill'): <b><span>{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</span></b></p>
 
                             <div class="panel-group" id="accordion">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Giao mã kích hoạt và thu tiền tận nơi (COD)</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseOne" class="panel-collapse collapse in">
-                                        <div class="panel-body">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="" placeholder="nicker">
+
+                                @foreach($paymentMethods as $paymentMethod)
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#PaymentMethod_{{ $paymentMethod->id }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($paymentMethod, 'name') }}</a>
+                                            </h4>
+                                        </div>
+                                        <div id="PaymentMethod_{{ $paymentMethod->id }}" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+
+                                                <?php
+                                                switch($paymentMethod->type)
+                                                {
+                                                    case \App\Models\PaymentMethod::PAYMENT_TYPE_COD_DB:
+                                                        ?>
+
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <input type="text" class="form-control" name="name" placeholder="* @lang('theme.name')">
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <input type="text" class="form-control" name="email" placeholder="* Email">
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="" placeholder="nickey3000@gmail.com">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <input type="text" class="form-control" name="phone" placeholder="* @lang('theme.phone')">
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <input type="text" class="form-control" name="address" placeholder="* @lang('theme.address')">
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <select name="province" class="form-control">
+                                                                    <option value="">* @lang('theme.province')</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <select name="district" class="form-control">
+                                                                    <option value="">* @lang('theme.district')</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p>@lang('theme.input_require')</p>
+                                                    <div class="form-group">
+                                                        <textarea name="note" class="form-control" rows="8" placeholder="@lang('theme.note')"></textarea>
+                                                    </div>
+
+                                                        <?php
+                                                        break;
+                                                }
+                                                ?>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="" placeholder="0908911493">
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="" placeholder="Địa chỉ (*)">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <select name="" id="" class="form-control" required="required">
-                                                            <option value="">Tỉnh /TP </option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <select name="" id="" class="form-control" required="required">
-                                                            <option value="">Quận/ Huyện </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <textarea name="" id="" class="form-control" rows="8" required="required" placeholder="Ghi chú"></textarea>
-                                            </div>
-                                            <p>Bạn cần điền đầy đủ các thông tin trên</p>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
+
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">

@@ -61,5 +61,11 @@ return [
     'use_discount_code' => 'Áp dụng',
     'bill' => 'Số tiền cần thanh toán',
     'payment_method' => 'Chọn phương thức thanh toán',
+    'phone' => 'Điện thoại',
+    'address' => 'Địa chỉ',
+    'province' => 'Tỉnh / thành phố',
+    'district' => 'Quận / huyện',
+    'note' => 'Ghi chú',
+    'input_require' => 'Bạn cần điền đầy đủ các thông tin trên',
 
 ];

@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\UserRole;
 use App\Models\Profile;
 use App\Models\Widget;
+use App\Models\PaymentMethod;
 
 class Init extends Command
 {
@@ -34,6 +35,8 @@ class Init extends Command
             UserRole::initCoreUserRoles();
 
             Widget::initCoreWidgets();
+
+            PaymentMethod::initCorePaymentMethods();
 
             DB::commit();
 

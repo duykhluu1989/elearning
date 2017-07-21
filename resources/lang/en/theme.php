@@ -61,5 +61,11 @@ return [
     'use_discount_code' => 'Apply discount code',
     'bill' => 'Total price need to pay',
     'payment_method' => 'Choose payment method',
+    'phone' => 'Phone',
+    'address' => 'Address',
+    'province' => 'Province / city',
+    'district' => 'District',
+    'note' => 'Note',
+    'input_require' => 'Please enter all the fields above',
 
 ];

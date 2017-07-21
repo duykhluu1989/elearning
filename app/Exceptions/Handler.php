@@ -63,6 +63,11 @@ class Handler extends ExceptionHandler
         if(Route::current()->getPrefix() == 'admin')
             return redirect()->action('Backend\UserController@login');
         else
-            return redirect()->back()->with('needLogin', true);
+        {
+            if(strpos(redirect()->back()->getTargetUrl(), '/admin') === false)
+                return redirect()->back()->with('needLogin', true);
+            else
+                return redirect()->action('Frontend\HomeController@home')->with('needLogin', true);
+        }
     }
 }

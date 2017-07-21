@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
+use App\Libraries\Helpers\Utility;
 use App\Models\PaymentMethod;
 
 class PaymentMethodController extends Controller
@@ -39,8 +40,8 @@ class PaymentMethodController extends Controller
             [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
-                    $status = PaymentMethod::getPaymentMethodStatus($row->status);
-                    if($row->status == PaymentMethod::STATUS_ACTIVE_DB)
+                    $status = Utility::getTrueFalse($row->status);
+                    if($row->status == Utility::ACTIVE_DB)
                         echo Html::span($status, ['class' => 'text-green']);
                     else
                         echo Html::span($status, ['class' => 'text-red']);

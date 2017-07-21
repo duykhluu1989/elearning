@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Course;
 use App\Models\Category;
+use App\Models\PaymentMethod;
 use App\RedisModels\Cart;
 
 class OrderController extends Controller
@@ -109,8 +110,14 @@ class OrderController extends Controller
     {
         $cart = self::getFullCart();
 
+        $paymentMethods = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail')
+            ->where('status', Utility::ACTIVE_DB)
+            ->orderBy('order', 'desc')
+            ->get();
+
         return view('frontend.orders.place_order', [
             'cart' => $cart,
+            'paymentMethods' => $paymentMethods,
         ]);
     }
 

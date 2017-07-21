@@ -14,13 +14,13 @@ class CodPayment extends Payment
     public function getName($lang = null)
     {
         $names = [
-            'en' => '',
+            'en' => 'COD',
         ];
 
         if($lang !== null && isset($names[$lang]))
             return $names[$lang];
 
-        return 'COD';
+        return 'Thu tiền tận nơi';
     }
 
     public function getType()
