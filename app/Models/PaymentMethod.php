@@ -8,7 +8,9 @@ use App\Libraries\Payments\Payment;
 class PaymentMethod extends Model
 {
     const PAYMENT_TYPE_COD_DB = 0;
-    const PAYMENT_TYPE_COD_LABEL = 'COD';
+    const PAYMENT_TYPE_BANK_TRANSFER_DB = 1;
+    const PAYMENT_TYPE_COD_LABEL = 'Thu trực tiếp';
+    const PAYMENT_TYPE_BANK_TRANSFER_LABEL = 'Chuyển khoản';
 
     protected $table = 'payment_method';
 
@@ -36,6 +38,7 @@ class PaymentMethod extends Model
     {
         $type = [
             self::PAYMENT_TYPE_COD_DB => self::PAYMENT_TYPE_COD_LABEL,
+            self::PAYMENT_TYPE_BANK_TRANSFER_DB => self::PAYMENT_TYPE_BANK_TRANSFER_LABEL,
         ];
 
         if($value !== null && isset($type[$value]))

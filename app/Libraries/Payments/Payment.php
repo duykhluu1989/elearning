@@ -14,9 +14,11 @@ abstract class Payment
         if(empty(static::$payments))
         {
             $codPayment = new CodPayment();
+            $bankTransferPayment = new BankTransferPayment();
 
             static::$payments = [
                 $codPayment->getCode() => $codPayment,
+                $bankTransferPayment->getCode() => $bankTransferPayment,
             ];
         }
 

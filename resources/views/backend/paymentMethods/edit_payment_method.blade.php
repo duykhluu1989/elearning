@@ -63,11 +63,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <?php
-                    $payment->renderView($paymentMethod);
-                    ?>
-                </div>
+
+                <?php
+
+                $payment->renderView($paymentMethod);
+
+                ?>
+
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
