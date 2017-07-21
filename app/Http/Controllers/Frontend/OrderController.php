@@ -68,6 +68,43 @@ class OrderController extends Controller
             return '';
     }
 
+    public function deleteCartItem(Request $request)
+    {
+        if($request->ajax() == false)
+            return view('frontend.errors.404');
+
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'course_id' => 'required',
+        ]);
+
+        if($validator->passes())
+        {
+            $cart = self::getCart();
+            $cart->deleteCartItem($inputs['course_id']);
+
+            if(empty($this->cartItems))
+            {
+                $cart->delete();
+
+                self::deleteCookieCartToken();
+
+                return 'Empty';
+            }
+            else
+            {
+                $cart->save();
+
+                self::setCookieCartToken($cart->token);
+
+                return 'Success';
+            }
+        }
+        else
+            return '';
+    }
+
     public function placeOrder()
     {
         $cart = self::getFullCart();
@@ -125,6 +162,11 @@ class OrderController extends Controller
     protected static function setCookieCartToken($token)
     {
         Cookie::queue(Cookie::make(Cart::CART_TOKEN_COOKIE_NAME, $token, Utility::SECOND_ONE_HOUR / 60));
+    }
+
+    protected static function deleteCookieCartToken()
+    {
+        Cookie::queue(Cookie::forget(Cart::CART_TOKEN_COOKIE_NAME));
     }
 
     public static function getFullCart()

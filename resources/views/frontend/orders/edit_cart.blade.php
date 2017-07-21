@@ -23,7 +23,7 @@
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="CartTableBody">
 
                                 @if($cart['countItem'] > 0)
                                     @foreach($cart['cartItems'] as $cartItem)
@@ -57,7 +57,7 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0)"><i class="fa fa-times-circle fa-2x" aria-hidden="true"></i></a>
+                                                <a href="javascript:void(0)" class="DeleteCartItem" data-course-id="{{ $cartItem->id }}"><i class="fa fa-times-circle fa-2x" aria-hidden="true"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -98,5 +98,39 @@
 
         </section>
     </main>
+
+    @if($cart['countItem'] > 0)
+        @push('scripts')
+            <script type="text/javascript">
+                $('.DeleteCartItem').click(function() {
+                    if($(this).data('course-id') != '')
+                    {
+                        var elem = $(this);
+
+                        $.ajax({
+                            url: '{{ action('Frontend\OrderController@deleteCartItem') }}',
+                            type: 'get',
+                            data: 'course_id=' + $(this).data('course-id'),
+                            success: function(result) {
+                                if(result)
+                                {
+                                    if(result == 'Success')
+                                        elem.parent().parent().remove();
+                                    else if(result == 'Empty')
+                                    {
+                                        $('#CartTableBody').html('' +
+                                            '<tr>' +
+                                            '<td colspan="4" class="text-center">@lang('theme.empty_cart')</td>' +
+                                            '</tr>' +
+                                        '');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            </script>
+        @endpush
+    @endif
 
 @stop

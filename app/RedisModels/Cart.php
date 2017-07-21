@@ -103,6 +103,7 @@ class Cart
 
     public function delete()
     {
-        Redis::command('del', [static::REDIS_KEY . '_' . $this->token]);
+        if(!empty($this->token))
+            Redis::command('del', [static::REDIS_KEY . '_' . $this->token]);
     }
 }

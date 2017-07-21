@@ -40,4 +40,6 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
     Route::get('cart/addItem', 'OrderController@addCartItem');
 
+    Route::get('cart/deleteItem', 'OrderController@deleteCartItem');
+
 });
