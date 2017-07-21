@@ -54,5 +54,12 @@ return [
     'browse_course' => 'Chọn khóa học khác',
     'place_order' => 'Đặt đơn hàng',
     'back_to_cart' => 'Quay về giỏ hàng',
+    'choose_course' => 'khóa học đã chọn',
+    'total_item_price' => 'Tổng tiền khóa học',
+    'discount' => 'Giảm giá',
+    'input_discount_code' => 'Nhập mã khuyến mãi',
+    'use_discount_code' => 'Áp dụng',
+    'bill' => 'Số tiền cần thanh toán',
+    'payment_method' => 'Chọn phương thức thanh toán',
 
 ];

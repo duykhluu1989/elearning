@@ -54,5 +54,12 @@ return [
     'browse_course' => 'Choose more course',
     'place_order' => 'Place order',
     'back_to_cart' => 'Back to cart',
+    'choose_course' => 'courses were chose',
+    'total_item_price' => 'Total course price',
+    'discount' => 'Discount',
+    'input_discount_code' => 'Enter discount code',
+    'use_discount_code' => 'Apply discount code',
+    'bill' => 'Total price need to pay',
+    'payment_method' => 'Choose payment method',
 
 ];
