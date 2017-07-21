@@ -8,6 +8,7 @@ use App\Libraries\Payments\Payment;
 class PaymentMethod extends Model
 {
     const PAYMENT_TYPE_COD_DB = 0;
+    const PAYMENT_TYPE_COD_LABEL = 'COD';
 
     protected $table = 'payment_method';
 
@@ -29,5 +30,17 @@ class PaymentMethod extends Model
 
         foreach($payments as $payment)
             $paymentMethods[] = $payment->initData();
+    }
+
+    public static function getPaymentMethodType($value = null)
+    {
+        $type = [
+            self::PAYMENT_TYPE_COD_DB => self::PAYMENT_TYPE_COD_LABEL,
+        ];
+
+        if($value !== null && isset($type[$value]))
+            return $type[$value];
+
+        return $type;
     }
 }

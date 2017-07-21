@@ -30,6 +30,6 @@ class CodPayment extends Payment
 
     public function renderView($paymentMethod)
     {
-        return null;
+        echo '';
     }
 }

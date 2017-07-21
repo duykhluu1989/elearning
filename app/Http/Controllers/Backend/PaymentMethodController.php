@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
 use App\Libraries\Helpers\Utility;
+use App\Libraries\Payments\Payment;
 use App\Models\PaymentMethod;
 
 class PaymentMethodController extends Controller
@@ -35,16 +36,18 @@ class PaymentMethodController extends Controller
             ],
             [
                 'title' => 'Loại',
-                'data' => 'type',
+                'data' => function($row) {
+                    echo PaymentMethod::getPaymentMethodType($row->type);
+                },
             ],
             [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
                     $status = Utility::getTrueFalse($row->status);
                     if($row->status == Utility::ACTIVE_DB)
-                        echo Html::span($status, ['class' => 'text-green']);
+                        echo Html::span($status, ['class' => 'label label-success']);
                     else
-                        echo Html::span($status, ['class' => 'text-red']);
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
         ];
@@ -56,14 +59,31 @@ class PaymentMethodController extends Controller
         ]);
     }
 
-    public function createPaymentMethod(Request $request)
+    public function updatePaymentMethod(Request $request)
     {
+        PaymentMethod::initCorePaymentMethods();
 
+        return redirect()->action('Backend\PaymentMethodController@adminPaymentMethod')->with('messageSuccess', 'Thành Công');
     }
 
     public function editPaymentMethod(Request $request, $id)
     {
+        $paymentMethod = PaymentMethod::find($id);
 
+        if(empty($paymentMethod))
+            return view('backend.errors.404');
+
+        $payment = Payment::getPayments($paymentMethod->code);
+
+        if($request->isMethod('post'))
+        {
+
+        }
+
+        return view('backend.paymentMethods.edit_payment_method', [
+            'paymentMethod' => $paymentMethod,
+            'payment' => $payment,
+        ]);
     }
 
     protected function savePaymentMethod()

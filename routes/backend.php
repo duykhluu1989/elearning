@@ -206,7 +206,7 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('setting/paymentMethod', 'PaymentMethodController@adminPaymentMethod');
 
-        Route::match(['get', 'post'], 'setting/paymentMethod/create', 'PaymentMethodController@createPaymentMethod');
+        Route::get('setting/paymentMethod/update', 'PaymentMethodController@updatePaymentMethod');
 
         Route::match(['get', 'post'], 'setting/paymentMethod/{id}/edit', 'PaymentMethodController@editPaymentMethod');
 

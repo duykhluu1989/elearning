@@ -161,9 +161,9 @@ class UserController extends Controller
                     $user->expert = Utility::INACTIVE_DB;
                     $user->created_at = date('Y-m-d H:i:s');
 
-                    $openId = $user->open_id;
+                    $openId = json_encode($user->open_id, true);
                     $openId['facebook'] = $userNode['id'];
-                    $user->open_id = $openId;
+                    $user->open_id = json_encode($openId);
 
                     $user->save();
 
@@ -204,9 +204,9 @@ class UserController extends Controller
                 return trans('theme.sign_in_fail');
             else if(!isset($user->open_id['facebook']))
             {
-                $openId = $user->open_id;
+                $openId = json_decode($user->open_id, true);
                 $openId['facebook'] = $userNode['id'];
-                $user->open_id = $openId;
+                $user->open_id = json_encode($openId);
 
                 $user->save();
             }

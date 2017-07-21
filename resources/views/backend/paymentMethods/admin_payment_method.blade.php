@@ -8,13 +8,13 @@
 
     $gridView->setTools([
         function() {
-            echo \App\Libraries\Helpers\Html::a(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-plus fa-fw']), [
-                'href' => action('Backend\PaymentMethodController@createPaymentMethod'),
+            echo \App\Libraries\Helpers\Html::a(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-refresh fa-fw']), [
+                'href' => action('Backend\PaymentMethodController@updatePaymentMethod'),
                 'class' => 'btn btn-primary',
                 'data-container' => 'body',
                 'data-toggle' => 'popover',
                 'data-placement' => 'top',
-                'data-content' => 'Phương Thức Thanh Toán Mới',
+                'data-content' => 'Cập Nhật Phương Thức Thanh Toán',
             ]);
         },
     ]);
