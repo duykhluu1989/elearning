@@ -135,6 +135,12 @@
 
     @push('scripts')
         <script type="text/javascript">
+            @if(session('needLogin'))
+                $(document).ready(function() {
+                    $('#modal_dangnhap').modal('show');
+                });
+            @endif
+
             $('#SignUpForm').submit(function(e) {
                 e.preventDefault();
 

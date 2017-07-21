@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Course;
+use App\Models\Category;
 use App\RedisModels\Cart;
 
 class OrderController extends Controller
@@ -16,10 +17,18 @@ class OrderController extends Controller
 
     public function editCart()
     {
+        $category = Category::select('id', 'slug', 'slug_en')
+            ->where('status', Utility::ACTIVE_DB)
+            ->where('parent_status', Utility::ACTIVE_DB)
+            ->whereNull('parent_id')
+            ->orderBy('order', 'desc')
+            ->first();
+
         $cart = self::getFullCart();
 
         return view('frontend.orders.edit_cart', [
             'cart' => $cart,
+            'category' => $category,
         ]);
     }
 

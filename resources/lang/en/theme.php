@@ -50,5 +50,7 @@ return [
     'quantity' => 'Quantity',
     'price' => 'Price',
     'empty_cart' => 'Cart is empty',
+    'checkout' => 'Checkout',
+    'browse_course' => 'Choose more course',
 
 ];

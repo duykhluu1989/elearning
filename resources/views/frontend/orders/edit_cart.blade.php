@@ -74,11 +74,11 @@
                                         <td colspan="4">
                                             <div class="row">
                                                 <div class="col-xs-4">
-                                                    <a href="khoahoc.php" class="btn btn-block btnGiohang">CHỌN KHOÁ HỌC KHÁC</a>
+                                                    <a href="{{ !empty($category) ? action('Frontend\CourseController@detailCategory', ['id' => $category->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($category, 'slug')]) : action('Frontend\HomeController@home') }}" class="btn btn-block btnGiohang">@lang('theme.browse_course')</a>
                                                 </div>
                                                 <div class="col-xs-4"></div>
                                                 <div class="col-xs-4">
-                                                    <a href="thanhtoan.php" class="btn btn-block btnThanhtoan">THANH TOÁN</a>
+                                                    <a href="{{ action('Frontend\OrderController@placeOrder') }}" class="btn btn-block btnThanhtoan">@lang('theme.checkout')</a>
                                                 </div>
                                             </div>
                                         </td>

@@ -50,5 +50,7 @@ return [
     'quantity' => 'Số lượng',
     'price' => 'Giá',
     'empty_cart' => 'Giỏ hàng trống',
+    'checkout' => 'Thanh toán',
+    'browse_course' => 'Chọn khóa học khác',
 
 ];
