@@ -1,10 +1,12 @@
 @push('scripts')
     <script type="text/javascript">
         $('#page').on('click', 'a', function() {
-            if($(this).hasClass('AddCartItem'))
+            if($(this).hasClass('AddCartItem') || $(this).hasClass('QuickBuyCourse'))
             {
                 if($(this).data('course-id') != '')
                 {
+                    var elem = $(this);
+
                     $.ajax({
                         url: '{{ action('Frontend\OrderController@addCartItem') }}',
                         type: 'get',
@@ -12,13 +14,18 @@
                         success: function(result) {
                             if(result)
                             {
-                                $('#CartDetail').html(result);
+                                if(elem.hasClass('QuickBuyCourse'))
+                                    location.href = '{{ action('Frontend\OrderController@editCart') }}';
+                                else
+                                {
+                                    $('#CartDetail').html(result);
 
-                                swal({
-                                    title: '@lang('theme.add_cart')',
-                                    type: 'success',
-                                    confirmButtonClass: 'btn-success'
-                                });
+                                    swal({
+                                        title: '@lang('theme.add_cart')',
+                                        type: 'success',
+                                        confirmButtonClass: 'btn-success'
+                                    });
+                                }
                             }
                             else
                             {

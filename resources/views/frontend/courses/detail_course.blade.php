@@ -45,7 +45,7 @@
                                 <div class="col-lg-8">
 
                                     @if($bought == false)
-                                        <a href="javascript:void(0)" class="btn btn-lg btnMuaKH"><i class="fa fa-cart-plus" aria-hidden="true"></i>@lang('theme.buy_course')</a>
+                                        <a href="javascript:void(0)" class="btn btn-lg btnMuaKH QuickBuyCourse" data-course-id="{{ $course->id }}"><i class="fa fa-cart-plus" aria-hidden="true"></i>@lang('theme.buy_course')</a>
                                         <a href="javascript:void(0)" class="btn btn-lg btnThemGH AddCartItem" data-course-id="{{ $course->id }}"><i class="fa fa-plus-square-o" aria-hidden="true"></i>@lang('theme.add_cart')</a>
                                     @endif
 
