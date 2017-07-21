@@ -24,7 +24,9 @@ class Utility
 
     const SECOND_ONE_HOUR = 3600;
 
-    const FRONTEND_ROWS_PER_PAGE = 6;
+    const FRONTEND_ROWS_PER_PAGE = 12;
+
+    const FRONTEND_HOME_ITEM_LIMIT = 6;
 
     public static function getTrueFalse($value = null)
     {
