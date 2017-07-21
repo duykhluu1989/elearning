@@ -12,8 +12,22 @@ use App\RedisModels\Cart;
 
 class OrderController extends Controller
 {
+    protected static $fullCart;
+
+    public function editCart()
+    {
+        $cart = self::getFullCart();
+
+        return view('frontend.orders.edit_cart', [
+            'cart' => $cart,
+        ]);
+    }
+
     public function addCartItem(Request $request)
     {
+        if($request->ajax() == false)
+            return view('frontend.errors.404');
+
         $inputs = $request->all();
 
         $validator = Validator::make($inputs, [
@@ -43,6 +57,11 @@ class OrderController extends Controller
         }
         else
             return '';
+    }
+
+    public function placeOrder()
+    {
+
     }
 
     protected static function getCart()
@@ -80,6 +99,8 @@ class OrderController extends Controller
             $fullCart['cartItems'] = $courses;
         }
 
+        self::$fullCart = $fullCart;
+
         return $fullCart;
     }
 
@@ -95,8 +116,16 @@ class OrderController extends Controller
 
     public static function getFullCart()
     {
-        $cart = self::getCart();
+        if(empty(self::$fullCart))
+        {
+            $cart = self::getCart();
 
-        return self::generateFullCart($cart);
+            if(!empty($cart->cartItems))
+                $cart->save();
+
+            return self::generateFullCart($cart);
+        }
+        else
+            return self::$fullCart;
     }
 }

@@ -45,5 +45,10 @@ return [
     'view_detail' => 'View detail',
     'preview' => 'Preview',
     'total_price' => 'Total price',
+    'cart' => 'Cart',
+    'course' => 'Course',
+    'quantity' => 'Quantity',
+    'price' => 'Price',
+    'empty_cart' => 'Cart is empty',
 
 ];

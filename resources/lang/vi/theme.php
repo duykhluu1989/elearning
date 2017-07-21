@@ -45,5 +45,10 @@ return [
     'view_detail' => 'Xem chi tiết',
     'preview' => 'Xem nhanh',
     'total_price' => 'Tổng tiền',
+    'cart' => 'Giỏ hàng',
+    'course' => 'Khóa học',
+    'quantity' => 'Số lượng',
+    'price' => 'Giá',
+    'empty_cart' => 'Giỏ hàng trống',
 
 ];

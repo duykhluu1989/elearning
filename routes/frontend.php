@@ -20,6 +20,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
         Route::get('logout', 'UserController@logout');
 
+        Route::match(['get', 'post'], 'order', 'OrderController@placeOrder');
+
     });
 
     Route::get('/', 'HomeController@home');
@@ -33,6 +35,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
     Route::get('previewCourse/{id}/{slug}', 'CourseController@previewCourse');
 
     Route::get('course/{id}/{slug}', 'CourseController@detailCourse');
+
+    Route::get('cart', 'OrderController@editCart');
 
     Route::get('cart/addItem', 'OrderController@addCartItem');
 

@@ -39,7 +39,7 @@
             </div>
             <div class="row row_cart_bottom">
                 <div class="col-xs-6">
-                    <a href="giohang.php" class="btn btn-block btnGiohang">GIỎ HÀNG</a>
+                    <a href="{{ action('Frontend\OrderController@editCart') }}" class="btn btn-block btnGiohang">@lang('theme.cart')</a>
                 </div>
                 <div class="col-xs-6">
                     <a href="thanhtoan.php" class="btn btn-block btnThanhtoan">THANH TOÁN</a>

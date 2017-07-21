@@ -30,7 +30,7 @@ class Setting extends Model
     const CATEGORY_COLLABORATOR_DB = 1;
     const CATEGORY_SOCIAL_DB = 2;
 
-    protected static $settings = null;
+    protected static $settings;
 
     protected $table = 'setting';
 
@@ -112,7 +112,7 @@ class Setting extends Model
 
     public static function getSettings($category = self::CATEGORY_GENERAL_DB, $code = null)
     {
-        if(self::$settings == null || !isset(self::$settings[$category]))
+        if(empty(self::$settings) || !isset(self::$settings[$category]))
         {
             $settings = Setting::where('category', $category)->get();
 
