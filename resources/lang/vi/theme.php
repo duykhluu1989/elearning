@@ -52,5 +52,7 @@ return [
     'empty_cart' => 'Giỏ hàng trống',
     'checkout' => 'Thanh toán',
     'browse_course' => 'Chọn khóa học khác',
+    'place_order' => 'Đặt đơn hàng',
+    'back_to_cart' => 'Quay về giỏ hàng',
 
 ];

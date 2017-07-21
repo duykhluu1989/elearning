@@ -70,7 +70,11 @@ class OrderController extends Controller
 
     public function placeOrder()
     {
+        $cart = self::getFullCart();
 
+        return view('frontend.orders.place_order', [
+            'cart' => $cart,
+        ]);
     }
 
     protected static function getCart()
