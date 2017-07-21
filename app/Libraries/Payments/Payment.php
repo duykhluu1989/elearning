@@ -34,6 +34,8 @@ abstract class Payment
 
     abstract public function renderView($paymentMethod);
 
+    abstract public function validateAndSetData($paymentMethod, $inputs, $validator);
+
     public function initData()
     {
         $paymentMethod = new PaymentMethod();

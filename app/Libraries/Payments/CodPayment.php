@@ -30,6 +30,11 @@ class CodPayment extends Payment
 
     public function renderView($paymentMethod)
     {
-        echo '';
+
+    }
+
+    public function validateAndSetData($paymentMethod, $inputs, $validator)
+    {
+
     }
 }

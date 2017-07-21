@@ -77,7 +77,28 @@ class PaymentMethodController extends Controller
 
         if($request->isMethod('post'))
         {
+            $inputs = $request->all();
 
+            $validator = Validator::make($inputs, [
+                'name' => 'required|unique:level,name,' . $paymentMethod->id,
+                'name_en' => 'nullable|unique:level,name_en,' . $paymentMethod->id,
+                'order' => 'required|integer|min:1',
+            ]);
+
+            $payment->validateAndSetData($paymentMethod, $inputs, $validator);
+
+            if($validator->passes())
+            {
+                $paymentMethod->name = $inputs['name'];
+                $paymentMethod->name_en = $inputs['name_en'];
+                $paymentMethod->order = $inputs['order'];
+                $paymentMethod->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                $paymentMethod->save();
+
+                return redirect()->action('Backend\PaymentMethodController@editPaymentMethod', ['id' => $paymentMethod->id])->with('messageSuccess', 'Thành Công');
+            }
+            else
+                return redirect()->action('Backend\PaymentMethodController@editPaymentMethod', ['id' => $paymentMethod->id])->withErrors($validator)->withInput();
         }
 
         return view('backend.paymentMethods.edit_payment_method', [
