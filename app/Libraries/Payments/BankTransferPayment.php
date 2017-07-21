@@ -37,6 +37,9 @@ class BankTransferPayment extends Payment
 
     public function validateAndSetData($paymentMethod, $inputs, $validator)
     {
+        if(empty($input))
+        {
 
+        }
     }
 }
