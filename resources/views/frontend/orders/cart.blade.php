@@ -1,12 +1,12 @@
 <div class="btnCart">
-    <span class="sum">{{ $cart['countItem'] }}</span>
+    <span class="sum" id="CartBoxCountItem">{{ $cart['countItem'] }}</span>
 
     @if($cart['countItem'] > 0)
-        <div class="box_cart">
+        <div class="box_cart" id="CartBoxBody">
             <div class="arrow_top"></div>
             <div class="box_cart_content">
                 @foreach($cart['cartItems'] as $cartItem)
-                    <div class="row pro_item">
+                    <div class="row pro_item" id="CartBoxItem_{{ $cartItem->id }}">
                         <div class="col-xs-3">
                             <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $cartItem->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($cartItem, 'slug')]) }}"><img src="{{ $cartItem->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($cartItem, 'name') }}" class="img-responsive"></a>
                         </div>
@@ -34,7 +34,7 @@
                     <p>@lang('theme.total_price')</p>
                 </div>
                 <div class="col-xs-6">
-                    <p class="price pull-right">{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</p>
+                    <p class="price pull-right" id="CartBoxTotalPrice">{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</p>
                 </div>
             </div>
             <div class="row row_cart_bottom">

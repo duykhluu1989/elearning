@@ -47,17 +47,19 @@
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($cartItem->promotionPrice->price) . 'đ' }}
                                                         <?php
                                                         $cart['totalPrice'] += $cartItem->promotionPrice->price;
+                                                        $cartItemPrice = $cartItem->promotionPrice->price;
                                                         ?>
                                                     @else
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($cartItem->price) . 'đ' }}
                                                         <?php
                                                         $cart['totalPrice'] += $cartItem->price;
+                                                        $cartItemPrice = $cartItem->price;
                                                         ?>
                                                     @endif
                                                 </p>
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0)" class="DeleteCartItem" data-course-id="{{ $cartItem->id }}"><i class="fa fa-times-circle fa-2x" aria-hidden="true"></i></a>
+                                                <a href="javascript:void(0)" class="DeleteCartItem" data-course-id="{{ $cartItem->id }}" data-course-price="{{ $cartItemPrice }}"><i class="fa fa-times-circle fa-2x" aria-hidden="true"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -67,7 +69,7 @@
                                             <p>@lang('theme.total_price')</p>
                                         </td>
                                         <td colspan="2">
-                                            <p class="price pull-right">{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</p>
+                                            <p class="price pull-right" id="CartTableTotalPrice" data-cart-total-price="{{ $cart['totalPrice'] }}">{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -115,7 +117,19 @@
                                 if(result)
                                 {
                                     if(result == 'Success')
+                                    {
                                         elem.parent().parent().remove();
+                                        var totalPriceTableElem = $('#CartTableTotalPrice');
+                                        var totalPrice = totalPriceTableElem.data('cart-total-price');
+                                        totalPrice -= elem.data('course-price');
+                                        totalPriceTableElem.data('cart-total-price', totalPrice);
+                                        totalPriceTableElem.html(totalPriceTableElem.data('cart-total-price') + 'đ');
+
+                                        $('#CartBoxItem_' + elem.data('course-id')).remove();
+                                        var countItemBoxElem = $('#CartBoxCountItem');
+                                        countItemBoxElem.html(countItemBoxElem.html() - 1);
+                                        $('#CartBoxTotalPrice').html(totalPriceTableElem.data('cart-total-price') + 'đ');
+                                    }
                                     else if(result == 'Empty')
                                     {
                                         $('#CartTableBody').html('' +
@@ -123,6 +137,9 @@
                                             '<td colspan="4" class="text-center">@lang('theme.empty_cart')</td>' +
                                             '</tr>' +
                                         '');
+
+                                        $('#CartBoxCountItem').html(0);
+                                        $('#CartBoxBody').remove();
                                     }
                                 }
                             }

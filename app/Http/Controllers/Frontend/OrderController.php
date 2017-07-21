@@ -84,7 +84,7 @@ class OrderController extends Controller
             $cart = self::getCart();
             $cart->deleteCartItem($inputs['course_id']);
 
-            if(empty($this->cartItems))
+            if(empty($cart->cartItems))
             {
                 $cart->delete();
 
