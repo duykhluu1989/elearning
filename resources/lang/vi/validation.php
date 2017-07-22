@@ -120,6 +120,7 @@ return [
         'password' => 'mật khẩu',
         'name' => 'họ và tên',
         'course' => 'khóa học',
+        'payment_method' => 'phương thức thanh toán',
     ],
 
 ];

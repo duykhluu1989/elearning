@@ -114,6 +114,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'payment_method' => 'payment method',
+    ],
 
 ];

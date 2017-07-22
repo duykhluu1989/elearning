@@ -11,6 +11,7 @@ use App\Models\Course;
 use App\Models\Category;
 use App\Models\PaymentMethod;
 use App\RedisModels\Cart;
+use App\Libraries\Payments\Payment;
 
 class OrderController extends Controller
 {
@@ -106,14 +107,55 @@ class OrderController extends Controller
             return '';
     }
 
-    public function placeOrder()
+    public function placeOrder(Request $request)
     {
         $cart = self::getFullCart();
 
-        $paymentMethods = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail')
+        $paymentMethods = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail', 'code')
             ->where('status', Utility::ACTIVE_DB)
             ->orderBy('order', 'desc')
             ->get();
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'payment_method' => 'required',
+            ]);
+
+            $validator->after(function($validator) use(&$inputs, $paymentMethods, $cart) {
+                if($cart['countItem'] == 0)
+                    $validator->errors()->add('cart', trans('theme.empty_cart'));
+
+                $validPaymentMethod = false;
+
+                foreach($paymentMethods as $paymentMethod)
+                {
+                    if($paymentMethod->id == $inputs['payment_method'])
+                    {
+                        $validPaymentMethod = $paymentMethod;
+                        $payment = Payment::getPayments($paymentMethod->code);
+
+                        $inputs['payment'] = $payment;
+                        $inputs['valid_payment_method'] = $validPaymentMethod;
+
+                        $payment->validatePlaceOrder($paymentMethod, $inputs, $validator);
+                        break;
+                    }
+                }
+
+                if($validPaymentMethod == false)
+                    $validator->errors()->add('payment_method', trans('theme.invalid_payment_method'));
+            });
+
+            if($validator->passes())
+            {
+
+            }
+            else
+                return redirect()->action('Frontend\OrderController@placeOrder')->withErrors($validator)->withInput();
+        }
 
         return view('frontend.orders.place_order', [
             'cart' => $cart,

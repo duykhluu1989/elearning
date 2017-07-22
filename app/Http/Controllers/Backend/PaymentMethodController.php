@@ -75,7 +75,9 @@ class PaymentMethodController extends Controller
                 'order' => 'required|integer|min:1',
             ]);
 
-            $payment->validateAndSetData($paymentMethod, $inputs, $validator);
+            $validator->after(function($validator) use($inputs, $payment, $paymentMethod) {
+                $payment->validateAndSetData($paymentMethod, $inputs, $validator);
+            });
 
             if($validator->passes())
             {

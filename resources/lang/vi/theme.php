@@ -77,5 +77,6 @@ return [
     'payment_bank_text_5' => 'Tại mục "Ghi chú" khi chuyển khoản, bạn ghi rõ: Số điện thoại - Họ và tên - Email đăng ký học - Mã đơn hàng',
     'example' => 'Ví dụ',
     'office_address' => 'Địa chỉ văn phòng',
+    'invalid_payment_method' => 'Phương thức thanh toán không hợp lệ',
 
 ];

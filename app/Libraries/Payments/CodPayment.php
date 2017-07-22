@@ -28,13 +28,24 @@ class CodPayment extends Payment
         return PaymentMethod::PAYMENT_TYPE_COD_DB;
     }
 
-    public function renderView($paymentMethod)
+    public function validatePlaceOrder($paymentMethod, $inputs, $validator)
     {
+        if(empty($inputs['name']))
+            $validator->errors()->add('name', trans('validation.required', ['attribute' => trans('theme.name')]));
 
-    }
+        if(empty($inputs['email']))
+            $validator->errors()->add('email', trans('validation.required', ['attribute' => 'email']));
 
-    public function validateAndSetData($paymentMethod, $inputs, $validator)
-    {
+        if(empty($inputs['phone']))
+            $validator->errors()->add('phone', trans('validation.required', ['attribute' => trans('theme.phone')]));
 
+        if(empty($inputs['address']))
+            $validator->errors()->add('address', trans('validation.required', ['attribute' => trans('theme.address')]));
+
+        if(empty($inputs['province']))
+            $validator->errors()->add('province', trans('validation.required', ['attribute' => trans('theme.province')]));
+
+        if(empty($inputs['district']))
+            $validator->errors()->add('district', trans('validation.required', ['attribute' => trans('theme.district')]));
     }
 }

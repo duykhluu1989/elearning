@@ -36,9 +36,20 @@ abstract class Payment
 
     abstract public function getType();
 
-    abstract public function renderView($paymentMethod);
+    public function renderView($paymentMethod)
+    {
 
-    abstract public function validateAndSetData($paymentMethod, $inputs, $validator);
+    }
+
+    public function validateAndSetData($paymentMethod, $inputs, $validator)
+    {
+
+    }
+
+    public function validatePlaceOrder($paymentMethod, $inputs, $validator)
+    {
+
+    }
 
     public function initData()
     {

@@ -77,5 +77,6 @@ return [
     'payment_bank_text_5' => 'In the "Note" section of the transfer, you specify: Phone number - Full name - Email enrollment - Order code',
     'example' => 'Example',
     'office_address' => 'Office address',
+    'invalid_payment_method' => 'Payment method is invalid',
 
 ];
