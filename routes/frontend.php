@@ -24,6 +24,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
     });
 
+    Route::get('district', 'OrderController@getListDistrict');
+
     Route::get('/', 'HomeController@home');
 
     Route::get('language/{locale}', 'HomeController@language');

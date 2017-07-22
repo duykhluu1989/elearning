@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
+use App\Libraries\Payments\Payment;
+use App\Libraries\Helpers\Area;
 use App\Models\Course;
 use App\Models\Category;
 use App\Models\PaymentMethod;
+use App\Models\Order;
 use App\RedisModels\Cart;
-use App\Libraries\Payments\Payment;
 
 class OrderController extends Controller
 {
@@ -151,7 +154,25 @@ class OrderController extends Controller
 
             if($validator->passes())
             {
+                try
+                {
+                    DB::beginTransaction();
 
+                    $order = new Order();
+                    $order->user_id = auth()->user()->id;
+                    $order->created_at = date('Y-m-d H:i:s');
+                    $order->payment_method_id = $inputs['payment_method'];
+                    $order->payment_status = 0;
+                    $order->save();
+
+                    DB::commit();
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Frontend\OrderController@placeOrder')->withErrors(['payment_method' => [$e->getMessage()]])->withInput();
+                }
             }
             else
                 return redirect()->action('Frontend\OrderController@placeOrder')->withErrors($validator)->withInput();
@@ -161,6 +182,30 @@ class OrderController extends Controller
             'cart' => $cart,
             'paymentMethods' => $paymentMethods,
         ]);
+    }
+
+    public function getListDistrict(Request $request)
+    {
+        if($request->ajax() == false)
+            return view('frontend.errors.404');
+
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'province_code' => 'required',
+        ]);
+
+        if($validator->passes())
+        {
+            $provinces = Area::$provinces;
+
+            if(isset($provinces[$inputs['province_code']]))
+                return json_encode($provinces[$inputs['province_code']]['cities']);
+            else
+                return '';
+        }
+        else
+            return '';
     }
 
     protected static function getCart()
@@ -181,6 +226,7 @@ class OrderController extends Controller
     protected static function generateFullCart($cart)
     {
         $fullCart = [
+            'cartData' => $cart,
             'countItem' => 0,
             'totalPrice' => 0,
             'cartItems' => array(),

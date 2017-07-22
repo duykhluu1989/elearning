@@ -157,7 +157,7 @@
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <select name="province" class="form-control">
+                                                                    <select id="OrderProvince" name="province" class="form-control">
                                                                         <option value="">* @lang('theme.province')</option>
                                                                         @foreach(\App\Libraries\Helpers\Area::$provinces as $code => $data)
                                                                             <option value="{{ $code }}">{{ $data['name'] }}</option>
@@ -170,7 +170,7 @@
                                                                     @endif
                                                                 </div>
                                                                 <div class="col-lg-6">
-                                                                    <select name="district" class="form-control">
+                                                                    <select id="OrderDistrict" name="district" class="form-control">
                                                                         <option value="">* @lang('theme.district')</option>
                                                                     </select>
                                                                     @if($errors->has('district'))
@@ -272,6 +272,39 @@
         $('.ChoosePaymentMethod').click(function() {
             if($(this).data('payment-method-id') != '')
                 $('input[name="payment_method"]').val($(this).data('payment-method-id'));
+        });
+
+        $('#OrderProvince').change(function() {
+            var districtElem = $('#OrderDistrict');
+
+            districtElem.html('' +
+                '<option value="">* @lang('theme.district')</option>' +
+            '');
+
+            if($(this).val() != '')
+            {
+                $.ajax({
+                    url: '{{ action('Frontend\OrderController@getListDistrict') }}',
+                    type: 'get',
+                    data: 'province_code=' + $(this).val(),
+                    success: function(result) {
+                        if(result)
+                        {
+                            result = JSON.parse(result);
+
+                            for(var code in result)
+                            {
+                                if(result.hasOwnProperty(code))
+                                {
+                                    districtElem.append('' +
+                                        '<option value="' + code + '">' + result[code] + '</option>' +
+                                    '');
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         });
     </script>
 @endpush
