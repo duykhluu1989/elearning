@@ -37,18 +37,8 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Mã</label>
-                            <span class="form-control no-border">{{ $paymentMethod->code }}</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Loại</label>
-                            <span class="form-control no-border">{{ \App\Models\PaymentMethod::getPaymentMethodType($paymentMethod->type) }}</span>
-                        </div>
-                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Trạng Thái</label>

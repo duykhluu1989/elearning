@@ -13,7 +13,7 @@ class WidgetController extends Controller
 {
     public function adminWidget(Request $request)
     {
-        $dataProvider = Widget::select('id', 'name', 'status', 'type');
+        $dataProvider = Widget::select('id', 'name', 'status');
 
         $inputs = $request->all();
 
@@ -21,9 +21,6 @@ class WidgetController extends Controller
         {
             if(!empty($inputs['name']))
                 $dataProvider->where('name', 'like', '%' . $inputs['name'] . '%');
-
-            if(isset($inputs['type']) && $inputs['type'] !== '')
-                $dataProvider->where('type', $inputs['type']);
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
                 $dataProvider->where('status', $inputs['status']);
@@ -38,12 +35,6 @@ class WidgetController extends Controller
                     echo Html::a($row->name, [
                         'href' => action('Backend\WidgetController@editWidget', ['id' => $row->id]),
                     ]);
-                },
-            ],
-            [
-                'title' => 'Loại',
-                'data' => function($row) {
-                    echo Widget::getWidgetType($row->type);
                 },
             ],
             [
@@ -64,12 +55,6 @@ class WidgetController extends Controller
                 'title' => 'Tên',
                 'name' => 'name',
                 'type' => 'input',
-            ],
-            [
-                'title' => 'Loại',
-                'name' => 'type',
-                'type' => 'select',
-                'options' => Widget::getWidgetType(),
             ],
             [
                 'title' => 'Trạng Thái',

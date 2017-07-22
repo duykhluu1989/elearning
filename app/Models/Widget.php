@@ -24,11 +24,6 @@ class Widget extends Model
     const TYPE_GROUP_COURSE_CUSTOM_DB = 2;
     const TYPE_ADVERTISE_BANNER_DB = 3;
     const TYPE_GROUP_STAFF_DB = 4;
-    const TYPE_SLIDER_LABEL = 'Khung Ảnh Trượt';
-    const TYPE_GROUP_COURSE_LABEL = 'Nhóm Khóa Học';
-    const TYPE_GROUP_COURSE_CUSTOM_LABEL = 'Nhóm Khóa Học Tùy Chọn';
-    const TYPE_ADVERTISE_BANNER_LABEL = 'Biển Quảng Cáo';
-    const TYPE_GROUP_STAFF_LABEL = 'Đội Ngũ Tiêu Biểu';
 
     const ATTRIBUTE_TYPE_STRING_DB = 0;
     const ATTRIBUTE_TYPE_INT_DB = 1;
@@ -326,21 +321,5 @@ class Widget extends Model
             $widget->attribute = $coreWidget[4];
             $widget->save();
         }
-    }
-
-    public static function getWidgetType($value = null)
-    {
-        $type = [
-            self::TYPE_SLIDER_DB => self::TYPE_SLIDER_LABEL,
-            self::TYPE_GROUP_COURSE_DB => self::TYPE_GROUP_COURSE_LABEL,
-            self::TYPE_GROUP_COURSE_CUSTOM_DB => self::TYPE_GROUP_COURSE_CUSTOM_LABEL,
-            self::TYPE_ADVERTISE_BANNER_DB => self::TYPE_ADVERTISE_BANNER_LABEL,
-            self::TYPE_GROUP_STAFF_DB => self::TYPE_GROUP_STAFF_LABEL,
-        ];
-
-        if($value !== null && isset($type[$value]))
-            return $type[$value];
-
-        return $type;
     }
 }

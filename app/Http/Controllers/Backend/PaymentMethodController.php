@@ -15,7 +15,7 @@ class PaymentMethodController extends Controller
 {
     public function adminPaymentMethod()
     {
-        $dataProvider = PaymentMethod::select('id', 'name', 'status', 'type', 'order', 'code')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
+        $dataProvider = PaymentMethod::select('id', 'name', 'status', 'order')->orderBy('id', 'desc')->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
@@ -27,18 +27,8 @@ class PaymentMethodController extends Controller
                 },
             ],
             [
-                'title' => 'Mã',
-                'data' => 'code',
-            ],
-            [
                 'title' => 'Thứ Tự',
                 'data' => 'order',
-            ],
-            [
-                'title' => 'Loại',
-                'data' => function($row) {
-                    echo PaymentMethod::getPaymentMethodType($row->type);
-                },
             ],
             [
                 'title' => 'Trạng Thái',

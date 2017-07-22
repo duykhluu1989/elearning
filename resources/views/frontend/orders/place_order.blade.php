@@ -79,6 +79,9 @@
 
                             <div class="panel-group" id="accordion">
 
+                                <?php
+                                $i = 1;
+                                ?>
                                 @foreach($paymentMethods as $paymentMethod)
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
@@ -86,7 +89,7 @@
                                                 <a data-toggle="collapse" data-parent="#accordion" href="#PaymentMethod_{{ $paymentMethod->id }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($paymentMethod, 'name') }}</a>
                                             </h4>
                                         </div>
-                                        <div id="PaymentMethod_{{ $paymentMethod->id }}" class="panel-collapse collapse in">
+                                        <div id="PaymentMethod_{{ $paymentMethod->id }}" class="panel-collapse collapse{{ $i == 1 ? ' in' : '' }}">
                                             <div class="panel-body">
 
                                                 <?php
@@ -136,130 +139,62 @@
 
                                                         <?php
                                                         break;
+
+                                                    case \App\Models\PaymentMethod::PAYMENT_TYPE_BANK_TRANSFER_DB:
+                                                        ?>
+
+                                                    <p>* @lang('theme.payment_bank_text_1')</p>
+                                                    <h4>@lang('theme.payment_bank_text_2')</h4>
+                                                    <p>@lang('theme.payment_bank_text_3'):</p>
+
+                                                    @if(!empty($paymentMethod->detail))
+                                                        <?php
+                                                        $details = json_decode($paymentMethod->detail, true);
+                                                        ?>
+                                                        @foreach($details as $detail)
+                                                            <h4>@lang('theme.bank'): {{ isset($detail['bank']) ? $detail['bank'] : '' }}</h4>
+                                                            <p>
+                                                                • @lang('theme.bank_number'): {{ isset($detail['bank_number']) ? $detail['bank_number'] : '' }}<br />
+                                                                • @lang('theme.bank_name'): {{ isset($detail['bank_name']) ? $detail['bank_name'] : '' }}<br />
+                                                            </p>
+                                                        @endforeach
+                                                    @endif
+
+                                                        <p>
+                                                            @lang('theme.payment_bank_text_4'):<br />
+                                                            • @lang('theme.payment_bank_text_5') <br>
+                                                            • @lang('theme.example'): 0909090909 - Nguyen Thi Huong Lan - caydenthan@gmail.com - 2313123
+                                                        </p>
+
+                                                        <?php
+                                                        break;
+
+                                                    case \App\Models\PaymentMethod::PAYMENT_TYPE_AT_OFFICE_DB:
+                                                        ?>
+
+                                                        <p>@lang('theme.office_address'):</p>
+
+                                                        @if(!empty($paymentMethod->detail))
+                                                            <?php
+                                                            $details = json_decode($paymentMethod->detail, true);
+                                                            ?>
+                                                            @foreach($details as $detail)
+                                                                <h4>{{ isset($detail['address']) ? $detail['address'] : '' }}</h4>
+                                                            @endforeach
+                                                        @endif
+
+
+                                                        <?php
+                                                        break;
                                                 }
                                                 ?>
                                             </div>
                                         </div>
                                     </div>
+                                    <?php
+                                    $i ++;
+                                    ?>
                                 @endforeach
-
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Thanh toán bằng mã thẻ cào điện thoại</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseTwo" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <p class="alert alert-success" role="alert">caydenthan.vn sẽ hoàn lại số tiền dư sau khi bạn thanh toán thành công vào số điện thoại mà bạn cung cấp.</p>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <label for="">Service Cod</label>
-                                                    </div>
-                                                    <div class="col-lg-8">
-                                                        <div class="radio">
-                                                            <label>
-                                                                <input type="radio" name="brand" id="" value="" checked="checked">
-                                                                Viettel
-                                                            </label>
-                                                            <label>
-                                                                <input type="radio" name="brand" id="" value="" >
-                                                                Mobilephone
-                                                            </label>
-                                                            <label>
-                                                                <input type="radio" name="brand" id="" value="">
-                                                                Vinaphone
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <label for="">Mã thẻ cào (*)</label>
-                                                    </div>
-                                                    <div class="col-lg-8">
-                                                        <input type="text" class="form-control" id="" placeholder="Nhập chữ số dưới lớp ">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <label for="">Sỗ seri thẻ (*)</label>
-                                                    </div>
-                                                    <div class="col-lg-8">
-                                                        <input type="text" class="form-control" id="" placeholder="Nhập số seri in trên thẻ cào">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Thanh toán bằng thẻ ATM có đăng ký Internet Banking (qua cổng Onepay)</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseThree" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <p>* Khóa học sẽ được kích hoạt ngay sau khi bạn thanh toán thành công.</p>
-                                            <img src="images/bank.png" alt="" class="img-responsive">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Thanh toán bằng thẻ quốc tế Visa/Mastercard (qua cổng Onepay)</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse4" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <img src="images/logo-visa-master.png" alt="" class="img-responsive">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Chuyển khoản qua Ngân hàng hoặc nộp tại cây ATM gần nhất</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse5" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <p>* Khóa học sẽ được kích hoạt sau khi caydenthan.vn kiểm tra tài khoản và xác nhận việc thanh toán của bạn thành công. (Thời gian kiểm tra và xác nhận tài khoản ít nhất là 12 giờ)</p>
-                                            <h4>Chuyển khoản ngân hàng</h4>
-                                            <p>Bạn có thể đến bất kỳ ngân hàng nào ở Việt Nam (hoặc sử dụng Internet Banking) để chuyển tiền theo thông tin bên dưới:</p>
-                                            <p>• Số tài khoản: 0531 0025 11245. <br>
-                                                • Chủ tài khoản: Công ty cổ phần DREAM VIET EDUCATION. <br>
-                                                • Ngân hàng: Ngân hàng Vietcombank, Chi nhánh Đông Sài Gòn, TP.HCM.<br>
-                                                Ghi chú khi chuyển khoản:<br><br>
-                                                • Tại mục "Ghi chú" khi chuyển khoản, bạn ghi rõ: Số điện thoại - Họ và tên - Email đăng ký học - Mã đơn hàng. <br>
-                                                • Ví dụ: 0909090909 - Nguyen Thi Huong Lan - caydenthan@gmail.com - 2313123<br>
-                                                Chuyển tiền qua Paypal<br><br>
-                                                • Địa chỉ email nhận tiền: ketoan@kyna.vn <br>
-                                                • Tại mục "Message" khi chuyển tiền, bạn ghi rõ: Số điện thoại - Họ và tên - Email đăng ký học - Khóa học đăng ký. <br>
-                                                • Tỉ giá áp dụng 1 USD = 21.000 VND (tỉ giá trên PayPal).</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Đóng tiền trực tiếp tại văn phòng của caydenthan.vn</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse6" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <p>Địa chỉ văn phòng:<br>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, facere sapiente, magni perferendis dicta voluptatibus ea natus sit laborum libero eligendi voluptatum aspernatur nulla architecto tenetur, velit provident. Aperiam, similique!</p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">

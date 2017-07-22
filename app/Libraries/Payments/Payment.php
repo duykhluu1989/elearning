@@ -15,10 +15,12 @@ abstract class Payment
         {
             $codPayment = new CodPayment();
             $bankTransferPayment = new BankTransferPayment();
+            $atOfficePayment = new AtOfficePayment();
 
             static::$payments = [
                 $codPayment->getCode() => $codPayment,
                 $bankTransferPayment->getCode() => $bankTransferPayment,
+                $atOfficePayment->getCode() => $atOfficePayment,
             ];
         }
 

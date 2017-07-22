@@ -4,33 +4,33 @@ namespace App\Libraries\Payments;
 
 use App\Models\PaymentMethod;
 
-class BankTransferPayment extends Payment
+class AtOfficePayment extends Payment
 {
     public function getCode()
     {
-        return 'bank_transfer';
+        return 'at_office';
     }
 
     public function getName($lang = null)
     {
         $names = [
-            'en' => 'Transfer via bank or nearest ATM',
+            'en' => 'Pay directly at the office of caydenthan.vn',
         ];
 
         if($lang !== null && isset($names[$lang]))
             return $names[$lang];
 
-        return 'Chuyển khoản qua ngân hàng hoặc nộp tại cây ATM gần nhất';
+        return 'Đóng tiền trực tiếp tại văn phòng của caydenthan.vn';
     }
 
     public function getType()
     {
-        return PaymentMethod::PAYMENT_TYPE_BANK_TRANSFER_DB;
+        return PaymentMethod::PAYMENT_TYPE_AT_OFFICE_DB;
     }
 
     public function renderView($paymentMethod)
     {
-        echo view('libraries.payments.bank_transfer_form', [
+        echo view('libraries.payments.at_office_form', [
             'paymentMethod' => $paymentMethod,
         ]);
     }

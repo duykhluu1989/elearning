@@ -32,7 +32,7 @@ if(!empty($paymentMethod->detail))
                             <input type="text" class="form-control" name="detail[bank][]" value="{{ isset($detail['bank']) ? $detail['bank'] : '' }}" required="required" />
                         </td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-default RemoveBannerItemButton"><i class="fa fa-trash-o fa-fw"></i></button>
+                            <button type="button" class="btn btn-default RemoveBankAccountItemButton"><i class="fa fa-trash-o fa-fw"></i></button>
                         </td>
                     </tr>
                 @endforeach

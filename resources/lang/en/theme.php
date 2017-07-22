@@ -67,5 +67,15 @@ return [
     'district' => 'District',
     'note' => 'Note',
     'input_require' => 'Please enter all the fields above',
+    'payment_bank_text_1' => 'The course will be activated after caydenthan.vn checks the account and confirms your payment is successful. (Time to check and confirm the account is at least 12 hours)',
+    'payment_bank_text_2' => 'Bank transfer',
+    'payment_bank_text_3' => 'You can go to any bank in Vietnam (or use Internet Banking) to transfer money according to the information below',
+    'bank_number' => 'Account number',
+    'bank_name' => 'Account holder',
+    'bank' => 'Bank',
+    'payment_bank_text_4' => 'Note when transfer',
+    'payment_bank_text_5' => 'In the "Note" section of the transfer, you specify: Phone number - Full name - Email enrollment - Order code',
+    'example' => 'Example',
+    'office_address' => 'Office address',
 
 ];

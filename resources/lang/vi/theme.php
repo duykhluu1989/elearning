@@ -67,5 +67,15 @@ return [
     'district' => 'Quận / huyện',
     'note' => 'Ghi chú',
     'input_require' => 'Bạn cần điền đầy đủ các thông tin trên',
+    'payment_bank_text_1' => 'Khóa học sẽ được kích hoạt sau khi caydenthan.vn kiểm tra tài khoản và xác nhận việc thanh toán của bạn thành công. (Thời gian kiểm tra và xác nhận tài khoản ít nhất là 12 giờ)',
+    'payment_bank_text_2' => 'Chuyển khoản ngân hàng',
+    'payment_bank_text_3' => 'Bạn có thể đến bất kỳ ngân hàng nào ở Việt Nam (hoặc sử dụng Internet Banking) để chuyển tiền theo thông tin bên dưới',
+    'bank_number' => 'Số tài khoản',
+    'bank_name' => 'Chủ tài khoản',
+    'bank' => 'Ngân hàng',
+    'payment_bank_text_4' => 'Ghi chú khi chuyển khoản',
+    'payment_bank_text_5' => 'Tại mục "Ghi chú" khi chuyển khoản, bạn ghi rõ: Số điện thoại - Họ và tên - Email đăng ký học - Mã đơn hàng',
+    'example' => 'Ví dụ',
+    'office_address' => 'Địa chỉ văn phòng',
 
 ];
