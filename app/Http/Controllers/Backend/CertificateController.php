@@ -103,7 +103,6 @@ class CertificateController extends Controller
         $certificate = new Certificate();
         $certificate->status = Utility::ACTIVE_DB;
         $certificate->order = 1;
-        $certificate->price = 1;
 
         return $this->saveCertificate($request, $certificate);
     }

@@ -60,7 +60,7 @@
                 <div class="form-group{{ $errors->has('price') ? ' has-error': '' }}">
                     <label>Lệ Phí</label>
                     <div class="input-group">
-                        <input type="text" class="form-control InputForNumber" name="price" value="{{ old('price', \App\Libraries\Helpers\Utility::formatNumber($certificate->price)) }}" />
+                        <input type="text" class="form-control InputForNumber" name="price" value="{{ old('price', (!empty($certificate->price) ? \App\Libraries\Helpers\Utility::formatNumber($certificate->price) : '')) }}" />
                         <span class="input-group-addon">VND</span>
                     </div>
                     @if($errors->has('price'))
