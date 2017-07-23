@@ -1,6 +1,14 @@
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
+            <li class="treeview{{ (request()->is('admin/order*') ? ' active' : '') }}">
+                <a href="#"><i class="fa fa-inbox"></i><span>Đơn Hàng</span></a>
+                <ul class="treeview-menu">
+                    <li class="{{ (request()->is('admin/order') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\OrderController@adminOrder') }}">Đơn Hàng</a>
+                    </li>
+                </ul>
+            </li>
             <li class="treeview{{ (request()->is('admin/course*') ? ' active' : '') }}">
                 <a href="#"><i class="fa fa-book"></i><span>Khóa Học</span></a>
                 <ul class="treeview-menu">

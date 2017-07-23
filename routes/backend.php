@@ -40,6 +40,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
     Route::group(['middleware' => ['auth', 'access', 'permission']], function() {
 
+        Route::get('order', 'OrderController@adminOrder');
+
+        Route::match(['get', 'post'], 'order/{id}/detail', 'OrderController@detailOrder');
+
         Route::get('courseCategory', 'CourseController@adminCategory');
 
         Route::match(['get', 'post'], 'courseCategory/create', 'CourseController@createCategory');
