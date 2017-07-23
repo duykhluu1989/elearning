@@ -81,5 +81,6 @@ return [
     'bought_courses' => 'Bạn đã mua :courses rồi',
     'order_success' => 'Đặt đơn hàng thành công',
     'order_number' => 'Số đơn hàng',
+    'detail' => 'Chi tiết',
 
 ];

@@ -33,13 +33,15 @@
                     </div>
                     <div class="col-lg-6 boxmH">
                         <div class="box_info_khoahoc">
-                            <p class="big_price"><i class="fa fa-tags" aria-hidden="true"></i>
-                                @if($course->validatePromotionPrice())
-                                    <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}</span> - <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }})</span> <span class="sale_percent">-{{ round(($course->price - $course->promotionPrice->price) * 100 / $course->price) }}%</span>
-                                @else
-                                    <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}</span>
-                                @endif
-                            </p>
+                            @if($bought == false)
+                                <p class="big_price"><i class="fa fa-tags" aria-hidden="true"></i>
+                                    @if($course->validatePromotionPrice())
+                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}</span> - <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }})</span> <span class="sale_percent">-{{ round(($course->price - $course->promotionPrice->price) * 100 / $course->price) }}%</span>
+                                    @else
+                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}</span>
+                                    @endif
+                                </p>
+                            @endif
 
                             <div class="row">
                                 <div class="col-lg-8">
@@ -71,7 +73,7 @@
                     <div class="col-lg-12">
                         <ul class="nav nav-tabs tabs_info">
                             <li class="active"><a data-toggle="tab" href="#section_gioithieu">@lang('theme.course_description')</a></li>
-                            <li><a data-toggle="tab" href="#section_chitiet">Chi tiết</a></li>
+                            <li><a data-toggle="tab" href="#section_chitiet">@lang('theme.detail')t</a></li>
                             <li><a data-toggle="tab" href="#section_binhluan">Đánh giá & bình luận</a></li>
                         </ul>
                         <div class="tab-content tabs_info_content">
@@ -80,8 +82,20 @@
                                 <?php echo \App\Libraries\Helpers\Utility::getValueByLocale($course, 'description'); ?>
                             </div>
                             <div id="section_chitiet" class="tab-pane fade">
-                                <h3>Section B</h3>
-                                <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
+                                <table class="table table-bordered">
+                                    <tbody>
+                                    @foreach($course->courseItems as $courseItem)
+                                        <tr>
+                                            <td>{{ $courseItem->number }}</td>
+                                            @if($bought == false)
+                                                <td>{{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}</td>
+                                            @else
+                                                <td>{{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}</td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                             <div id="section_binhluan" class="tab-pane fade">
                                 <h3>Dropdown 1</h3>

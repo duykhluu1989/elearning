@@ -92,8 +92,7 @@ class CourseController extends Controller
             $query->select('user_id', 'name');
         }, 'promotionPrice' => function($query) {
             $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
-        }])
-            ->select('id', 'user_id', 'name', 'name_en', 'price', 'video_length', 'image', 'item_count', 'audio_length')
+        }])->select('id', 'user_id', 'name', 'name_en', 'price', 'video_length', 'image', 'item_count', 'audio_length')
             ->where('id', $id)
             ->where('status', Course::STATUS_PUBLISH_DB)
             ->where('category_status', Utility::ACTIVE_DB)
@@ -132,8 +131,7 @@ class CourseController extends Controller
             $query->select('id', 'name', 'name_en', 'slug', 'slug_en');
         }, 'promotionPrice' => function($query) {
             $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
-        }])
-            ->select('id', 'user_id', 'name', 'name_en', 'price', 'description', 'description_en', 'point_price', 'video_length', 'level_id', 'short_description', 'short_description_en', 'image', 'item_count', 'bought_count', 'view_count', 'audio_length')
+        }, 'courseItems'])->select('id', 'user_id', 'name', 'name_en', 'price', 'description', 'description_en', 'point_price', 'video_length', 'level_id', 'short_description', 'short_description_en', 'image', 'item_count', 'bought_count', 'view_count', 'audio_length')
             ->where('id', $id)
             ->where('status', Course::STATUS_PUBLISH_DB)
             ->where('category_status', Utility::ACTIVE_DB)
@@ -167,10 +165,11 @@ class CourseController extends Controller
         }
 
         $bought = false;
+        $userCourse = null;
 
         if(auth()->user())
         {
-            $userCourse = UserCourse::select('id')->where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
+            $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
 
             if(!empty($userCourse))
                 $bought = true;
@@ -179,6 +178,7 @@ class CourseController extends Controller
         return view('frontend.courses.detail_course', [
             'bought' => $bought,
             'course' => $course,
+            'userCourse' => $userCourse,
         ]);
     }
 }
