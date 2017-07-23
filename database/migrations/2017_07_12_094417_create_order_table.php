@@ -19,7 +19,8 @@ class CreateOrderTable extends Migration
             $table->double('total_price')->unsigned();
             $table->double('total_discount_price')->unsigned();
             $table->double('total_point_price')->unsigned();
-            $table->unsignedInteger('payment_method_id')->nullable();
+            $table->unsignedInteger('discount_id')->nullable();
+            $table->unsignedInteger('referral_id')->nullable();
             $table->string('note', 255)->nullable();
         });
     }

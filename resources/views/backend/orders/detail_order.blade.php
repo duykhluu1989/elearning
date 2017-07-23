@@ -11,10 +11,6 @@
 
                     <button type="button" class="btn btn-primary" id="SubmitPaymentButton">Xác Nhận Thanh Toán</button>
 
-                @elseif($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
-
-                    <button type="button" class="btn btn-primary">Hoàn Tiền</button>
-
                 @endif
             @endif
 
@@ -36,10 +32,8 @@
                     $status = \App\Models\Order::getOrderPaymentStatus($order->payment_status);
                     if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
                         echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-success']);
-                    else if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
-                        echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-danger']);
                     else
-                        echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-warning']);
+                        echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-danger']);
                     ?>
                 </div>
             </div>
@@ -84,26 +78,26 @@
 
             <div class="modal fade" tabindex="-1" role="dialog" id="SubmitPaymentModal">
                 <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <form method="post">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title">Xác Nhận Thanh Toán</h4>
-                            </div>
-                            <div class="modal-body">
+                    <div class="modal-content box" id="SubmitPaymentModalContent">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Xác Nhận Thanh Toán</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ action('Backend\OrderController@submitPaymentOrder', ['id' => $order->id]) }}" method="post" id="SubmitPaymentModalForm">
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-primary">Xác Nhận</button>
-                            </div>
+                                @include('backend.orders.partials.submit_payment_order_form')
+
+                            </form>
                             {{ csrf_field() }}
-                        </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary" id="SubmitPaymentModalSubmitButton">Xác Nhận</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
-        @elseif($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
 
         @endif
     @endif
@@ -118,10 +112,42 @@
                 $('#SubmitPaymentButton').click(function() {
                     $('#SubmitPaymentModal').modal('show');
                 });
+
+                $('#SubmitPaymentModalSubmitButton').click(function() {
+                    var submitPaymentModalFormElem = $('#SubmitPaymentModalForm');
+
+                    if(submitPaymentModalFormElem[0].checkValidity() == false)
+                        submitPaymentModalFormElem[0].reportValidity();
+                    else
+                    {
+                        $('#SubmitPaymentModalContent').append('' +
+                            '<div class="overlay">' +
+                            '<i class="fa fa-refresh fa-spin"></i>' +
+                            '</div>' +
+                        '');
+
+                        $.ajax({
+                            url: submitPaymentModalFormElem.prop('action'),
+                            type: 'post',
+                            data: '_token=' + $('input[name="_token"]').first().val() + '&' + submitPaymentModalFormElem.serialize(),
+                            success: function(result) {
+                                if(result)
+                                {
+                                    if(result == 'Success')
+                                        location.reload();
+                                    else
+                                    {
+                                        submitPaymentModalFormElem.html(result);
+
+                                        $('#SubmitPaymentModalContent').find('div[class="overlay"]').first().remove();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             </script>
         @endpush
-
-    @elseif($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
 
     @endif
 @endif

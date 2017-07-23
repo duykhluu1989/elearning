@@ -44,7 +44,7 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'order/{id}/detail', 'OrderController@detailOrder');
 
-        Route::post('order/{id}/submitPayment', 'Backend\OrderController@submitPaymentOrder');
+        Route::post('order/{id}/submitPayment', 'OrderController@submitPaymentOrder');
 
         Route::get('courseCategory', 'CourseController@adminCategory');
 

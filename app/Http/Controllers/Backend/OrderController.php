@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Libraries\Helpers\Utility;
+use App\Models\UserCourse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
+use App\Libraries\Helpers\Utility;
 use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
 
@@ -57,10 +59,8 @@ class OrderController extends Controller
                     $status = Order::getOrderPaymentStatus($row->payment_status);
                     if($row->payment_status == Order::PAYMENT_STATUS_COMPLETE_DB)
                         echo Html::span($status, ['class' => 'label label-success']);
-                    else if($row->payment_status == Order::PAYMENT_STATUS_PENDING_DB)
-                        echo Html::span($status, ['class' => 'label label-danger']);
                     else
-                        echo Html::span($status, ['class' => 'label label-warning']);
+                        echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
             [
@@ -100,24 +100,57 @@ class OrderController extends Controller
 
     public function submitPaymentOrder(Request $request, $id)
     {
-        $order = Order::find($id);
+        $order = Order::with('orderItems')->where('payment_status', Order::PAYMENT_STATUS_PENDING_DB)
+            ->whereNull('cancelled_at')
+            ->find($id);
 
         if(empty($order))
-            return view('backend.errors.404');
+            return '';
 
         $inputs = $request->all();
 
-        $validator = Validator::make($inputs, [
+        $inputs['amount'] = implode('', explode('.', $inputs['amount']));
 
+        $validator = Validator::make($inputs, [
+            'amount' => 'required|integer|min:1',
         ]);
+
+        $validator->after(function($validator) use($order) {
+            $courseIds = array();
+
+            foreach($order->orderItems as $orderItem)
+                $courseIds[] = $orderItem->course_id;
+
+            $userCourses = UserCourse::select('course_id')->where('user_id', $order->user_id)->whereIn('course_id', $courseIds)->get();
+
+            if(count($userCourses) > 0)
+                $validator->errors()->add('amount', 'Đơn hàng này có khóa học đã mua rồi');
+        });
 
         if($validator->passes())
         {
+            try
+            {
+                DB::beginTransaction();
 
+                $order->completePayment();
+
+                DB::commit();
+
+                return 'Success';
+            }
+            catch(\Exception $e)
+            {
+                DB::rollBack();
+
+                return view('backend.orders.partials.submit_payment_order_form', [
+                    'order' => $order,
+                ])->withErrors(['amount' => [$e->getMessage()]]);
+            }
         }
         else
-        {
-
-        }
+            return view('backend.orders.partials.submit_payment_order_form', [
+                'order' => $order,
+            ])->withErrors($validator);
     }
 }
