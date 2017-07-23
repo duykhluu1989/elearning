@@ -42,6 +42,16 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderItem', 'order_id');
     }
 
+    public function orderAddress()
+    {
+        return $this->hasOne('App\Models\OrderAddress', 'order_id');
+    }
+
+    public function orderTransactions()
+    {
+        return $this->hasMany('App\Models\OrderTransaction', 'order_id');
+    }
+
     public static function getOrderPaymentStatus($value = null)
     {
         $status = [
@@ -55,7 +65,7 @@ class Order extends Model
         return $status;
     }
 
-    public function completePayment($amount = null, $note = null)
+    public function completePayment($note = null)
     {
         if(empty($this->cancelled_at) && $this->payment_status == self::PAYMENT_STATUS_PENDING_DB)
         {
@@ -64,9 +74,7 @@ class Order extends Model
 
             $transaction = new OrderTransaction();
             $transaction->order_id = $this->id;
-
-            if($amount === null)
-                $transaction->amount = $this->total_price;
+            $transaction->amount = $this->total_price;
 
             $transaction->type = self::PAYMENT_STATUS_COMPLETE_DB;
             $transaction->created_at = date('Y-m-d H:i:s');
@@ -84,7 +92,12 @@ class Order extends Model
                 $userCourse->order_id = $this->id;
                 $userCourse->course_item_tracking = 1;
                 $userCourse->save();
+
+                $orderItem->course->bought_count ++;
+                $orderItem->course->save();
             }
+
+            $pointEarn = round($transaction->amount / Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::EXCHANGE_POINT_RATE), 0, PHP_ROUND_HALF_DOWN);
 
             if(empty($this->user->studentInformation))
             {
@@ -92,12 +105,16 @@ class Order extends Model
                 $student->user_id = $this->user_id;
                 $student->course_count = 1;
                 $student->total_spent = $transaction->amount;
+                $student->current_point = $pointEarn;
+                $student->total_point = $pointEarn;
                 $student->save();
             }
             else
             {
                 $this->user->studentInformation->course_count += 1;
                 $this->user->studentInformation->total_spent += $transaction->amount;
+                $this->user->studentInformation->current_point += $pointEarn;
+                $this->user->studentInformation->total_point += $pointEarn;
                 $this->user->studentInformation->save();
             }
 

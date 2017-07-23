@@ -37,6 +37,36 @@
                     ?>
                 </div>
             </div>
+
+            @if(!empty($order->orderAddress))
+                <div class="row">
+                    <div class="col-sm-4">
+                        <p class="page-header">Tên</p>
+                        {{ $order->orderAddress->name }}
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="page-header">Email</p>
+                        {{ $order->orderAddress->email }}
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="page-header">Số Điện Thoại</p>
+                        {{ $order->orderAddress->phone }}
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="page-header">Địa Chỉ</p>
+                        {{ $order->orderAddress->address }}
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="page-header">Tỉnh / Thành Phố</p>
+                        {{ $order->orderAddress->province }}
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="page-header">Quận / Huyện</p>
+                        {{ $order->orderAddress->district }}
+                    </div>
+                </div>
+            @endif
+
             <div class="row">
                 <div class="col-sm-12">
                     <p class="page-header">Khóa Học</p>
@@ -46,6 +76,7 @@
                             <tr>
                                 <th>Tên</th>
                                 <th>Giá Tiền</th>
+                                <th>Giá Điểm</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -53,20 +84,52 @@
                                 <tr>
                                     <td>{{ $orderItem->course->name }}</td>
                                     <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderItem->price) . ' VND' }}</td>
+                                    <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderItem->point_price) }}</td>
                                 </tr>
                             @endforeach
                             <tr>
                                 <td colspan="2"></td>
                             </tr>
                             <tr>
-                                <th>Tổng Tiền</th>
+                                <th>Tổng</th>
                                 <td>{{ \App\Libraries\Helpers\Utility::formatNumber($order->total_price) . ' VND' }}</td>
+                                <td>{{ \App\Libraries\Helpers\Utility::formatNumber($order->total_point_price) }}</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
+            @if(count($order->orderTransactions) > 0)
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="page-header">Thanh Toán</p>
+                        <div class="table-responsive no-padding">
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>Trạng Thái</th>
+                                    <th>Tiền</th>
+                                    <th>Điểm</th>
+                                    <th>Ghi Chú</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($order->orderTransactions as $orderTransaction)
+                                    <tr>
+                                        <td>{{ \App\Models\Order::getOrderPaymentStatus($orderTransaction->type) }}</td>
+                                        <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderTransaction->amount) . ' VND' }}</td>
+                                        <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderTransaction->point_amount) }}</td>
+                                        <td>{{ $orderTransaction->note }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
         <div class="box-footer">
             <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\OrderController@adminOrder')) }}" class="btn btn-default">Quay Lại</a>

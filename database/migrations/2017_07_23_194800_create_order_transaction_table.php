@@ -12,6 +12,7 @@ class CreateOrderTransactionTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('order_id');
             $table->double('amount')->unsigned();
+            $table->double('point_amount')->unsigned();
             $table->unsignedTinyInteger('type')->default(0);
             $table->dateTime('created_at');
             $table->double('referral_commission_percent')->unsigned()->nullable();

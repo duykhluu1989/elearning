@@ -16,6 +16,7 @@ use App\Models\PaymentMethod;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\UserCourse;
+use App\Models\OrderAddress;
 use App\RedisModels\Cart;
 
 class OrderController extends Controller
@@ -230,6 +231,19 @@ class OrderController extends Controller
                         $orderItem->save();
                     }
 
+                    if(isset($inputs['name']))
+                    {
+                        $orderAddress = new OrderAddress();
+                        $orderAddress->order_id = $order->id;
+                        $orderAddress->name = $inputs['name'];
+                        $orderAddress->email = $inputs['email'];
+                        $orderAddress->phone = $inputs['phone'];
+                        $orderAddress->address = $inputs['address'];
+                        $orderAddress->province = Area::$provinces[$inputs['province']]['name'];
+                        $orderAddress->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+                        $orderAddress->save();
+                    }
+
                     DB::commit();
 
                     $orderThankYou = [
@@ -330,6 +344,7 @@ class OrderController extends Controller
         $fullCart = [
             'countItem' => 0,
             'totalPrice' => 0,
+            'totalPointPrice' => 0,
             'cartItems' => array(),
         ];
 
@@ -337,7 +352,7 @@ class OrderController extends Controller
         {
             $courses = Course::with(['promotionPrice' => function($query) {
                 $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
-            }])->select('id', 'name', 'name_en', 'price', 'image', 'slug', 'slug_en')
+            }])->select('id', 'name', 'name_en', 'price', 'point_price', 'image', 'slug', 'slug_en')
                 ->whereIn('id', $cart->cartItems)
                 ->get();
 
@@ -350,6 +365,9 @@ class OrderController extends Controller
                     $fullCart['totalPrice'] += $cartItem->promotionPrice->price;
                 else
                     $fullCart['totalPrice'] += $cartItem->price;
+
+                if(!empty($cartItem->point_price))
+                    $fullCart['totalPointPrice'] += $cartItem->point_price;
             }
         }
 

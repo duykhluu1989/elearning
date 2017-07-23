@@ -109,10 +109,8 @@ class OrderController extends Controller
 
         $inputs = $request->all();
 
-        $inputs['amount'] = implode('', explode('.', $inputs['amount']));
-
         $validator = Validator::make($inputs, [
-            'amount' => 'required|integer|min:1',
+            'note' => 'nullable|string',
         ]);
 
         $validator->after(function($validator) use($order) {
@@ -133,7 +131,7 @@ class OrderController extends Controller
             {
                 DB::beginTransaction();
 
-                $order->completePayment();
+                $order->completePayment($inputs['note']);
 
                 DB::commit();
 

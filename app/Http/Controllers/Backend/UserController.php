@@ -366,7 +366,7 @@ class UserController extends Controller
         $dataProvider = User::with(['studentInformation' => function($query) {
             $query->select('user_id', 'course_count', 'total_spent', 'current_point');
         }])
-            ->select('id', 'username', 'email', 'status')->where('admin', Utility::INACTIVE_DB)->orderBy('id', 'desc');
+            ->select('id', 'username', 'email', 'status')->orderBy('id', 'desc');
 
         $inputs = $request->all();
 

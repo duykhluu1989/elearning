@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="form-group{{ $errors->has('amount') ? ' has-error': '' }}">
-            <label>Số Tiền <i>(bắt buộc)</i></label>
-            <input type="text" class="form-control InputForNumber" name="amount" value="{{ request()->input('amount', \App\Libraries\Helpers\Utility::formatNumber($order->total_price)) }}" required="required" />
+            <label>Số Tiền</label>
+            <span class="form-control no-border">{{ \App\Libraries\Helpers\Utility::formatNumber($order->total_price) . ' VND' }}</span>
             @if($errors->has('amount'))
                 <span class="help-block">{{ $errors->first('amount') }}</span>
             @endif
