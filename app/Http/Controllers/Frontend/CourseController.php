@@ -107,7 +107,7 @@ class CourseController extends Controller
 
         if(auth()->user())
         {
-            $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
+            $userCourse = UserCourse::select('id')->where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
 
             if(!empty($userCourse))
                 $bought = true;
@@ -147,7 +147,7 @@ class CourseController extends Controller
 
         if(auth()->user())
         {
-            $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
+            $userCourse = UserCourse::select('id')->where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
 
             if(!empty($userCourse))
                 $bought = true;

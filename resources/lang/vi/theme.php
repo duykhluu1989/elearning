@@ -78,5 +78,8 @@ return [
     'example' => 'Ví dụ',
     'office_address' => 'Địa chỉ văn phòng',
     'invalid_payment_method' => 'Phương thức thanh toán không hợp lệ',
+    'bought_courses' => 'Bạn đã mua :courses rồi',
+    'order_success' => 'Đặt đơn hàng thành công',
+    'order_number' => 'Số đơn hàng',
 
 ];

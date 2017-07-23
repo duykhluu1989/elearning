@@ -28,7 +28,7 @@ class CodPayment extends Payment
         return PaymentMethod::PAYMENT_TYPE_COD_DB;
     }
 
-    public function validatePlaceOrder($paymentMethod, $inputs, $validator)
+    public function validatePlaceOrder($paymentMethod, $inputs, $validator, $cart)
     {
         if(empty($inputs['name']))
             $validator->errors()->add('name', trans('validation.required', ['attribute' => trans('theme.name')]));

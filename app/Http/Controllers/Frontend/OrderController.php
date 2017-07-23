@@ -14,6 +14,8 @@ use App\Models\Course;
 use App\Models\Category;
 use App\Models\PaymentMethod;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\UserCourse;
 use App\RedisModels\Cart;
 
 class OrderController extends Controller
@@ -112,48 +114,85 @@ class OrderController extends Controller
 
     public function placeOrder(Request $request)
     {
-        $cart = self::getFullCart();
-
-        $paymentMethods = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail', 'code')
-            ->where('status', Utility::ACTIVE_DB)
-            ->orderBy('order', 'desc')
-            ->get();
-
         if($request->isMethod('post'))
         {
             $inputs = $request->all();
+
+            $cart = self::getCart();
 
             $validator = Validator::make($inputs, [
                 'payment_method' => 'required',
             ]);
 
-            $validator->after(function($validator) use(&$inputs, $paymentMethods, $cart) {
-                if($cart['countItem'] == 0)
+            $validator->after(function($validator) use(&$inputs, $cart) {
+                if(empty($cart->cartItems))
                     $validator->errors()->add('cart', trans('theme.empty_cart'));
 
-                $validPaymentMethod = false;
+                $userCourses = UserCourse::with(['course' => function($query) {
+                    $query->select('id', 'name', 'name_ne');
+                }])->select('course_id')->where('user_id', auth()->user()->id)->whereIn('course_id', $cart->cartItems)->get();
+                
+                $boughtCourses = '';
 
-                foreach($paymentMethods as $paymentMethod)
+                foreach($userCourses as $userCourse)
                 {
-                    if($paymentMethod->id == $inputs['payment_method'])
-                    {
-                        $validPaymentMethod = $paymentMethod;
-                        $payment = Payment::getPayments($paymentMethod->code);
+                    $cart->deleteCartItem($userCourse->course_id);
 
-                        $inputs['payment'] = $payment;
-                        $inputs['valid_payment_method'] = $validPaymentMethod;
-
-                        $payment->validatePlaceOrder($paymentMethod, $inputs, $validator);
-                        break;
-                    }
+                    if($boughtCourses == '')
+                        $boughtCourses .= Utility::getValueByLocale($userCourse->course, 'name');
+                    else
+                        $boughtCourses .= ', ' . Utility::getValueByLocale($userCourse->course, 'name');
                 }
 
-                if($validPaymentMethod == false)
+                if(empty($cart->cartItems))
+                {
+                    $cart->delete();
+
+                    self::deleteCookieCartToken();
+                }
+
+                if($boughtCourses != '')
+                    $validator->errors()->add('cart', trans('theme.bought_courses', ['courses' => $boughtCourses]));
+
+                $paymentMethod = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail', 'code')
+                    ->where('status', Utility::ACTIVE_DB)
+                    ->find($inputs['payment_method']);
+
+                if(empty($paymentMethod))
                     $validator->errors()->add('payment_method', trans('theme.invalid_payment_method'));
+                else
+                {
+                    $payment = Payment::getPayments($paymentMethod->code);
+
+                    $inputs['payment'] = $payment;
+                    $inputs['order_payment_method'] = $paymentMethod;
+
+                    $payment->validatePlaceOrder($paymentMethod, $inputs, $validator, $cart);
+                }
             });
 
             if($validator->passes())
             {
+                $courses = Course::with(['promotionPrice' => function($query) {
+                    $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+                }])->select('id', 'name', 'name_en', 'price', 'point_price')
+                    ->whereIn('id', $cart->cartItems)
+                    ->get();
+
+                $totalPrice = 0;
+                $totalPointPrice = 0;
+
+                foreach($courses as $course)
+                {
+                    if($course->validatePromotionPrice())
+                        $totalPrice += $course->promotionPrice->price;
+                    else
+                        $totalPrice += $course->price;
+
+                    if(!empty($course->point_price))
+                        $totalPointPrice += $course->point_price;
+                }
+
                 try
                 {
                     DB::beginTransaction();
@@ -162,10 +201,52 @@ class OrderController extends Controller
                     $order->user_id = auth()->user()->id;
                     $order->created_at = date('Y-m-d H:i:s');
                     $order->payment_method_id = $inputs['payment_method'];
-                    $order->payment_status = 0;
+                    $order->payment_status = Order::PAYMENT_STATUS_PENDING_DB;
+                    $order->total_price = $totalPrice;
+                    $order->total_discount_price = 0;
+                    $order->total_point_price = $totalPointPrice;
+
+                    if(!empty($inputs['note']))
+                        $order->note = $inputs['note'];
+
                     $order->save();
 
+                    foreach($courses as $course)
+                    {
+                        $orderItem = new OrderItem();
+                        $orderItem->order_id = $order->id;
+                        $orderItem->course_id = $course->id;
+
+                        if($course->validatePromotionPrice())
+                            $orderItem->price = $course->promotionPrice->price;
+                        else
+                            $orderItem->price = $course->price;
+
+                        if(empty($course->point_price))
+                            $orderItem->point_price = 0;
+                        else
+                            $orderItem->point_price = $course->point_price;
+
+                        $orderItem->save();
+                    }
+
                     DB::commit();
+
+                    $orderThankYou = [
+                        'order_number' => $order->number,
+                        'payment_method' => Utility::getValueByLocale($inputs['order_payment_method'], 'name'),
+                        'total_price' => $order->total_price,
+                        'courses' => array(),
+                    ];
+
+                    foreach($courses as $course)
+                        $orderThankYou['courses'][] = Utility::getValueByLocale($course, 'name');
+
+                    $cart->delete();
+
+                    self::deleteCookieCartToken();
+
+                    return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou));
                 }
                 catch(\Exception $e)
                 {
@@ -178,10 +259,31 @@ class OrderController extends Controller
                 return redirect()->action('Frontend\OrderController@placeOrder')->withErrors($validator)->withInput();
         }
 
+        $cart = self::getFullCart();
+
+        $paymentMethods = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail', 'code')
+            ->where('status', Utility::ACTIVE_DB)
+            ->orderBy('order', 'desc')
+            ->get();
+
         return view('frontend.orders.place_order', [
             'cart' => $cart,
             'paymentMethods' => $paymentMethods,
         ]);
+    }
+
+    public function thankYou()
+    {
+        if(session('order'))
+        {
+            $orderThankYou = json_decode(session('order'), true);
+
+            return view('frontend.orders.thank_you', [
+                'orderThankYou' => $orderThankYou,
+            ]);
+        }
+        else
+            return redirect()->action('Frontend\OrderController@placeOrder');
     }
 
     public function getListDistrict(Request $request)
@@ -226,7 +328,6 @@ class OrderController extends Controller
     protected static function generateFullCart($cart)
     {
         $fullCart = [
-            'cartData' => $cart,
             'countItem' => 0,
             'totalPrice' => 0,
             'cartItems' => array(),
@@ -242,6 +343,14 @@ class OrderController extends Controller
 
             $fullCart['countItem'] = count($courses);
             $fullCart['cartItems'] = $courses;
+
+            foreach($fullCart['cartItems'] as $cartItem)
+            {
+                if($cartItem->validatePromotionPrice())
+                    $fullCart['totalPrice'] += $cartItem->promotionPrice->price;
+                else
+                    $fullCart['totalPrice'] += $cartItem->price;
+            }
         }
 
         self::$fullCart = $fullCart;

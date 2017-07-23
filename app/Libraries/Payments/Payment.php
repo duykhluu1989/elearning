@@ -46,7 +46,7 @@ abstract class Payment
 
     }
 
-    public function validatePlaceOrder($paymentMethod, $inputs, $validator)
+    public function validatePlaceOrder($paymentMethod, $inputs, $validator, $cart)
     {
 
     }

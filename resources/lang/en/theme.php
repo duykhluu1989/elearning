@@ -78,5 +78,8 @@ return [
     'example' => 'Example',
     'office_address' => 'Office address',
     'invalid_payment_method' => 'Payment method is invalid',
+    'bought_courses' => 'You have already purchased :courses',
+    'order_success' => 'Order successful',
+    'order_number' => 'Order number',
 
 ];

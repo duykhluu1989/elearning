@@ -15,10 +15,10 @@ class Category extends Model
     {
         parent::boot();
 
-        static::saving(function(Category $category) {
-            static::changeParentIdSavingHandle($category);
+        self::saving(function(Category $category) {
+            self::changeParentIdSavingHandle($category);
 
-            static::changeStatusOrParentStatusSavingHandle($category);
+            self::changeStatusOrParentStatusSavingHandle($category);
         });
     }
 

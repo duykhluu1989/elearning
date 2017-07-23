@@ -46,13 +46,11 @@
                                                     @if($cartItem->validatePromotionPrice())
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($cartItem->promotionPrice->price) . 'đ' }}
                                                         <?php
-                                                        $cart['totalPrice'] += $cartItem->promotionPrice->price;
                                                         $cartItemPrice = $cartItem->promotionPrice->price;
                                                         ?>
                                                     @else
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($cartItem->price) . 'đ' }}
                                                         <?php
-                                                        $cart['totalPrice'] += $cartItem->price;
                                                         $cartItemPrice = $cartItem->price;
                                                         ?>
                                                     @endif
