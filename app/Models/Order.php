@@ -9,9 +9,9 @@ class Order extends Model
     const PAYMENT_STATUS_PENDING_DB = 0;
     const PAYMENT_STATUS_COMPLETE_DB = 1;
     const PAYMENT_STATUS_REFUND_DB = 2;
-    const PAYMENT_STATUS_PENDING_LABEL = 'Chưa thanh toán';
-    const PAYMENT_STATUS_COMPLETE_LABEL = 'Đã thanh toán';
-    const PAYMENT_STATUS_REFUND_LABEL = 'Hoàn tiền';
+    const PAYMENT_STATUS_PENDING_LABEL = 'Chưa Thanh Toán';
+    const PAYMENT_STATUS_COMPLETE_LABEL = 'Đã Thanh Toán';
+    const PAYMENT_STATUS_REFUND_LABEL = 'Đã Hoàn Tiền';
 
     const ORDER_NUMBER_PREFIX = 1987654321;
 

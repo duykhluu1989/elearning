@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
 use App\Models\Order;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -79,7 +80,15 @@ class OrderController extends Controller
     {
         Utility::setBackUrlCookie($request, '/admin/order?');
 
-        $order = Order::find($id);
+        $order = Order::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'paymentMethod' => function($query) {
+            $query->select('id', 'name');
+        }, 'orderItems.course' => function($query) {
+            $query->select('id', 'name');
+        }])->find($id);
 
         if(empty($order))
             return view('backend.errors.404');
@@ -87,5 +96,28 @@ class OrderController extends Controller
         return view('backend.orders.detail_order', [
             'order' => $order,
         ]);
+    }
+
+    public function submitPaymentOrder(Request $request, $id)
+    {
+        $order = Order::find($id);
+
+        if(empty($order))
+            return view('backend.errors.404');
+
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+
+        ]);
+
+        if($validator->passes())
+        {
+
+        }
+        else
+        {
+
+        }
     }
 }

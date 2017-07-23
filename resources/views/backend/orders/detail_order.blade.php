@@ -6,6 +6,18 @@
 
     <div class="box box-primary">
         <div class="box-header with-border">
+            @if(empty($order->cancelled_at))
+                @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
+
+                    <button type="button" class="btn btn-primary" id="SubmitPaymentButton">Xác Nhận Thanh Toán</button>
+
+                @elseif($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
+
+                    <button type="button" class="btn btn-primary">Hoàn Tiền</button>
+
+                @endif
+            @endif
+
             <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\OrderController@adminOrder')) }}" class="btn btn-default">Quay Lại</a>
         </div>
         <div class="box-body">
@@ -67,4 +79,49 @@
         </div>
     </div>
 
+    @if(empty($order->cancelled_at))
+        @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
+
+            <div class="modal fade" tabindex="-1" role="dialog" id="SubmitPaymentModal">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <form method="post">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Xác Nhận Thanh Toán</h4>
+                            </div>
+                            <div class="modal-body">
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Xác Nhận</button>
+                            </div>
+                            {{ csrf_field() }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        @elseif($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
+
+        @endif
+    @endif
+
 @stop
+
+@if(empty($order->cancelled_at))
+    @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
+
+        @push('scripts')
+            <script type="text/javascript">
+                $('#SubmitPaymentButton').click(function() {
+                    $('#SubmitPaymentModal').modal('show');
+                });
+            </script>
+        @endpush
+
+    @elseif($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
+
+    @endif
+@endif
