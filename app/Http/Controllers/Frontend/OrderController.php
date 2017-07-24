@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\UserCourse;
 use App\Models\OrderAddress;
+use App\Models\Discount;
 use App\RedisModels\Cart;
 
 class OrderController extends Controller
@@ -128,51 +129,53 @@ class OrderController extends Controller
             $validator->after(function($validator) use(&$inputs, $cart) {
                 if(empty($cart->cartItems))
                     $validator->errors()->add('cart', trans('theme.empty_cart'));
-
-                $userCourses = UserCourse::with(['course' => function($query) {
-                    $query->select('id', 'name', 'name_ne');
-                }])->select('course_id')->where('user_id', auth()->user()->id)->whereIn('course_id', $cart->cartItems)->get();
-                
-                $boughtCourses = '';
-
-                foreach($userCourses as $userCourse)
-                {
-                    $cart->deleteCartItem($userCourse->course_id);
-
-                    if($boughtCourses == '')
-                        $boughtCourses .= Utility::getValueByLocale($userCourse->course, 'name');
-                    else
-                        $boughtCourses .= ', ' . Utility::getValueByLocale($userCourse->course, 'name');
-                }
-
-                if(empty($cart->cartItems))
-                {
-                    $cart->delete();
-
-                    self::deleteCookieCartToken();
-                }
-
-                if($boughtCourses != '')
-                    $validator->errors()->add('cart', trans('theme.bought_courses', ['courses' => $boughtCourses]));
-
-                $paymentMethod = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail', 'code')
-                    ->where('status', Utility::ACTIVE_DB)
-                    ->find($inputs['payment_method']);
-
-                if(empty($paymentMethod))
-                    $validator->errors()->add('payment_method', trans('theme.invalid_payment_method'));
                 else
                 {
-                    $payment = Payment::getPayments($paymentMethod->code);
+                    $userCourses = UserCourse::with(['course' => function($query) {
+                        $query->select('id', 'name', 'name_ne');
+                    }])->select('course_id')->where('user_id', auth()->user()->id)->whereIn('course_id', $cart->cartItems)->get();
 
-                    $inputs['payment'] = $payment;
-                    $inputs['order_payment_method'] = $paymentMethod;
+                    $boughtCourses = '';
 
-                    $payment->validatePlaceOrder($paymentMethod, $inputs, $validator, $cart);
+                    foreach($userCourses as $userCourse)
+                    {
+                        $cart->deleteCartItem($userCourse->course_id);
+
+                        if($boughtCourses == '')
+                            $boughtCourses .= Utility::getValueByLocale($userCourse->course, 'name');
+                        else
+                            $boughtCourses .= ', ' . Utility::getValueByLocale($userCourse->course, 'name');
+                    }
+
+                    if(empty($cart->cartItems))
+                    {
+                        $cart->delete();
+
+                        self::deleteCookieCartToken();
+                    }
+
+                    if($boughtCourses != '')
+                        $validator->errors()->add('cart', trans('theme.bought_courses', ['courses' => $boughtCourses]));
+
+                    $paymentMethod = PaymentMethod::select('id', 'name', 'name_en', 'type', 'detail', 'code')
+                        ->where('status', Utility::ACTIVE_DB)
+                        ->find($inputs['payment_method']);
+
+                    if(empty($paymentMethod))
+                        $validator->errors()->add('payment_method', trans('theme.invalid_payment_method'));
+                    else
+                    {
+                        $payment = Payment::getPayments($paymentMethod->code);
+
+                        $inputs['payment'] = $payment;
+                        $inputs['order_payment_method'] = $paymentMethod;
+
+                        $payment->validatePlaceOrder($paymentMethod, $inputs, $validator, $cart);
+                    }
                 }
             });
 
-            if($validator->passes())
+            if(!$validator->passes())
             {
                 $courses = Course::with(['promotionPrice' => function($query) {
                     $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
@@ -284,6 +287,44 @@ class OrderController extends Controller
             'cart' => $cart,
             'paymentMethods' => $paymentMethods,
         ]);
+    }
+
+    public function useDiscountCode(Request $request)
+    {
+        $inputs = $request->all();
+
+        $cart = self::getCart();
+
+        $validator = Validator::make($inputs, [
+            'discount_code' => 'required|alpha_num|max:255',
+        ]);
+
+        $validator->after(function($validator) use(&$inputs, $cart) {
+            if(empty($cart->cartItems))
+                $validator->errors()->add('discount_code', trans('theme.empty_cart'));
+            else
+            {
+                $result = Discount::calculateDiscountPrice($inputs['discount_code'], $cart, auth()->user());
+
+                if($result['status'] == 'error')
+                    $validator->errors()->add('discount_code', $result['message']);
+                else
+                    $inputs['discount_price'] = $result['discount'];
+            }
+        });
+
+        if($validator->passes())
+        {
+            return json_encode([
+                'status' => 'success',
+                'discount' => $inputs['discount_price'],
+            ]);
+        }
+        else
+            return json_encode([
+                'status' => 'error',
+                'message' => $validator->errors()->first('discount_code'),
+            ]);
     }
 
     public function thankYou()

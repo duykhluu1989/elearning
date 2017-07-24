@@ -84,5 +84,6 @@ return [
     'detail' => 'Chi tiết',
     'list_course_item' => 'Danh sách bài học',
     'lecture_complete' => 'bài học đã hoàn thành',
+    'discount_invalid' => 'Mã khuyến mãi không hợp lệ',
 
 ];

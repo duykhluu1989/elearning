@@ -121,6 +121,10 @@ return [
         'name' => 'họ và tên',
         'course' => 'khóa học',
         'payment_method' => 'phương thức thanh toán',
+        'phone' => 'điện thoại',
+        'address' => 'địa chỉ',
+        'province' => 'tỉnh / thành phố',
+        'district' => 'quận / huyện',
     ],
 
 ];

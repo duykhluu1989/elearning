@@ -48,22 +48,22 @@
                                             <div class="form-group">
                                                 <input type="text" class="form-control" name="discount_code" placeholder="@lang('theme.input_discount_code')">
                                             </div>
-                                            <button type="submit" class="btn btn-lg btn-block btnRed">@lang('theme.use_discount_code')</button>
+                                            <button type="button" id="UseDiscountCodeButton" class="btn btn-lg btn-block btnRed">@lang('theme.use_discount_code')</button>
                                         </div>
                                         <div class="table-responsive table_hocphi">
                                             <table class="table table-hover">
                                                 <tbody>
                                                 <tr>
                                                     <th>@lang('theme.total_item_price')</th>
-                                                    <td>{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</td>
+                                                    <td id="OrderTotalItemPrice" data-order-total-item-price="{{ $cart['totalPrice'] }}">{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>@lang('theme.discount')</th>
-                                                    <td>0đ</td>
+                                                    <td id="OrderDiscountPrice">0đ</td>
                                                 </tr>
                                                 <tr>
                                                     <th>@lang('theme.total_price')</th>
-                                                    <td>{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</td>
+                                                    <td class="OrderTotalPrice">{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -75,7 +75,12 @@
                         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                             <div class="main_content">
                                 <p>@lang('theme.payment_method')</p>
-                                <p>@lang('theme.bill'): <b><span>{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</span></b></p>
+                                <p>@lang('theme.bill'): <b>
+                                        <span class="OrderTotalPrice">{{ \App\Libraries\Helpers\Utility::formatNumber($cart['totalPrice']) . 'đ' }}</span>
+                                        @if(app()->getLocale() == 'en')
+                                            <span id="OrderTotalPriceEn">({{ round($cart['totalPrice'] / \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::EXCHANGE_USD_RATE), 2) . 'USD' }})</span>
+                                        @endif
+                                    </b></p>
                                 @if($errors->has('payment_method'))
                                     <div class="form-group has-error">
                                         <span class="help-block">* {{ $errors->first('payment_method') }}</span>
@@ -84,12 +89,12 @@
                                 <div class="panel-group" id="accordion">
 
                                     <?php
-                                    $choosePaymentMethod = null;
+                                    $choosePaymentMethod = old('payment_method');
                                     $i = 1;
                                     ?>
                                     @foreach($paymentMethods as $paymentMethod)
                                         <?php
-                                        if($i == 1)
+                                        if($i == 1 && empty($choosePaymentMethod))
                                             $choosePaymentMethod = $paymentMethod->id;
                                         ?>
 
@@ -99,7 +104,7 @@
                                                     <a data-toggle="collapse" data-parent="#accordion" href="#PaymentMethod_{{ $paymentMethod->id }}" class="ChoosePaymentMethod" data-payment-method-id="{{ $paymentMethod->id }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($paymentMethod, 'name') }}</a>
                                                 </h4>
                                             </div>
-                                            <div id="PaymentMethod_{{ $paymentMethod->id }}" class="panel-collapse collapse{{ $i == 1 ? ' in' : '' }}">
+                                            <div id="PaymentMethod_{{ $paymentMethod->id }}" class="panel-collapse collapse{{ (($i == 1 && empty($choosePaymentMethod)) || $choosePaymentMethod == $paymentMethod->id) ? ' in' : '' }}">
                                                 <div class="panel-body">
 
                                                     <?php
@@ -111,7 +116,7 @@
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <input type="text" class="form-control" name="name" placeholder="* @lang('theme.name')">
+                                                                    <input type="text" class="form-control" name="name" placeholder="* @lang('theme.name')" value="{{ old('name') }}" />
                                                                     @if($errors->has('name'))
                                                                         <div class="form-group has-error">
                                                                             <span class="help-block">* {{ $errors->first('name') }}</span>
@@ -119,7 +124,7 @@
                                                                     @endif
                                                                 </div>
                                                                 <div class="col-lg-6">
-                                                                    <input type="text" class="form-control" name="email" placeholder="* Email">
+                                                                    <input type="text" class="form-control" name="email" placeholder="* Email" value="{{ old('email') }}" />
                                                                     @if($errors->has('email'))
                                                                         <div class="form-group has-error">
                                                                             <span class="help-block">* {{ $errors->first('email') }}</span>
@@ -131,7 +136,7 @@
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
-                                                                    <input type="text" class="form-control" name="phone" placeholder="* @lang('theme.phone')">
+                                                                    <input type="text" class="form-control" name="phone" placeholder="* @lang('theme.phone')" value="{{ old('phone') }}" />
                                                                     @if($errors->has('phone'))
                                                                         <div class="form-group has-error">
                                                                             <span class="help-block">* {{ $errors->first('phone') }}</span>
@@ -139,7 +144,7 @@
                                                                     @endif
                                                                 </div>
                                                                 <div class="col-lg-6">
-                                                                    <input type="text" class="form-control" name="address" placeholder="* @lang('theme.address')">
+                                                                    <input type="text" class="form-control" name="address" placeholder="* @lang('theme.address')" value="{{ old('address') }}" />
                                                                     @if($errors->has('address'))
                                                                         <div class="form-group has-error">
                                                                             <span class="help-block">* {{ $errors->first('address') }}</span>
@@ -152,9 +157,18 @@
                                                             <div class="row">
                                                                 <div class="col-lg-6">
                                                                     <select id="OrderProvince" name="province" class="form-control">
+                                                                        <?php
+                                                                        $province = old('province');
+                                                                        ?>
+
                                                                         <option value="">* @lang('theme.province')</option>
+
                                                                         @foreach(\App\Libraries\Helpers\Area::$provinces as $code => $data)
-                                                                            <option value="{{ $code }}">{{ $data['name'] }}</option>
+                                                                            @if($province == $code)
+                                                                                <option selected="selected" value="{{ $code }}">{{ $data['name'] }}</option>
+                                                                            @else
+                                                                                <option value="{{ $code }}">{{ $data['name'] }}</option>
+                                                                            @endif
                                                                         @endforeach
                                                                     </select>
                                                                     @if($errors->has('province'))
@@ -165,7 +179,21 @@
                                                                 </div>
                                                                 <div class="col-lg-6">
                                                                     <select id="OrderDistrict" name="district" class="form-control">
+                                                                        <?php
+                                                                        $district = old('district');
+                                                                        ?>
+
                                                                         <option value="">* @lang('theme.district')</option>
+
+                                                                        @if($district && isset(\App\Libraries\Helpers\Area::$provinces[$province]['cities']))
+                                                                            @foreach(\App\Libraries\Helpers\Area::$provinces[$province]['cities'] as $code => $data)
+                                                                                @if($district == $code)
+                                                                                    <option selected="selected" value="{{ $code }}">{{ $data }}</option>
+                                                                                @else
+                                                                                    <option value="{{ $code }}">{{ $data }}</option>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @endif
                                                                     </select>
                                                                     @if($errors->has('district'))
                                                                         <div class="form-group has-error">
@@ -177,7 +205,7 @@
                                                         </div>
                                                         <p>@lang('theme.input_require')</p>
                                                         <div class="form-group">
-                                                            <textarea name="note" class="form-control" rows="8" placeholder="@lang('theme.note')"></textarea>
+                                                            <textarea name="note" class="form-control" rows="8" placeholder="@lang('theme.note')">{{ old('note') }}</textarea>
                                                         </div>
 
                                                             <?php
@@ -263,9 +291,68 @@
 
 @push('scripts')
     <script type="text/javascript">
-        $('.ChoosePaymentMethod').click(function() {
+        $('.ChoosePaymentMethod').click(function(e) {
             if($(this).data('payment-method-id') != '')
-                $('input[name="payment_method"]').val($(this).data('payment-method-id'));
+            {
+                var paymentMethodInputElem = $('input[name="payment_method"]');
+
+                if($(this).data('payment-method-id') == paymentMethodInputElem.val())
+                {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                }
+                else
+                    paymentMethodInputElem.val($(this).data('payment-method-id'));
+            }
+        });
+
+        $('#UseDiscountCodeButton').click(function() {
+            var discountCodeInputElem = $('input[name="discount_code"]');
+            var discountCodeVal = discountCodeInputElem.val().trim();
+
+            if(discountCodeVal != '')
+            {
+                $.ajax({
+                    url: '{{ action('Frontend\OrderController@useDiscountCode') }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&discount_code=' + discountCodeVal,
+                    success: function(result) {
+                        if(result)
+                        {
+                            result = JSON.parse(result);
+
+                            if(result['status'] == 'error')
+                            {
+                                swal({
+                                    title: result['message'],
+                                    type: 'error',
+                                    confirmButtonClass: 'btn-success'
+                                });
+                            }
+                            else
+                            {
+                                if(result['discount'] > 0)
+                                {
+                                    $('#OrderDiscountPrice').html(formatNumber(result['discount'].toString(), '.') + 'đ');
+
+                                    var totalPriceAfterDiscount = $('#OrderTotalItemPrice').data('order-total-item-price') - result['discount'];
+
+                                    $('.OrderTotalPrice').each(function() {
+                                        $(this).html(formatNumber(totalPriceAfterDiscount.toString(), '.') + 'đ');
+                                    });
+
+                                    @if(app()->getLocale() == 'en')
+                                        $('#OrderTotalPriceEn').html('(' +
+                                            (totalPriceAfterDiscount / {{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::EXCHANGE_USD_RATE) }}).toFixed(2) +
+                                            'USD' +
+                                        ')');
+                                    @endif
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         });
 
         $('#OrderProvince').change(function() {

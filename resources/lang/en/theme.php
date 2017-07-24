@@ -84,5 +84,6 @@ return [
     'detail' => 'Detail',
     'list_course_item' => 'List all lectures',
     'lecture_complete' => 'lectures complete',
+    'discount_invalid' => 'Discount code is not valid',
 
 ];

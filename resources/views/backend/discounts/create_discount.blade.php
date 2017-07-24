@@ -84,8 +84,8 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('start_time') ? ' has-error': '' }}">
-                            <label>Thời Gian Bắt Đầu</label>
-                            <input type="text" class="form-control DateTimePicker" name="start_time" value="{{ old('start_time', $discount->start_time) }}" />
+                            <label>Thời Gian Bắt Đầu <i>(bắt buộc)</i></label>
+                            <input type="text" class="form-control DateTimePicker" name="start_time" value="{{ old('start_time', $discount->start_time) }}" required="required" />
                             @if($errors->has('start_time'))
                                 <span class="help-block">{{ $errors->first('start_time') }}</span>
                             @endif
@@ -93,8 +93,8 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('end_time') ? ' has-error': '' }}">
-                            <label>Thời Gian Kết Thúc</label>
-                            <input type="text" class="form-control DateTimePicker" name="end_time" value="{{ old('end_time', $discount->end_time) }}" />
+                            <label>Thời Gian Kết Thúc <i>(bắt buộc)</i></label>
+                            <input type="text" class="form-control DateTimePicker" name="end_time" value="{{ old('end_time', $discount->end_time) }}" required="required" />
                             @if($errors->has('end_time'))
                                 <span class="help-block">{{ $errors->first('end_time') }}</span>
                             @endif

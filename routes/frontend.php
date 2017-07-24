@@ -22,6 +22,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
         Route::match(['get', 'post'], 'order', 'OrderController@placeOrder');
 
+        Route::post('discount', 'OrderController@useDiscountCode');
+
         Route::get('thankYou', 'OrderController@thankYou');
 
         Route::get('course/{id}/{slug}/item/{number}', 'CourseController@detailCourseItem');

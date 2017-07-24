@@ -121,12 +121,12 @@
                                         var totalPrice = totalPriceTableElem.data('cart-total-price');
                                         totalPrice -= elem.data('course-price');
                                         totalPriceTableElem.data('cart-total-price', totalPrice);
-                                        totalPriceTableElem.html(totalPriceTableElem.data('cart-total-price') + 'đ');
+                                        totalPriceTableElem.html(formatNumber(totalPriceTableElem.data('cart-total-price').toString(), '.') + 'đ');
 
                                         $('#CartBoxItem_' + elem.data('course-id')).remove();
                                         var countItemBoxElem = $('#CartBoxCountItem');
                                         countItemBoxElem.html(countItemBoxElem.html() - 1);
-                                        $('#CartBoxTotalPrice').html(totalPriceTableElem.data('cart-total-price') + 'đ');
+                                        $('#CartBoxTotalPrice').html(formatNumber(totalPriceTableElem.data('cart-total-price').toString(), '.') + 'đ');
                                     }
                                     else if(result == 'Empty')
                                     {

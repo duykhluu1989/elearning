@@ -2,6 +2,7 @@
 
 namespace App\Libraries\Payments;
 
+use Illuminate\Support\Facades\Validator;
 use App\Models\PaymentMethod;
 
 class CodPayment extends Payment
@@ -30,22 +31,16 @@ class CodPayment extends Payment
 
     public function validatePlaceOrder($paymentMethod, $inputs, $validator, $cart)
     {
-        if(empty($inputs['name']))
-            $validator->errors()->add('name', trans('validation.required', ['attribute' => trans('theme.name')]));
+        $paymentValidator = Validator::make($inputs, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|numeric',
+            'address' => 'required|max:255',
+            'province' => 'required',
+            'district' => 'required',
+        ]);
 
-        if(empty($inputs['email']))
-            $validator->errors()->add('email', trans('validation.required', ['attribute' => 'email']));
-
-        if(empty($inputs['phone']))
-            $validator->errors()->add('phone', trans('validation.required', ['attribute' => trans('theme.phone')]));
-
-        if(empty($inputs['address']))
-            $validator->errors()->add('address', trans('validation.required', ['attribute' => trans('theme.address')]));
-
-        if(empty($inputs['province']))
-            $validator->errors()->add('province', trans('validation.required', ['attribute' => trans('theme.province')]));
-
-        if(empty($inputs['district']))
-            $validator->errors()->add('district', trans('validation.required', ['attribute' => trans('theme.district')]));
+        if($paymentValidator->fails())
+            $validator->errors()->merge($paymentValidator->errors());
     }
 }

@@ -54,6 +54,7 @@
 <script src="{{ asset('themes/js/functions.js') }}"></script>
 <script src="{{ asset('themes/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('assets/js/frontend.js') }}"></script>
 @stack('scripts')
 <script type="text/javascript">
     if($('input[name="_token"]').length > 0)

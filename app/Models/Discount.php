@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Libraries\Helpers\Utility;
 
 class Discount extends Model
 {
@@ -79,5 +80,166 @@ class Discount extends Model
             return $randomString;
 
         return null;
+    }
+
+    public static function calculateDiscountPrice($code, $cart, $user)
+    {
+        $result = [
+            'status' => 'error',
+            'message' => trans('theme.discount_invalid'),
+            'discount' => 0,
+        ];
+
+        $discount = Discount::with('discountApplies')->where('code', $code)->where('status', Utility::ACTIVE_DB)->first();
+
+        if(empty($discount))
+            return $result;
+
+        $courses = Course::with(['promotionPrice' => function($query) {
+            $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+        }, 'categoryCourses' => function($query) {
+            $query->orderBy('level');
+        }])->select('id', 'price')
+            ->whereIn('id', $cart->cartItems)
+            ->get();
+
+        $totalPrice = 0;
+
+        foreach($courses as $course)
+        {
+            if($course->validatePromotionPrice())
+                $totalPrice += $course->promotionPrice->price;
+            else
+                $totalPrice += $course->price;
+        }
+
+        if(!empty($discount->minimum_order_amount) && $totalPrice < $discount->minimum_order_amount)
+            return $result;
+
+        $time = time();
+        $startTime = strtotime($discount->start_time);
+        $endTime = strtotime($discount->end_time);
+
+        if($time < $startTime || $time > $endTime)
+            return $result;
+
+        if(!empty($discount->usage_limit) && $discount->used_count >= $discount->usage_limit)
+            return $result;
+
+        if(!empty($discount->usage_unique))
+        {
+            $userUsedCount = Order::where('user_id', $user->id)->where('discount_id', $discount->id)->count('id');
+
+            if($userUsedCount >= $discount->usage_unique)
+                return $result;
+        }
+
+        if(!empty($discount->campaign_code))
+        {
+            $userUsedInCampaign = Order::select('order.id')
+                ->join('discount', 'order.discount_id', '=', 'discount.id')
+                ->where('order.user_id', $user->id)
+                ->where('discount.campaign_code', $discount->campaign_code)
+                ->where('discount.code', '<>', $discount->code)
+                ->first();
+
+            if(!empty($userUsedInCampaign))
+                return $result;
+        }
+
+        if(!empty($discount->user_id) && $user->id != $discount->user_id)
+            return $result;
+
+        if(count($discount->discountApplies) == 0)
+        {
+            if($discount->type == self::TYPE_FIX_AMOUNT_DB)
+            {
+                $discountPrice = $discount->value;
+
+                if($discountPrice > $totalPrice)
+                    $discountPrice = $totalPrice;
+            }
+            else
+            {
+                $discountPrice = round($totalPrice * $discount->value / 100);
+
+                if(!empty($discount->value_limit) && $discountPrice > $discount->value_limit)
+                    $discountPrice = $discount->value_limit;
+            }
+        }
+        else
+        {
+            $discountPrice = 0;
+
+            foreach($discount->discountApplies as $discountApply)
+            {
+                foreach($courses as $course)
+                {
+                    if($course->validatePromotionPrice())
+                        $coursePrice = $course->promotionPrice->price;
+                    else
+                        $coursePrice = $course->price;
+
+                    if($discountApply->target == DiscountApply::TARGET_COURSE_DB)
+                    {
+                        if($course->id == $discountApply->apply_id)
+                        {
+                            if($discount->type == self::TYPE_FIX_AMOUNT_DB)
+                            {
+                                $discountPrice = $discount->value;
+
+                                if($discountPrice > $coursePrice)
+                                    $discountPrice = $coursePrice;
+                            }
+                            else
+                            {
+                                $discountPrice = round($coursePrice * $discount->value / 100);
+
+                                if(!empty($discount->value_limit) && $discountPrice > $discount->value_limit)
+                                    $discountPrice = $discount->value_limit;
+                            }
+
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        $found = false;
+
+                        foreach($course->categoryCourses as $categoryCourse)
+                        {
+                            if($categoryCourse->caegory_id == $discountApply->apply_id)
+                            {
+                                if($discount->type == self::TYPE_FIX_AMOUNT_DB)
+                                {
+                                    $discountPrice = $discount->value;
+
+                                    if($discountPrice > $coursePrice)
+                                        $discountPrice = $coursePrice;
+                                }
+                                else
+                                {
+                                    $discountPrice = round($coursePrice * $discount->value / 100);
+
+                                    if(!empty($discount->value_limit) && $discountPrice > $discount->value_limit)
+                                        $discountPrice = $discount->value_limit;
+                                }
+
+                                $found = true;
+                                break;
+                            }
+                        }
+
+                        if($found == true)
+                            break;
+                    }
+                }
+            }
+        }
+
+        $result['status'] = 'success';
+        $result['discount'] = $discountPrice;
+
+        return $result;
     }
 }
