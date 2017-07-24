@@ -21,8 +21,6 @@ class CreateOrderTable extends Migration
             $table->double('total_point_price')->unsigned();
             $table->unsignedInteger('discount_id')->nullable();
             $table->unsignedInteger('referral_id')->nullable();
-            $table->double('referral_commission_percent')->unsigned()->nullable();
-            $table->double('referral_commission_amount')->unsigned()->nullable();
             $table->double('user_earn_point')->unsigned()->nullable();
             $table->string('note', 255)->nullable();
         });

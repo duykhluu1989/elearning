@@ -18,6 +18,8 @@ use App\Models\OrderItem;
 use App\Models\UserCourse;
 use App\Models\OrderAddress;
 use App\Models\Discount;
+use App\Models\User;
+use App\Models\Collaborator;
 use App\RedisModels\Cart;
 
 class OrderController extends Controller
@@ -189,8 +191,23 @@ class OrderController extends Controller
                 }
             });
 
-            if(!$validator->passes())
+            if($validator->passes())
             {
+                $referral = null;
+
+                if($request->hasCookie(Utility::REFERRAL_COOKIE_NAME))
+                {
+                    $referral = User::select('user.id')
+                        ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
+                        ->where('user.status', Utility::ACTIVE_DB)
+                        ->where('collaborator.status', Collaborator::STATUS_ACTIVE_DB)
+                        ->where('collaborator.code', $request->cookie(Utility::REFERRAL_COOKIE_NAME))
+                        ->first();
+
+                    if(!empty($referral) && $referral->id == auth()->user()->id)
+                        $referral = null;
+                }
+
                 $courses = Course::with(['promotionPrice' => function($query) {
                     $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
                 }])->select('id', 'name', 'name_en', 'price', 'point_price')
@@ -242,6 +259,9 @@ class OrderController extends Controller
 
                         $order->discount_id = $discount->id;
                     }
+
+                    if(!empty($referral))
+                        $order->referral_id = $referral->id;
 
                     $order->save();
 

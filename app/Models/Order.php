@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Libraries\Helpers\Utility;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -128,6 +129,27 @@ class Order extends Model
                 $this->user->studentInformation->current_point += $pointEarn;
                 $this->user->studentInformation->total_point += $pointEarn;
                 $this->user->studentInformation->save();
+            }
+
+            if(!empty($this->referral) && $this->referral->status == Utility::ACTIVE_DB)
+            {
+                if(!empty($this->referral->collaboratorInformation) && $this->referral->collaboratorInformation->status == Collaborator::STATUS_ACTIVE_DB)
+                {
+                    $collaboratorTransaction = new CollaboratorTransaction();
+                    $collaboratorTransaction->collaborator_id = $this->referral_id;
+                    $collaboratorTransaction->order_id = $this->id;
+                    $collaboratorTransaction->type = CollaboratorTransaction::TYPE_INCOME_DB;
+                    $collaboratorTransaction->commission_percent = $this->referral->collaboratorInformation->commission_percent;
+                    $collaboratorTransaction->commission_amount = round($transaction->amount * $collaboratorTransaction->commission_percent / 100);
+                    $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
+                    $collaboratorTransaction->save();
+
+                    $this->referral->collaboratorInformation->total_revenue += $transaction->amount;
+                    $this->referral->collaboratorInformation->total_commission += $collaboratorTransaction->commission_amount;
+                    $this->referral->collaboratorInformation->current_revenue += $transaction->amount;
+                    $this->referral->collaboratorInformation->current_commission += $collaboratorTransaction->commission_amount;
+                    $this->referral->collaboratorInformation->save();
+                }
             }
 
             return true;

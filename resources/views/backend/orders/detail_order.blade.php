@@ -9,7 +9,7 @@
             @if(empty($order->cancelled_at))
                 @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
 
-                    <button type="button" class="btn btn-primary" id="SubmitPaymentButton">Xác Nhận Thanh Toán</button>
+                    <button type="button" class="btn btn-primary SubmitPaymentButton">Xác Nhận Thanh Toán</button>
 
                     <a href="{{ action('Backend\OrderController@cancelOrder', ['id' => $order->id]) }}" class="btn btn-primary pull-right Confirmation">Hủy</a>
 
@@ -48,20 +48,18 @@
                     <p class="page-header">Học Viên</p>
                     {{ $order->user->profile->name }}
                 </div>
-
-                @if(!empty($order->discount))
-                    <div class="col-sm-4">
-                        <p class="page-header">Mã Giám Giá</p>
+                <div class="col-sm-4">
+                    <p class="page-header">Mã Giám Giá</p>
+                    @if(!empty($order->discount))
                         {{ $order->discount->code }}
-                    </div>
-                @endif
-
-                @if(!empty($order->referral))
-                    <div class="col-sm-4">
-                        <p class="page-header">Cộng Tác Viên</p>
+                    @endif
+                </div>
+                <div class="col-sm-4">
+                    <p class="page-header">Cộng Tác Viên</p>
+                    @if(!empty($order->referral))
                         {{ $order->referral->profile->name }}
-                    </div>
-                @endif
+                    @endif
+                </div>
             </div>
 
             @if(!empty($order->orderAddress))
@@ -177,7 +175,7 @@
             @if(empty($order->cancelled_at))
                 @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
 
-                    <button type="button" class="btn btn-primary" id="SubmitPaymentButton">Xác Nhận Thanh Toán</button>
+                    <button type="button" class="btn btn-primary SubmitPaymentButton">Xác Nhận Thanh Toán</button>
 
                     <a href="{{ action('Backend\OrderController@cancelOrder', ['id' => $order->id]) }}" class="btn btn-primary pull-right Confirmation">Hủy</a>
 
@@ -224,7 +222,7 @@
 
         @push('scripts')
             <script type="text/javascript">
-                $('#SubmitPaymentButton').click(function() {
+                $('.SubmitPaymentButton').click(function() {
                     $('#SubmitPaymentModal').modal('show');
                 });
 

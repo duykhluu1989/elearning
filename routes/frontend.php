@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
+Route::group(['namespace' => 'Frontend', 'middleware' => ['setReferral', 'locale']], function() {
 
     Route::group(['middleware' => 'guest'], function() {
 
