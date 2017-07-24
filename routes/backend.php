@@ -134,6 +134,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('articleStatic', 'ArticleController@adminArticleStatic');
 
+        Route::match(['get', 'post'], 'articleStatic/create', 'ArticleController@createArticleStatic');
+
         Route::match(['get', 'post'], 'articleStatic/{id}/edit', 'ArticleController@editArticleStatic');
 
         Route::get('advice', 'CaseAdviceController@adminCaseAdvice');

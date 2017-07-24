@@ -318,6 +318,17 @@ class ArticleController extends Controller
         ]);
     }
 
+    public function createArticleStatic(Request $request)
+    {
+        Utility::setBackUrlCookie($request, '/admin/articleStatic?');
+
+        $article = new Article();
+        $article->type = Article::TYPE_STATIC_ARTICLE_DB;
+        $article->status = Course::STATUS_DRAFT_DB;
+
+        return $this->saveArticleStatic($request, $article);
+    }
+
     public function editArticleStatic(Request $request, $id)
     {
         Utility::setBackUrlCookie($request, '/admin/articleStatic?');
@@ -327,16 +338,21 @@ class ArticleController extends Controller
         if(empty($article))
             return view('backend.errors.404');
 
+        return $this->saveArticleStatic($request, $article, false);
+    }
+
+    protected function saveArticleStatic($request, $article, $create = true)
+    {
         if($request->isMethod('post'))
         {
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'name' => 'required|unique:course,name,' . $article->id,
-                'name_en' => 'nullable|unique:course,name_en,' . $article->id,
+                'name' => 'required|unique:course,name,' . ($create == true ? '' : (',' . $article->id)),
+                'name_en' => 'nullable|unique:course,name_en,' . ($create == true ? '' : (',' . $article->id)),
                 'content' => 'required',
-                'slug' => 'nullable|unique:course,slug,' . $article->id,
-                'slug_en' => 'nullable|unique:course,slug_en,' . $article->id,
+                'slug' => 'nullable|unique:course,slug,' . ($create == true ? '' : (',' . $article->id)),
+                'slug_en' => 'nullable|unique:course,slug_en,' . ($create == true ? '' : (',' . $article->id)),
             ]);
 
             if($validator->passes())
@@ -365,12 +381,26 @@ class ArticleController extends Controller
                 return redirect()->action('Backend\ArticleController@editArticleStatic', ['id' => $article->id])->with('messageSuccess', 'Thành Công');
             }
             else
-                return redirect()->action('Backend\ArticleController@editArticleStatic', ['id' => $article->id])->withErrors($validator)->withInput();
+            {
+                if($create == true)
+                    return redirect()->action('Backend\ArticleController@createArticleStatic')->withErrors($validator)->withInput();
+                else
+                    return redirect()->action('Backend\ArticleController@editArticleStatic', ['id' => $article->id])->withErrors($validator)->withInput();
+            }
         }
 
-        return view('backend.articles.edit_article_static', [
-            'article' => $article,
-        ]);
+        if($create == true)
+        {
+            return view('backend.articles.create_article_static', [
+                'article' => $article,
+            ]);
+        }
+        else
+        {
+            return view('backend.articles.edit_article_static', [
+                'article' => $article,
+            ]);
+        }
     }
 
     public function autoCompleteArticleStatic(Request $request)
