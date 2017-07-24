@@ -46,7 +46,12 @@
                                     <div class="col-lg-12">
                                         <div class="frm_maKM">
                                             <div class="form-group">
-                                                <input type="text" class="form-control" name="discount_code" placeholder="@lang('theme.input_discount_code')">
+                                                <input type="text" class="form-control" name="discount_code" placeholder="@lang('theme.input_discount_code')" value="{{ old('discount_code') }}" />
+                                                @if($errors->has('discount_code'))
+                                                    <div class="form-group has-error">
+                                                        <span class="help-block">* {{ $errors->first('discount_code') }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                             <button type="button" id="UseDiscountCodeButton" class="btn btn-lg btn-block btnRed">@lang('theme.use_discount_code')</button>
                                         </div>

@@ -52,6 +52,16 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderTransaction', 'order_id');
     }
 
+    public function discount()
+    {
+        return $this->belongsTo('App\Models\Discount', 'discount_id');
+    }
+
+    public function referral()
+    {
+        return $this->belongsTo('App\Models\User', 'referral_id');
+    }
+
     public static function getOrderPaymentStatus($value = null)
     {
         $status = [
@@ -70,7 +80,6 @@ class Order extends Model
         if(empty($this->cancelled_at) && $this->payment_status == self::PAYMENT_STATUS_PENDING_DB)
         {
             $this->payment_status = self::PAYMENT_STATUS_COMPLETE_DB;
-            $this->save();
 
             $transaction = new OrderTransaction();
             $transaction->order_id = $this->id;
@@ -98,6 +107,9 @@ class Order extends Model
             }
 
             $pointEarn = round($transaction->amount / Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::EXCHANGE_POINT_RATE), 0, PHP_ROUND_HALF_DOWN);
+
+            $this->user_earn_point = $pointEarn;
+            $this->save();
 
             if(empty($this->user->studentInformation))
             {

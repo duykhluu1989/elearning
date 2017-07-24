@@ -124,6 +124,7 @@ class OrderController extends Controller
 
             $validator = Validator::make($inputs, [
                 'payment_method' => 'required',
+                'discount_code' => 'nullable|alpha_num|max:255'
             ]);
 
             $validator->after(function($validator) use(&$inputs, $cart) {
@@ -172,6 +173,19 @@ class OrderController extends Controller
 
                         $payment->validatePlaceOrder($paymentMethod, $inputs, $validator, $cart);
                     }
+
+                    if(!empty($inputs['discount_code']))
+                    {
+                        $result = Discount::calculateDiscountPrice($inputs['discount_code'], $cart, auth()->user());
+
+                        if($result['status'] == 'error')
+                            $validator->errors()->add('discount_code', $result['message']);
+                        else if($result['discountPrice'] > 0)
+                        {
+                            $inputs['discount'] = $result['discount'];
+                            $inputs['discount_price'] = $result['discountPrice'];
+                        }
+                    }
                 }
             });
 
@@ -186,6 +200,11 @@ class OrderController extends Controller
                 $totalPrice = 0;
                 $totalPointPrice = 0;
 
+                if(isset($inputs['discount_price']))
+                    $discountPrice = $inputs['discount_price'];
+                else
+                    $discountPrice = 0;
+
                 foreach($courses as $course)
                 {
                     if($course->validatePromotionPrice())
@@ -197,6 +216,8 @@ class OrderController extends Controller
                         $totalPointPrice += $course->point_price;
                 }
 
+                $totalPrice -= $discountPrice;
+
                 try
                 {
                     DB::beginTransaction();
@@ -207,11 +228,20 @@ class OrderController extends Controller
                     $order->payment_method_id = $inputs['payment_method'];
                     $order->payment_status = Order::PAYMENT_STATUS_PENDING_DB;
                     $order->total_price = $totalPrice;
-                    $order->total_discount_price = 0;
+                    $order->total_discount_price = $discountPrice;
                     $order->total_point_price = $totalPointPrice;
 
                     if(!empty($inputs['note']))
                         $order->note = $inputs['note'];
+
+                    if(isset($inputs['discount']))
+                    {
+                        $discount = $inputs['discount'];
+                        $discount->used_count += 1;
+                        $discount->save();
+
+                        $order->discount_id = $discount->id;
+                    }
 
                     $order->save();
 
@@ -309,7 +339,7 @@ class OrderController extends Controller
                 if($result['status'] == 'error')
                     $validator->errors()->add('discount_code', $result['message']);
                 else
-                    $inputs['discount_price'] = $result['discount'];
+                    $inputs['discount_price'] = $result['discountPrice'];
             }
         });
 

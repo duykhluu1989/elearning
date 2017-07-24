@@ -163,6 +163,12 @@ class OrderController extends Controller
             $query->select('id', 'name');
         }, 'orderItems.course' => function($query) {
             $query->select('id', 'name');
+        }, 'discount' => function($query) {
+            $query->select('id', 'code');
+        }, 'referral' => function($query) {
+            $query->select('id');
+        }, 'referral.profile' => function($query) {
+            $query->select('user_id', 'name');
         }])->find($id);
 
         if(empty($order))

@@ -48,6 +48,20 @@
                     <p class="page-header">Học Viên</p>
                     {{ $order->user->profile->name }}
                 </div>
+
+                @if(!empty($order->discount))
+                    <div class="col-sm-4">
+                        <p class="page-header">Mã Giám Giá</p>
+                        {{ $order->discount->code }}
+                    </div>
+                @endif
+
+                @if(!empty($order->referral))
+                    <div class="col-sm-4">
+                        <p class="page-header">Cộng Tác Viên</p>
+                        {{ $order->referral->profile->name }}
+                    </div>
+                @endif
             </div>
 
             @if(!empty($order->orderAddress))
@@ -76,6 +90,10 @@
                         <p class="page-header">Quận / Huyện</p>
                         {{ $order->orderAddress->district }}
                     </div>
+                    <div class="col-sm-12">
+                        <p class="page-header">Ghi Chú</p>
+                        {{ $order->note }}
+                    </div>
                 </div>
             @endif
 
@@ -99,6 +117,18 @@
                                     <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderItem->point_price) }}</td>
                                 </tr>
                             @endforeach
+
+                            @if(!empty($order->discount))
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <th>Giảm Giá</th>
+                                    <td>{{ \App\Libraries\Helpers\Utility::formatNumber($order->total_discount_price) . ' VND' }}</td>
+                                    <td></td>
+                                </tr>
+                            @endif
+
                             <tr>
                                 <td colspan="2"></td>
                             </tr>

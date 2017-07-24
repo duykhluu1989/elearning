@@ -87,7 +87,8 @@ class Discount extends Model
         $result = [
             'status' => 'error',
             'message' => trans('theme.discount_invalid'),
-            'discount' => 0,
+            'discount' => '',
+            'discountPrice' => 0,
         ];
 
         $discount = Discount::with('discountApplies')->where('code', $code)->where('status', Utility::ACTIVE_DB)->first();
@@ -238,7 +239,8 @@ class Discount extends Model
         }
 
         $result['status'] = 'success';
-        $result['discount'] = $discountPrice;
+        $result['discount'] = $discount;
+        $result['discountPrice'] = $discountPrice;
 
         return $result;
     }
