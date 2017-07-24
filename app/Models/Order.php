@@ -123,4 +123,13 @@ class Order extends Model
 
         return false;
     }
+
+    public function cancelOrder()
+    {
+        if(empty($this->cancelled_at) && $this->payment_status == self::PAYMENT_STATUS_PENDING_DB)
+        {
+            $this->cancelled_at = date('Y-m-d H:i:s');
+            $this->save();
+        }
+    }
 }

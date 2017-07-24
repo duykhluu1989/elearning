@@ -365,8 +365,9 @@ class UserController extends Controller
     {
         $dataProvider = User::with(['studentInformation' => function($query) {
             $query->select('user_id', 'course_count', 'total_spent', 'current_point');
-        }])
-            ->select('id', 'username', 'email', 'status')->orderBy('id', 'desc');
+        }, 'profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('id', 'username', 'email', 'status')->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
@@ -396,6 +397,12 @@ class UserController extends Controller
             [
                 'title' => 'Email',
                 'data' => 'email',
+            ],
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo $row->profile->name;;
+                },
             ],
             [
                 'title' => 'Trạng Thái',
@@ -466,8 +473,9 @@ class UserController extends Controller
             $query->select('id', 'user_id');
         }, 'collaboratorInformation.parentCollaborator.user' => function($query) {
             $query->select('id', 'username');
-        }])
-            ->select('user.id', 'user.username', 'user.email', 'user.status')
+        }, 'profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('user.id', 'user.username', 'user.email', 'user.status')
             ->where('user.collaborator', Utility::ACTIVE_DB)
             ->orderBy('user.id', 'desc');
 
@@ -521,6 +529,12 @@ class UserController extends Controller
             [
                 'title' => 'Email',
                 'data' => 'email',
+            ],
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo $row->profile->name;;
+                },
             ],
             [
                 'title' => 'Trạng Thái',

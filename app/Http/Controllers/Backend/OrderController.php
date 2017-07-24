@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Models\UserCourse;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,11 +10,12 @@ use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
 use App\Libraries\Helpers\Utility;
 use App\Models\Order;
-use Illuminate\Support\Facades\Validator;
+use App\Models\PaymentMethod;
+use App\Models\UserCourse;
 
 class OrderController extends Controller
 {
-    public function adminOrder()
+    public function adminOrder(Request $request)
     {
         $dataProvider = Order::with(['user' => function($query) {
             $query->select('id');
@@ -22,17 +23,57 @@ class OrderController extends Controller
             $query->select('user_id', 'name');
         }, 'paymentMethod' => function($query) {
             $query->select('id', 'name');
-        }])->select('id', 'user_id', 'number', 'created_at', 'payment_method_id', 'payment_status', 'total_price')
-            ->orderBy('id', 'desc')
-            ->paginate(GridView::ROWS_PER_PAGE);
+        }])->select('order.id', 'order.user_id', 'order.number', 'order.created_at', 'order.payment_method_id', 'order.payment_status', 'order.total_price', 'order.cancelled_at')
+            ->orderBy('order.id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['number']))
+                $dataProvider->where('order.number', 'like', '%' . $inputs['number'] . '%');
+
+            if(!empty($inputs['name']))
+            {
+                $dataProvider->join('user', 'order.user_id', '=', 'user.id')
+                    ->join('profile', 'user.id', '=', 'profile.user_id')
+                    ->where('profile.name', 'like', '%' . $inputs['name'] . '%');
+            }
+
+            if(!empty($inputs['payment_method_id']))
+                $dataProvider->where('order.payment_method_id', $inputs['payment_method_id']);
+
+            if(isset($inputs['payment_status']) && $inputs['payment_status'] !== '')
+                $dataProvider->where('order.payment_status', $inputs['payment_status']);
+
+            if(isset($inputs['cancelled']) && $inputs['cancelled'] !== '')
+            {
+                if($inputs['cancelled'] == Utility::ACTIVE_DB)
+                    $dataProvider->whereNotNull('order.cancelled_at');
+                else
+                    $dataProvider->whereNull('order.cancelled_at');
+            }
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
 
         $columns = [
             [
                 'title' => 'Mã',
                 'data' => function($row) {
-                    echo Html::a($row->number, [
-                        'href' => action('Backend\OrderController@detailOrder', ['id' => $row->id]),
-                    ]);
+                    if(empty($row->cancelled_at))
+                    {
+                        echo Html::a($row->number, [
+                            'href' => action('Backend\OrderController@detailOrder', ['id' => $row->id]),
+                        ]);
+                    }
+                    else
+                    {
+                        echo Html::a($row->number, [
+                            'href' => action('Backend\OrderController@detailOrder', ['id' => $row->id]),
+                            'class' => 'text-danger',
+                        ]);
+                    }
                 },
             ],
             [
@@ -70,6 +111,40 @@ class OrderController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setFilters([
+            [
+                'title' => 'Mã',
+                'name' => 'number',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Tên',
+                'name' => 'name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Phương Thức TT',
+                'name' => 'payment_method_id',
+                'type' => 'select',
+                'options' => PaymentMethod::all()->pluck('name', 'id')->toArray(),
+            ],
+            [
+                'title' => 'Trạng Thái TT',
+                'name' => 'payment_status',
+                'type' => 'select',
+                'options' => Order::getOrderPaymentStatus(),
+            ],
+            [
+                'title' => 'Hủy',
+                'name' => 'cancelled',
+                'type' => 'select',
+                'options' => [
+                    Utility::ACTIVE_DB => 'Đã Hủy',
+                    Utility::INACTIVE_DB => 'Không Hủy',
+                ],
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
 
         return view('backend.orders.admin_order', [
             'gridView' => $gridView,
@@ -150,5 +225,19 @@ class OrderController extends Controller
             return view('backend.orders.partials.submit_payment_order_form', [
                 'order' => $order,
             ])->withErrors($validator);
+    }
+
+    public function cancelOrder($id)
+    {
+        $order = Order::with('orderItems')->where('payment_status', Order::PAYMENT_STATUS_PENDING_DB)
+            ->whereNull('cancelled_at')
+            ->find($id);
+
+        if(empty($order))
+            return view('backend.errors.404');
+
+        $order->cancelOrder();
+
+        return redirect(Utility::getBackUrlCookie(action('Backend\OrderController@adminOrder')))->with('messageSuccess', 'Thành Công');
     }
 }

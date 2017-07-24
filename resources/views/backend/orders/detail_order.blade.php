@@ -4,17 +4,23 @@
 
 @section('section')
 
-    <div class="box box-primary">
+    <div class="box{{ empty($order->cancelled_at) ? ' box-primary' : ' box-danger' }}">
         <div class="box-header with-border">
             @if(empty($order->cancelled_at))
                 @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
 
                     <button type="button" class="btn btn-primary" id="SubmitPaymentButton">Xác Nhận Thanh Toán</button>
 
+                    <a href="{{ action('Backend\OrderController@cancelOrder', ['id' => $order->id]) }}" class="btn btn-primary pull-right Confirmation">Hủy</a>
+
                 @endif
             @endif
 
             <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\OrderController@adminOrder')) }}" class="btn btn-default">Quay Lại</a>
+
+            @if(!empty($order->cancelled_at))
+                <span class="box-title text-danger pull-right">Đơn Hàng Đã Hủy Vào Lúc {{ $order->cancelled_at }}</span>
+            @endif
         </div>
         <div class="box-body">
             <div class="row">
@@ -35,6 +41,12 @@
                     else
                         echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-danger']);
                     ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <p class="page-header">Học Viên</p>
+                    {{ $order->user->profile->name }}
                 </div>
             </div>
 
@@ -71,7 +83,7 @@
                 <div class="col-sm-12">
                     <p class="page-header">Khóa Học</p>
                     <div class="table-responsive no-padding">
-                        <table class="table table-striped table-hover table-condensed">
+                        <table class="table table-hover table-condensed">
                             <thead>
                             <tr>
                                 <th>Tên</th>
@@ -106,7 +118,7 @@
                     <div class="col-sm-12">
                         <p class="page-header">Thanh Toán</p>
                         <div class="table-responsive no-padding">
-                            <table class="table table-striped table-hover table-condensed">
+                            <table class="table table-hover table-condensed">
                                 <thead>
                                 <tr>
                                     <th>Trạng Thái</th>
@@ -132,6 +144,16 @@
             @endif
         </div>
         <div class="box-footer">
+            @if(empty($order->cancelled_at))
+                @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
+
+                    <button type="button" class="btn btn-primary" id="SubmitPaymentButton">Xác Nhận Thanh Toán</button>
+
+                    <a href="{{ action('Backend\OrderController@cancelOrder', ['id' => $order->id]) }}" class="btn btn-primary pull-right Confirmation">Hủy</a>
+
+                @endif
+            @endif
+
             <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\OrderController@adminOrder')) }}" class="btn btn-default">Quay Lại</a>
         </div>
     </div>
