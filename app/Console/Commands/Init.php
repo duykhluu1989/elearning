@@ -41,12 +41,14 @@ class Init extends Command
             DB::commit();
 
             echo 'Init Succeed';
+            echo "\r\n";
         }
         catch(\Exception $e)
         {
             DB::rollBack();
 
             echo 'Init Failed: ' . $e->getMessage();
+            echo "\r\n";
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\CourseItem;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -131,7 +132,9 @@ class CourseController extends Controller
             $query->select('id', 'name', 'name_en', 'slug', 'slug_en');
         }, 'promotionPrice' => function($query) {
             $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
-        }, 'courseItems'])->select('id', 'user_id', 'name', 'name_en', 'price', 'description', 'description_en', 'point_price', 'video_length', 'level_id', 'short_description', 'short_description_en', 'image', 'item_count', 'bought_count', 'view_count', 'audio_length')
+        }, 'courseItems' => function($query) {
+            $query->select('id', 'course_id', 'name', 'name_en', 'number', 'video_length', 'audio_length');
+        }])->select('id', 'user_id', 'name', 'name_en', 'slug', 'slug_en', 'price', 'description', 'description_en', 'point_price', 'video_length', 'level_id', 'short_description', 'short_description_en', 'image', 'item_count', 'bought_count', 'view_count', 'audio_length')
             ->where('id', $id)
             ->where('status', Course::STATUS_PUBLISH_DB)
             ->where('category_status', Utility::ACTIVE_DB)
@@ -178,6 +181,58 @@ class CourseController extends Controller
         return view('frontend.courses.detail_course', [
             'bought' => $bought,
             'course' => $course,
+            'userCourse' => $userCourse,
+        ]);
+    }
+
+    public function detailCourseItem($id, $slug, $number)
+    {
+        $course = Course::with(['categoryCourses' => function($query) {
+            $query->orderBy('level');
+        }, 'categoryCourses.category' => function($query) {
+            $query->select('id', 'name', 'name_en', 'slug', 'slug_en');
+        }])->select('id', 'name', 'name_en', 'slug', 'slug_en', 'item_count')
+            ->where('id', $id)
+            ->where('status', Course::STATUS_PUBLISH_DB)
+            ->where('category_status', Utility::ACTIVE_DB)
+            ->where(function($query) use($slug) {
+                $query->where('slug', $slug)->orWhere('slug_en', $slug);
+            })->first();
+
+        if(empty($course))
+            return view('frontend.errors.404');
+
+        $courseItem = CourseItem::select('id', 'name', 'name_en', 'type', 'content', 'content_en', 'number')
+            ->where('course_id', $course->id)
+            ->where('number', $number)
+            ->first();
+
+        if(empty($courseItem))
+            return view('frontend.errors.404');
+
+        $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $course->id)->first();
+
+        if(empty($userCourse))
+            return view('frontend.errors.404');
+
+        if($courseItem->number == $userCourse->course_item_tracking + 1)
+        {
+            $userCourse->course_item_tracking += 1;
+
+            if($courseItem->number == $course->item_count && $userCourse->finish == false)
+            {
+                $userCourse->finish = true;
+
+                auth()->user()->studentInformation->finish_course_count += 1;
+                auth()->user()->studentInformation->save();
+            }
+
+            $userCourse->save();
+        }
+
+        return view('frontend.courses.detail_course_item', [
+            'course' => $course,
+            'courseItem' => $courseItem,
             'userCourse' => $userCourse,
         ]);
     }

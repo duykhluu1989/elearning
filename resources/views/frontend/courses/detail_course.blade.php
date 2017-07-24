@@ -73,7 +73,7 @@
                     <div class="col-lg-12">
                         <ul class="nav nav-tabs tabs_info">
                             <li class="active"><a data-toggle="tab" href="#section_gioithieu">@lang('theme.course_description')</a></li>
-                            <li><a data-toggle="tab" href="#section_chitiet">@lang('theme.detail')t</a></li>
+                            <li><a data-toggle="tab" href="#section_chitiet">@lang('theme.detail')</a></li>
                             <li><a data-toggle="tab" href="#section_binhluan">Đánh giá & bình luận</a></li>
                         </ul>
                         <div class="tab-content tabs_info_content">
@@ -82,20 +82,49 @@
                                 <?php echo \App\Libraries\Helpers\Utility::getValueByLocale($course, 'description'); ?>
                             </div>
                             <div id="section_chitiet" class="tab-pane fade">
-                                <table class="table table-bordered">
-                                    <tbody>
-                                    @foreach($course->courseItems as $courseItem)
-                                        <tr>
-                                            <td>{{ $courseItem->number }}</td>
-                                            @if($bought == false)
-                                                <td>{{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}</td>
-                                            @else
-                                                <td>{{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}</td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
+                                @if($bought == false)
+                                    <h4>@lang('theme.list_course_item')</h4>
+                                    <table class="table table-bordered table-hover table-condensed">
+                                        <tbody>
+                                        @foreach($course->courseItems as $courseItem)
+                                            <tr>
+                                                <td class="text-center">{{ $courseItem->number }}</td>
+                                                <td class="col-sm-11">{{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <h4>{{ $userCourse->course_item_tracking . ' / ' . $course->item_count }} @lang('theme.lecture_complete')</h4>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ round($userCourse->course_item_tracking * 100 / $course->item_count) }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ round($userCourse->course_item_tracking * 100 / $course->item_count) }}%">
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered table-hover table-condensed">
+                                        <tbody>
+                                        @foreach($course->courseItems as $courseItem)
+                                            <tr class="CourseItemNavigation{{ $courseItem->number == $userCourse->course_item_tracking + 1 ? ' info' : '' }}" style="cursor: pointer" data-href="{{ action('Frontend\CourseController@detailCourseItem', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug'), 'number' => $courseItem->number]) }}">
+                                                <td class="text-center">{{ $courseItem->number }}</td>
+                                                <td class="col-sm-11">
+                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @if(!empty($courseItem->video_length))
+                                                        {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->video_length) }}
+                                                    @elseif(!empty($courseItem->audio_length))
+                                                        {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->audio_length) }}
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if($courseItem->number <= $userCourse->course_item_tracking)
+                                                        <i class="fa fa-check-circle"></i>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
                             </div>
                             <div id="section_binhluan" class="tab-pane fade">
                                 <h3>Dropdown 1</h3>
@@ -110,4 +139,15 @@
 
 @stop
 
-@include('frontend.courses.partials.add_cart_item')
+@if($bought == false)
+    @include('frontend.courses.partials.add_cart_item')
+@else
+    @push('scripts')
+        <script type="text/javascript">
+            $('.CourseItemNavigation').click(function() {
+                if($(this).data('href') != '')
+                    location.href = $(this).data('href');
+            });
+        </script>
+    @endpush
+@endif

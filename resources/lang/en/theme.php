@@ -82,5 +82,7 @@ return [
     'order_success' => 'Order successful',
     'order_number' => 'Order number',
     'detail' => 'Detail',
+    'list_course_item' => 'List all lectures',
+    'lecture_complete' => 'lectures complete',
 
 ];

@@ -82,5 +82,7 @@ return [
     'order_success' => 'Đặt đơn hàng thành công',
     'order_number' => 'Số đơn hàng',
     'detail' => 'Chi tiết',
+    'list_course_item' => 'Danh sách bài học',
+    'lecture_complete' => 'bài học đã hoàn thành',
 
 ];

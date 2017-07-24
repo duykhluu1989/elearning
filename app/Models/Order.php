@@ -75,6 +75,7 @@ class Order extends Model
             $transaction = new OrderTransaction();
             $transaction->order_id = $this->id;
             $transaction->amount = $this->total_price;
+            $transaction->point_amount = $this->total_point_price;
 
             $transaction->type = self::PAYMENT_STATUS_COMPLETE_DB;
             $transaction->created_at = date('Y-m-d H:i:s');
@@ -90,7 +91,6 @@ class Order extends Model
                 $userCourse->user_id = $this->user_id;
                 $userCourse->course_id = $orderItem->course_id;
                 $userCourse->order_id = $this->id;
-                $userCourse->course_item_tracking = 1;
                 $userCourse->save();
 
                 $orderItem->course->bought_count ++;

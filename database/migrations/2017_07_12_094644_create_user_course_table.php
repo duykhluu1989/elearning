@@ -12,8 +12,9 @@ class CreateUserCourseTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('course_id');
-            $table->unsignedInteger('last_course_item')->nullable();
-            $table->unsignedInteger('order_id');
+            $table->unsignedInteger('course_item_tracking')->default(0);
+            $table->unsignedInteger('order_id')->nullable();
+            $table->unsignedTinyInteger('finish')->default(0);
         });
     }
 
