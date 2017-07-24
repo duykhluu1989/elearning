@@ -144,6 +144,11 @@
 @else
     @push('scripts')
         <script type="text/javascript">
+            $(document).ready(function() {
+                if(location.href.indexOf('#section_chitiet') !== -1)
+                    $('a[href="#section_chitiet"]').trigger('click');
+            });
+
             $('.CourseItemNavigation').click(function() {
                 if($(this).data('href') != '')
                     location.href = $(this).data('href');

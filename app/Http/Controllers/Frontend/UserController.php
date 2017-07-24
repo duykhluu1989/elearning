@@ -243,7 +243,7 @@ class UserController extends Controller
                 'sub' => $user->id,
                 'iat' => $time,
                 'exp' => $time + Utility::SECOND_ONE_HOUR,
-                'iss' => app('request')->getUri(),
+                'iss' => request()->getUri(),
                 'jti' => md5($user->id . $time),
             ];
 

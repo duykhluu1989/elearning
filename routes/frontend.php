@@ -26,6 +26,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => 'locale'], function() {
 
         Route::get('course/{id}/{slug}/item/{number}', 'CourseController@detailCourseItem');
 
+        Route::get('source/{token}', 'CourseController@getSource');
+
     });
 
     Route::get('district', 'OrderController@getListDistrict');

@@ -4,6 +4,7 @@ namespace App\Libraries\Helpers;
 
 use Illuminate\Support\Facades\Cookie;
 use Intervention\Image\Facades\Image;
+use Firebase\JWT\JWT;
 
 class Utility
 {
@@ -276,5 +277,41 @@ class Utility
         }
 
         return '';
+    }
+
+    public static function generateTemporarySourceToken($user, $filePath)
+    {
+        $time = time();
+
+        $claims = [
+            'sub' => $user->id,
+            'iat' => $time,
+            'exp' => $time + 5,
+            'iss' => request()->getUri(),
+            'jti' => md5($user->id . $time),
+            'filePath' => $filePath,
+        ];
+
+        return JWT::encode($claims, env('APP_KEY'));
+    }
+
+    public static function getFilePathFromTemporarySourceToken($user, $token)
+    {
+        try
+        {
+            $decoded = JWT::decode($token, env('APP_KEY'), ['HS256']);
+
+            if($user->id == $decoded->sub)
+            {
+                if(isset($decoded->filePath))
+                    return $decoded->filePath;
+            }
+        }
+        catch(\Exception $e)
+        {
+
+        }
+
+        return null;
     }
 }

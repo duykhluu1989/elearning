@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Models\CourseItem;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Course;
+use App\Models\CourseItem;
 use App\Models\UserCourse;
 use App\Models\Category;
 
@@ -191,7 +191,7 @@ class CourseController extends Controller
             $query->orderBy('level');
         }, 'categoryCourses.category' => function($query) {
             $query->select('id', 'name', 'name_en', 'slug', 'slug_en');
-        }])->select('id', 'name', 'name_en', 'slug', 'slug_en', 'item_count')
+        }])->select('id', 'name', 'name_en', 'slug', 'slug_en', 'item_count', 'image', 'short_description', 'short_description_en')
             ->where('id', $id)
             ->where('status', Course::STATUS_PUBLISH_DB)
             ->where('category_status', Utility::ACTIVE_DB)
@@ -235,5 +235,15 @@ class CourseController extends Controller
             'courseItem' => $courseItem,
             'userCourse' => $userCourse,
         ]);
+    }
+
+    public function getSource($token)
+    {
+        $filePath = Utility::getFilePathFromTemporarySourceToken(auth()->user(), $token);
+
+        if($filePath)
+            return response()->file($filePath);
+
+        return '';
     }
 }

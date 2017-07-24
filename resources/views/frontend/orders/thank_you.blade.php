@@ -1,6 +1,6 @@
 @extends('frontend.layouts.main')
 
-@section('page_heading', trans('theme.checkout'))
+@section('page_heading', trans('theme.order_success'))
 
 @section('section')
 
