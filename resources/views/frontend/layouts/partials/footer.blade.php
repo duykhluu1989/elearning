@@ -3,19 +3,21 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <h5>Chủ đề</h5>
+                    <h5>@lang('theme.category_list')</h5>
                     <ul class="list_footer">
-                        <li><a href="tintuc.php">- Marketing</a></li>
-                        <li><a href="tintuc.php">- Bán hàng</a></li>
-                        <li><a href="tintuc.php">- Quản trị ngân hàng thương mại</a></li>
-                        <li><a href="tintuc.php">- Đầu tư chứng khoán</a></li>
-                        <li><a href="tintuc.php">- Đầu tư bất động sản</a></li>
-                        <li><a href="tintuc.php">- Kỹ năng mềm</a></li>
-                        <li><a href="tintuc.php">- Tư vấn pháp luật</a></li>
-                        <li><a href="tintuc.php">- Kỹ năng viết luận văn, luận án</a></li>
-                        <li><a href="tintuc.php">- Kỹ năng lãnh đạo</a></li>
-                        <li><a href="tintuc.php">- Phương pháp nghiên cứu khoa học</a></li>
-                        <li><a href="tintuc.php">- Bí quyết học và thi Tiếng Anh</a></li>
+
+                        <?php
+                        $rootCategories = \App\Models\Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
+                            ->where('status', \App\Libraries\Helpers\Utility::ACTIVE_DB)
+                            ->where('parent_status', \App\Libraries\Helpers\Utility::ACTIVE_DB)
+                            ->whereNull('parent_id')
+                            ->orderBy('order', 'desc')
+                            ->get();
+                        ?>
+
+                        @foreach($rootCategories as $rootCategory)
+                            <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'name') }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -65,7 +67,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <ul class="list_social">
-                        <li><a href=""><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                        <li><a href="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL) }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                         <li><a href=""><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
                         <li><a href=""><i class="fa fa-youtube-square" aria-hidden="true"></i></a></li>
                     </ul>

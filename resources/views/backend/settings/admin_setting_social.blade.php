@@ -33,6 +33,12 @@
                             <input type="text" class="form-control" name="{{ \App\Models\Setting::FACEBOOK_GRAPH_VERSION }}" value="{{ old(\App\Models\Setting::FACEBOOK_GRAPH_VERSION, $settings[\App\Models\Setting::FACEBOOK_GRAPH_VERSION]->value) }}" />
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>{{ $settings[\App\Models\Setting::FACEBOOK_PAGE_URL]->name }}</label>
+                            <input type="text" class="form-control" name="{{ \App\Models\Setting::FACEBOOK_PAGE_URL }}" value="{{ old(\App\Models\Setting::FACEBOOK_PAGE_URL, $settings[\App\Models\Setting::FACEBOOK_PAGE_URL]->value) }}" />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="box-footer">
