@@ -160,7 +160,7 @@ class Menu extends Model
             if($this->target == self::TARGET_CATEGORY_DB)
                 return action('Frontend\CourseController@detailCategory', ['id' => $this->target_id, 'slug' => Utility::getValueByLocale($this->targetInformation, 'slug')]);
             else
-                return Utility::getValueByLocale($this->targetInformation, 'slug');
+                return action('Frontend\PageController@detailPage', ['id' => $this->target_id, 'slug' => Utility::getValueByLocale($this->targetInformation, 'slug')]);
         }
         else
             return 'javascript:void(0)';

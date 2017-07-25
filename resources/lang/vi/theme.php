@@ -28,7 +28,7 @@ return [
     'system_error' => 'Hệ thống xảy ra lỗi, vui lòng thử lại',
     'forget_password' => 'Quên mật khẩu đăng nhập?',
     'retrieve_password' => 'Lấy lại mật khẩu',
-    'retrieve_password_description' => 'Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan.vn sẽ gửi email hướng dẫn bạn khôi phục mật khẩu',
+    'retrieve_password_description' => 'Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan sẽ gửi email hướng dẫn bạn khôi phục mật khẩu',
     'sign_up_success' => 'Đăng kí thành công',
     'retrieve_password_email' => 'Vui lòng kiểm tra email để khôi phục mật khẩu',
     'expert' => 'Góc nhìn chuyên gia',
@@ -67,7 +67,7 @@ return [
     'district' => 'Quận / huyện',
     'note' => 'Ghi chú',
     'input_require' => 'Bạn cần điền đầy đủ các thông tin trên',
-    'payment_bank_text_1' => 'Khóa học sẽ được kích hoạt sau khi caydenthan.vn kiểm tra tài khoản và xác nhận việc thanh toán của bạn thành công. (Thời gian kiểm tra và xác nhận tài khoản ít nhất là 12 giờ)',
+    'payment_bank_text_1' => 'Khóa học sẽ được kích hoạt sau khi caydenthan kiểm tra tài khoản và xác nhận việc thanh toán của bạn thành công. (Thời gian kiểm tra và xác nhận tài khoản ít nhất là 12 giờ)',
     'payment_bank_text_2' => 'Chuyển khoản ngân hàng',
     'payment_bank_text_3' => 'Bạn có thể đến bất kỳ ngân hàng nào ở Việt Nam (hoặc sử dụng Internet Banking) để chuyển tiền theo thông tin bên dưới',
     'bank_number' => 'Số tài khoản',
@@ -85,5 +85,8 @@ return [
     'list_course_item' => 'Danh sách bài học',
     'lecture_complete' => 'bài học đã hoàn thành',
     'discount_invalid' => 'Mã khuyến mãi không hợp lệ',
+    'list_intro' => 'Danh mục giới thiệu',
+    'become_collaborator' => 'Trở thành đối tác phân phối khóa học của caydenthan',
+    'collaborator_slogan' => 'Khoá học chất - Hoa hồng cao - Dễ chia sẻ',
 
 ];

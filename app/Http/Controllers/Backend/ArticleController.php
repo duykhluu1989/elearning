@@ -299,7 +299,7 @@ class ArticleController extends Controller
             [
                 'title' => 'Nhóm Trang',
                 'data' => function($row) {
-                    if($row->group !== '')
+                    if($row->group !== null)
                         echo Article::getStaticArticleGroup($row->group);
                 },
             ],

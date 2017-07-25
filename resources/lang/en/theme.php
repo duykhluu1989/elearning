@@ -28,7 +28,7 @@ return [
     'system_error' => 'System occurred an error, please try again',
     'forget_password' => 'Forget password?',
     'retrieve_password' => 'Retrieve password',
-    'retrieve_password_description' => 'To retrieve your password, enter your login email in the box below. Then caydenthan.vn will send you an email to recover your password',
+    'retrieve_password_description' => 'To retrieve your password, enter your login email in the box below. Then caydenthan will send you an email to recover your password',
     'sign_up_success' => 'Sign up success',
     'retrieve_password_email' => 'Please check your email to recover password',
     'expert' => 'Expert say',
@@ -67,7 +67,7 @@ return [
     'district' => 'District',
     'note' => 'Note',
     'input_require' => 'Please enter all the fields above',
-    'payment_bank_text_1' => 'The course will be activated after caydenthan.vn checks the account and confirms your payment is successful. (Time to check and confirm the account is at least 12 hours)',
+    'payment_bank_text_1' => 'The course will be activated after caydenthan checks the account and confirms your payment is successful. (Time to check and confirm the account is at least 12 hours)',
     'payment_bank_text_2' => 'Bank transfer',
     'payment_bank_text_3' => 'You can go to any bank in Vietnam (or use Internet Banking) to transfer money according to the information below',
     'bank_number' => 'Account number',
@@ -85,5 +85,8 @@ return [
     'list_course_item' => 'List all lectures',
     'lecture_complete' => 'lectures complete',
     'discount_invalid' => 'Discount code is not valid',
+    'list_intro' => 'List introduction',
+    'become_collaborator' => 'Become a collaborator of caydenthan',
+    'collaborator_slogan' => 'Great Courses - High commissions - Easy to share',
 
 ];
