@@ -1201,7 +1201,10 @@ class CourseController extends Controller
                         $courseItem->content = $inputs['file_path'];
                         $courseItem->content_en = $inputs['file_path_en'];
 
-                        $ffprobe = FFProbe::create();
+                        $ffprobe = FFProbe::create([
+                            'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+                            'ffprobe.binaries' => '/usr/bin/ffprobe',
+                        ]);
                         $duration = (int)$ffprobe->format($courseItem->content)->get('duration');
                         if($duration < 1)
                             $duration = null;
