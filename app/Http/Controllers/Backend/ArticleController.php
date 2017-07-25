@@ -312,6 +312,7 @@ class ArticleController extends Controller
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
         $gridView->setFilters([
             [
                 'title' => 'Tên',
@@ -390,9 +391,6 @@ class ArticleController extends Controller
                 $article->short_description_en = $inputs['short_description_en'];
                 $article->order = $inputs['order'];
 
-                if(empty($article->published_at) && $article->status == Course::STATUS_PUBLISH_DB)
-                    $article->published_at = date('Y-m-d H:i:s');
-
                 if(isset($inputs['group']) && $inputs['group'] !== '')
                     $article->group = $inputs['group'];
                 else
@@ -447,5 +445,32 @@ class ArticleController extends Controller
         $articles = $builder->get()->toJson();
 
         return $articles;
+    }
+
+    public function deleteArticleStatic($id)
+    {
+        $article = Article::where('type', Article::TYPE_STATIC_ARTICLE_DB)->find($id);
+
+        if(empty($article))
+            return view('backend.errors.404');
+
+        $article->delete();
+
+        return redirect(Utility::getBackUrlCookie(action('Backend\ArticleController@adminArticleStatic')))->with('messageSuccess', 'Thành Công');
+    }
+
+    public function controlDeleteArticleStatic(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $articles = Article::whereIn('id', explode(';', $ids))->where('type', Article::TYPE_STATIC_ARTICLE_DB)->get();
+
+        foreach($articles as $article)
+            $article->delete();
+
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\ArticleController@adminArticleStatic')->with('messageSuccess', 'Thành Công');
     }
 }
