@@ -16,7 +16,7 @@ class CaseAdviceController extends Controller
 {
     public function adminCaseAdvice(Request $request)
     {
-        $dataProvider = CaseAdvice::select('id', 'name', 'type', 'status', 'phone')->orderBy('id', 'desc');
+        $dataProvider = CaseAdvice::select('id', 'name', 'type', 'status', 'phone', 'order', 'adviser')->orderBy('id', 'desc');
 
         $inputs = $request->all();
 

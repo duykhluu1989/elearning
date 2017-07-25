@@ -23,37 +23,37 @@
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <h5>Giới thiệu</h5>
                     <ul class="list_footer">
-                        <li><a href="gioithieu.php">- Giới thiệu chung</a></li>
-                        <li><a href="gioithieu.php">- Thành viên sáng lập</a></li>
-                        <li><a href="gioithieu.php">- Ban cố vấn</a></li>
-                        <li><a href="gioithieu.php">- Chính sách bảo mật</a></li>
-                        <li><a href="gioithieu.php">- Quy chế hoạt động</a></li>
-                        <li><a href="gioithieu.php">- Điều khoản dịch vụ</a></li>
-                        <li><a href="gioithieu.php">- Liên hệ</a></li>
-                        <li><a href="gioithieu.php">- Đội ngũ giảng viên</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Giới thiệu chung</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Thành viên sáng lập</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Ban cố vấn</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Chính sách bảo mật</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Quy chế hoạt động</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Điều khoản dịch vụ</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Liên hệ</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Đội ngũ giảng viên</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <h5>Hướng dẫn/Trợ giúp</h5>
                     <ul class="list_footer">
-                        <li><a href="huongdanthanhtoan.php">- Hướng dẫn thanh toán</a></li>
-                        <li><a href="cauhoithuonggap.php">- Câu hỏi thường gặp</a></li>
-                        <li><a href="sample.php">- Hướng dẫn sử dụng</a></li>
-                        <li><a href="sample.php">- Cung cấp số điện thoại hotline</a></li>
-                        <li><a href="sample.php">- Thời gian hỗ trợ</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Hướng dẫn thanh toán</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Câu hỏi thường gặp</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Hướng dẫn sử dụng</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Cung cấp số điện thoại hotline</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Thời gian hỗ trợ</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <h5>&nbsp;</h5>
                     <ul class="list_footer">
-                        <li><a href="hoptacgiangday.php">- Hợp tác giảng dạy</a></li>
-                        <li><a href="sample.php">- Liên kết website </a></li>
-                        <li><a href="sample.php">- Đăng ký bảo mật</a></li>
-                        <li><a href="quitrinhmuahang.php">- Qui trình mua hàng</a></li>
-                        <li><a href="tintuc.php">- Về pháp lý</a></li>
-                        <li><a href="tintuc.php">- Bản tin kinh tế</a></li>
-                        <li><a href="tintuc.php">- Kiến thức pháp luật</a></li>
-                        <li><a href="tintuc.php">- Góc truyền thông</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Hợp tác giảng dạy</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Liên kết website </a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Đăng ký bảo mật</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Qui trình mua hàng</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Về pháp lý</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Bản tin kinh tế</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Kiến thức pháp luật</a></li>
+                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Góc truyền thông</a></li>
                     </ul>
                 </div>
             </div>
@@ -68,8 +68,8 @@
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <ul class="list_social">
                         <li><a href="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL) }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                        <li><a href=""><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                        <li><a href=""><i class="fa fa-youtube-square" aria-hidden="true"></i></a></li>
+                        <li><a href="javascript:void(0)"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                        <li><a href="javascript:void(0)"><i class="fa fa-youtube-square" aria-hidden="true"></i></a></li>
                     </ul>
                     <p class="pull-right luottruycap"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> Lượt truy cập: <span>8888</span></p>
                 </div>

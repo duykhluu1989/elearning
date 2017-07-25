@@ -52,4 +52,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setReferral', 'locale
 
     Route::get('cart/deleteItem', 'OrderController@deleteCartItem');
 
+    Route::get('sample', 'ArticleController@sample');
+
+    Route::get('tintuc', 'ArticleController@tintuc');
+
 });
