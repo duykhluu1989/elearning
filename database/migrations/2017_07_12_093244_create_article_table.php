@@ -25,7 +25,8 @@ class CreateArticleTable extends Migration
             $table->unsignedInteger('view_count')->default(0);
             $table->string('slug', 255);
             $table->string('slug_en', 255)->nullable();
-            $table->string('code', 255)->nullable();
+            $table->unsignedTinyInteger('group')->nullable();
+            $table->unsignedInteger('order')->default(1);
         });
     }
 

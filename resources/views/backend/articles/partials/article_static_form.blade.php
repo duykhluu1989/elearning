@@ -65,6 +65,37 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>Nhóm Trang</label>
+                    <select class="form-control" name="group">
+                        <option value=""></option>
+                        <?php
+                        $group = old('group', $article->group);
+                        ?>
+                        @foreach(\App\Models\Article::getStaticArticleGroup() as $value => $label)
+                            @if($group === $value)
+                                <option value="{{ $value }}" selected="selected">{{ $label }}</option>
+                            @else
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group{{ $errors->has('order') ? ' has-error': '' }}">
+                    <label>Thứ Tự <i>(bắt buộc)</i></label>
+                    <input type="text" class="form-control" name="order" required="required" value="{{ old('order', $article->order) }}" />
+                    @if($errors->has('order'))
+                        <span class="help-block">{{ $errors->first('order') }}</span>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
     <div class="box-body">
         <div class="nav-tabs-custom">

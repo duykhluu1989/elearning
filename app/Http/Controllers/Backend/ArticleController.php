@@ -141,11 +141,11 @@ class ArticleController extends Controller
 
             $validator = Validator::make($inputs, [
                 'user_name' => 'required',
-                'name' => 'required|unique:course,name' . ($create == true ? '' : (',' . $article->id)),
-                'name_en' => 'nullable|unique:course,name_en' . ($create == true ? '' : (',' . $article->id)),
+                'name' => 'required|unique:article,name' . ($create == true ? '' : (',' . $article->id)),
+                'name_en' => 'nullable|unique:article,name_en' . ($create == true ? '' : (',' . $article->id)),
                 'content' => 'required',
-                'slug' => 'nullable|unique:course,slug' . ($create == true ? '' : (',' . $article->id)),
-                'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $article->id)),
+                'slug' => 'nullable|unique:article,slug' . ($create == true ? '' : (',' . $article->id)),
+                'slug_en' => 'nullable|unique:article,slug_en' . ($create == true ? '' : (',' . $article->id)),
             ]);
 
             $validator->after(function($validator) use(&$inputs) {
@@ -251,7 +251,7 @@ class ArticleController extends Controller
 
     public function adminArticleStatic(Request $request)
     {
-        $dataProvider = Article::select('id', 'name', 'status', 'view_count')
+        $dataProvider = Article::select('id', 'name', 'status', 'view_count', 'order', 'group')
             ->where('type', Article::TYPE_STATIC_ARTICLE_DB)
             ->orderBy('id', 'desc');
 
@@ -264,6 +264,9 @@ class ArticleController extends Controller
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
                 $dataProvider->where('status', $inputs['status']);
+
+            if(isset($inputs['group']) && $inputs['group'] !== '')
+                $dataProvider->where('group', $inputs['group']);
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -278,6 +281,10 @@ class ArticleController extends Controller
                 },
             ],
             [
+                'title' => 'Thứ Tự',
+                'data' => 'order',
+            ],
+            [
                 'title' => 'Trạng Thái',
                 'data' => function($row) {
                     $status = Course::getCourseStatus($row->status);
@@ -287,6 +294,13 @@ class ArticleController extends Controller
                         echo Html::span($status, ['class' => 'label label-primary']);
                     else
                         echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Nhóm Trang',
+                'data' => function($row) {
+                    if($row->group !== '')
+                        echo Article::getStaticArticleGroup($row->group);
                 },
             ],
             [
@@ -310,6 +324,12 @@ class ArticleController extends Controller
                 'type' => 'select',
                 'options' => Course::getCourseStatus(),
             ],
+            [
+                'title' => 'Nhóm Trang',
+                'name' => 'group',
+                'type' => 'select',
+                'options' => Article::getStaticArticleGroup(),
+            ],
         ]);
         $gridView->setFilterValues($inputs);
 
@@ -325,6 +345,8 @@ class ArticleController extends Controller
         $article = new Article();
         $article->type = Article::TYPE_STATIC_ARTICLE_DB;
         $article->status = Course::STATUS_DRAFT_DB;
+        $article->group = null;
+        $article->order = 1;
 
         return $this->saveArticleStatic($request, $article);
     }
@@ -348,11 +370,12 @@ class ArticleController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'name' => 'required|unique:course,name,' . ($create == true ? '' : (',' . $article->id)),
-                'name_en' => 'nullable|unique:course,name_en,' . ($create == true ? '' : (',' . $article->id)),
+                'name' => 'required|unique:article,name' . ($create == true ? '' : (',' . $article->id)),
+                'name_en' => 'nullable|unique:article,name_en' . ($create == true ? '' : (',' . $article->id)),
                 'content' => 'required',
-                'slug' => 'nullable|unique:course,slug,' . ($create == true ? '' : (',' . $article->id)),
-                'slug_en' => 'nullable|unique:course,slug_en,' . ($create == true ? '' : (',' . $article->id)),
+                'slug' => 'nullable|unique:article,slug' . ($create == true ? '' : (',' . $article->id)),
+                'slug_en' => 'nullable|unique:article,slug_en' . ($create == true ? '' : (',' . $article->id)),
+                'order' => 'required|integer|min:1',
             ]);
 
             if($validator->passes())
@@ -365,6 +388,15 @@ class ArticleController extends Controller
                 $article->content_en = $inputs['content_en'];
                 $article->short_description = $inputs['short_description'];
                 $article->short_description_en = $inputs['short_description_en'];
+                $article->order = $inputs['order'];
+
+                if(empty($article->published_at) && $article->status == Course::STATUS_PUBLISH_DB)
+                    $article->published_at = date('Y-m-d H:i:s');
+
+                if(isset($inputs['group']) && $inputs['group'] !== '')
+                    $article->group = $inputs['group'];
+                else
+                    $article->group = null;
 
                 if(empty($inputs['slug']))
                     $article->slug = str_slug($article->name);
@@ -375,6 +407,9 @@ class ArticleController extends Controller
                     $article->slug_en = str_slug($article->name_en);
                 else
                     $article->slug_en = str_slug($inputs['slug_en']);
+
+                if($create == true)
+                    $article->created_at = date('Y-m-d H:i:s');
 
                 $article->save();
 

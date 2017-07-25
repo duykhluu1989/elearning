@@ -108,8 +108,8 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Cấp Độ</label>
-                    <option value=""></option>
                     <select class="form-control" name="level_id">
+                        <option value=""></option>
                         <?php
                         $levelId = old('level_id', $course->level_id);
                         ?>

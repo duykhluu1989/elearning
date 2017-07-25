@@ -111,7 +111,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Thành Viên Chỉ Định</label>
-                                <span class="form-control no-border">{{ !empty($discount->user) ? $discount->user->username : '' }}</span>
+                                <span class="form-control no-border">{{ !empty($discount->user) ? ($discount->user->profile->name . ' - ' . $discount->user->email) : '' }}</span>
                             </div>
                         </div>
                     @else

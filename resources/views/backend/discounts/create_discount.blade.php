@@ -177,24 +177,24 @@
                             <label>Chỉ Cho Phép Thành Viên Chỉ Định Sử Dụng</label>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" id="FixUsageUserCheckBox"<?php echo (old('username', $discount->user_id) ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                    <input type="checkbox" id="FixUsageUserCheckBox"<?php echo (old('user_name', $discount->user_id) ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row" id="FixUsageUserUsernameInput" style="<?php echo (old('username', $discount->user_id) ? '' : 'display: none'); ?>">
+                <div class="row" id="FixUsageUserUsernameInput" style="<?php echo (old('user_name', $discount->user_id) ? '' : 'display: none'); ?>">
                     <div class="col-sm-12">
-                        <div class="form-group{{ $errors->has('username') ? ' has-error': '' }}">
+                        <div class="form-group{{ $errors->has('user_name') ? ' has-error': '' }}">
                             <label>Thành Viên Chỉ Định <i>(bắt buộc)</i></label>
-                            <input type="text" class="form-control" id="UsernameInput" name="username" placeholder="username" value="{{ old('username', (!empty($discount->user_id) ? (!empty($discount->user) ? $discount->user->username : '') : '')) }}"<?php echo (old('username', $discount->user_id) ? ' required="required"' : ''); ?> />
-                            @if($errors->has('username'))
-                                <span class="help-block">{{ $errors->first('username') }}</span>
+                            <input type="text" class="form-control" id="UserInput" name="user_name" placeholder="name - email" value="{{ old('user_name', (!empty($discount->user_id) ? (!empty($discount->user) ? ($discount->user->profile->name . ' - ' . $discount->user->email) : '') : '')) }}"<?php echo (old('user_name', $discount->user_id) ? ' required="required"' : ''); ?> />
+                            @if($errors->has('user_name'))
+                                <span class="help-block">{{ $errors->first('user_name') }}</span>
                             @endif
                         </div>
                     </div>
                 </div>
-                <div class="row" id="NoFixUsageUserInputs" style="<?php echo (old('username', $discount->user_id) ? 'display: none' : ''); ?>">
+                <div class="row" id="NoFixUsageUserInputs" style="<?php echo (old('user_name', $discount->user_id) ? 'display: none' : ''); ?>">
                     <div class="col-sm-4">
                         <div class="form-group{{ $errors->has('usage_unique') ? ' has-error': '' }}">
                             <label>Số Lần Sử Dụng Mỗi Thành Viên <i>(để trống là không giới hạn)</i></label>
@@ -363,7 +363,7 @@
         $('#FixUsageUserCheckBox').change(function() {
             if($(this).prop('checked'))
             {
-                $('#UsernameInput').prop('required', 'required');
+                $('#UserInput').prop('required', 'required');
                 $('#UsageUniqueInput').val('');
                 $('#CampaignCodeInput').val('');
                 $('#FixUsageUserUsernameInput').show();
@@ -371,7 +371,7 @@
             }
             else
             {
-                $('#UsernameInput').val('').removeAttr('required');
+                $('#UserInput').val('').removeAttr('required');
                 $('#FixUsageUserUsernameInput').hide();
                 $('#NoFixUsageUserInputs').show();
             }
@@ -397,7 +397,7 @@
             }
         });
 
-        $('#UsernameInput').autocomplete({
+        $('#UserInput').autocomplete({
             minLength: 3,
             delay: 1000,
             source: function(request, response) {
@@ -415,11 +415,11 @@
                 });
             },
             select: function(event, ui) {
-                $(this).val(ui.item.username);
+                $(this).val(ui.item.name + ' - ' + ui.item.email);
                 return false;
             }
         }).autocomplete('instance')._renderItem = function(ul, item) {
-            return $('<li>').append('<a>' + item.username + '</a>').appendTo(ul);
+            return $('<li>').append('<a>' + item.name + ' - ' + item.email + '</a>').appendTo(ul);
         };
 
         $('#NewDiscountApplyButton').click(function() {

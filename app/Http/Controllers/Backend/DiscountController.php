@@ -184,16 +184,24 @@ class DiscountController extends Controller
             ]);
 
             $validator->after(function($validator) use(&$inputs) {
-                if(!empty($inputs['username']))
+                if(!empty($inputs['user_name']))
                 {
-                    $user = User::select('id')
-                        ->where('username', $inputs['username'])
-                        ->first();
+                    $userNameParts = explode(' - ', $inputs['user_name']);
 
-                    if(!empty($user))
-                        $inputs['user_id'] = $user->id;
-                    else
-                        $validator->errors()->add('username', 'Thành Viên Không Tồn Tại');
+                    if(count($userNameParts) == 2)
+                    {
+                        $user = User::select('user.id')
+                            ->join('profile', 'user.id', '=', 'profile.user_id')
+                            ->where('user.email', $userNameParts[1])
+                            ->where('profile.name', $userNameParts[0])
+                            ->first();
+
+                        if(!empty($user))
+                            $inputs['user_id'] = $user->id;
+                    }
+
+                    if(!isset($inputs['user_id']))
+                        $validator->errors()->add('user_name', 'Thành Viên Không Tồn Tại');
                 }
 
                 if($inputs['type'] == Discount::TYPE_PERCENTAGE_DB && $inputs['value'] > 99)
