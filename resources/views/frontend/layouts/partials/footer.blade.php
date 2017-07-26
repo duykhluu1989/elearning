@@ -33,7 +33,7 @@
                                 </ul>
                             </div>
                             <?php
-                            $noParentFooterMenus[] = array();
+                            $noParentFooterMenus = array();
                             ?>
                         @else
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -58,6 +58,21 @@
                     @endif
                 @endforeach
 
+                @if(count($noParentFooterMenus) > 0)
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <h5></h5>
+                        <ul class="list_footer">
+
+                            @foreach($noParentFooterMenus as $noParentFooterMenu)
+                                <li><a href="{{ $noParentFooterMenu->getMenuUrl() }}">- {{ $noParentFooterMenu->getMenuTitle(false) }}</a></li>
+                            @endforeach
+
+                        </ul>
+                    </div>
+                    <?php
+                    $noParentFooterMenus = null;
+                    ?>
+                @endif
             </div>
         </div>
     </section>
