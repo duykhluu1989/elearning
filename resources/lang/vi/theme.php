@@ -88,5 +88,6 @@ return [
     'list_intro' => 'Danh mục giới thiệu',
     'become_collaborator' => 'Trở thành đối tác phân phối khóa học của caydenthan',
     'collaborator_slogan' => 'Khoá học chất - Hoa hồng cao - Dễ chia sẻ',
+    'guide' => 'Hướng dẫn / trợ giúp',
 
 ];

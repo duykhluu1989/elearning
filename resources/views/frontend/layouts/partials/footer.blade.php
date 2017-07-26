@@ -21,26 +21,39 @@
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <h5>Giới thiệu</h5>
+                    <h5>@lang('theme.course_description')</h5>
                     <ul class="list_footer">
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Giới thiệu chung</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Thành viên sáng lập</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Ban cố vấn</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Chính sách bảo mật</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Quy chế hoạt động</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Điều khoản dịch vụ</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Liên hệ</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Đội ngũ giảng viên</a></li>
+
+                        <?php
+                        $groupIntroPages = \App\Models\Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
+                            ->where('type', \App\Models\Article::TYPE_STATIC_ARTICLE_DB)
+                            ->where('status', \App\Models\Course::STATUS_PUBLISH_DB)
+                            ->where('group', \App\Models\Article::STATIC_ARTICLE_GROUP_INTRO_DB)
+                            ->orderBy('order', 'desc')
+                            ->get();
+                        ?>
+
+                        @foreach($groupIntroPages as $groupIntroPage)
+                            <li><a href="{{ action('Frontend\PageController@detailPage', ['id' => $groupIntroPage->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($groupIntroPage, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($groupIntroPage, 'name') }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <h5>Hướng dẫn/Trợ giúp</h5>
+                    <h5>@lang('theme.guide')</h5>
                     <ul class="list_footer">
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Hướng dẫn thanh toán</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Câu hỏi thường gặp</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Hướng dẫn sử dụng</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Cung cấp số điện thoại hotline</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Thời gian hỗ trợ</a></li>
+
+                        <?php
+                        $groupGuidePages = \App\Models\Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
+                            ->where('type', \App\Models\Article::TYPE_STATIC_ARTICLE_DB)
+                            ->where('status', \App\Models\Course::STATUS_PUBLISH_DB)
+                            ->where('group', \App\Models\Article::STATIC_ARTICLE_GROUP_GUIDE_DB)
+                            ->orderBy('order', 'desc')
+                            ->get();
+                        ?>
+
+                        @foreach($groupGuidePages as $groupGuidePage)
+                            <li><a href="{{ action('Frontend\PageController@detailPage', ['id' => $groupGuidePage->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($groupGuidePage, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($groupGuidePage, 'name') }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
