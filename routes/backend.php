@@ -112,6 +112,16 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('discount/controlDelete', 'DiscountController@controlDeleteDiscount');
 
+        Route::get('newsCategory', 'NewsController@adminCategory');
+
+        Route::match(['get', 'post'], 'newsCategory/create', 'NewsController@createCategory');
+
+        Route::match(['get', 'post'], 'newsCategory/{id}/edit', 'NewsController@editCategory');
+
+        Route::get('newsCategory/{id}/delete', 'NewsController@deleteCategory');
+
+        Route::get('newsCategory/controlDelete', 'NewsController@controlDeleteCategory');
+
         Route::get('widget', 'WidgetController@adminWidget');
 
         Route::match(['get', 'post'], 'widget/{id}/edit', 'WidgetController@editWidget');

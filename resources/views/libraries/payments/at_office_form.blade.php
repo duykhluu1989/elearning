@@ -38,13 +38,13 @@ if(!empty($paymentMethod->detail))
     <script type="text/javascript">
         $('#NewAddressItemButton').click(function() {
             $('#ListAddressItem').append('' +
-            '<tr>' +
-            '<td>' +
-            '<input type="text" class="form-control" name="detail[address][]" required="required" />' +
-            '</td>' +
-            '<td class="text-center">' +
-            '<button type="button" class="btn btn-default RemoveBankAccountItemButton"><i class="fa fa-trash-o fa-fw"></i></button>' +
-            '</td>' +
+                '<tr>' +
+                '<td>' +
+                '<input type="text" class="form-control" name="detail[address][]" required="required" />' +
+                '</td>' +
+                '<td class="text-center">' +
+                '<button type="button" class="btn btn-default RemoveBankAccountItemButton"><i class="fa fa-trash-o fa-fw"></i></button>' +
+                '</td>' +
             '</tr>');
         });
 

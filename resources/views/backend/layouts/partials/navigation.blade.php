@@ -26,6 +26,9 @@
                     </li>
                 </ul>
             </li>
+            <li class="{{ (request()->is('admin/newsCategory*') ? 'active' : '') }}">
+                <a href="{{ action('Backend\NewsController@adminCategory') }}"><i class="fa fa-rss"></i><span>Tin Tức</span></a>
+            </li>
             <li class="{{ (request()->is('admin/discount*') ? 'active' : '') }}">
                 <a href="{{ action('Backend\DiscountController@adminDiscount') }}"><i class="fa fa-tags"></i><span>Mã Giảm Giá</span></a>
             </li>
