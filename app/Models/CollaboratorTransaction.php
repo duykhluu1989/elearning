@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CollaboratorTransaction extends Model
 {
     const TYPE_INCOME_DB = 0;
-    const TYPE_INCOME_FROM_CHILD_DB = 1;
+    const TYPE_DOWNLINE_INCOME_DB = 1;
 
     protected $table = 'collaborator_transaction';
 

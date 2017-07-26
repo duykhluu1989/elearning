@@ -16,6 +16,7 @@ class CreateCollaboratorTransactionTable extends Migration
             $table->double('commission_percent')->unsigned()->nullable();
             $table->double('commission_amount')->unsigned()->nullable();
             $table->dateTime('created_at');
+            $table->unsignedInteger('downline_collaborator_id')->nullable();
         });
     }
 

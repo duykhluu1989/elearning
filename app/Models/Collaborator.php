@@ -48,7 +48,6 @@ class Collaborator extends Model
                             $collaborator->rank_id = $ranks[Setting::COLLABORATOR_GOLD]->id;
 
                             $upRank = json_decode($ranks[Setting::COLLABORATOR_GOLD]->value, true);
-
                         }
                         else
                         {
