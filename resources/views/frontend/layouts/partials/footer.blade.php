@@ -23,7 +23,7 @@
                     @else
                         @if(count($noParentFooterMenus) > 0)
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <h5></h5>
+                                <h5>&nbsp;</h5>
                                 <ul class="list_footer">
 
                                     @foreach($noParentFooterMenus as $noParentFooterMenu)
@@ -60,7 +60,7 @@
 
                 @if(count($noParentFooterMenus) > 0)
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                        <h5></h5>
+                        <h5>&nbsp;</h5>
                         <ul class="list_footer">
 
                             @foreach($noParentFooterMenus as $noParentFooterMenu)
