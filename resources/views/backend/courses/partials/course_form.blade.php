@@ -203,7 +203,14 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Liên Kết Tĩnh</label>
-                                <input type="text" class="form-control" name="slug" value="{{ old('slug', $course->slug) }}" />
+                                <div class="input-group">
+                                    @if(empty($course->id))
+                                        <span class="input-group-addon">{{ url('course') }}/</span>
+                                    @else
+                                        <span class="input-group-addon">{{ url('course', ['id' => $course->id]) }}/</span>
+                                    @endif
+                                    <input type="text" class="form-control" name="slug" value="{{ old('slug', $course->slug) }}" />
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -228,7 +235,14 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Liên Kết Tĩnh EN</label>
-                                <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $course->slug_en) }}" />
+                                <div class="input-group">
+                                    @if(empty($course->id))
+                                        <span class="input-group-addon">{{ url('course') }}/</span>
+                                    @else
+                                        <span class="input-group-addon">{{ url('course', ['id' => $course->id]) }}/</span>
+                                    @endif
+                                    <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $course->slug_en) }}" />
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-12">

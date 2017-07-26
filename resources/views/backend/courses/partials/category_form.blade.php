@@ -76,13 +76,27 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>Liên Kết Tĩnh</label>
-                    <input type="text" class="form-control" name="slug" value="{{ old('slug', $category->slug) }}" />
+                    <div class="input-group">
+                        @if(empty($category->id))
+                            <span class="input-group-addon">{{ url('category') }}/</span>
+                        @else
+                            <span class="input-group-addon">{{ url('category', ['id' => $category->id]) }}/</span>
+                        @endif
+                        <input type="text" class="form-control" name="slug" value="{{ old('slug', $category->slug) }}" />
+                    </div>
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>Liên Kết Tĩnh EN</label>
-                    <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $category->slug_en) }}" />
+                    <div class="input-group">
+                        @if(empty($category->id))
+                            <span class="input-group-addon">{{ url('category') }}/</span>
+                        @else
+                            <span class="input-group-addon">{{ url('category', ['id' => $category->id]) }}/</span>
+                        @endif
+                        <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $category->slug_en) }}" />
+                    </div>
                 </div>
             </div>
         </div>
