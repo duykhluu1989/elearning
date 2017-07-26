@@ -18,6 +18,7 @@ class CreateMenuTable extends Migration
             $table->string('target', 255)->nullable();
             $table->unsignedTinyInteger('type')->default(0);
             $table->unsignedInteger('position')->default(1);
+            $table->unsignedTinyInteger('theme_position')->default(0);
         });
     }
 

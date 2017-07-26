@@ -1,5 +1,5 @@
 <?php
-$rootMenus = \App\Models\Menu::getMenuTree();
+$rootMenus = \App\Models\Menu::getMenuTree(\App\Models\Menu::THEME_POSITION_MENU_DB);
 ?>
 @foreach($rootMenus as $rootMenu)
     <?php

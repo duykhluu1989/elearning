@@ -19,6 +19,9 @@ class Menu extends Model
     const TARGET_CATEGORY_DB = 'category';
     const TARGET_STATIC_ARTICLE_DB = 'article';
 
+    const THEME_POSITION_MENU_DB = 0;
+    const THEME_POSITION_FOOTER_DB = 1;
+
     protected $table = 'menu';
 
     public $timestamps = false;
@@ -93,10 +96,11 @@ class Menu extends Model
         return $title;
     }
 
-    public static function getMenuTree()
+    public static function getMenuTree($themePosition)
     {
         $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target', 'type')
             ->whereNull('parent_id')
+            ->where('theme_position', $themePosition)
             ->orderBy('position')
             ->get();
 

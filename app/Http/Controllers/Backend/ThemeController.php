@@ -57,12 +57,16 @@ class ThemeController extends Controller
             }
         }
 
-        $rootMenus = Menu::getMenuTree();
+        $rootMenus = Menu::getMenuTree(Menu::THEME_POSITION_MENU_DB);
 
         $menu = new Menu();
         $menu->type = Menu::TYPE_CATEGORY_DB;
+        $menu->theme_position = Menu::THEME_POSITION_MENU_DB;
 
         return view('backend.themes.admin_menu', [
+            'formTitle' => 'Menu',
+            'treeMaxLevel' => 3,
+            'formAction' => action('Backend\ThemeController@adminMenu'),
             'rootMenus' => $rootMenus,
             'menu' => $menu,
         ]);
@@ -100,6 +104,7 @@ class ThemeController extends Controller
                 'name' => 'required_if:type,' . Menu::TYPE_STATIC_LINK_DB,
                 'url' => 'nullable|url|required_if:type,' . Menu::TYPE_STATIC_LINK_DB,
                 'target_name' => 'required_if:type,' . Menu::TYPE_CATEGORY_DB . ',' . Menu::TYPE_STATIC_ARTICLE_DB,
+                'theme_position' => 'required|integer',
             ]);
 
             $validator->after(function($validator) use(&$inputs) {
@@ -139,6 +144,7 @@ class ThemeController extends Controller
                 $menu->name_en = $inputs['name_en'];
                 $menu->url = $inputs['url'];
                 $menu->type = $inputs['type'];
+                $menu->theme_position = $inputs['theme_position'];
 
                 if(!empty($inputs['target']))
                 {
@@ -195,5 +201,65 @@ class ThemeController extends Controller
 
             return '';
         }
+    }
+
+    public function adminFooter(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'parent_id' => 'required|array',
+            ]);
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $i = 1;
+
+                    foreach($inputs['parent_id'] as $id => $parentId)
+                    {
+                        if(empty($parentId))
+                            $parentId = 'NULL';
+
+                        DB::statement('
+                            UPDATE `menu`
+                            SET `position` = ' . $i . ', `parent_id` = ' . $parentId . '
+                            WHERE `id` = ' . $id
+                        );
+
+                        $i ++;
+                    }
+
+                    DB::commit();
+
+                    return redirect()->action('Backend\ThemeController@adminFooter')->with('messageSuccess', 'Thành Công');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Backend\ThemeController@adminFooter')->with('messageError', $e->getMessage());
+                }
+            }
+        }
+
+        $rootMenus = Menu::getMenuTree(Menu::THEME_POSITION_FOOTER_DB);
+
+        $menu = new Menu();
+        $menu->type = Menu::TYPE_CATEGORY_DB;
+        $menu->theme_position = Menu::THEME_POSITION_FOOTER_DB;
+
+        return view('backend.themes.admin_menu', [
+            'formTitle' => 'Footer Menu',
+            'treeMaxLevel' => 2,
+            'formAction' => action('Backend\ThemeController@adminFooter'),
+            'rootMenus' => $rootMenus,
+            'menu' => $menu,
+        ]);
     }
 }

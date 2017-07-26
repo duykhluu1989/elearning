@@ -222,6 +222,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('theme/menu/{id}/delete', 'ThemeController@deleteMenu');
 
+        Route::match(['get', 'post'], 'theme/footer', 'ThemeController@adminFooter');
+
         Route::match(['get', 'post'], 'setting', 'SettingController@adminSetting');
 
         Route::match(['get', 'post'], 'setting/collaborator', 'SettingController@adminSettingCollaborator');

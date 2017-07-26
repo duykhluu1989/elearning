@@ -20,7 +20,11 @@ class NewsController extends Controller
 
         if(count($inputs) > 0)
         {
+            if(!empty($inputs['name']))
+                $dataProvider->where('name', 'like', '%' . $inputs['name'] . '%');
 
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('status', $inputs['status']);
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -54,7 +58,7 @@ class NewsController extends Controller
         $gridView->setCheckbox();
         $gridView->setFilters([
             [
-                'title' => 'Tình Huống',
+                'title' => 'Tên',
                 'name' => 'name',
                 'type' => 'input',
             ],

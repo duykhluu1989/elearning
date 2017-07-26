@@ -1,10 +1,10 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', 'Menu')
+@section('page_heading', $formTitle)
 
 @section('section')
 
-    <form action="{{ action('Backend\ThemeController@adminMenu') }}" method="post" id="AdminMenuForm">
+    <form action="{{ $formAction }}" method="post" id="AdminMenuForm">
 
         <div class="box box-primary" id="AdminMenuDiv">
             <div class="box-header with-border">
@@ -71,7 +71,7 @@
     <script src="{{ asset('assets/js/jquery.mjs.nestedSortable.js') }}"></script>
     <script type="text/javascript">
         $('#ListMenuItem').nestedSortable({
-            maxLevels: 3,
+            maxLevels: {{ $treeMaxLevel }},
             revert: 250,
             forcePlaceholderSize: true,
             handle: 'div',

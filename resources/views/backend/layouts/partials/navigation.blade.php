@@ -83,6 +83,9 @@
                     <li class="{{ (request()->is('admin/theme/menu') ? 'active' : '') }}">
                         <a href="{{ action('Backend\ThemeController@adminMenu') }}">Menu</a>
                     </li>
+                    <li class="{{ (request()->is('admin/theme/footer') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\ThemeController@adminFooter') }}">Footer</a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview{{ (request()->is('admin/setting*') ? ' active' : '') }}">
