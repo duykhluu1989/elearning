@@ -49,7 +49,7 @@ class PaymentMethodController extends Controller
         ]);
     }
 
-    public function updatePaymentMethod(Request $request)
+    public function updatePaymentMethod()
     {
         PaymentMethod::initCorePaymentMethods();
 
@@ -97,10 +97,5 @@ class PaymentMethodController extends Controller
             'paymentMethod' => $paymentMethod,
             'payment' => $payment,
         ]);
-    }
-
-    protected function savePaymentMethod()
-    {
-
     }
 }

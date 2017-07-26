@@ -244,7 +244,7 @@
             else
             {
                 elFinderSelectedFile.parent().append('' +
-                '<img src="' + fileUrl + '" width="100%" alt="Course Image" />' +
+                    '<img src="' + fileUrl + '" width="100%" alt="Article Image" />' +
                 '');
             }
         }

@@ -12,9 +12,11 @@ class Article extends Model
     const STATIC_ARTICLE_GROUP_INTRO_DB = 0;
     const STATIC_ARTICLE_GROUP_GUIDE_DB = 1;
     const STATIC_ARTICLE_GROUP_COLLABORATOR_DB = 2;
+    const STATIC_ARTICLE_GROUP_FAQ_DB = 3;
     const STATIC_ARTICLE_GROUP_INTRO_LABEL = 'Giới Thiệu';
     const STATIC_ARTICLE_GROUP_GUIDE_LABEL = 'Hướng Dẫn';
     const STATIC_ARTICLE_GROUP_COLLABORATOR_LABEL = 'Cộng Tác Viên';
+    const STATIC_ARTICLE_GROUP_FAQ_LABEL = 'Hỏi Đáp';
 
     protected $table = 'article';
 
@@ -31,6 +33,7 @@ class Article extends Model
             self::STATIC_ARTICLE_GROUP_INTRO_DB => self::STATIC_ARTICLE_GROUP_INTRO_LABEL,
             self::STATIC_ARTICLE_GROUP_GUIDE_DB => self::STATIC_ARTICLE_GROUP_GUIDE_LABEL,
             self::STATIC_ARTICLE_GROUP_COLLABORATOR_DB => self::STATIC_ARTICLE_GROUP_COLLABORATOR_LABEL,
+            self::STATIC_ARTICLE_GROUP_FAQ_DB => self::STATIC_ARTICLE_GROUP_FAQ_LABEL,
         ];
 
         if($value !== null && isset($group[$value]))

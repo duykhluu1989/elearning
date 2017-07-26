@@ -23,30 +23,29 @@ class PageController extends Controller
 
         if($page->group !== null)
         {
-            $sameGroupPages = Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
-                ->where('type', Article::TYPE_STATIC_ARTICLE_DB)
-                ->where('status', Course::STATUS_PUBLISH_DB)
-                ->where('group', $page->group)
-                ->orderBy('order', 'desc')
-                ->get();
-
             switch($page->group)
             {
                 case Article::STATIC_ARTICLE_GROUP_INTRO_DB:
 
-                    return $this->detailIntroPage($page, $sameGroupPages);
+                    return $this->detailIntroPage($page);
 
                     break;
 
                 case Article::STATIC_ARTICLE_GROUP_GUIDE_DB:
 
-                    return $this->detailGuidePage($page, $sameGroupPages);
+                    return $this->detailGuidePage($page);
 
                     break;
 
                 case Article::STATIC_ARTICLE_GROUP_COLLABORATOR_DB:
 
-                    return $this->detailCollaboratorPage($page, $sameGroupPages);
+                    return $this->detailCollaboratorPage($page);
+
+                    break;
+
+                case Article::STATIC_ARTICLE_GROUP_FAQ_DB:
+
+                    return $this->detailFaqPage($page);
 
                     break;
             }
@@ -62,27 +61,55 @@ class PageController extends Controller
         ]);
     }
 
-    public function detailIntroPage($page, $sameGroupPages)
+    public function detailIntroPage($page)
     {
+        $sameGroupPages = Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('type', Article::TYPE_STATIC_ARTICLE_DB)
+            ->where('status', Course::STATUS_PUBLISH_DB)
+            ->where('group', Article::STATIC_ARTICLE_GROUP_INTRO_DB)
+            ->orderBy('order', 'desc')
+            ->get();
+
         return view('frontend.pages.detail_intro_page', [
             'page' => $page,
             'sameGroupPages' => $sameGroupPages,
         ]);
     }
 
-    public function detailGuidePage($page, $sameGroupPages)
+    public function detailGuidePage($page)
     {
+        $sameGroupPages = Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('type', Article::TYPE_STATIC_ARTICLE_DB)
+            ->where('status', Course::STATUS_PUBLISH_DB)
+            ->where('group', Article::STATIC_ARTICLE_GROUP_GUIDE_DB)
+            ->orderBy('order', 'desc')
+            ->get();
+
         return view('frontend.pages.detail_guide_page', [
             'page' => $page,
             'sameGroupPages' => $sameGroupPages,
         ]);
     }
 
-    public function detailCollaboratorPage($page, $sameGroupPages)
+    public function detailCollaboratorPage($page)
     {
+        $sameGroupPages = Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('type', Article::TYPE_STATIC_ARTICLE_DB)
+            ->where('status', Course::STATUS_PUBLISH_DB)
+            ->where('group', Article::STATIC_ARTICLE_GROUP_COLLABORATOR_DB)
+            ->orderBy('order', 'desc')
+            ->get();
+
         return view('frontend.pages.detail_collaborator_page', [
             'page' => $page,
             'sameGroupPages' => $sameGroupPages,
+        ]);
+    }
+
+    public function detailFaqPage($page)
+    {
+        return view('frontend.pages.detail_faq_page', [
+            'page' => $page,
         ]);
     }
 }

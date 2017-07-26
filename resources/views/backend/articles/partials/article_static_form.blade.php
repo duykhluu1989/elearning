@@ -129,13 +129,52 @@
                                 <input type="text" class="form-control" name="short_description" value="{{ old('short_description', $article->short_description) }}" />
                             </div>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 ArticleStaticGroupInput" style="{{ $group === \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB ? 'display: none' : '' }}">
                             <div class="form-group{{ $errors->has('content') ? ' has-error': '' }}">
                                 <label>Nội Dung <i>(bắt buộc)</i></label>
                                 @if($errors->has('content'))
                                     <span class="help-block">{{ $errors->first('content') }}</span>
                                 @endif
-                                <textarea class="form-control TextEditorInput" name="content">{{ old('content', $article->content) }}</textarea>
+                                <textarea class="form-control TextEditorInput" name="content">{{ old('content', ($group !== \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB ? $article->content : '')) }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 ArticleStaticGroupFaqInput" style="{{ $group !== \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB ? 'display: none' : '' }}">
+                            <?php
+                            $details = array();
+
+                            if($group === \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB && !empty($article->content))
+                                $details = json_decode($article->content, true);
+                            ?>
+                            <div class="form-group">
+                                <label>Nội Dung <i>(bắt buộc - kéo thả để thay đổi thứ tự)</i></label>
+                                <div class="no-padding">
+                                    <table class="table table-bordered table-striped table-hover table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th>Tiêu Đề</th>
+                                            <th>Nội Dung</th>
+                                            <th class="col-sm-1 text-center">
+                                                <button type="button" class="btn btn-primary" id="NewContentItemButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Thêm Mới"><i class="fa fa-plus fa-fw"></i></button>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="ListContentItem">
+                                        @foreach($details as $detail)
+                                            <tr>
+                                                <td>
+                                                    <input type="text" class="form-control" name="detail[title][]" value="{{ isset($detail['title']) ? $detail['title'] : '' }}" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" name="detail[description][]" value="{{ isset($detail['description']) ? $detail['description'] : '' }}" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-default RemoveContentItemButton"><i class="fa fa-trash-o fa-fw"></i></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,10 +200,49 @@
                                 <input type="text" class="form-control" name="short_description_en" value="{{ old('short_description_en', $article->short_description_en) }}" />
                             </div>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 ArticleStaticGroupInput" style="{{ $group === \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB ? 'display: none' : '' }}">
                             <div class="form-group">
                                 <label>Nội Dung EN</label>
-                                <textarea class="form-control TextEditorInput" name="content_en">{{ old('content_en', $article->content_en) }}</textarea>
+                                <textarea class="form-control TextEditorInput" name="content_en">{{ old('content_en', ($group !== \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB ? $article->content_en : '')) }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 ArticleStaticGroupFaqInput" style="{{ $group !== \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB ? 'display: none' : '' }}">
+                            <?php
+                            $detailEns = array();
+
+                            if($group === \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB && !empty($article->content_en))
+                                $detailEns = json_decode($article->content_en, true);
+                            ?>
+                            <div class="form-group">
+                                <label>Nội Dung EN <i>(kéo thả để thay đổi thứ tự)</i></label>
+                                <div class="no-padding">
+                                    <table class="table table-bordered table-striped table-hover table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th>Tiêu Đề</th>
+                                            <th>Nội Dung</th>
+                                            <th class="col-sm-1 text-center">
+                                                <button type="button" class="btn btn-primary" id="NewContentEnItemButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Thêm Mới"><i class="fa fa-plus fa-fw"></i></button>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="ListContentEnItem">
+                                        @foreach($detailEns as $detailEn)
+                                            <tr>
+                                                <td>
+                                                    <input type="text" class="form-control" name="detail_en[title][]" value="{{ isset($detailEn['title']) ? $detailEn['title'] : '' }}" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" name="detail_en[description][]" value="{{ isset($detailEn['description']) ? $detailEn['description'] : '' }}" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-default RemoveContentItemButton"><i class="fa fa-trash-o fa-fw"></i></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -256,9 +334,78 @@
             else
             {
                 elFinderSelectedFile.parent().append('' +
-                        '<img src="' + fileUrl + '" width="100%" alt="Course Image" />' +
-                        '');
+                    '<img src="' + fileUrl + '" width="100%" alt="Article Image" />' +
+                '');
             }
         }
+
+        $('select[name="group"]').change(function() {
+            if($(this).val() === '{{ \App\Models\Article::STATIC_ARTICLE_GROUP_FAQ_DB }}')
+            {
+                $('.ArticleStaticGroupInput').each(function() {
+                    $(this).hide();
+                });
+
+                $('.ArticleStaticGroupFaqInput').each(function() {
+                    $(this).show();
+                });
+            }
+            else
+            {
+                $('.ArticleStaticGroupFaqInput').each(function() {
+                    $(this).hide();
+                });
+
+                $('.ArticleStaticGroupInput').each(function() {
+                    $(this).show();
+                });
+            }
+        });
+
+        $('#NewContentItemButton').click(function() {
+            $('#ListContentItem').append('' +
+                '<tr>' +
+                '<td>' +
+                '<input type="text" class="form-control" name="detail[title][]" />' +
+                '</td>' +
+                '<td>' +
+                '<input type="text" class="form-control" name="detail[description][]" />' +
+                '</td>' +
+                '<td class="text-center">' +
+                '<button type="button" class="btn btn-default RemoveContentItemButton"><i class="fa fa-trash-o fa-fw"></i></button>' +
+                '</td>' +
+            '</tr>');
+        });
+
+        $('#ListContentItem').on('click', 'button', function() {
+            if($(this).hasClass('RemoveContentItemButton'))
+                $(this).parent().parent().remove();
+        }).sortable({
+            revert: true,
+            cursor: 'move'
+        });
+
+        $('#NewContentEnItemButton').click(function() {
+            $('#ListContentEnItem').append('' +
+                '<tr>' +
+                '<td>' +
+                '<input type="text" class="form-control" name="detail_en[title][]" />' +
+                '</td>' +
+                '<td>' +
+                '<input type="text" class="form-control" name="detail_en[description][]" />' +
+                '</td>' +
+                '<td class="text-center">' +
+                '<button type="button" class="btn btn-default RemoveContentItemButton"><i class="fa fa-trash-o fa-fw"></i></button>' +
+                '</td>' +
+            '</tr>');
+        });
+
+        $('#ListContentEnItem').on('click', 'button', function() {
+            if($(this).hasClass('RemoveContentItemButton'))
+                $(this).parent().parent().remove();
+        }).sortable({
+            revert: true,
+            cursor: 'move'
+        });
     </script>
 @endpush

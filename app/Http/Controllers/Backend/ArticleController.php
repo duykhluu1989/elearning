@@ -373,7 +373,8 @@ class ArticleController extends Controller
             $validator = Validator::make($inputs, [
                 'name' => 'required|unique:article,name' . ($create == true ? '' : (',' . $article->id)),
                 'name_en' => 'nullable|unique:article,name_en' . ($create == true ? '' : (',' . $article->id)),
-                'content' => 'required',
+                'content' => 'required_unless:group,' . Article::STATIC_ARTICLE_GROUP_FAQ_DB,
+                'detail' => 'required_if:group,' . Article::STATIC_ARTICLE_GROUP_FAQ_DB,
                 'slug' => 'nullable|unique:article,slug' . ($create == true ? '' : (',' . $article->id)),
                 'slug_en' => 'nullable|unique:article,slug_en' . ($create == true ? '' : (',' . $article->id)),
                 'order' => 'required|integer|min:1',
@@ -385,8 +386,6 @@ class ArticleController extends Controller
                 $article->name = $inputs['name'];
                 $article->name_en = $inputs['name_en'];
                 $article->status = $inputs['status'];
-                $article->content = $inputs['content'];
-                $article->content_en = $inputs['content_en'];
                 $article->short_description = $inputs['short_description'];
                 $article->short_description_en = $inputs['short_description_en'];
                 $article->order = $inputs['order'];
@@ -408,6 +407,42 @@ class ArticleController extends Controller
 
                 if($create == true)
                     $article->created_at = date('Y-m-d H:i:s');
+
+                if(isset($inputs['detail']))
+                {
+                    $details = array();
+
+                    foreach($inputs['detail'] as $attribute => $attributeItems)
+                    {
+                        foreach($attributeItems as $key => $item)
+                        {
+                            if(!empty($item))
+                                $details[$key][$attribute] = $item;
+                        }
+                    }
+
+                    $article->content = json_encode($details);
+                }
+                else
+                    $article->content = $inputs['content'];
+
+                if(isset($inputs['detail_en']))
+                {
+                    $details = array();
+
+                    foreach($inputs['detail_en'] as $attribute => $attributeItems)
+                    {
+                        foreach($attributeItems as $key => $item)
+                        {
+                            if(!empty($item))
+                                $details[$key][$attribute] = $item;
+                        }
+                    }
+
+                    $article->content_en = json_encode($details);
+                }
+                else
+                    $article->content_en = $inputs['content_en'];
 
                 $article->save();
 
