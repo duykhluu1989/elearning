@@ -2,73 +2,62 @@
     <section class="footer_top">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <h5>@lang('theme.category_list')</h5>
-                    <ul class="list_footer">
 
+                <?php
+                $rootFooterMenus = \App\Models\Menu::getMenuTree(\App\Models\Menu::THEME_POSITION_FOOTER_DB);
+                $noParentFooterMenus = array();
+                ?>
+                @foreach($rootFooterMenus as $rootFooterMenu)
+                    <?php
+                    if(isset($rootFooterMenu->auto_categories))
+                        $countAutoCategory = count($rootFooterMenu->auto_categories);
+                    else
+                        $countAutoCategory = 0;
+
+                        $countChildrenFooterMenu = count($rootFooterMenu->childrenMenus) + $countAutoCategory;
+                    ?>
+                    @if($countChildrenFooterMenu == 0)
                         <?php
-                        $rootCategories = \App\Models\Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
-                            ->where('status', \App\Libraries\Helpers\Utility::ACTIVE_DB)
-                            ->where('parent_status', \App\Libraries\Helpers\Utility::ACTIVE_DB)
-                            ->whereNull('parent_id')
-                            ->orderBy('order', 'desc')
-                            ->get();
+                        $noParentFooterMenus[] = $rootFooterMenu;
                         ?>
+                    @else
+                        @if(count($noParentFooterMenus) > 0)
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <h5></h5>
+                                <ul class="list_footer">
 
-                        @foreach($rootCategories as $rootCategory)
-                            <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($rootCategory, 'name') }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <h5>@lang('theme.course_description')</h5>
-                    <ul class="list_footer">
+                                    @foreach($noParentFooterMenus as $noParentFooterMenu)
+                                        <li><a href="{{ $noParentFooterMenu->getMenuUrl() }}">- {{ $noParentFooterMenu->getMenuTitle(false) }}</a></li>
+                                    @endforeach
 
-                        <?php
-                        $groupIntroPages = \App\Models\Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
-                            ->where('type', \App\Models\Article::TYPE_STATIC_ARTICLE_DB)
-                            ->where('status', \App\Models\Course::STATUS_PUBLISH_DB)
-                            ->where('group', \App\Models\Article::STATIC_ARTICLE_GROUP_INTRO_DB)
-                            ->orderBy('order', 'desc')
-                            ->get();
-                        ?>
+                                </ul>
+                            </div>
+                            <?php
+                            $noParentFooterMenus[] = array();
+                            ?>
+                        @else
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <h5>{{ $rootFooterMenu->getMenuTitle(false) }}</h5>
+                                <ul class="list_footer">
 
-                        @foreach($groupIntroPages as $groupIntroPage)
-                            <li><a href="{{ action('Frontend\PageController@detailPage', ['id' => $groupIntroPage->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($groupIntroPage, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($groupIntroPage, 'name') }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <h5>@lang('theme.guide')</h5>
-                    <ul class="list_footer">
+                                    @if($countAutoCategory > 0)
 
-                        <?php
-                        $groupGuidePages = \App\Models\Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
-                            ->where('type', \App\Models\Article::TYPE_STATIC_ARTICLE_DB)
-                            ->where('status', \App\Models\Course::STATUS_PUBLISH_DB)
-                            ->where('group', \App\Models\Article::STATIC_ARTICLE_GROUP_GUIDE_DB)
-                            ->orderBy('order', 'desc')
-                            ->get();
-                        ?>
+                                        @foreach($rootFooterMenu->auto_categories as $autoCategory)
+                                            <li><a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $autoCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($autoCategory, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($autoCategory, 'name') }}</a></li>
+                                        @endforeach
 
-                        @foreach($groupGuidePages as $groupGuidePage)
-                            <li><a href="{{ action('Frontend\PageController@detailPage', ['id' => $groupGuidePage->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($groupGuidePage, 'slug')]) }}">- {{ \App\Libraries\Helpers\Utility::getValueByLocale($groupGuidePage, 'name') }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <h5>&nbsp;</h5>
-                    <ul class="list_footer">
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Hợp tác giảng dạy</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Liên kết website </a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Đăng ký bảo mật</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Qui trình mua hàng</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Về pháp lý</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Bản tin kinh tế</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Kiến thức pháp luật</a></li>
-                        <li><a href="{{ action('Frontend\ArticleController@sample') }}">- Góc truyền thông</a></li>
-                    </ul>
-                </div>
+                                    @endif
+
+                                    @foreach($rootFooterMenu->childrenMenus as $childFooterMenu)
+                                        <li><a href="{{ $childFooterMenu->getMenuUrl() }}">- {{ $childFooterMenu->getMenuTitle(false) }}</a></li>
+                                    @endforeach
+
+                                </ul>
+                            </div>
+                        @endif
+                    @endif
+                @endforeach
+
             </div>
         </div>
     </section>
