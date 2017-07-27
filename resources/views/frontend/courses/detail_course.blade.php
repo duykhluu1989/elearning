@@ -59,6 +59,9 @@
                                         @if(!empty($course->audio_length))
                                             <p>@lang('theme.audio_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->audio_length) }}</b></span></p>
                                         @endif
+                                        @if(!empty($course->level))
+                                            <p>@lang('theme.level'): <span><b>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->level, 'name') }}</b></span></p>
+                                        @endif
                                     </div>
 
                                     <div class="fb-like" data-href="{{ request()->url() }}" data-layout="button" data-action="like" data-size="large" data-show-faces="false" data-share="true"></div>
@@ -73,58 +76,72 @@
                     <div class="col-lg-12">
                         <ul class="nav nav-tabs tabs_info">
                             <li class="active"><a data-toggle="tab" href="#section_gioithieu">@lang('theme.course_description')</a></li>
-                            <li><a data-toggle="tab" href="#section_chitiet">@lang('theme.detail')</a></li>
-                            <li><a data-toggle="tab" href="#section_binhluan">Đánh giá & bình luận</a></li>
+                            <li><a data-toggle="tab" href="#section_noidungKH">@lang('theme.detail')</a></li>
+                            <li><a data-toggle="tab" href="#section_giangvien">@lang('theme.teacher_label')</a></li>
+                            <li><a data-toggle="tab" href="#section_binhluan">@lang('theme.review')</a></li>
                         </ul>
                         <div class="tab-content tabs_info_content">
                             <div id="section_gioithieu" class="tab-pane fade in active">
                                 <h4>@lang('theme.course_description_title')</h4>
                                 <?php echo \App\Libraries\Helpers\Utility::getValueByLocale($course, 'description'); ?>
                             </div>
-                            <div id="section_chitiet" class="tab-pane fade">
+                            <div id="section_noidungKH" class="tab-pane fade">
                                 @if($bought == false)
                                     <h4>@lang('theme.list_course_item')</h4>
-                                    <table class="table table-bordered table-hover table-condensed">
-                                        <tbody>
-                                        @foreach($course->courseItems as $courseItem)
-                                            <tr>
-                                                <td class="text-center">{{ $courseItem->number }}</td>
-                                                <td class="col-sm-11">{{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive table_noidungKH">
+                                        <table class="table table-hover table-bordered">
+                                            <tbody>
+
+                                            @foreach($course->courseItems as $courseItem)
+                                                <tr>
+                                                    <td class="text-center">{{ $courseItem->number }}</td>
+                                                    <td class="col-sm-11">{{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}</td>
+                                                </tr>
+                                            @endforeach
+
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 @else
                                     <h4>{{ $userCourse->course_item_tracking . ' / ' . $course->item_count }} @lang('theme.lecture_complete')</h4>
                                     <div class="progress">
                                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ round($userCourse->course_item_tracking * 100 / $course->item_count) }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ round($userCourse->course_item_tracking * 100 / $course->item_count) }}%">
                                         </div>
                                     </div>
-                                    <table class="table table-bordered table-hover table-condensed">
-                                        <tbody>
-                                        @foreach($course->courseItems as $courseItem)
-                                            <tr class="CourseItemNavigation{{ $courseItem->number == $userCourse->course_item_tracking + 1 ? ' info' : '' }}" style="cursor: pointer" data-href="{{ action('Frontend\CourseController@detailCourseItem', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug'), 'number' => $courseItem->number]) }}">
-                                                <td class="text-center">{{ $courseItem->number }}</td>
-                                                <td class="col-sm-11">
-                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    @if(!empty($courseItem->video_length))
-                                                        {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->video_length) }}
-                                                    @elseif(!empty($courseItem->audio_length))
-                                                        {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->audio_length) }}
-                                                    @endif
-                                                </td>
-                                                <td class="text-center">
-                                                    @if($courseItem->number <= $userCourse->course_item_tracking)
-                                                        <i class="fa fa-check-circle"></i>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+
+                                    <div class="table-responsive table_noidungKH">
+                                        <table class="table table-hover table-bordered">
+                                            <tbody>
+
+                                            @foreach($course->courseItems as $courseItem)
+                                                <tr class="CourseItemNavigation{{ $courseItem->number == $userCourse->course_item_tracking + 1 ? ' info' : '' }}" style="cursor: pointer" data-href="{{ action('Frontend\CourseController@detailCourseItem', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug'), 'number' => $courseItem->number]) }}">
+                                                    <td class="text-center">{{ $courseItem->number }}</td>
+                                                    <td class="col-sm-11" style="border-right: none">
+                                                        {{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}
+                                                    </td>
+                                                    <td class="text-center" style="border-left: none">
+                                                        @if(!empty($courseItem->video_length))
+                                                            {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->video_length) }}
+                                                        @elseif(!empty($courseItem->audio_length))
+                                                            {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->audio_length) }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if($courseItem->number <= $userCourse->course_item_tracking)
+                                                            <i class="fa fa-check-circle"></i>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 @endif
+                            </div>
+                            <div id="section_giangvien" class="tab-pane fade">
+                                <h3>{{ $course->user->profile->name }}</h3>
+                                <p>{{ $course->user->profile->description }}</p>
                             </div>
                             <div id="section_binhluan" class="tab-pane fade">
                                 <h3>Dropdown 1</h3>
@@ -145,8 +162,8 @@
     @push('scripts')
         <script type="text/javascript">
             $(document).ready(function() {
-                if(location.href.indexOf('#section_chitiet') !== -1)
-                    $('a[href="#section_chitiet"]').trigger('click');
+                if(location.href.indexOf('#section_noidungKH') !== -1)
+                    $('a[href="#section_noidungKH"]').trigger('click');
             });
 
             $('.CourseItemNavigation').click(function() {

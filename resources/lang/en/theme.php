@@ -92,5 +92,8 @@ return [
     'first_name' => 'First name',
     'last_name' => 'Last name',
     'visitor_count' => 'Visitor count',
+    'teacher_label' => 'Teacher',
+    'review' => 'Review & comment',
+    'level' => 'Level',
 
 ];

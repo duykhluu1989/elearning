@@ -92,5 +92,8 @@ return [
     'first_name' => 'Tên',
     'last_name' => 'Họ',
     'visitor_count' => 'Lượt truy cập',
+    'teacher_label' => 'Giảng viên',
+    'review' => 'Đánh giá & bình luận',
+    'level' => 'Cấp độ',
 
 ];
