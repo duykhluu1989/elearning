@@ -169,6 +169,10 @@ class OrderController extends Controller
             $query->select('id');
         }, 'referral.profile' => function($query) {
             $query->select('user_id', 'name');
+        }, 'orderTransactions', 'collaboratorTransactions.user' => function($query) {
+            $query->select('id');
+        }, 'collaboratorTransactions.user.profile' => function($query) {
+            $query->select('user_id', 'name');
         }])->find($id);
 
         if(empty($order))

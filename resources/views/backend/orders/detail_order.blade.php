@@ -149,6 +149,7 @@
                             <table class="table table-hover table-condensed">
                                 <thead>
                                 <tr>
+                                    <th>Thời Gian</th>
                                     <th>Trạng Thái</th>
                                     <th>Tiền</th>
                                     <th>Điểm</th>
@@ -158,10 +159,43 @@
                                 <tbody>
                                 @foreach($order->orderTransactions as $orderTransaction)
                                     <tr>
+                                        <td>{{ $orderTransaction->created_at }}</td>
                                         <td>{{ \App\Models\Order::getOrderPaymentStatus($orderTransaction->type) }}</td>
                                         <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderTransaction->amount) . ' VND' }}</td>
                                         <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderTransaction->point_amount) }}</td>
                                         <td>{{ $orderTransaction->note }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if(count($order->collaboratorTransactions) > 0)
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="page-header">Hoa Hồng</p>
+                        <div class="table-responsive no-padding">
+                            <table class="table table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>Thời Gian</th>
+                                    <th>Loại</th>
+                                    <th>Tỉ Lệ</th>
+                                    <th>Tiền</th>
+                                    <th>CTV</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($order->collaboratorTransactions as $collaboratorTransaction)
+                                    <tr>
+                                        <td>{{ $collaboratorTransaction->created_at }}</td>
+                                        <td>{{ \App\Models\CollaboratorTransaction::getTransactionType($collaboratorTransaction->type) }}</td>
+                                        <td>{{ $collaboratorTransaction->commission_percent . ' %' }}</td>
+                                        <td>{{ \App\Libraries\Helpers\Utility::formatNumber($collaboratorTransaction->commission_amount) . ' VND' }}</td>
+                                        <td>{{ $collaboratorTransaction->user->profile->name }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

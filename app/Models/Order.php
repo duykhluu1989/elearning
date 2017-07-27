@@ -63,6 +63,11 @@ class Order extends Model
         return $this->belongsTo('App\Models\User', 'referral_id');
     }
 
+    public function collaboratorTransactions()
+    {
+        return $this->hasMany('App\Models\CollaboratorTransaction', 'order_id');
+    }
+
     public static function getOrderPaymentStatus($value = null)
     {
         $status = [
