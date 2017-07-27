@@ -23,6 +23,21 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
+                        <div class="form-group{{ $errors->has('first_name') ? ' has-error': '' }}">
+                            <label>Tên</label>
+                            <input type="text" class="form-control" name="first_name" value="{{ old('first_name') }}" />
+                            @if($errors->has('first_name'))
+                                <span class="help-block">{{ $errors->first('first_name') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Họ</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ old('last_name') }}" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('email') ? ' has-error': '' }}">
                             <label>Email <i>(bắt buộc)</i></label>
                             <input type="email" class="form-control" name="email" required="required" value="{{ old('email') }}" />

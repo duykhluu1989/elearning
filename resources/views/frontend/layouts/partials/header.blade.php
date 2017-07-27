@@ -64,16 +64,16 @@
                 <div class="modal-body">
                     <form action="{{ action('Frontend\UserController@register') }}" method="POST" role="form" class="frm_dangky" id="SignUpForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="name" placeholder="@lang('theme.name')" required="required">
+                            <input type="text" class="form-control" name="first_name" placeholder="* @lang('theme.first_name')" required="required">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="email" placeholder="Email" required="required">
+                            <input type="text" class="form-control" name="last_name" placeholder="@lang('theme.last_name')">
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')" required="required">
+                            <input type="text" class="form-control" name="email" placeholder="* Email" required="required">
                         </div>
                         <div class="form-group">
-                            <p class="text-center"><a class="btn-link" href="sample.php">Hướng dẫn đăng ký</a></p>
+                            <input type="password" class="form-control" name="password" placeholder="* @lang('theme.password')" required="required">
                         </div>
                         <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
                         <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>

@@ -150,7 +150,7 @@ class UserController extends Controller
 
     public function createUser(Request $request)
     {
-        Utility::setBackUrlCookie($request, ['/admin/user?', '/admin/userStudent', '/admin/userCollaborator']);
+        Utility::setBackUrlCookie($request, ['/admin/userStudent', '/admin/userCollaborator', '/admin/user?']);
 
         $user = new User();
         $user->status = Utility::ACTIVE_DB;
@@ -168,6 +168,7 @@ class UserController extends Controller
                 'email' => 'required|email|max:255|unique:user,email',
                 'password' => 'required|alpha_dash|min:6|max:32',
                 're_password' => 'required|alpha_dash|min:6|max:32|same:password',
+                'first_name' => 'required_with:last_name',
             ]);
 
             if($validator->passes())
@@ -189,6 +190,9 @@ class UserController extends Controller
 
                     $profile = new Profile();
                     $profile->user_id = $user->id;
+                    $profile->first_name = $inputs['first_name'];
+                    $profile->last_name = $inputs['last_name'];
+                    $profile->name = trim($profile->last_name . ' ' . $profile->first_name);
                     $profile->save();
 
                     if($user->collaborator == Utility::ACTIVE_DB)
@@ -228,7 +232,7 @@ class UserController extends Controller
 
     public function editUser(Request $request, $id)
     {
-        Utility::setBackUrlCookie($request, ['/admin/user?', '/admin/userStudent', '/admin/userCollaborator']);
+        Utility::setBackUrlCookie($request, ['/admin/userStudent', '/admin/userCollaborator', '/admin/user?']);
 
         $user = User::with(['userRoles', 'profile', 'collaboratorInformation' => function($query) {
             $query->select('user_id');
@@ -315,7 +319,7 @@ class UserController extends Controller
                     $user->profile->first_name = $inputs['first_name'];
                     $user->profile->last_name = $inputs['last_name'];
                     $user->profile->title = $inputs['title'];
-                    $user->profile->name = (!empty($user->profile->last_name) ? ($user->profile->last_name . ' ') : '') . $user->profile->first_name;
+                    $user->profile->name = trim($user->profile->last_name . ' ' . $user->profile->first_name);
                     $user->profile->gender = $inputs['gender'];
                     $user->profile->birthday = $inputs['birthday'];
                     $user->profile->phone = $inputs['phone'];

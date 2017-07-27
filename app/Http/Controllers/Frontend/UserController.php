@@ -57,7 +57,8 @@ class UserController extends Controller
         $inputs = $request->all();
 
         $validator = Validator::make($inputs, [
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'nullable|string|max:100',
             'email' => 'required|email|max:255|unique:user,email',
             'password' => 'required|alpha_dash|min:6|max:32',
         ]);
@@ -82,8 +83,9 @@ class UserController extends Controller
 
                 $profile = new Profile();
                 $profile->user_id = $user->id;
-                $profile->first_name = $inputs['name'];
-                $profile->name = $inputs['name'];
+                $profile->first_name = $inputs['first_name'];
+                $profile->last_name = $inputs['last_name'];
+                $profile->name = trim($profile->last_name . ' ' . $profile->first_name);
                 $profile->save();
 
                 DB::commit();

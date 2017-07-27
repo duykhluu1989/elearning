@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Libraries\Helpers\Utility;
 use Illuminate\Database\Eloquent\Model;
+use App\Libraries\Helpers\Utility;
 
 class Order extends Model
 {
@@ -150,17 +150,19 @@ class Order extends Model
                     $this->referral->collaboratorInformation->current_commission += $collaboratorTransaction->commission_amount;
                     $this->referral->collaboratorInformation->save();
 
-                    if(!empty($this->referral->collaboratorInformation->parentCollaborator) && $this->referral->collaboratorInformation->parentCollaborator->status == Collaborator::STATUS_ACTIVE_DB && $this->referral->collaboratorInformation->parentCollaborator->user->status == Utility::ACTIVE_DB)
+                    if(!empty($this->referral->collaboratorInformation->parentCollaborator) && $this->referral->collaboratorInformation->parentCollaborator->status == Collaborator::STATUS_ACTIVE_DB
+                        && $this->referral->collaboratorInformation->parentCollaborator->user->status == Utility::ACTIVE_DB && $this->referral->collaboratorInformation->parentCollaborator->rank->code == Setting::COLLABORATOR_MANAGER)
                     {
-                        $collaboratorRank = json_decode($this->referral->collaboratorInformation->parentCollaborator->rank->value, true);
+                        $parentCollaboratorRank = json_decode($this->referral->collaboratorInformation->parentCollaborator->rank->value, true);
 
                         $collaboratorTransaction = new CollaboratorTransaction();
                         $collaboratorTransaction->collaborator_id = $this->referral->collaboratorInformation->parentCollaborator->user_id;
                         $collaboratorTransaction->order_id = $this->id;
                         $collaboratorTransaction->type = CollaboratorTransaction::TYPE_DOWNLINE_INCOME_DB;
-                        $collaboratorTransaction->commission_percent = $collaboratorRank[Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE];
+                        $collaboratorTransaction->commission_percent = $parentCollaboratorRank[Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE];
                         $collaboratorTransaction->commission_amount = round($transaction->amount * $collaboratorTransaction->commission_percent / 100);
                         $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
+                        $collaboratorTransaction->downline_collaborator_id = $this->referral->collaboratorInformation->id;
                         $collaboratorTransaction->save();
                     }
                 }

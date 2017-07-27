@@ -89,5 +89,7 @@ return [
     'become_collaborator' => 'Become a collaborator of caydenthan',
     'collaborator_slogan' => 'Great Courses - High commissions - Easy to share',
     'guide' => 'Guide / help',
+    'first_name' => 'First name',
+    'last_name' => 'Last name',
 
 ];

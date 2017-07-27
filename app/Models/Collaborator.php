@@ -39,7 +39,7 @@ class Collaborator extends Model
                 {
                     $collaboratorRank = json_decode($collaborator->rank->value, true);
 
-                    if($collaborator->current_revenue >= $collaboratorRank[self::REVENUE_ATTRIBUTE]);
+                    if($collaborator->current_revenue >= $collaboratorRank[self::REVENUE_ATTRIBUTE])
                     {
                         $ranks = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
 

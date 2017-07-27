@@ -51,21 +51,26 @@ class CollaboratorController extends Controller
                     {
                         if(!empty($user->collaboratorInformation))
                         {
-                            $tempParentCollaborator = $user->collaboratorInformation;
-
-                            do
+                            if($user->collaboratorInformation->rank->code != Setting::COLLABORATOR_MANAGER)
                             {
-                                if($tempParentCollaborator->id == $collaborator->collaboratorInformation->id)
+                                $tempParentCollaborator = $user->collaboratorInformation;
+
+                                do
                                 {
-                                    $validator->errors()->add('parent_username', 'Quản Lý Không Được Là Cộng Tác Viên Cấp Dưới Của Chính Nó');
-                                    break;
+                                    if($tempParentCollaborator->id == $collaborator->collaboratorInformation->id)
+                                    {
+                                        $validator->errors()->add('parent_username', 'Quản Lý Không Được Là Cộng Tác Viên Cấp Dưới Của Chính Nó');
+                                        break;
+                                    }
+
+                                    $tempParentCollaborator = $tempParentCollaborator->parentCollaborator;
                                 }
+                                while(!empty($tempParentCollaborator));
 
-                                $tempParentCollaborator = $tempParentCollaborator->parentCollaborator;
+                                $inputs['parent_id'] = $user->collaboratorInformation->id;
                             }
-                            while(!empty($tempParentCollaborator));
-
-                            $inputs['parent_id'] = $user->collaboratorInformation->id;
+                            else
+                                $validator->errors()->add('parent_username', 'Cộng Tác Viên Không Phải Cấp Quản Lý');
                         }
                         else
                             $validator->errors()->add('parent_username', 'Thành Viên Không Phải Là Cộng Tác Viên');
