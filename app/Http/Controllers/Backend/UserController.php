@@ -605,6 +605,19 @@ class UserController extends Controller
                         'data-content' => 'Chỉnh Sửa Cộng Tác Viên',
                     ]);
                 },
+            ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-list fa-fw']), [
+                        'href' => action('Backend\CollaboratorController@adminCollaboratorTransaction', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Lịch Sử Hoa Hồng',
+                    ]);
+                },
             ]
         ];
 

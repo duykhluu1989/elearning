@@ -10,6 +10,7 @@
             <div class="box-header with-border">
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
                 <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\UserController@adminUserCollaborator')) }}" class="btn btn-default">Quay Lại</a>
+                <a href="{{ action('Backend\CollaboratorController@adminCollaboratorTransaction', ['id' => $collaborator->id]) }}" class="btn btn-primary">Lịch Sử Hoa Hồng</a>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -125,6 +126,7 @@
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
                 <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\UserController@adminUserCollaborator')) }}" class="btn btn-default">Quay Lại</a>
+                <a href="{{ action('Backend\CollaboratorController@adminCollaboratorTransaction', ['id' => $collaborator->id]) }}" class="btn btn-primary">Lịch Sử Hoa Hồng</a>
             </div>
         </div>
         {{ csrf_field() }}

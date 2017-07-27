@@ -204,6 +204,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'userCollaborator/{id}/edit', 'CollaboratorController@editCollaborator');
 
+        Route::get('userCollaborator/{id}/transaction', 'CollaboratorController@adminCollaboratorTransaction');
+
         Route::get('role', 'RoleController@adminRole');
 
         Route::match(['get', 'post'], 'role/create', 'RoleController@createRole');

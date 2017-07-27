@@ -5,19 +5,20 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Utility;
 use App\Models\User;
 use App\Models\Collaborator;
 use App\Models\Setting;
+use App\Models\CollaboratorTransaction;
 
 class CollaboratorController extends Controller
 {
     public function editCollaborator(Request $request, $id)
     {
-        Utility::setBackUrlCookie($request, '/admin/userCollaborator');
+        Utility::setBackUrlCookie($request, '/admin/userCollaborator?');
 
         $collaborator = User::select('id', 'username')
-            ->where('collaborator', Utility::ACTIVE_DB)
             ->with(['collaboratorInformation.parentCollaborator' => function($query) {
                 $query->select('id', 'user_id');
             }, 'collaboratorInformation.parentCollaborator.user' => function($query) {
@@ -25,7 +26,7 @@ class CollaboratorController extends Controller
             }])
             ->find($id);
 
-        if(empty($collaborator))
+        if(empty($collaborator) || empty($collaborator->collaboratorInformation))
             return view('backend.errors.404');
 
         if($request->isMethod('post'))
@@ -133,5 +134,105 @@ class CollaboratorController extends Controller
         }
 
         return view('backend.collaborators.edit_collaborator', ['collaborator' => $collaborator]);
+    }
+
+    public function adminCollaboratorTransaction(Request $request, $id)
+    {
+        Utility::setBackUrlCookie($request, '/admin/userCollaborator?');
+
+        $collaborator = User::select('id', 'username')
+            ->with(['collaboratorInformation' => function($query) {
+                $query->select('user_id');
+            }])->find($id);
+
+        if(empty($collaborator) || empty($collaborator->collaboratorInformation))
+            return view('backend.errors.404');
+
+        $dataProvider = CollaboratorTransaction::with(['order' => function($query) {
+            $query->select('id', 'number');
+        }, 'downlineCollaborator' => function($query) {
+            $query->select('id');
+        }, 'downlineCollaborator.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('collaborator_transaction.collaborator_id', 'collaborator_transaction.order_id', 'collaborator_transaction.type', 'collaborator_transaction.commission_percent', 'collaborator_transaction.commission_amount', 'collaborator_transaction.created_at', 'collaborator_transaction.downline_collaborator_id')
+            ->where('collaborator_transaction.collaborator_id', $id)
+            ->orderBy('collaborator_transaction.id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['order_number']))
+            {
+                $dataProvider->join('order', 'collaborator_transaction.order_id', '=', 'order.id')
+                    ->where('order.number', 'like', '%' . $inputs['order_number'] . '%');
+            }
+
+            if(isset($inputs['type']) && $inputs['type'] !== '')
+                $dataProvider->where('collaborator_transaction.type', $inputs['type']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Thời Gian',
+                'data' => 'created_at',
+            ],
+            [
+                'title' => 'Đơn Hàng',
+                'data' => function($row) {
+                    if(!empty($row->order))
+                        echo $row->order->number;
+                },
+            ],
+            [
+                'title' => 'Loại',
+                'data' => function($row) {
+                    echo CollaboratorTransaction::getTransactionType($row->type);
+                },
+            ],
+            [
+                'title' => 'Tỉ Lệ',
+                'data' => function($row) {
+                    if(!empty($row->commission_percent))
+                        echo $row->commission_percent . ' %';
+                },
+            ],
+            [
+                'title' => 'Tiền',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->commission_amount) . ' VND';
+                },
+            ],
+            [
+                'title' => 'CTV Cấp Dưới',
+                'data' => function($row) {
+                    if(!empty($row->downlineCollaborator))
+                        echo $row->downlineCollaborator->profile->name;
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setFilters([
+            [
+                'title' => 'Đơn Hàng',
+                'name' => 'order_number',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Loại',
+                'name' => 'type',
+                'type' => 'select',
+                'options' => CollaboratorTransaction::getTransactionType(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
+
+        return view('backend.collaborators.admin_collaborator_transaction', [
+            'collaborator' => $collaborator,
+            'gridView' => $gridView,
+        ]);
     }
 }

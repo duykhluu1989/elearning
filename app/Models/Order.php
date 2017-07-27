@@ -162,7 +162,7 @@ class Order extends Model
                         $collaboratorTransaction->commission_percent = $parentCollaboratorRank[Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE];
                         $collaboratorTransaction->commission_amount = round($transaction->amount * $collaboratorTransaction->commission_percent / 100);
                         $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
-                        $collaboratorTransaction->downline_collaborator_id = $this->referral->collaboratorInformation->id;
+                        $collaboratorTransaction->downline_collaborator_id = $this->referral_id;
                         $collaboratorTransaction->save();
                     }
                 }
