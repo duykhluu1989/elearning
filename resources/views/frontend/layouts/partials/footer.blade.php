@@ -84,11 +84,13 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <ul class="list_social">
-                        <li><a href="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL) }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                        <li><a href="javascript:void(0)"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                        <li><a href="javascript:void(0)"><i class="fa fa-youtube-square" aria-hidden="true"></i></a></li>
+
+                        @if(!empty(\App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL)))
+                            <li><a href="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL) }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                        @endif
+
                     </ul>
-                    <p class="pull-right luottruycap"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> Lượt truy cập: <span>8888</span></p>
+                    <p class="pull-right luottruycap"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>@lang('theme.visitor_count'): <span>{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_VISITOR_COUNT) }}</span></p>
                 </div>
             </div>
         </div>

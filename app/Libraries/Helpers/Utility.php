@@ -22,8 +22,10 @@ class Utility
     const BACK_URL_COOKIE_NAME = 'back_url';
     const VIEW_COURSE_COOKIE_NAME = 'view_course';
     const REFERRAL_COOKIE_NAME = 'referral';
+    const VISITOR_COOKIE_NAME = 'visitor';
 
     const MINUTE_ONE_MONTH = 43200;
+    const MINUTE_ONE_DAY = 14400;
 
     const SECOND_ONE_HOUR = 3600;
 

@@ -9,6 +9,7 @@ class Setting extends Model
     const WEB_TITLE = 'web_title';
     const WEB_DESCRIPTION = 'web_description';
     const WEB_KEYWORD = 'web_keyword';
+    const WEB_VISITOR_COUNT = 'web_visitor_count';
 
     const EXCHANGE_USD_RATE = 'exchange_usd_rate';
     const EXCHANGE_POINT_RATE = 'exchange_point_rate';
@@ -43,6 +44,7 @@ class Setting extends Model
             [self::WEB_TITLE, 'Tiêu Đề Website', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
             [self::WEB_DESCRIPTION, 'Mô Tả Website', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
             [self::WEB_KEYWORD, 'Từ Khóa', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
+            [self::WEB_VISITOR_COUNT, 'Lượt View', self::TYPE_INT_DB, 0, self::CATEGORY_GENERAL_DB],
 
             [self::EXCHANGE_USD_RATE, 'Tỉ Lệ Quy Đổi USD', self::TYPE_INT_DB, 22000, self::CATEGORY_GENERAL_DB],
             [self::EXCHANGE_POINT_RATE, 'Tỉ Lệ Quy Đổi Điểm', self::TYPE_INT_DB, 1000, self::CATEGORY_GENERAL_DB],
@@ -134,5 +136,12 @@ class Setting extends Model
         }
 
         return self::$settings[$category];
+    }
+
+    public static function increaseVisitorCount()
+    {
+        $settings = self::getSettings(self::CATEGORY_GENERAL_DB);
+
+        $settings[self::WEB_VISITOR_COUNT]->increment('value', 1);
     }
 }

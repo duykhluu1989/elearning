@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
         'permission' => \App\Http\Middleware\Permission::class,
         'access' => \App\Http\Middleware\Access::class,
         'locale' => \App\Http\Middleware\Locale::class,
-        'setReferral' => \App\Http\Middleware\SetReferral::class
+        'setReferral' => \App\Http\Middleware\SetReferral::class,
+        'visitorCount' => \App\Http\Middleware\VisitorCount::class
     ];
 }

@@ -91,5 +91,6 @@ return [
     'guide' => 'Hướng dẫn / trợ giúp',
     'first_name' => 'Tên',
     'last_name' => 'Họ',
+    'visitor_count' => 'Lượt truy cập',
 
 ];

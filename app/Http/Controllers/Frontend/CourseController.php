@@ -157,14 +157,14 @@ class CourseController extends Controller
                 $viewIds[] = $course->id;
                 $viewIds = implode(';', $viewIds);
 
-                Cookie::queue(Utility::VIEW_COURSE_COOKIE_NAME, $viewIds, Utility::MINUTE_ONE_MONTH);
+                Cookie::queue(Utility::VIEW_COURSE_COOKIE_NAME, $viewIds, Utility::MINUTE_ONE_DAY);
             }
         }
         else
         {
             $course->increment('view_count', 1);
 
-            Cookie::queue(Utility::VIEW_COURSE_COOKIE_NAME, $course->id, Utility::MINUTE_ONE_MONTH);
+            Cookie::queue(Utility::VIEW_COURSE_COOKIE_NAME, $course->id, Utility::MINUTE_ONE_DAY);
         }
 
         $bought = false;

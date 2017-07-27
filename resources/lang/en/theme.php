@@ -91,5 +91,6 @@ return [
     'guide' => 'Guide / help',
     'first_name' => 'First name',
     'last_name' => 'Last name',
+    'visitor_count' => 'Visitor count',
 
 ];
