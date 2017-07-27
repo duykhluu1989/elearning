@@ -6,7 +6,7 @@
 
     @include('frontend.layouts.partials.header')
 
-    <section class="hotdeal">
+    <section class="hotdeal mt152">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">

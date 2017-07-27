@@ -1,8 +1,17 @@
+@media (max-width: 1920px) {
+	.qc_left, .qc_right {
+        display: block;
+    }
+}
 @media (max-width: 1366px) {
-	
+    .qc_left, .qc_right {
+        display: none;
+    }
 }
 @media (max-width: 1280px) {
-	
+	.lang {
+        display: none;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -77,9 +86,57 @@
         padding: 20px 0;
     }
 	.title_line {
-        font-size: 20px;
+        font-size: 18px;
         padding-bottom: 15px;
+        padding-top: 15px;
     }
+    .navbar-brand {
+        margin-left: 15px;
+    }
+    .btnBGmoi, .btnTTmoi {
+        display: none;
+    }
+    .banner_qc {
+        min-height: 100px;
+    }
+    .mt60 {
+        margin-top: 0;
+    }
+    .footer_bottom p, .cskh, .hotdeal, .luottruycap {
+        text-align: center;
+    }
+    ul.list_social {
+        text-align: center;
+        border-left: none;
+        margin-top: 10px;
+    }
+    .luottruycap {
+        top: 0;
+        margin-top: 15px;
+    }
+    .comments-container {
+        width: 100%;
+    }
+
+    .comments-list .comment-box {
+        width: 100%;
+    }
+
+    .reply-list .comment-box {
+        width: 100%;
+    }
+    .nav-tabs > li {
+        display: block;
+        float: none;
+        border-bottom: 1px solid #ccc;
+    }
+    .tabs_info > li.active > a, .tabs_info > li.active > a:hover, .tabs_info > li.active > a:focus {
+        border-top: 1px solid #ddd;
+    }
+    .box_info_khoahoc {
+        margin-top: 30px;
+    }
+
 }
 
 @media (max-width: 736px) {

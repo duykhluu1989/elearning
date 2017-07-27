@@ -80,17 +80,23 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <p>© 2017 caydenthan.vn. All rights reserved.</p>
+                    <p class="copyright">© 2017 caydenthan.vn. All rights reserved.</p>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <ul class="list_social">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <p class="luottruycap"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>@lang('theme.visitor_count'): <span>{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_VISITOR_COUNT) }}</p>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <ul class="list_social">
 
-                        @if(!empty(\App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL)))
-                            <li><a href="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL) }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                        @endif
+                                @if(!empty(\App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL)))
+                                    <li><a href="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL) }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                @endif
 
-                    </ul>
-                    <p class="pull-right luottruycap"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>@lang('theme.visitor_count'): <span>{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_VISITOR_COUNT) }}</span></p>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -220,6 +226,5 @@
                 </div>
             </div>
         </div>
-
     </section>
 </footer>

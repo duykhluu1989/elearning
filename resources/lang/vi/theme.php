@@ -96,5 +96,7 @@ return [
     'review' => 'Đánh giá & bình luận',
     'level' => 'Cấp độ',
     'send' => 'Gửi',
+    'welcome' => 'Chào mừng bạn',
+    'sign_out' => 'Đăng xuất',
 
 ];

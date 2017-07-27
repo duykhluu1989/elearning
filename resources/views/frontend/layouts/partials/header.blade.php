@@ -1,4 +1,17 @@
 <header id="header-1" class="navbar-fixed-top header">
+
+    @if(auth()->user())
+        <div class="menu_top">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 text-right">
+                        <p><span><i class="fa fa-user-circle" aria-hidden="true"></i>@lang('theme.welcome')</span> <a class="btn-link" href="thongtinhocvien.php">{{ auth()->user()->profile->name }}</a> | <a class="btn-link" href="{{ action('Frontend\UserController@logout') }}"><i class="fa fa-sign-out" aria-hidden="true"></i>@lang('theme.sign_out')</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="menu">
         <nav role="navigation" class="navbar navbar-default">
             <div class="container-fluid">

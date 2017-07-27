@@ -3,9 +3,9 @@ jQuery(function($) {
     //matchHeight columm
     $('.boxmH').matchHeight();
 
-   // CENTERED MODALS
+    // CENTERED MODALS
     // phase one - store every dialog's height
-    $('.modal').each(function () {
+    $('.modal').each(function() {
         var t = $(this),
             d = t.find('.modal-dialog'),
             fadeClass = (t.is('.fade') ? 'fade' : '');
@@ -21,7 +21,7 @@ jQuery(function($) {
             .addClass(fadeClass);
     });
     // phase two - set margin-top on every dialog show
-    $('.modal').on('show.bs.modal', function () {
+    $('.modal').on('show.bs.modal', function() {
         var t = $(this),
             d = t.find('.modal-dialog'),
             dh = d.data('height'),
@@ -37,224 +37,229 @@ jQuery(function($) {
     });
 
     //popover
-     $('[data-toggle="popover"]').popover({
-        placement : 'top',
-      });
+    $('[data-toggle="popover"]').popover({
+        placement: 'top',
+    });
 
 
-    
+
 
     /* customer */
     $('.owl_banner').owlCarousel({
-      loop:true,
-      margin:10,
-      responsive:{
-        0:{
-            items:1
+        loop: true,
+        margin: 10,
+        responsive: {
+            0: {
+                items: 1
+            }
         }
-      }
     });
 
     $('.owl_khmp').owlCarousel({
-      loop:true,
-      margin:30,
-      nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      dots: false,
-      responsive:{
-        0:{
-            items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:4
+        loop: true,
+        margin: 30,
+        nav: true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 4
+            }
         }
-      }
     });
 
     $('.owl_chuyengia').owlCarousel({
-      loop:true,
-      margin:10,
-      // nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      // dots: false,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:5
+        loop: true,
+        margin: 10,
+        // nav:true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        // dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 5
+            }
         }
-      }
     });
 
     $('.owl_markerting').owlCarousel({
-      loop:true,
-      margin:30,
-      nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      dots: false,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:4
-        }    
-      }
+        loop: true,
+        margin: 30,
+        nav: true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 4
+            }
+        }
     });
 
     $('.owl_banhang').owlCarousel({
-      loop:true,
-      margin:30,
-      nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      dots: false,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:4
-        }    
-      }
+        loop: true,
+        margin: 30,
+        nav: true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 4
+            }
+        }
     });
 
     $('.owl_QTNHTM').owlCarousel({
-      loop:true,
-      margin:30,
-      nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      dots: false,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:4
-        }    
-      }
+        loop: true,
+        margin: 30,
+        nav: true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 4
+            }
+        }
     });
 
     $('.owl_vechungtoi').owlCarousel({
-      loop:true,
-      // margin:30,
-      // nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      // dots: false,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:1
-        },
-        1000:{
-            items:1
-        }    
-      }
+        loop: true,
+        // margin:30,
+        // nav:true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        // dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 1
+            },
+            1000: {
+                items: 1
+            }
+        }
     });
 
     $('.owl_giaovien').owlCarousel({
-      loop:true,
-      margin:30,
-      nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      dots: false,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:5
-        }    
-      }
+        loop: true,
+        margin: 30,
+        nav: true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 5
+            }
+        }
     });
 
     $('.owl_tructuyen').owlCarousel({
-      loop:true,
-      margin:15,
-      dots: true,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:5
-        }    
-      }
+        loop: true,
+        margin: 15,
+        dots: true,
+        responsive: {
+            0: {
+                items: 3
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 5
+            }
+        }
     });
 
     $('.owl_tintucnoibat').owlCarousel({
-      loop:true,
-      margin:10,
-      // nav:true,
-      navText: [
-          "<i class='fa fa-chevron-left fa-2x'></i>",
-          "<i class='fa fa-chevron-right fa-2x'></i>"],
-      dots: false,
-      responsive:{
-        0:{
-          items:1
-        },
-        600:{
-            items:3
-        },
-        1000:{
-            items:5
-        }    
-      }
+        loop: true,
+        margin: 10,
+        // nav:true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 5
+            }
+        }
     });
 
 
 });
 
 $(window).scroll(function() {
-  if ($(this).scrollTop() > 100) {
-    $('.scroll_to_top').fadeIn();
-  } else {
-    $('.scroll_to_top').fadeOut();
-  }
+    if ($(this).scrollTop() > 100) {
+        $('.scroll_to_top').fadeIn();
+    } else {
+        $('.scroll_to_top').fadeOut();
+    }
 });
 
-$('.scroll_to_top').on('click', function(e) {
-  e.preventDefault();
-  $('html, body').animate({scrollTop : 0}, 800);
-});
+
 
 //---------------------------------------------------
 
@@ -280,8 +285,8 @@ $('.navbar-collapse ul li a').click(function() {
     $(this).closest('.collapse').collapse('toggle');
 });
 
-(function($){
-    $(window).on("load",function(){
+(function($) {
+    $(window).on("load", function() {
         $(".content").mCustomScrollbar();
     });
 
@@ -290,54 +295,73 @@ $('.navbar-collapse ul li a').click(function() {
 
 
 
-$(document).ready(function(){
+$(document).ready(function() {
 
     //menu hover
-    $(".dropdown").hover(            
+    $(".dropdown").hover(
         function() {
-            $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true,true).slideDown("400");
-            $(this).toggleClass('open');        
+            $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideDown("500");
+            $(this).toggleClass('open');
         },
         function() {
-            $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true,true).slideUp("400");
-            $(this).toggleClass('open');       
+            $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideUp("500");
+            $(this).toggleClass('open');
         }
     );
 
     //search on header
     $('.header').on('click', '.search-toggle', function(e) {
-      var selector = $(this).data('selector');
+        var selector = $(this).data('selector');
 
-      $(selector).toggleClass('show').find('.search-input').focus();
-      $(this).toggleClass('active');
+        $(selector).toggleClass('show').find('.search-input').focus();
+        $(this).toggleClass('active');
 
-      e.preventDefault();
+        e.preventDefault();
     });
 
 
     //close ads
     $('.qc_left .btnClose').on('click', function(e) {
-      e.preventDefault();
-      $('.qc_left').hide();
+        e.preventDefault();
+        $('.qc_left').hide();
     });
     $('.qc_right .btnClose').on('click', function(e) {
-      e.preventDefault();
-      $('.qc_right').hide();
+        e.preventDefault();
+        $('.qc_right').hide();
     });
 
     //file browser
 
     $("#doiavatar").filestyle({
-      size : 'lg',
+        size: 'lg',
     });
+
+    $('.scroll_to_top').on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({ scrollTop: 0 }, 800);
+    });
+
+    
 
 });
 
+// show hide when scroll to element
+// $(document).scroll(function() {
+//     var y = $(document).scrollTop();
+//     var body = $('body').height();
+//     var height_window = $(window).height();
+//     var height_footer_bottom = 0; //$('.bottom_searchCondition').height();
+//     // var h_services = $('#bottom_searchCondition').height() + $('#services').height();
 
-// (function($){
-//     $(window).on("load",function(){
-//         $(".box_cart_content").mCustomScrollbar();
-//     });
-// })(jQuery);
+//     if (y <= (body + height_footer_bottom)) {
+//         setTimeout(function() {
+//             $('.btnBGmoi, .btnTTmoi').removeClass('no_fixed');
+//         }, 200);
 
- 
+//     } else {
+//         setTimeout(function() {
+//             $('.btnBGmoi, .btnTTmoi').addClass('no_fixed');
+//         }, 200);
+
+//     }
+// });

@@ -96,5 +96,7 @@ return [
     'review' => 'Review & comment',
     'level' => 'Level',
     'send' => 'Send',
+    'welcome' => 'Welcome',
+    'sign_out' => 'Sign out',
 
 ];
