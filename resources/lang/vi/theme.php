@@ -95,5 +95,6 @@ return [
     'teacher_label' => 'Giảng viên',
     'review' => 'Đánh giá & bình luận',
     'level' => 'Cấp độ',
+    'send' => 'Gửi',
 
 ];

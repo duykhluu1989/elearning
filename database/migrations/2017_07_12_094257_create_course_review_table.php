@@ -13,6 +13,7 @@ class CreateCourseReviewTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('course_id');
             $table->string('detail', 1000);
+            $table->dateTime('created_at');
         });
     }
 

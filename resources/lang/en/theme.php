@@ -95,5 +95,6 @@ return [
     'teacher_label' => 'Teacher',
     'review' => 'Review & comment',
     'level' => 'Level',
+    'send' => 'Send',
 
 ];

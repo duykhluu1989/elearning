@@ -30,6 +30,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
 
         Route::get('source/{token}', 'CourseController@getSource');
 
+        Route::post('reviewCourse/{id}/{slug}', 'CourseController@reviewCourse');
+
     });
 
     Route::get('district', 'OrderController@getListDistrict');
@@ -45,6 +47,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
     Route::get('previewCourse/{id}/{slug}', 'CourseController@previewCourse');
 
     Route::get('course/{id}/{slug}', 'CourseController@detailCourse');
+
+    Route::get('course/{id}/{slug}/review', 'CourseController@detailCourseReview');
 
     Route::get('cart', 'OrderController@editCart');
 

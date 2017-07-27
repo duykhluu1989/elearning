@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,6 +11,7 @@ use App\Models\Course;
 use App\Models\CourseItem;
 use App\Models\UserCourse;
 use App\Models\Category;
+use App\Models\CourseReview;
 
 class CourseController extends Controller
 {
@@ -243,6 +245,51 @@ class CourseController extends Controller
 
         if($filePath)
             return response()->file($filePath);
+
+        return '';
+    }
+
+    public function detailCourseReview(Request $request, $id, $slug)
+    {
+        if($request->ajax() == false)
+            return view('frontend.errors.404');
+
+        $courseReviews = CourseReview::with(['user' => function($query) {
+            $query->select('id', 'avatar');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('user_id', 'detail', 'created_at')
+            ->where('course_id', $id)
+            ->orderBy('id', 'desc')
+            ->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
+
+        return view('frontend.courses.partials.detail_course_review', ['courseReviews' => $courseReviews]);
+    }
+
+    public function reviewCourse(Request $request, $id, $slug)
+    {
+        $course = Course::select('id')->find($id);
+
+        if(empty($course))
+            return '';
+
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'detail' => 'required|string|max:1000',
+        ]);
+
+        if($validator->passes())
+        {
+            $review = new CourseReview();
+            $review->user_id = auth()->user()->id;
+            $review->course_id = $course->id;
+            $review->detail = $inputs['detail'];
+            $review->created_at = date('Y-m-d H:i:s');
+            $review->save();
+
+            return 'Success';
+        }
 
         return '';
     }

@@ -144,8 +144,23 @@
                                 <p>{{ $course->user->profile->description }}</p>
                             </div>
                             <div id="section_binhluan" class="tab-pane fade">
-                                <h3>Dropdown 1</h3>
-                                <p>WInteger convallis, nulla in sollicitudin placerat, ligula enim auctor lectus, in mollis diam dolor at lorem. Sed bibendum nibh sit amet dictum feugiat. Vivamus arcu sem, cursus a feugiat ut, iaculis at erat. Donec vehicula at ligula vitae venenatis. Sed nunc nulla, vehicula non porttitor in, pharetra et dolor. Fusce nec velit velit. Pellentesque consectetur eros.</p>
+                                <h3>@lang('theme.review')</h3>
+                                <span id="CourseReviewTab">
+                                </span>
+
+                                @if($bought == true)
+                                    <hr />
+                                    <div class="block_input_comment">
+                                        <form id="CourseReviewForm" action="{{ action('Frontend\CourseController@reviewCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" method="POST" role="form">
+                                            <div class="form-group">
+                                                <textarea id="CourseReviewDetail" name="detail" class="form-control" rows="8" required="required"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-lg btnGui pull-right">@lang('theme.send')</button>
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </div>
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -170,6 +185,67 @@
                 if($(this).data('href') != '')
                     location.href = $(this).data('href');
             });
+
+            $('#CourseReviewForm').submit(function(e) {
+                e.preventDefault();
+
+                var reviewDetailElem = $('#CourseReviewDetail');
+                var reviewDetailVal = reviewDetailElem.val().trim();
+
+                if(reviewDetailVal != '')
+                {
+                    $.ajax({
+                        url: '{{ action('Frontend\CourseController@reviewCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
+                        type: 'post',
+                        data: '_token=' + $('input[name="_token"]').first().val() + '&detail=' + reviewDetailVal,
+                        success: function(result) {
+                            if(result)
+                            {
+                                reviewDetailElem.val('');
+
+                                $.ajax({
+                                    url: '{{ action('Frontend\CourseController@detailCourseReview', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
+                                    type: 'get',
+                                    success: function(result) {
+                                        if(result)
+                                            $('#CourseReviewTab').html(result);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         </script>
     @endpush
 @endif
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                url: '{{ action('Frontend\CourseController@detailCourseReview', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
+                type: 'get',
+                success: function(result) {
+                    if(result)
+                        $('#CourseReviewTab').html(result);
+                }
+            });
+        });
+
+        $('#CourseReviewTab').on('click', 'a', function() {
+            if($(this).attr('data-page'))
+            {
+                $.ajax({
+                    url: '{{ action('Frontend\CourseController@detailCourseReview', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
+                    type: 'get',
+                    data: 'page=' + $(this).attr('data-page'),
+                    success: function(result) {
+                        if(result)
+                            $('#CourseReviewTab').html(result);
+                    }
+                });
+            }
+        });
+    </script>
+@endpush
