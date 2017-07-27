@@ -84,6 +84,12 @@
 
                         </div>
                     </div>
+
+                    @if(count($rootCategories) > 0)
+                        <div class="col-lg-12 text-center mt30">
+                            <a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategories[0]->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategories[0], 'slug')]) }}" class="btn btnShowall">@lang('theme.all_course')<i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </section>
