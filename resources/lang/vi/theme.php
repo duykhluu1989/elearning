@@ -101,5 +101,12 @@ return [
     'all_article' => 'Tất cả bài viết',
     'all_expert' => 'Các tác giả',
     'relative_article' => 'Bài viết liên quan',
+    'account' => 'Thông tin tài khoản',
+    'account_general' => 'Thông tin chung',
+    'up_avatar' => 'Thay đổi ảnh đại diện',
+    'gender' => 'Giới tính',
+    'birthday' => 'Ngày sinh',
+    'title' => 'Chức danh',
+    'save' => 'Lưu thông tin',
 
 ];

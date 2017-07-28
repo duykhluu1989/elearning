@@ -1085,4 +1085,26 @@ class Area
             ],
         ]
     ];
+
+    public static function getCodeFromName($name, $area = 'province')
+    {
+        foreach(self::$provinces as $code => $data)
+        {
+            if($area == 'province')
+            {
+                if($name == $data['name'])
+                    return $code;
+            }
+            else
+            {
+                foreach($data['cities'] as $districtCode => $districtName)
+                {
+                    if($name == $districtName)
+                        return $districtCode;
+                }
+            }
+        }
+
+        return null;
+    }
 }

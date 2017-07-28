@@ -125,6 +125,10 @@ return [
         'address' => 'địa chỉ',
         'province' => 'tỉnh / thành phố',
         'district' => 'quận / huyện',
+        'first_name' => 'tên',
+        'last_name' => 'họ',
+        'birthday' => 'ngày sinh',
+        'title' => 'chức danh',
     ],
 
 ];

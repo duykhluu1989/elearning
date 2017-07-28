@@ -11,8 +11,8 @@ class CreateProfileTable extends Migration
         Schema::create('profile', function(Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->string('first_name', 255)->nullable();
-            $table->string('last_name', 255)->nullable();
+            $table->string('first_name', 100);
+            $table->string('last_name', 100)->nullable();
             $table->unsignedTinyInteger('gender')->default(0);
             $table->date('birthday')->nullable();
             $table->string('phone', 20)->nullable();
@@ -20,6 +20,8 @@ class CreateProfileTable extends Migration
             $table->string('description', 1000)->nullable();
             $table->string('name', 255)->nullable();
             $table->string('title', 255)->nullable();
+            $table->string('province', 255)->nullable();
+            $table->string('district', 255)->nullable();
         });
     }
 

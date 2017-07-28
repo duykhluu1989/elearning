@@ -168,7 +168,8 @@ class UserController extends Controller
                 'email' => 'required|email|max:255|unique:user,email',
                 'password' => 'required|alpha_dash|min:6|max:32',
                 're_password' => 'required|alpha_dash|min:6|max:32|same:password',
-                'first_name' => 'required_with:last_name',
+                'first_name' => 'required|max:100',
+                'last_name' => 'nullable|max:100',
             ]);
 
             if($validator->passes())
@@ -251,7 +252,8 @@ class UserController extends Controller
                 'password' => 'nullable|alpha_dash|min:6|max:32',
                 're_password' => 'nullable|alpha_dash|min:6|max:32|same:password',
                 'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
-                'first_name' => 'required_with:last_name',
+                'first_name' => 'required|max:100',
+                'last_name' => 'nullable|max:100',
                 'phone' => 'nullable|numeric',
                 'birthday' => 'nullable|date',
             ]);
@@ -705,7 +707,8 @@ class UserController extends Controller
                 'password' => 'nullable|alpha_dash|min:6|max:32',
                 're_password' => 'nullable|alpha_dash|min:6|max:32|same:password',
                 'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
-                'first_name' => 'required_with:last_name',
+                'first_name' => 'required|max:100',
+                'last_name' => 'nullable|max:100',
                 'phone' => 'nullable|numeric',
                 'birthday' => 'nullable|date',
             ]);
@@ -744,7 +747,7 @@ class UserController extends Controller
                     $user->profile->first_name = $inputs['first_name'];
                     $user->profile->last_name = $inputs['last_name'];
                     $user->profile->title = $inputs['title'];
-                    $user->profile->name = (!empty($user->profile->last_name) ? ($user->profile->last_name . ' ') : '') . $user->profile->first_name;
+                    $user->profile->name = trim($user->profile->last_name . ' ' . $user->profile->first_name);
                     $user->profile->gender = $inputs['gender'];
                     $user->profile->birthday = $inputs['birthday'];
                     $user->profile->phone = $inputs['phone'];

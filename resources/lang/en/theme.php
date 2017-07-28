@@ -101,5 +101,12 @@ return [
     'all_article' => 'All articles',
     'all_expert' => 'All experts',
     'relative_article' => 'Related articles',
+    'account' => 'Account information',
+    'account_general' => 'General information',
+    'up_avatar' => 'Change avatar',
+    'gender' => 'Gender',
+    'birthday' => 'Birthday',
+    'title' => 'Title',
+    'save' => 'Save information',
 
 ];

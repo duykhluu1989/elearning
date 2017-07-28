@@ -116,6 +116,8 @@ return [
 
     'attributes' => [
         'payment_method' => 'payment method',
+        'first_name' => 'first name',
+        'last_name' => 'last name',
     ],
 
 ];

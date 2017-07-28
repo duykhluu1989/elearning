@@ -62,17 +62,20 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error': '' }}">
-                            <label>Tên</label>
-                            <input type="text" class="form-control" name="first_name" value="{{ old('first_name', $user->profile->first_name) }}" />
+                            <label>Tên <i>(bắt buộc)</i></label>
+                            <input type="text" class="form-control" name="first_name" required="required" value="{{ old('first_name', $user->profile->first_name) }}" />
                             @if($errors->has('first_name'))
                                 <span class="help-block">{{ $errors->first('first_name') }}</span>
                             @endif
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="form-group">
+                        <div class="form-group{{ $errors->has('last_name') ? ' has-error': '' }}">
                             <label>Họ</label>
                             <input type="text" class="form-control" name="last_name" value="{{ old('last_name', $user->profile->last_name) }}" />
+                            @if($errors->has('last_name'))
+                                <span class="help-block">{{ $errors->first('last_name') }}</span>
+                            @endif
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -87,7 +90,7 @@
                         <div class="form-group">
                             <label>Giới Tính</label>
                             <?php
-                            $gender = old('gender', (!empty($user->profile) ? $user->profile->gender : ''));
+                            $gender = old('gender', $user->profile->gender);
                             ?>
                             <div>
                                 @foreach(\App\Models\Profile::getProfileGender() as $value => $label)

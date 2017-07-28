@@ -23,6 +23,8 @@ class Profile extends Model
     {
         $profile = new Profile();
         $profile->user_id = User::where('username', 'admin')->first()->id;;
+        $profile->first_name = 'Admin';
+        $profile->name = 'Admin';
         $profile->save();
     }
 

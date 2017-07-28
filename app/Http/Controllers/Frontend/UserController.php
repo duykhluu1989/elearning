@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
+use App\Libraries\Helpers\Area;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Setting;
@@ -299,5 +300,85 @@ class UserController extends Controller
         {
             return view('frontend.errors.404');
         }
+    }
+
+    public function editAccount(Request $request)
+    {
+        $user = auth()->user();
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'password' => 'nullable|alpha_dash|min:6|max:32',
+                're_password' => 'nullable|alpha_dash|min:6|max:32|same:password',
+                'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
+                'first_name' => 'required|max:100',
+                'last_name' => 'nullable|max:100',
+                'phone' => 'nullable|numeric',
+                'birthday' => 'nullable|date',
+                'address' => 'nullable|max:255',
+                'title' => 'nullable|max:255',
+            ]);
+
+            if($validator->passes())
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    if(isset($inputs['avatar']))
+                    {
+                        $savePath = User::AVATAR_UPLOAD_PATH . '/' . $user->id;
+
+                        list($imagePath, $imageUrl) = Utility::saveFile($inputs['avatar'], $savePath, Utility::getValidImageExt());
+
+                        if(!empty($imagePath) && !empty($imageUrl))
+                        {
+                            Utility::resizeImage($imagePath, 200);
+
+                            if(!empty($user->avatar))
+                                Utility::deleteFile($user->avatar);
+
+                            $user->avatar = $imageUrl;
+                        }
+                    }
+
+                    if(!empty($inputs['password']))
+                        $user->password = Hash::make($inputs['password']);
+
+                    $user->save();
+
+                    $user->profile->first_name = $inputs['first_name'];
+                    $user->profile->last_name = $inputs['last_name'];
+                    $user->profile->title = $inputs['title'];
+                    $user->profile->name = trim($user->profile->last_name . ' ' . $user->profile->first_name);
+                    $user->profile->gender = $inputs['gender'];
+                    $user->profile->birthday = $inputs['birthday'];
+                    $user->profile->phone = $inputs['phone'];
+                    $user->profile->address = $inputs['address'];
+                    $user->profile->province = Area::$provinces[$inputs['province']]['name'];
+                    $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+                    $user->profile->save();
+
+                    DB::commit();
+
+                    return redirect()->action('Frontend\UserController@editAccount')->with('messageSuccess', 'Thành Công');
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return redirect()->action('Frontend\UserController@editAccount')->withInput()->with('messageError', $e->getMessage());
+                }
+            }
+            else
+                return redirect()->action('Frontend\UserController@editAccount')->withErrors($validator)->withInput();
+        }
+
+        return view('frontend.users.edit_account', [
+            'user' => $user,
+        ]);
     }
 }

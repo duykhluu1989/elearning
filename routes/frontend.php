@@ -20,6 +20,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
 
         Route::get('logout', 'UserController@logout');
 
+        Route::match(['get', 'post'], 'account', 'UserController@editAccount');
+
         Route::match(['get', 'post'], 'order', 'OrderController@placeOrder');
 
         Route::post('discount', 'OrderController@useDiscountCode');
