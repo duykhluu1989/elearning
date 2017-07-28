@@ -13,6 +13,7 @@ use App\Libraries\Helpers\Area;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Setting;
+use App\Models\Collaborator;
 use Facebook\Facebook;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
@@ -99,7 +100,7 @@ class UserController extends Controller
             {
                 DB::rollBack();
 
-                return json_encode(['username' => [$e->getMessage()]]);
+                return json_encode(['first_name' => [$e->getMessage()]]);
             }
         }
         else
@@ -391,5 +392,111 @@ class UserController extends Controller
         return view('frontend.users.edit_account', [
             'user' => $user,
         ]);
+    }
+
+    public function registerCollaborator(Request $request)
+    {
+        if(auth()->guest() || empty(auth()->user()->collaboratorInformation))
+        {
+            if(auth()->guest())
+            {
+                $inputs = $request->all();
+
+                $validator = Validator::make($inputs, [
+                    'first_name' => 'required|string|max:100',
+                    'last_name' => 'nullable|string|max:100',
+                    'email' => 'required|email|max:255|unique:user,email',
+                    'password' => 'required|alpha_dash|min:6|max:32',
+                ]);
+
+                if($validator->passes())
+                {
+                    try
+                    {
+                        DB::beginTransaction();
+
+                        $user = new User();
+                        $user->username = explode('@', $inputs['email'])[0];
+                        $user->email = $inputs['email'];
+                        $user->status = Utility::ACTIVE_DB;
+                        $user->admin = Utility::INACTIVE_DB;
+                        $user->collaborator = Utility::ACTIVE_DB;
+                        $user->teacher = Utility::INACTIVE_DB;
+                        $user->expert = Utility::INACTIVE_DB;
+                        $user->created_at = date('Y-m-d H:i:s');
+                        $user->password = Hash::make($inputs['password']);
+                        $user->save();
+
+                        $profile = new Profile();
+                        $profile->user_id = $user->id;
+                        $profile->first_name = $inputs['first_name'];
+                        $profile->last_name = $inputs['last_name'];
+                        $profile->name = trim($profile->last_name . ' ' . $profile->first_name);
+                        $profile->save();
+
+                        $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+                        $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
+
+                        $collaborator = new Collaborator();
+                        $collaborator->user_id = $user->id;
+                        $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
+                        $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
+                        $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
+                        $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
+                        $collaborator->status = Collaborator::STATUS_PENDING_DB;
+                        $collaborator->save();
+
+                        DB::commit();
+
+                        auth()->login($user);
+
+                        return 'Success';
+                    }
+                    catch(\Exception $e)
+                    {
+                        DB::rollBack();
+
+                        return json_encode(['first_name' => [$e->getMessage()]]);
+                    }
+                }
+                else
+                    return json_encode($validator->errors()->messages());
+            }
+            else
+            {
+                try
+                {
+                    DB::beginTransaction();
+
+                    $user = auth()->user();
+                    $user->collaborator = Utility::ACTIVE_DB;
+                    $user->save();
+
+                    $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+                    $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
+
+                    $collaborator = new Collaborator();
+                    $collaborator->user_id = $user->id;
+                    $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
+                    $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
+                    $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
+                    $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
+                    $collaborator->status = Collaborator::STATUS_PENDING_DB;
+                    $collaborator->save();
+
+                    DB::commit();
+
+                    return 'Success';
+                }
+                catch(\Exception $e)
+                {
+                    DB::rollBack();
+
+                    return $e->getMessage();
+                }
+            }
+        }
+        else
+            return '';
     }
 }

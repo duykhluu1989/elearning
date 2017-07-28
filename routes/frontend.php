@@ -36,6 +36,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
 
     });
 
+    Route::post('registerCollaborator', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@registerCollaborator']);
+
     Route::get('district', 'OrderController@getListDistrict');
 
     Route::get('/', 'HomeController@home');

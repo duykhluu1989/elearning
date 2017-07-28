@@ -22,7 +22,8 @@
                             <p>@lang('theme.collaborator_slogan')</p>
 
                             @if(auth()->guest() || empty(auth()->user()->collaboratorInformation))
-                                <a href="javascript:void(0)" class="btn btn-lg btnRed">@lang('theme.sign_up')</a>
+                                <a href="javascript:void(0)" class="btn btn-lg btnRed" id="CollaboratorSignUp">@lang('theme.sign_up')</a>
+                                {{ csrf_field() }}
                             @endif
 
                         </div>
@@ -40,7 +41,7 @@
                         <div class="navleft">
                             <ul class="list_navLeft">
 
-                               @foreach($sameGroupPages as $sameGroupPage)
+                                @foreach($sameGroupPages as $sameGroupPage)
                                     @if($sameGroupPage->id == $page->id)
                                         <li class="active"><a href="javascript:void(0)">{{ \App\Libraries\Helpers\Utility::getValueByLocale($sameGroupPage, 'name') }}</a></li>
                                     @else
@@ -68,5 +69,134 @@
             </div>
         </section>
     </main>
+
+    @if(auth()->guest() || empty(auth()->user()->collaboratorInformation))
+        @if(auth()->guest())
+            <div id="CollaboratorSignUpModal" class="modal fade modal_general" data-backdrop="static" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title text-center">@lang('theme.sign_up') <span class="logo_small"><img src="{{ asset('themes/images/logo_small.png') }}" alt="Logo" class="img-responsive"></span></h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ action('Frontend\UserController@registerCollaborator') }}" method="POST" role="form" class="frm_dangky" id="CollaboratorSignUpForm">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="first_name" placeholder="* @lang('theme.first_name')" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="last_name" placeholder="@lang('theme.last_name')">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="email" placeholder="* Email" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" name="password" placeholder="* @lang('theme.password')" required="required">
+                                </div>
+                                <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
+                                {{ csrf_field() }}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @push('scripts')
+                <script type="text/javascript">
+                    $('#CollaboratorSignUp').click(function() {
+                        $('#CollaboratorSignUpModal').modal('show');
+                    });
+
+                    $('#CollaboratorSignUpForm').submit(function(e) {
+                        e.preventDefault();
+
+                        var formElem = $(this);
+
+                        formElem.find('input').each(function() {
+                            $(this).parent().removeClass('has-error').find('span[class="help-block"]').first().remove();
+                        });
+
+                        $.ajax({
+                            url: '{{ action('Frontend\UserController@registerCollaborator') }}',
+                            type: 'post',
+                            data: '_token=' + $('input[name="_token"]').first().val() + '&' + formElem.serialize(),
+                            success: function(result) {
+                                if(result)
+                                {
+                                    if(result == 'Success')
+                                    {
+                                        $('#CollaboratorSignUpModal').modal('hide');
+
+                                        swal({
+                                            title: '@lang('theme.sign_up_success')',
+                                            type: 'success',
+                                            allowEscapeKey: false,
+                                            showConfirmButton: false
+                                        });
+
+                                        setTimeout(function() {
+                                            location.reload();
+                                        }, 3000);
+                                    }
+                                    else
+                                    {
+                                        result = JSON.parse(result);
+
+                                        for(var name in result)
+                                        {
+                                            if(result.hasOwnProperty(name))
+                                            {
+                                                formElem.find('input[name="' + name + '"]').first().parent().addClass('has-error').append('' +
+                                                    '<span class="help-block">' + result[name][0] + '</span>' +
+                                                '');
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                </script>
+            @endpush
+        @else
+            @push('scripts')
+                <script type="text/javascript">
+                    $('#CollaboratorSignUp').click(function() {
+                        $.ajax({
+                            url: '{{ action('Frontend\UserController@registerCollaborator') }}',
+                            type: 'post',
+                            data: '_token=' + $('input[name="_token"]').first().val(),
+                            success: function(result) {
+                                if(result)
+                                {
+                                    if(result == 'Success')
+                                    {
+                                        swal({
+                                            title: '@lang('theme.sign_up_success')',
+                                            type: 'success',
+                                            allowEscapeKey: false,
+                                            showConfirmButton: false
+                                        });
+
+                                        setTimeout(function() {
+                                            location.reload();
+                                        }, 3000);
+                                    }
+                                    else
+                                    {
+                                        swal({
+                                            title: result,
+                                            type: 'error',
+                                            confirmButtonClass: 'btn-success'
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    });
+                </script>
+            @endpush
+        @endif
+    @endif
 
 @stop
