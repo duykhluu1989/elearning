@@ -18,6 +18,7 @@
     <link rel="icon" type="image/png" href="{{ asset('themes/favicons/favicon-16x16.png') }}" sizes="16x16">
     <link rel="manifest" href="{{ asset('themes/favicons/manifest.json') }}">
     <link rel="mask-icon" href="{{ asset('themes/favicons/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,700,900">
@@ -45,6 +46,7 @@
     @include('frontend.layouts.partials.footer')
 </div>
 <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('themes/js/jquery.easing.1.3.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('themes/js/bootstrap-filestyle.min.js') }}"></script>

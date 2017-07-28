@@ -32,6 +32,8 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::post('user/autoComplete', 'UserController@autoCompleteUser');
 
+        Route::get('district', 'UserController@getListDistrict');
+
         Route::post('certificate/autoComplete', 'CertificateController@autoCompleteCertificate');
 
         Route::post('setting/collaborator/value', 'SettingController@getSettingCollaboratorValue');

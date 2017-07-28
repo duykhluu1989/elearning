@@ -105,7 +105,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>@lang('theme.birthday')</label>
-                                                <input type="date" name="birthday" class="form-control DatePicker" value="{{ old('birthday', $user->profile->birthday) }}" />
+                                                <input type="text" name="birthday" class="form-control DatePicker" value="{{ old('birthday', $user->profile->birthday) }}" />
                                                 @if($errors->has('birthday'))
                                                     <div class="form-group has-error">
                                                         <span class="help-block">* {{ $errors->first('birthday') }}</span>
@@ -203,3 +203,40 @@
     </main>
 
 @stop
+
+@push('scripts')
+    <script type="text/javascript">
+        $('#ProfileProvince').change(function() {
+            var districtElem = $('#ProfileDistrict');
+
+            districtElem.html('' +
+                '<option value=""></option>' +
+            '');
+
+            if($(this).val() != '')
+            {
+                $.ajax({
+                    url: '{{ action('Frontend\OrderController@getListDistrict') }}',
+                    type: 'get',
+                    data: 'province_code=' + $(this).val(),
+                    success: function(result) {
+                        if(result)
+                        {
+                            result = JSON.parse(result);
+
+                            for(var code in result)
+                            {
+                                if(result.hasOwnProperty(code))
+                                {
+                                    districtElem.append('' +
+                                        '<option value="' + code + '">' + result[code] + '</option>' +
+                                    '');
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+@endpush

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Widgets\GridView;
 use App\Libraries\Helpers\Html;
 use App\Libraries\Helpers\Utility;
+use App\Libraries\Helpers\Area;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\UserRole;
@@ -327,6 +328,8 @@ class UserController extends Controller
                     $user->profile->phone = $inputs['phone'];
                     $user->profile->address = $inputs['address'];
                     $user->profile->description = $inputs['description'];
+                    $user->profile->province = Area::$provinces[$inputs['province']]['name'];
+                    $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
                     $user->profile->save();
 
                     if($user->collaborator == Utility::ACTIVE_DB && empty($user->collaboratorInformation))
@@ -753,6 +756,8 @@ class UserController extends Controller
                     $user->profile->phone = $inputs['phone'];
                     $user->profile->address = $inputs['address'];
                     $user->profile->description = $inputs['description'];
+                    $user->profile->province = Area::$provinces[$inputs['province']]['name'];
+                    $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
                     $user->profile->save();
 
                     DB::commit();
@@ -795,5 +800,26 @@ class UserController extends Controller
         $users = $builder->get()->toJson();
 
         return $users;
+    }
+
+    public function getListDistrict(Request $request)
+    {
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'province_code' => 'required',
+        ]);
+
+        if($validator->passes())
+        {
+            $provinces = Area::$provinces;
+
+            if(isset($provinces[$inputs['province_code']]))
+                return json_encode($provinces[$inputs['province_code']]['cities']);
+            else
+                return '';
+        }
+        else
+            return '';
     }
 }

@@ -282,6 +282,44 @@
                                         <input type="text" class="form-control" name="address" value="{{ old('address', $user->profile->address) }}" />
                                     </div>
                                 </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Tỉnh / Thành Phố</label>
+                                        <select id="ProfileProvince" name="province" class="form-control">
+                                            <?php
+                                            $province = old('province', \App\Libraries\Helpers\Area::getCodeFromName($user->profile->province));
+                                            ?>
+                                            <option value=""></option>
+                                            @foreach(\App\Libraries\Helpers\Area::$provinces as $code => $data)
+                                                @if($province == $code)
+                                                    <option selected="selected" value="{{ $code }}">{{ $data['name'] }}</option>
+                                                @else
+                                                    <option value="{{ $code }}">{{ $data['name'] }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Quận / Huyện</label>
+                                        <select id="ProfileDistrict" name="district" class="form-control">
+                                            <?php
+                                            $district = old('district', \App\Libraries\Helpers\Area::getCodeFromName($user->profile->district, 'district'));
+                                            ?>
+                                            <option value=""></option>
+                                            @if($district && isset(\App\Libraries\Helpers\Area::$provinces[$province]['cities']))
+                                                @foreach(\App\Libraries\Helpers\Area::$provinces[$province]['cities'] as $code => $data)
+                                                    @if($district == $code)
+                                                        <option selected="selected" value="{{ $code }}">{{ $data }}</option>
+                                                    @else
+                                                        <option value="{{ $code }}">{{ $data }}</option>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label>Mô Tả</label>
@@ -310,4 +348,38 @@
 
 @push('scripts')
     <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
+    <script type="text/javascript">
+        $('#ProfileProvince').change(function() {
+            var districtElem = $('#ProfileDistrict');
+
+            districtElem.html('' +
+                '<option value=""></option>' +
+            '');
+
+            if($(this).val() != '')
+            {
+                $.ajax({
+                    url: '{{ action('Backend\UserController@getListDistrict') }}',
+                    type: 'get',
+                    data: 'province_code=' + $(this).val(),
+                    success: function(result) {
+                        if(result)
+                        {
+                            result = JSON.parse(result);
+
+                            for(var code in result)
+                            {
+                                if(result.hasOwnProperty(code))
+                                {
+                                    districtElem.append('' +
+                                        '<option value="' + code + '">' + result[code] + '</option>' +
+                                    '');
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 @endpush
