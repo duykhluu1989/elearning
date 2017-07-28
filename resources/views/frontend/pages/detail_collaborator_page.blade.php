@@ -20,7 +20,11 @@
                         <div class="table_content">
                             <h1>@lang('theme.become_collaborator')</h1>
                             <p>@lang('theme.collaborator_slogan')</p>
-                            <a href="javascript:void(0)" class="btn btn-lg btnRed">@lang('theme.sign_up')</a>
+
+                            @if(auth()->guest() || empty(auth()->user()->collaboratorInformation))
+                                <a href="javascript:void(0)" class="btn btn-lg btnRed">@lang('theme.sign_up')</a>
+                            @endif
+
                         </div>
                     </div>
                 </div>
