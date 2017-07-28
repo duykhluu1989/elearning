@@ -180,8 +180,36 @@
             </div>
         </section>
 
-        <section class="banner_qc">
-        </section>
+        <?php
+        $adHorizontalTopItem = null;
+
+        if(isset($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]))
+        {
+            if(!empty($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]->detail))
+            {
+                $adHorizontalTopItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]->detail, true);
+
+                $randomKey = array_rand($adHorizontalTopItems);
+
+                $adHorizontalTopItem = $adHorizontalTopItems[$randomKey];
+            }
+        }
+        ?>
+        @if($adHorizontalTopItem)
+            @if(isset($adHorizontalTopItem['script']))
+                <section class="banner_qc">
+                    <?php echo $adHorizontalTopItem['script']; ?>
+                </section>
+            @else
+                <a href="{{ isset($adHorizontalTopItem['url']) ? $adHorizontalTopItem['url'] : 'javascript:void(0)' }}">
+                    <section class="banner_qc" style="background-image: {{ isset($adHorizontalTopItem['image']) ? $adHorizontalTopItem['image'] : '' }}">
+                    </section>
+                </a>
+            @endif
+        @else
+            <section class="banner_qc">
+            </section>
+        @endif
 
         <section class="chuyengia bg_gray">
             <div class="container">
