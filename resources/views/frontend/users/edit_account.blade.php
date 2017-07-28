@@ -172,28 +172,58 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <h4>Thông tin đăng nhập</h4>
+                                        <h4>@lang('theme.sign_in_information')</h4>
                                         <div class="frm_thongtindangnhap boxmH">
                                             <div class="form-group">
-                                                <label for="">Tên đăng nhập</label>
-                                                <input type="text" class="form-control" id="">
+                                                <label>* @lang('theme.username')</label>
+                                                <input type="text" class="form-control" name="username" value="{{ old('username', $user->username) }}" required="required" />
+                                                @if($errors->has('username'))
+                                                    <div class="form-group has-error">
+                                                        <span class="help-block">* {{ $errors->first('username') }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                             <div class="form-group">
-                                                <label for="">Mật khẩu hiện tại</label>
-                                                <input type="password" class="form-control" id="">
+                                                <label>* Email</label>
+                                                <input type="text" class="form-control" name="email" value="{{ old('email', $user->email) }}" required="required" />
+                                                @if($errors->has('email'))
+                                                    <div class="form-group has-error">
+                                                        <span class="help-block">* {{ $errors->first('email') }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                             <div class="form-group">
-                                                <label for="">Mật khẩu mới</label>
-                                                <input type="password" class="form-control" id="">
+                                                <label>@lang('theme.old_password')</label>
+                                                <input type="password" class="form-control" name="old_password" />
+                                                @if($errors->has('old_password'))
+                                                    <div class="form-group has-error">
+                                                        <span class="help-block">* {{ $errors->first('old_password') }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                             <div class="form-group">
-                                                <label for="">Nhập lại mật khẩu mới</label>
-                                                <input type="password" class="form-control" id="">
+                                                <label>@lang('theme.new_password')</label>
+                                                <input type="password" class="form-control" name="new_password" />
+                                                @if($errors->has('new_password'))
+                                                    <div class="form-group has-error">
+                                                        <span class="help-block">* {{ $errors->first('new_password') }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
-                                            <button type="submit" class="btn btn-lg btn-block btnRed mb15"><i class="fa fa-floppy-o" aria-hidden="true"></i> LƯU</button>
+                                            <div class="form-group">
+                                                <label>@lang('theme.re_new_password')</label>
+                                                <input type="password" class="form-control" name="re_new_password" />
+                                                @if($errors->has('re_new_password'))
+                                                    <div class="form-group has-error">
+                                                        <span class="help-block">* {{ $errors->first('re_new_password') }}</span>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <button type="submit" class="btn btn-lg btn-block btnRed mb15"><i class="fa fa-floppy-o" aria-hidden="true"></i>@lang('theme.save')</button>
                                         </div>
                                     </div>
                                 </div>
+                                {{ csrf_field() }}
                             </form>
                         </div>
                     </div>

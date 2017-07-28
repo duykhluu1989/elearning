@@ -116,7 +116,7 @@ return [
     |
     */
 
-    'attributes'           => [
+    'attributes' => [
         'password' => 'mật khẩu',
         'name' => 'họ và tên',
         'course' => 'khóa học',
@@ -129,6 +129,10 @@ return [
         'last_name' => 'họ',
         'birthday' => 'ngày sinh',
         'title' => 'chức danh',
+        'username' => 'tên tài khoản',
+        'old_password' => 'mật khẩu hiện tại',
+        'new_password' => 'mật khẩu mới',
+        're_new_password' => 'xác nhận mật khẩu mới',
     ],
 
 ];

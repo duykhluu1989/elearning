@@ -118,6 +118,9 @@ return [
         'payment_method' => 'payment method',
         'first_name' => 'first name',
         'last_name' => 'last name',
+        'old_password' => 'old password',
+        'new_password' => 'new password',
+        're_new_password' => 'confirm new password',
     ],
 
 ];

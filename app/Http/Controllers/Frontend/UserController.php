@@ -311,8 +311,11 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'password' => 'nullable|alpha_dash|min:6|max:32',
-                're_password' => 'nullable|alpha_dash|min:6|max:32|same:password',
+                'old_password' => 'required_with:new_password|alpha_dash',
+                'new_password' => 'required_with:old_password|alpha_dash|min:6|max:32',
+                're_new_password' => 'nullable|alpha_dash|min:6|max:32|same:new_password',
+                'username' => 'required|unique:user,username,' . $user->id,
+                'email' => 'required|unique:user,email,' . $user->id,
                 'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
                 'first_name' => 'required|max:100',
                 'last_name' => 'nullable|max:100',
@@ -321,6 +324,14 @@ class UserController extends Controller
                 'address' => 'nullable|max:255',
                 'title' => 'nullable|max:255',
             ]);
+
+            $validator->after(function($validator) use(&$inputs, $user) {
+                if(!empty($inputs['old_password']))
+                {
+                    if(Hash::check($inputs['old_password'], $user->password) == false)
+                        $validator->errors()->add('old_password', trans('theme.old_password_error'));
+                }
+            });
 
             if($validator->passes())
             {
@@ -345,8 +356,8 @@ class UserController extends Controller
                         }
                     }
 
-                    if(!empty($inputs['password']))
-                        $user->password = Hash::make($inputs['password']);
+                    if(!empty($inputs['new_password']))
+                        $user->password = Hash::make($inputs['new_password']);
 
                     $user->save();
 

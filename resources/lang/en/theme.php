@@ -108,5 +108,11 @@ return [
     'birthday' => 'Birthday',
     'title' => 'Title',
     'save' => 'Save information',
+    'sign_in_information' => 'Sign in information',
+    'username' => 'Username',
+    'old_password' => 'Old password',
+    'new_password' => 'New password',
+    're_new_password' => 'Confirm new password',
+    'old_password_error' => 'Old password is not correct',
 
 ];

@@ -108,5 +108,11 @@ return [
     'birthday' => 'Ngày sinh',
     'title' => 'Chức danh',
     'save' => 'Lưu thông tin',
+    'sign_in_information' => 'Thông tin đăng nhập',
+    'username' => 'Tên tài khoản',
+    'old_password' => 'Mật khẩu hiện tại',
+    'new_password' => 'Mật khẩu mới',
+    're_new_password' => 'Xác nhận mật khẩu mới',
+    'old_password_error' => 'Mật khẩu hiện tại không chính xác',
 
 ];
