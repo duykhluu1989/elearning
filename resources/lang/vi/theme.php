@@ -98,5 +98,6 @@ return [
     'send' => 'Gửi',
     'welcome' => 'Chào mừng bạn',
     'sign_out' => 'Đăng xuất',
+    'all_article' => 'Tất cả bài viết',
 
 ];

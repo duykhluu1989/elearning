@@ -58,8 +58,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
 
     Route::get('page/{id}/{slug}', 'PageController@detailPage');
 
-    Route::get('sample', 'ArticleController@sample');
-
     Route::get('tintuc', 'ArticleController@tintuc');
+
+    Route::get('article', 'ArticleController@adminExpert');
 
 });

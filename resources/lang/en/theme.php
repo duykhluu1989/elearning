@@ -98,5 +98,6 @@ return [
     'send' => 'Send',
     'welcome' => 'Welcome',
     'sign_out' => 'Sign out',
+    'all_article' => 'All articles',
 
 ];
