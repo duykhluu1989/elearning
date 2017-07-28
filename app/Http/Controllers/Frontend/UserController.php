@@ -311,11 +311,11 @@ class UserController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'old_password' => 'required_with:new_password|alpha_dash',
-                'new_password' => 'required_with:old_password|alpha_dash|min:6|max:32',
+                'old_password' => 'nullable|required_with:new_password|alpha_dash',
+                'new_password' => 'nullable|required_with:old_password|alpha_dash|min:6|max:32',
                 're_new_password' => 'nullable|alpha_dash|min:6|max:32|same:new_password',
-                'username' => 'required|unique:user,username,' . $user->id,
-                'email' => 'required|unique:user,email,' . $user->id,
+                'username' => 'required|alpha_dash|min:4|max:255|unique:user,username,' . $user->id,
+                'email' => 'required|email|max:255|unique:user,email,' . $user->id,
                 'avatar' => 'mimes:' . implode(',', Utility::getValidImageExt()),
                 'first_name' => 'required|max:100',
                 'last_name' => 'nullable|max:100',

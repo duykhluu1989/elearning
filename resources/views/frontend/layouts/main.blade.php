@@ -58,6 +58,29 @@
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('assets/js/frontend.js') }}"></script>
 @stack('scripts')
+@if(session('messageSuccess'))
+    <script type="text/javascript">
+        $(document).ready(function() {
+            swal({
+                title: '{{ session('messageSuccess') }}',
+                type: 'success',
+                confirmButtonClass: 'btn-success',
+                allowOutsideClick: true
+            });
+        });
+    </script>
+@elseif(session('messageError'))
+    <script type="text/javascript">
+        $(document).ready(function() {
+            swal({
+                title: '{{ session('messageError') }}',
+                type: 'error',
+                confirmButtonClass: 'btn-danger',
+                allowOutsideClick: true
+            });
+        });
+    </script>
+@endif
 <script type="text/javascript">
     if($('input[name="_token"]').length > 0)
     {
