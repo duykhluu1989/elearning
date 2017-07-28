@@ -21,6 +21,7 @@ class Utility
     const LANGUAGE_COOKIE_NAME = 'language';
     const BACK_URL_COOKIE_NAME = 'back_url';
     const VIEW_COURSE_COOKIE_NAME = 'view_course';
+    const VIEW_ARTICLE_COOKIE_NAME = 'view_article';
     const REFERRAL_COOKIE_NAME = 'referral';
     const VISITOR_COOKIE_NAME = 'visitor';
 

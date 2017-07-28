@@ -60,6 +60,10 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
 
     Route::get('tintuc', 'ArticleController@tintuc');
 
-    Route::get('article', 'ArticleController@adminExpert');
+    Route::get('expert', 'ArticleController@adminExpert');
+
+    Route::get('expert/{id}', 'ArticleController@detailExpert');
+
+    Route::get('article/{id}/{slug}', 'ArticleController@detailArticle');
 
 });

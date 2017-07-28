@@ -99,5 +99,6 @@ return [
     'welcome' => 'Welcome',
     'sign_out' => 'Sign out',
     'all_article' => 'All articles',
+    'all_expert' => 'All experts',
 
 ];

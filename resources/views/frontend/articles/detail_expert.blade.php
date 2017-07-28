@@ -1,12 +1,14 @@
 @extends('frontend.layouts.main')
 
-@section('page_heading', trans('theme.expert'))
+@section('og_description', trans('theme.expert') . '-' . $expert->profile->name)
+
+@section('page_heading', trans('theme.expert') . '-' . $expert->profile->name)
 
 @section('section')
 
     @include('frontend.layouts.partials.header')
 
-    @include('frontend.layouts.partials.breabcrumb', ['breabcrumbTitle' => trans('theme.expert')])
+    @include('frontend.articles.partials.expert_breadcrumb')
 
     <main>
         <section class="khoahoc bg_gray">
@@ -18,17 +20,17 @@
                             <hr>
                             <ul class="list_navLeft">
 
-                                @foreach($experts as $expert)
-                                    <li>
+                                @foreach($listExperts as $listExpert)
+                                    <li class="{{ $listExpert->id == $expert->id ? 'active' : '' }}">
                                         <div class="row">
                                             <div class="col-xs-4">
-                                                @if(!empty($expert->avatar))
-                                                    <a href="{{ action('Frontend\ArticleController@detailExpert', ['id' => $expert->id]) }}"><img src="{{ $expert->avatar }}" alt="User Avatar" class="img-responsive"></a>
+                                                @if(!empty($listExpert->avatar))
+                                                    <a href="{{ action('Frontend\ArticleController@detailExpert', ['id' => $listExpert->id]) }}"><img src="{{ $listExpert->avatar }}" alt="User Avatar" class="img-responsive"></a>
                                                 @endif
                                             </div>
                                             <div class="col-xs-8">
-                                                <a href="{{ action('Frontend\ArticleController@detailExpert', ['id' => $expert->id]) }}">{{ $expert->profile->name }}</a>
-                                                <p><small>{{ $expert->profile->title }}</small></p>
+                                                <a href="{{ action('Frontend\ArticleController@detailExpert', ['id' => $listExpert->id]) }}">{{ $listExpert->profile->name }}</a>
+                                                <p><small>{{ $listExpert->profile->title }}</small></p>
                                             </div>
                                         </div>
                                     </li>
@@ -39,14 +41,23 @@
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                         <div class="main_content">
+                            <div class="row item_news item_news_top">
+                                <div class="col-lg-4">
+                                    @if(!empty($expert->avatar))
+                                        <a href="javascript:void(0)"><img src="{{ $expert->avatar }}" alt="User Avatar" class="img-responsive w100p"></a>
+                                    @endif
+                                </div>
+                                <div class="col-lg-8">
+                                    <h4><a href="javascript:void(0)">{{ $expert->profile->name }}</a></h4>
+                                    <p>{{ $expert->profile->title }}</p>
+                                </div>
+                            </div>
 
                             @foreach($articles as $article)
                                 <div class="row item_news">
-                                    <div class="col-lg-3">
-                                        <a href="{{ action('Frontend\ArticleController@detailArticle', ['id' => $article->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($article, 'slug')]) }}"><img src="{{ $article->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($article, 'name') }}" class="img-responsive w100p"></a>
-                                    </div>
-                                    <div class="col-lg-9">
+                                    <div class="col-lg-12">
                                         <h4><a href="{{ action('Frontend\ArticleController@detailArticle', ['id' => $article->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($article, 'slug')]) }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($article, 'name') }}</a></h4>
+                                        <p class="date"><small>{{ $article->published_at }}</small></p>
                                         <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($article, 'short_description') }}</p>
                                     </div>
                                 </div>

@@ -99,5 +99,6 @@ return [
     'welcome' => 'Chào mừng bạn',
     'sign_out' => 'Đăng xuất',
     'all_article' => 'Tất cả bài viết',
+    'all_expert' => 'Các tác giả',
 
 ];
