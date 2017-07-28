@@ -385,6 +385,15 @@ class UserController extends Controller
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
                 $dataProvider->where('status', $inputs['status']);
+
+            if(isset($inputs['expert']) && $inputs['expert'] !== '')
+                $dataProvider->where('expert', $inputs['expert']);
+
+            if(isset($inputs['teacher']) && $inputs['teacher'] !== '')
+                $dataProvider->where('teacher', $inputs['teacher']);
+
+            if(isset($inputs['collaborator']) && $inputs['collaborator'] !== '')
+                $dataProvider->where('collaborator', $inputs['collaborator']);
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -458,6 +467,24 @@ class UserController extends Controller
                 'name' => 'status',
                 'type' => 'select',
                 'options' => User::getUserStatus(),
+            ],
+            [
+                'title' => 'Chuyên Gia',
+                'name' => 'expert',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
+            ],
+            [
+                'title' => 'Giảng Viên',
+                'name' => 'teacher',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
+            ],
+            [
+                'title' => 'Cộng Tác Viên',
+                'name' => 'collaborator',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
             ],
         ]);
         $gridView->setFilterValues($inputs);

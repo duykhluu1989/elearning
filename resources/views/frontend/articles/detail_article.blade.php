@@ -53,13 +53,13 @@
                             echo \App\Libraries\Helpers\Utility::getValueByLocale($article, 'content');
                             ?>
 
-                            <h2>TIN TỨC LIÊN QUAN</h2>
+                            <h2>@lang('theme.relative_article')</h2>
                             <ul class="list_tintuclienquan">
-                                <li><a href=""><i class="fa fa-check-square-o" aria-hidden="true"></i> Phasellus a lacinia odio. Sed laoreet tellus lacus, eu euismod risus condimentum eu. </a></li>
-                                <li><a href=""><i class="fa fa-check-square-o" aria-hidden="true"></i> Praesent nec urna eget lectus tincidunt euismod. In a bibendum justo. </a></li>
-                                <li><a href=""><i class="fa fa-check-square-o" aria-hidden="true"></i> Ut ut pretium justo, ut semper magna. Aliquam in pretium lorem. </a></li>
-                                <li><a href=""><i class="fa fa-check-square-o" aria-hidden="true"></i> Integer eu metus egestas, sollicitudin nulla in, aliquet justo.</a></li>
-                                <li><a href=""><i class="fa fa-check-square-o" aria-hidden="true"></i> Morbi acinia lectus in justo suscipit euismod.</a></li>
+
+                                @foreach($relatedArticles as $relatedArticle)
+                                    <li><a href="{{ action('Frontend\ArticleController@detailArticle', ['id' => $relatedArticle->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($relatedArticle, 'slug')]) }}"><i class="fa fa-check-square-o" aria-hidden="true"></i>{{ \App\Libraries\Helpers\Utility::getValueByLocale($relatedArticle, 'name') }}</a></li>
+                                @endforeach
+
                             </ul>
                         </div>
                     </div>

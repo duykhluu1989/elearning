@@ -100,5 +100,6 @@ return [
     'sign_out' => 'Đăng xuất',
     'all_article' => 'Tất cả bài viết',
     'all_expert' => 'Các tác giả',
+    'relative_article' => 'Bài viết liên quan',
 
 ];

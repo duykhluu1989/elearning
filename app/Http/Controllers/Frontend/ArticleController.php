@@ -76,7 +76,7 @@ class ArticleController extends Controller
             $query->select('id');
         }, 'user.profile' => function($query) {
             $query->select('user_id', 'name');
-        }])->select('id', 'user_id', 'name', 'name_en', 'short_description', 'short_description_en', 'image', 'content', 'content_en')
+        }])->select('id', 'user_id', 'name', 'name_en', 'short_description', 'short_description_en', 'image', 'content', 'content_en', 'published_at')
             ->where('id', $id)
             ->where('type', Article::TYPE_EXPERT_ARTICLE_DB)
             ->where('status', Course::STATUS_PUBLISH_DB)
@@ -116,9 +116,19 @@ class ArticleController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        $relatedArticles = Article::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('type', Article::TYPE_EXPERT_ARTICLE_DB)
+            ->where('status', Course::STATUS_PUBLISH_DB)
+            ->where('published_at', '<=', $article->published_at)
+            ->where('id', '<>', $article->id)
+            ->limit(Utility::FRONTEND_HOME_ITEM_LIMIT)
+            ->orderBy('published_at', 'desc')
+            ->get();
+
         return view('frontend.articles.detail_article', [
             'article' => $article,
             'experts' => $experts,
+            'relatedArticles' => $relatedArticles,
         ]);
     }
 }
