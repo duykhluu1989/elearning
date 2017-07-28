@@ -22,7 +22,9 @@ class CollaboratorController extends Controller
             ->with(['collaboratorInformation.parentCollaborator' => function($query) {
                 $query->select('id', 'user_id');
             }, 'collaboratorInformation.parentCollaborator.user' => function($query) {
-                $query->select('id', 'username');
+                $query->select('id', 'email');
+            }, 'collaboratorInformation.parentCollaborator.user.profile' => function($query) {
+                $query->select('user_id', 'name');
             }])
             ->find($id);
 
@@ -39,45 +41,53 @@ class CollaboratorController extends Controller
             ]);
 
             $validator->after(function($validator) use(&$inputs, $collaborator) {
-                if(!empty($inputs['parent_username']))
+                if(!empty($inputs['parent_user_name']))
                 {
-                    $user = User::select('id')
-                        ->with(['collaboratorInformation' => function($query) {
-                            $query->select('id', 'user_id');
-                        }])
-                        ->where('username', $inputs['parent_username'])
-                        ->first();
+                    $userNameParts = explode(' - ', $inputs['parent_user_name']);
 
-                    if(!empty($user))
+                    if(count($userNameParts) == 2)
                     {
-                        if(!empty($user->collaboratorInformation))
+                        $user = User::with(['collaboratorInformation' => function($query) {
+                            $query->select('id', 'user_id', 'rank_id', 'parent_id');
+                        }])->select('user.id')
+                            ->join('profile', 'user.id', '=', 'profile.user_id')
+                            ->where('user.email', $userNameParts[1])
+                            ->where('profile.name', $userNameParts[0])
+                            ->first();
+
+                        if(!empty($user))
                         {
-                            if($user->collaboratorInformation->rank->code != Setting::COLLABORATOR_MANAGER)
+                            if(!empty($user->collaboratorInformation))
                             {
-                                $tempParentCollaborator = $user->collaboratorInformation;
-
-                                do
+                                if($user->collaboratorInformation->rank->code == Setting::COLLABORATOR_MANAGER)
                                 {
-                                    if($tempParentCollaborator->id == $collaborator->collaboratorInformation->id)
+                                    $tempParentCollaborator = $user->collaboratorInformation;
+
+                                    do
                                     {
-                                        $validator->errors()->add('parent_username', 'Quản Lý Không Được Là Cộng Tác Viên Cấp Dưới Của Chính Nó');
-                                        break;
+                                        if($tempParentCollaborator->id == $collaborator->collaboratorInformation->id)
+                                        {
+                                            $validator->errors()->add('parent_user_name', 'Quản Lý Không Được Là Cộng Tác Viên Cấp Dưới Của Chính Nó');
+                                            break;
+                                        }
+
+                                        $tempParentCollaborator = $tempParentCollaborator->parentCollaborator;
                                     }
+                                    while(!empty($tempParentCollaborator));
 
-                                    $tempParentCollaborator = $tempParentCollaborator->parentCollaborator;
+                                    $inputs['parent_id'] = $user->collaboratorInformation->id;
                                 }
-                                while(!empty($tempParentCollaborator));
-
-                                $inputs['parent_id'] = $user->collaboratorInformation->id;
+                                else
+                                    $validator->errors()->add('parent_user_name', 'Cộng Tác Viên Không Phải Cấp Quản Lý');
                             }
                             else
-                                $validator->errors()->add('parent_username', 'Cộng Tác Viên Không Phải Cấp Quản Lý');
+                                $validator->errors()->add('parent_user_name', 'Thành Viên Không Phải Là Cộng Tác Viên');
                         }
                         else
-                            $validator->errors()->add('parent_username', 'Thành Viên Không Phải Là Cộng Tác Viên');
+                            $validator->errors()->add('parent_user_name', 'Cộng Tác Viên Không Tồn Tại');
                     }
                     else
-                        $validator->errors()->add('parent_username', 'Cộng Tác Viên Không Tồn Tại');
+                        $validator->errors()->add('parent_user_name', 'Cộng Tác Viên Không Tồn Tại');
                 }
 
                 $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
@@ -120,6 +130,8 @@ class CollaboratorController extends Controller
             {
                 if(!empty($inputs['parent_id']))
                     $collaborator->collaboratorInformation->parent_id = $inputs['parent_id'];
+                else
+                    $collaborator->collaboratorInformation->parent_id = null;
 
                 $collaborator->collaboratorInformation->status = isset($inputs['status']) ? Collaborator::STATUS_ACTIVE_DB : Collaborator::STATUS_INACTIVE_DB;
                 $collaborator->collaboratorInformation->rank_id = $inputs['rank_id'];

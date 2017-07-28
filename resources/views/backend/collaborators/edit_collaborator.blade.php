@@ -23,11 +23,11 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <div class="form-group{{ $errors->has('parent_username') ? ' has-error': '' }}">
+                        <div class="form-group{{ $errors->has('parent_user_name') ? ' has-error': '' }}">
                             <label>Quản Lý</label>
-                            <input type="text" class="form-control" id="ParentInput" name="parent_username" placeholder="username" value="{{ old('parent_username', (!empty($collaborator->collaboratorInformation->parentCollaborator) ? $collaborator->collaboratorInformation->parentCollaborator->user->username : '')) }}" />
-                            @if($errors->has('parent_username'))
-                                <span class="help-block">{{ $errors->first('parent_username') }}</span>
+                            <input type="text" class="form-control" id="ParentInput" name="parent_user_name" placeholder="name - email" value="{{ old('parent_user_name', (!empty($collaborator->collaboratorInformation->parentCollaborator) ? ($collaborator->collaboratorInformation->parentCollaborator->user->profile->name . '-' . $collaborator->collaboratorInformation->parentCollaborator->user->email) : '')) }}" />
+                            @if($errors->has('parent_user_name'))
+                                <span class="help-block">{{ $errors->first('parent_user_name') }}</span>
                             @endif
                         </div>
                     </div>
@@ -160,11 +160,11 @@
                 });
             },
             select: function(event, ui) {
-                $(this).val(ui.item.username);
+                $(this).val(ui.item.name + ' - ' + ui.item.email);
                 return false;
             }
         }).autocomplete('instance')._renderItem = function(ul, item) {
-            return $('<li>').append('<a>' + item.username + '</a>').appendTo(ul);
+            return $('<li>').append('<a>' + item.name + ' - ' + item.email + '</a>').appendTo(ul);
         };
 
         $('input[type="radio"][name="rank_id"]').change(function() {
