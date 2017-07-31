@@ -122,6 +122,49 @@ class CourseController extends Controller
         ]);
     }
 
+    public function adminCourse($sort = null)
+    {
+        $listCategories = Category::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('status', Utility::ACTIVE_DB)
+            ->where('parent_status', Utility::ACTIVE_DB)
+            ->whereNull('parent_id')
+            ->orderBy('order', 'desc')
+            ->get();
+
+        $builder = Course::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'promotionPrice' => function($query) {
+            $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+        }])->select('course.id', 'course.user_id', 'course.name', 'course.name_en', 'course.price', 'course.image', 'course.slug', 'course.slug_en', 'course.bought_count', 'course.view_count')
+            ->where('course.status', Course::STATUS_PUBLISH_DB)
+            ->where('course.category_status', Utility::ACTIVE_DB)
+            ->orderBy('course.published_at', 'desc');
+
+        if($sort == 'highlight')
+            $builder->where('course.highlight', Utility::ACTIVE_DB);
+        else if($sort == 'promotion')
+        {
+            $time = date('Y-m-d H:i:s');
+
+            $builder->join('promotion_price', 'course.id', '=', 'promotion_price.course_id')
+                ->where('promotion_price.status', Utility::ACTIVE_DB)
+                ->where('promotion_price.start_time', '<=', $time)
+                ->where('promotion_price.end_time', '>=', $time);
+        }
+        else
+            $sort = null;
+
+        $courses = $builder->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
+
+        return view('frontend.courses.admin_course', [
+            'courses' => $courses,
+            'listCategories' => $listCategories,
+            'sort' => $sort,
+        ]);
+    }
+
     public function detailCourse(Request $request, $id, $slug)
     {
         $course = Course::with(['user' => function($query) {

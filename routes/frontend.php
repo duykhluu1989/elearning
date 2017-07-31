@@ -50,6 +50,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
 
     Route::get('previewCourse/{id}/{slug}', 'CourseController@previewCourse');
 
+    Route::get('course/{sort?}', 'CourseController@adminCourse');
+
     Route::get('course/{id}/{slug}', 'CourseController@detailCourse');
 
     Route::get('course/{id}/{slug}/review', 'CourseController@detailCourseReview');
