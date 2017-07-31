@@ -60,6 +60,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
     Route::get('course/{id}/{slug}/review', 'CourseController@detailCourseReview');
 
+    Route::get('newCourse', 'CourseController@newCourse');
+
     Route::get('cart', 'OrderController@editCart');
 
     Route::get('cart/addItem', 'OrderController@addCartItem');

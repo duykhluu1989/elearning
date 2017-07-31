@@ -371,4 +371,21 @@ class CourseController extends Controller
 
         return array();
     }
+
+    public function newCourse(Request $request)
+    {
+        if($request->ajax() == false)
+            return view('frontend.errors.404');
+
+        if(request()->hasCookie(Utility::VISIT_START_TIME_COOKIE_NAME))
+        {
+            $newCourses = self::getNewCourses();
+
+            return view('frontend.courses.partials.new_course', [
+                'newCourses' => $newCourses,
+            ]);
+        }
+
+        return '';
+    }
 }

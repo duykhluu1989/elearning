@@ -108,7 +108,7 @@
         ?>
 
         <a class="btn btnBGmoi" href="#modal_BGM" data-toggle="modal">
-            <span class="count">{{ count($newCourses) }}</span>
+            <span class="count" id="NewCourseModalCount">{{ count($newCourses) }}</span>
             <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> @lang('theme.new_course')
         </a>
 
@@ -151,23 +151,9 @@
                         <h4 class="modal-title text-center">@lang('theme.new_course')</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="baivietmoi_content">
+                        <div class="baivietmoi_content" id="NewCourseModalContent">
 
-                            @foreach($newCourses as $newCourse)
-                                <article>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $newCourse->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'slug')]) }}">
-                                                <img src="{{ $newCourse->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'name') }}" class="img-responsive w100p">
-                                            </a>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <h4>{{ \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'name') }}</h4>
-                                            <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'short_description') }}</p>
-                                        </div>
-                                    </div>
-                                </article>
-                            @endforeach
+                            @include('frontend.courses.partials.new_course')
 
                         </div>
                     </div>
@@ -176,3 +162,34 @@
         </div>
     </section>
 </footer>
+
+@push('scripts')
+    <script type="text/javascript">
+        var baseNewCourseTimeout = 0;
+
+        var newCourseTimeInterval = setInterval(function() {
+            $.ajax({
+                url: '{{ action('Frontend\CourseController@newCourse') }}',
+                type: 'get',
+                success: function(result) {
+                    if(result)
+                    {
+                        $('#NewCourseModalContent').html(result);
+
+                        var countNewCourse = result.split('class="row"').length;
+
+                        if(countNewCourse > 0)
+                            countNewCourse -= 1;
+
+                        $('#NewCourseModalCount').html(countNewCourse);
+                    }
+                }
+            });
+
+            baseNewCourseTimeout += 300;
+
+            if(baseNewCourseTimeout >= 3600)
+                clearInterval(newCourseTimeInterval);
+        }, 300000);
+    </script>
+@endpush
