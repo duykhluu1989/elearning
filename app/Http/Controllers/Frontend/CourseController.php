@@ -70,6 +70,8 @@ class CourseController extends Controller
                 ->where('promotion_price.start_time', '<=', $time)
                 ->where('promotion_price.end_time', '>=', $time);
         }
+        else if($sort == 'free')
+            $builder->where('course.price', 0);
         else
             $sort = null;
 
@@ -143,7 +145,10 @@ class CourseController extends Controller
             ->orderBy('course.published_at', 'desc');
 
         if($sort == 'highlight')
+        {
             $builder->where('course.highlight', Utility::ACTIVE_DB);
+            $listTitle = trans('theme.highlight_course');
+        }
         else if($sort == 'promotion')
         {
             $time = date('Y-m-d H:i:s');
@@ -152,9 +157,19 @@ class CourseController extends Controller
                 ->where('promotion_price.status', Utility::ACTIVE_DB)
                 ->where('promotion_price.start_time', '<=', $time)
                 ->where('promotion_price.end_time', '>=', $time);
+
+            $listTitle = trans('theme.discount_course');
+        }
+        else if($sort == 'free')
+        {
+            $builder->where('course.price', 0);
+            $listTitle = trans('theme.free_course');
         }
         else
+        {
             $sort = null;
+            $listTitle = trans('theme.all_course');
+        }
 
         $courses = $builder->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
 
@@ -162,6 +177,7 @@ class CourseController extends Controller
             'courses' => $courses,
             'listCategories' => $listCategories,
             'sort' => $sort,
+            'listTitle' => $listTitle,
         ]);
     }
 

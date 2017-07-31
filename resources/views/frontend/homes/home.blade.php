@@ -73,12 +73,9 @@
 
                         </div>
                     </div>
-
-                    @if(count($rootCategories) > 0)
-                        <div class="col-lg-12 text-center mt30">
-                            <a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategories[0]->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategories[0], 'slug')]) }}" class="btn btnShowall">@lang('theme.all_course')<i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                        </div>
-                    @endif
+                    <div class="col-lg-12 text-center mt30">
+                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'free']) }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -116,12 +113,9 @@
 
                         </div>
                     </div>
-
-                    @if(count($rootCategories) > 0)
-                        <div class="col-lg-12 text-center mt30">
-                            <a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategories[0]->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategories[0], 'slug')]) }}" class="btn btnShowall">@lang('theme.all_course')<i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                        </div>
-                    @endif
+                    <div class="col-lg-12 text-center mt30">
+                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'promotion']) }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -159,12 +153,9 @@
 
                         </div>
                     </div>
-
-                    @if(count($rootCategories) > 0)
-                        <div class="col-lg-12 text-center mt30">
-                            <a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategories[0]->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategories[0], 'slug')]) }}" class="btn btnShowall">@lang('theme.all_course')<i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                        </div>
-                    @endif
+                    <div class="col-lg-12 text-center mt30">
+                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'highlight']) }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -284,7 +275,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12 text-center mt30">
-                        <a href="{{ action('Frontend\ArticleController@adminExpert') }}" class="btn btnShowall">@lang('theme.all_article')<i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                        <a href="{{ action('Frontend\ArticleController@adminExpert') }}" class="btn btnShowall">@lang('theme.all_article') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -375,12 +366,9 @@
 
                             </div>
                         </div>
-
-                        @if(count($rootCategories) > 0)
-                            <div class="col-lg-12 text-center mt30">
-                                <a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategories[0]->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategories[0], 'slug')]) }}" class="btn btnShowall">@lang('theme.all_course')<i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                            </div>
-                        @endif
+                        <div class="col-lg-12 text-center mt30">
+                            <a href="{{ action('Frontend\CourseController@adminCourse') }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -492,14 +480,11 @@
                         </ul>
                     </div>
                 </div>
-
-                @if(count($rootCategories) > 0)
-                    <div class="row">
-                        <div class="col-lg-12 text-center mt30">
-                            <a href="{{ action('Frontend\CourseController@detailCategory', ['id' => $rootCategories[0]->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($rootCategories[0], 'slug')]) }}" class="btn btnShowall">@lang('theme.all_course')<i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                        </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center mt30">
+                        <a href="{{ action('Frontend\CourseController@adminCourse') }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                     </div>
-                @endif
+                </div>
             </div>
         </section>
 
