@@ -10,6 +10,8 @@
 
     @include('frontend.layouts.partials.header')
 
+    @include('frontend.layouts.partials.headtext')
+
     @include('frontend.articles.partials.article_breadcrumb')
 
     <main>

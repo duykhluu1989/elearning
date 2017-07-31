@@ -8,6 +8,8 @@
 
     @include('frontend.layouts.partials.header')
 
+    @include('frontend.layouts.partials.headtext')
+
     @include('frontend.articles.partials.expert_breadcrumb')
 
     <main>

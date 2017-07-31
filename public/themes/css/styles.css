@@ -433,11 +433,7 @@ section {padding: 60px 0;}
     top: 40%;
 }
 .banner_qc {
-    background: url('../images/qc_ngang.jpg') no-repeat;
-    background-size: cover;
-    -webkit-background-size: 100%;
-    background-size: 100%;
-    min-height: 366px;
+    border-top: 1px solid #ccc;
 }
 .owl_chuyengia .item {
     text-align: center;
@@ -573,8 +569,8 @@ ul.list_tuvanpl li {
     margin: 0 auto;
 }
 .tintucnoibat {
-    border-top: 2px solid #333;
-    border-bottom: 2px solid #333;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 .owl_tintucnoibat .item a {
     width: 200px;
@@ -717,8 +713,8 @@ ul.list_social li:hover a {
     text-align: center;
     padding: 0 5px;
     position: fixed;
-    bottom: 150px;
-    right: 20px;
+    bottom: 120px;
+    right: 30px;
     display: none;
     z-index: 2000;  
     -webkit-transition: -webkit-transform 0.3s;
@@ -734,6 +730,7 @@ ul.list_social li:hover a {
 }
 .btnCart {
     position: relative;
+    z-index: 100;
     width: 30px;
     height: 40px;
     cursor: pointer;
@@ -742,7 +739,7 @@ ul.list_social li:hover a {
 .btnCart:hover .box_cart {
   visibility: visible;
   opacity: 1;
-  transition: visibility 0s linear 0s, opacity 300ms;
+  transition: visibility 0s linear 0s, opacity 100ms;
 
 }
 .box_cart {
@@ -758,7 +755,7 @@ ul.list_social li:hover a {
     box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0s linear 300ms, opacity 300ms;
+    transition: visibility 0s linear 100ms, opacity 100ms;
 }
 .arrow_top {
   width: 50px;
@@ -831,18 +828,23 @@ ul.list_social li:hover a {
   position: relative;
 }
 .qc_left {
-  position: fixed;
+  position: absolute;
   z-index: 10;
-  left: 0;
-  top: 30%;
+  left: -200px;
+  top: 15%;
   display: none;
+  width: 200px;
 }
 .qc_right {
-  position: fixed;
+  position: absolute;
   z-index: 10;
-  right: 0;
-  top: 30%;
+  right: -200px;
+  top: 15%;
   display: none;
+  width: 200px;
+}
+.qc_right img {
+  width: 100%;
 }
 .btnClose {
   display: block;
@@ -1756,3 +1758,18 @@ ul.list_tintuc li:hover a {
   border-radius: 3px;
 }
 
+
+#page {
+  position: relative;
+}
+.live_chat {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #FDBE34;
+  color: #333;
+  position: fixed;
+  z-index: 200;
+  bottom: 60px;
+  right: 30px;
+  border-radius: 3px;
+}

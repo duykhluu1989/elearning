@@ -6,6 +6,8 @@
 
     @include('frontend.layouts.partials.header')
 
+    @include('frontend.layouts.partials.headtext')
+
     <main>
         <section class="bg_gray">
             <div class="container">

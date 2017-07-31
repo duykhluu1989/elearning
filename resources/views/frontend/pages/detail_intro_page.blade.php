@@ -10,6 +10,8 @@
 
     @include('frontend.layouts.partials.header')
 
+    @include('frontend.layouts.partials.headtext')
+
     @include('frontend.layouts.partials.breabcrumb', ['breabcrumbTitle' => \App\Libraries\Helpers\Utility::getValueByLocale($page, 'name')])
 
     <main>

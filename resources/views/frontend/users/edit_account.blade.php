@@ -6,6 +6,8 @@
 
     @include('frontend.layouts.partials.header')
 
+    @include('frontend.layouts.partials.headtext')
+
     @include('frontend.layouts.partials.breabcrumb', ['breabcrumbTitle' => trans('theme.account')])
 
     <main>
