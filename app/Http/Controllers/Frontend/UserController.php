@@ -407,6 +407,7 @@ class UserController extends Controller
                     'last_name' => 'nullable|string|max:100',
                     'email' => 'required|email|max:255|unique:user,email',
                     'password' => 'required|alpha_dash|min:6|max:32',
+                    'bank_number' => 'nullable|numeric',
                 ]);
 
                 if($validator->passes())
@@ -444,6 +445,9 @@ class UserController extends Controller
                         $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
                         $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
                         $collaborator->status = Collaborator::STATUS_PENDING_DB;
+                        $collaborator->bank = $inputs['bank'];
+                        $collaborator->bank_holder = $inputs['bank_holder'];
+                        $collaborator->bank_number = $inputs['bank_number'];
                         $collaborator->save();
 
                         DB::commit();
@@ -464,36 +468,50 @@ class UserController extends Controller
             }
             else
             {
-                try
+                $inputs = $request->all();
+
+                $validator = Validator::make($inputs, [
+                    'bank_number' => 'nullable|numeric',
+                ]);
+
+                if($validator->passes())
                 {
-                    DB::beginTransaction();
+                    try
+                    {
+                        DB::beginTransaction();
 
-                    $user = auth()->user();
-                    $user->collaborator = Utility::ACTIVE_DB;
-                    $user->save();
+                        $user = auth()->user();
+                        $user->collaborator = Utility::ACTIVE_DB;
+                        $user->save();
 
-                    $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
-                    $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
+                        $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+                        $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
 
-                    $collaborator = new Collaborator();
-                    $collaborator->user_id = $user->id;
-                    $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
-                    $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
-                    $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
-                    $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
-                    $collaborator->status = Collaborator::STATUS_PENDING_DB;
-                    $collaborator->save();
+                        $collaborator = new Collaborator();
+                        $collaborator->user_id = $user->id;
+                        $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
+                        $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
+                        $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
+                        $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
+                        $collaborator->status = Collaborator::STATUS_PENDING_DB;
+                        $collaborator->bank = $inputs['bank'];
+                        $collaborator->bank_holder = $inputs['bank_holder'];
+                        $collaborator->bank_number = $inputs['bank_number'];
+                        $collaborator->save();
 
-                    DB::commit();
+                        DB::commit();
 
-                    return 'Success';
+                        return 'Success';
+                    }
+                    catch(\Exception $e)
+                    {
+                        DB::rollBack();
+
+                        return json_encode(['bank' => [$e->getMessage()]]);
+                    }
                 }
-                catch(\Exception $e)
-                {
-                    DB::rollBack();
-
-                    return $e->getMessage();
-                }
+                else
+                    return json_encode($validator->errors()->messages());
             }
         }
         else

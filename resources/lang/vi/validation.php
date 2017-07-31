@@ -133,6 +133,7 @@ return [
         'old_password' => 'mật khẩu hiện tại',
         'new_password' => 'mật khẩu mới',
         're_new_password' => 'xác nhận mật khẩu mới',
+        'bank_number' => 'số tài khoản'
     ],
 
 ];

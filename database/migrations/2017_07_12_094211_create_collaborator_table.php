@@ -22,6 +22,9 @@ class CreateCollaboratorTable extends Migration
             $table->double('commission_percent')->unsigned()->default(1);
             $table->unsignedInteger('parent_id')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
+            $table->string('bank', 255)->nullable();
+            $table->string('bank_holder', 255)->nullable();
+            $table->string('bank_number', 20)->nullable();
         });
     }
 

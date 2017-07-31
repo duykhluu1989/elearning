@@ -38,6 +38,7 @@ class CollaboratorController extends Controller
             $validator = Validator::make($inputs, [
                 'create_discount_percent' => 'required|integer|min:1|max:99',
                 'commission_percent' => 'required|integer|min:1|max:99',
+                'bank_number' => 'nullable|numeric',
             ]);
 
             $validator->after(function($validator) use(&$inputs, $collaborator) {
@@ -137,6 +138,9 @@ class CollaboratorController extends Controller
                 $collaborator->collaboratorInformation->rank_id = $inputs['rank_id'];
                 $collaborator->collaboratorInformation->create_discount_percent = $inputs['create_discount_percent'];
                 $collaborator->collaboratorInformation->commission_percent = $inputs['commission_percent'];
+                $collaborator->collaboratorInformation->bank = $inputs['bank'];
+                $collaborator->collaboratorInformation->bank_holder = $inputs['bank_holder'];
+                $collaborator->collaboratorInformation->bank_number = $inputs['bank_number'];
                 $collaborator->collaboratorInformation->save();
 
                 return redirect()->action('Backend\CollaboratorController@editCollaborator', ['id' => $collaborator->id])->with('messageSuccess', 'Thành Công');

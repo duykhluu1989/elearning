@@ -122,6 +122,26 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Ngân Hàng</label>
+                            <input type="text" class="form-control" name="bank" value="{{ old('bank', $collaborator->collaboratorInformation->bank) }}" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Chủ Tài Khoản</label>
+                            <input type="text" class="form-control" name="bank_holder" value="{{ old('bank_holder', $collaborator->collaboratorInformation->bank_holder) }}" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Số Tài Khoản</label>
+                            <input type="text" class="form-control" name="bank_number" value="{{ old('bank_number', $collaborator->collaboratorInformation->bank_number) }}" />
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>

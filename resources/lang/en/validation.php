@@ -121,6 +121,7 @@ return [
         'old_password' => 'old password',
         'new_password' => 'new password',
         're_new_password' => 'confirm new password',
+        'bank_number' => 'bank number',
     ],
 
 ];
