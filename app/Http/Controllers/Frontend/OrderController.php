@@ -71,7 +71,7 @@ class OrderController extends Controller
 
             self::setCookieCartToken($cart->token);
 
-            return view('frontend.orders.cart', [
+            return view('frontend.orders.partials.cart', [
                 'cart' => self::generateFullCart($cart),
             ]);
         }

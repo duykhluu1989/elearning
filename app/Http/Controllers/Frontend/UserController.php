@@ -14,6 +14,8 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Models\Setting;
 use App\Models\Collaborator;
+use App\Models\Order;
+use App\Models\UserCourse;
 use Facebook\Facebook;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
@@ -516,5 +518,41 @@ class UserController extends Controller
         }
         else
             return '';
+    }
+
+    public function adminOrder()
+    {
+        $user = auth()->user();
+
+        $orders = Order::with(['orderItems' => function($query) {
+            $query->select('order_id', 'course_id');
+        }, 'orderItems.course' => function($query) {
+            $query->select('id', 'name', 'name_en');
+        }])->select('id', 'number', 'created_at', 'cancelled_at', 'payment_status', 'total_price')
+            ->where('user_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
+
+        return view('frontend.users.admin_order', [
+            'orders' => $orders,
+        ]);
+    }
+
+    public function adminCourse()
+    {
+        $user = auth()->user();
+
+        $userCourses = UserCourse::with(['course' => function($query) {
+            $query->select('id', 'category_id', 'name', 'name_en', 'slug', 'slug_en', 'item_count');
+        }, 'course.category' => function($query) {
+            $query->select('id', 'name', 'name_en');
+        }])->select('id', 'user_id', 'course_id', 'course_item_tracking')
+            ->where('user_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
+
+        return view('frontend.users.admin_course', [
+            'userCourses' => $userCourses,
+        ]);
     }
 }

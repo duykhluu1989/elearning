@@ -22,6 +22,10 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setRe
 
         Route::match(['get', 'post'], 'account', 'UserController@editAccount');
 
+        Route::get('account/order', 'UserController@adminOrder');
+
+        Route::get('account/course', 'UserController@adminCourse');
+
         Route::match(['get', 'post'], 'order', 'OrderController@placeOrder');
 
         Route::post('discount', 'OrderController@useDiscountCode');

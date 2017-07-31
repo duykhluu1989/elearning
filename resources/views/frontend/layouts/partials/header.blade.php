@@ -52,7 +52,7 @@
                         </li>
                         <li id="CartDetail">
 
-                            @include('frontend.orders.cart', ['cart' => \App\Http\Controllers\Frontend\OrderController::getFullCart()])
+                            @include('frontend.orders.partials.cart', ['cart' => \App\Http\Controllers\Frontend\OrderController::getFullCart()])
 
                         </li>
                     </ul>

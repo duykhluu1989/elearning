@@ -116,5 +116,14 @@ return [
     'old_password_error' => 'Old password is not correct',
     'sent' => 'Sent',
     'free' => 'Free',
+    'user_order' => 'Your orders',
+    'user_course' => 'Your courses',
+    'status' => 'Status',
+    'time' => 'Time',
+    'cancelled' => 'Cancelled',
+    'unpaid' => 'Unpaid',
+    'paid' => 'Paid',
+    'category' => 'Category',
+    'complete' => 'Complete',
 
 ];

@@ -17,9 +17,9 @@
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                         <div class="navleft">
                             <h5>@lang('theme.account')</h5>
-                            <ul class="list_navLeft">
-                                <li class="active"><a href="javascript:void(0)">@lang('theme.account_general')</a></li>
-                            </ul>
+
+                            @include('frontend.users.partials.navigation')
+
                         </div>
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">

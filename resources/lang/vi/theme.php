@@ -116,5 +116,14 @@ return [
     'old_password_error' => 'Mật khẩu hiện tại không chính xác',
     'sent' => 'Đã gửi',
     'free' => 'Miễn phí',
+    'user_order' => 'Đơn hàng của bạn',
+    'user_course' => 'Khóa học của bạn',
+    'status' => 'Trạng thái',
+    'time' => 'Thời gian',
+    'cancelled' => 'Đã hủy',
+    'unpaid' => 'Chưa thanh toán',
+    'paid' => 'Đã thanh toán',
+    'category' => 'Chủ đề',
+    'complete' => 'Hoàn thành',
 
 ];
