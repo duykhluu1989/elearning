@@ -38,12 +38,10 @@
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade in active">
-                                    @foreach($courses as $course)
-                                        <div class="row item_khoahoc">
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                    <div class="row">
+                                        @foreach($courses as $course)
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 item_khoahoc">
                                                 <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive w100p"></a>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                 <h4><a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}</a></h4>
                                                 <p class="name_gv">{{ $course->user->profile->name }}</p>
                                                 <p class="price">
@@ -53,16 +51,14 @@
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                     @endif
                                                 </p>
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                                 <div class="ticker2">
                                                     <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
                                                 </div>
                                                 <a href="javascript:void(0)" class="btn btnYellow btn-block PreviewCourse" data-url="{{ action('Frontend\CourseController@previewCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">@lang('theme.preview')</a>
                                                 <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btnRed btn-block">@lang('theme.view_detail')</a>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                     <div class="row">
                                         <div class="col-lg-12 text-center">
                                             <ul class="pagination">
