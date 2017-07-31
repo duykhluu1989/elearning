@@ -96,6 +96,27 @@ class Discount extends Model
         if(empty($discount))
             return $result;
 
+        if(!empty($discount->collaborator_id))
+        {
+            if(request()->hasCookie(Utility::REFERRAL_COOKIE_NAME))
+            {
+                $referral = User::select('user.id')
+                    ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
+                    ->where('user.status', Utility::ACTIVE_DB)
+                    ->where('collaborator.status', Collaborator::STATUS_ACTIVE_DB)
+                    ->where('collaborator.code', request()->cookie(Utility::REFERRAL_COOKIE_NAME))
+                    ->first();
+
+                if(!empty($referral) && $referral->id == auth()->user()->id)
+                    $referral = null;
+
+                if(empty($referral) || $referral->id != $discount->collaborator_id)
+                    return $result;
+            }
+            else
+                return $result;
+        }
+
         $courses = Course::with(['promotionPrice' => function($query) {
             $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
         }, 'categoryCourses' => function($query) {
