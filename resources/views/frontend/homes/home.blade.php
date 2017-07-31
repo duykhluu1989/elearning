@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12 text-center mt30">
-                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'free']) }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'free']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12 text-center mt30">
-                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'promotion']) }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'promotion']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -154,7 +154,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12 text-center mt30">
-                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'highlight']) }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'highlight']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
