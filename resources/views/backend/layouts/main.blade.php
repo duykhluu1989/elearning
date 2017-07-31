@@ -28,6 +28,45 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
+                    <li class="dropdown notifications-menu">
+                        <?php
+                        $countPendingOrder = \App\Models\Order::where('payment_status', \App\Models\Order::PAYMENT_STATUS_PENDING_DB)->whereNull('cancelled_at')->count('id');
+                        $countNewCollaborator = \App\Models\Collaborator::where('status', \App\Models\Collaborator::STATUS_PENDING_DB)->count('id');
+                        $countNewReview = \App\Models\CourseReview::where('status', \App\Models\CourseReview::STATUS_PENDING_DB)->count('id');
+                        ?>
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning">{{ $countPendingOrder + $countNewCollaborator + $countNewReview }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <ul class="menu">
+                                    @if($countPendingOrder > 0)
+                                        <li>
+                                            <a href="{{ action('Backend\OrderController@adminOrder') }}">
+                                                <i class="fa fa-inbox text-yellow"></i> {{ $countPendingOrder . ' đơn hàng chưa thanh toán' }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if($countNewCollaborator > 0)
+                                        <li>
+                                            <a href="{{ action('Backend\UserController@adminUserCollaborator') }}">
+                                                <i class="fa fa-user text-yellow"></i> {{ $countNewCollaborator . ' cộng tác viên mới chờ duyệt' }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if($countNewReview > 0)
+                                        <li>
+                                            <a href="{{ action('Backend\CourseController@adminCourseReview') }}">
+                                                <i class="fa fa-comment-o text-yellow"></i> {{ $countNewReview . ' nhận xét khóa học mới chờ duyệt' }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             @if(!empty(auth()->user()->avatar))
