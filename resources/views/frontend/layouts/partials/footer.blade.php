@@ -100,14 +100,21 @@
                 </div>
             </div>
         </div>
+
         <a href='#' class="scroll_to_top"><i class="fa fa-angle-double-up fa-2x" aria-hidden="true"></i></a>
+
+        <?php
+        $newCourses = \App\Http\Controllers\Frontend\CourseController::getNewCourses();
+        ?>
+
         <a class="btn btnBGmoi" href="#modal_BGM" data-toggle="modal">
-            <span class="count">3</span>
-            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> BÀI GIẢNG MỚI
+            <span class="count">{{ count($newCourses) }}</span>
+            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> @lang('theme.new_course')
         </a>
+
         <a class="btn btnTTmoi" href="#modal_TTM" data-toggle="modal">
             <span class="count">3</span>
-            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> TIN TỨC MỚI
+            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> @lang('theme.news')
         </a>
 
         <div id="modal_TTM" class="modal fade baivietmoi">
@@ -130,97 +137,38 @@
                                     </div>
                                 </div>
                             </article>
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div id="modal_BGM" class="modal fade baivietmoi">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title text-center">BÀI GIẢNG MỚI</h4>
+                        <h4 class="modal-title text-center">@lang('theme.new_course')</h4>
                     </div>
                     <div class="modal-body">
                         <div class="baivietmoi_content">
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
+
+                            @foreach($newCourses as $newCourse)
+                                <article>
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $newCourse->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'slug')]) }}">
+                                                <img src="{{ $newCourse->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'name') }}" class="img-responsive w100p">
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <h4>{{ \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'name') }}</h4>
+                                            <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($newCourse, 'short_description') }}</p>
+                                        </div>
                                     </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
+                                </article>
+                            @endforeach
+
                         </div>
                     </div>
                 </div>

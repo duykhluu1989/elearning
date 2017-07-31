@@ -24,6 +24,7 @@ class Utility
     const VIEW_ARTICLE_COOKIE_NAME = 'view_article';
     const REFERRAL_COOKIE_NAME = 'referral';
     const VISITOR_COOKIE_NAME = 'visitor';
+    const VISIT_START_TIME_COOKIE_NAME = 'visit_start_time';
 
     const MINUTE_ONE_MONTH = 43200;
     const MINUTE_ONE_DAY = 14400;

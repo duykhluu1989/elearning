@@ -125,5 +125,7 @@ return [
     'paid' => 'Paid',
     'category' => 'Category',
     'complete' => 'Complete',
+    'new_course' => 'New courses',
+    'news' => 'News',
 
 ];

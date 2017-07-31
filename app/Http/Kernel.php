@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'access' => \App\Http\Middleware\Access::class,
         'locale' => \App\Http\Middleware\Locale::class,
         'setReferral' => \App\Http\Middleware\SetReferral::class,
-        'visitorCount' => \App\Http\Middleware\VisitorCount::class
+        'visitorCount' => \App\Http\Middleware\VisitorCount::class,
+        'setVisitStartTime' => \App\Http\Middleware\SetVisitStartTime::class,
     ];
 }

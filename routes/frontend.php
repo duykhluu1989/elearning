@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace' => 'Frontend', 'middleware' => ['visitorCount', 'setReferral', 'locale']], function() {
+Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', 'visitorCount', 'setReferral', 'locale']], function() {
 
     Route::group(['middleware' => 'guest'], function() {
 

@@ -125,5 +125,7 @@ return [
     'paid' => 'Đã thanh toán',
     'category' => 'Chủ đề',
     'complete' => 'Hoàn thành',
+    'new_course' => 'Khóa học mới',
+    'news' => 'Tin tức mới',
 
 ];

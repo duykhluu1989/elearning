@@ -354,4 +354,21 @@ class CourseController extends Controller
 
         return '';
     }
+
+    public static function getNewCourses()
+    {
+        if(request()->hasCookie(Utility::VISIT_START_TIME_COOKIE_NAME))
+        {
+            $newCourses = Course::select('id', 'name', 'name_en', 'image', 'slug', 'slug_en', 'short_description', 'short_description_en')
+                ->where('status', Course::STATUS_PUBLISH_DB)
+                ->where('category_status', Utility::ACTIVE_DB)
+                ->where('published_at', '>=', date('Y-m-d H:i:s', request()->cookie(Utility::VISIT_START_TIME_COOKIE_NAME)))
+                ->orderBy('published_at', 'desc')
+                ->get();
+
+            return $newCourses;
+        }
+
+        return array();
+    }
 }
