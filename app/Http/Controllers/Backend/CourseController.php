@@ -19,6 +19,7 @@ use App\Models\Tag;
 use App\Models\TagCourse;
 use App\Models\PromotionPrice;
 use App\Models\Discount;
+use App\Models\CourseReview;
 use FFMpeg\FFProbe;
 
 class CourseController extends Controller
@@ -1566,5 +1567,139 @@ class CourseController extends Controller
         $tags = Tag::where('name', 'like', '%' . $term . '%')->limit(Utility::AUTO_COMPLETE_LIMIT)->pluck('name')->toJson();
 
         return $tags;
+    }
+
+    public function adminCourseReview(Request $request)
+    {
+        $dataProvider = CourseReview::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'course' => function($query) {
+            $query->select('id', 'name');
+        }])
+            ->select('course_review.*')
+            ->orderBy('course_review.id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['user_name']))
+            {
+                $dataProvider->join('user', 'course_review.user_id', '=', 'user.id')
+                    ->join('profile', 'user.id', '=', 'profile.user_id')
+                    ->where('profile.name', 'like', '%' . $inputs['user_name'] . '%');
+            }
+
+            if(!empty($inputs['course_name']))
+            {
+                $dataProvider->join('course', 'course_review.course_id', '=', 'course.id')
+                    ->where('course.name', 'like', '%' . $inputs['course_name'] . '%');
+            }
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('course_review.status', $inputs['status']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo $row->user->profile->name;
+                },
+            ],
+            [
+                'title' => 'Khóa Học',
+                'data' => function($row) {
+                    echo $row->course->name;
+                },
+            ],
+            [
+                'title' => 'Nội dung',
+                'data' => 'detail',
+            ],
+            [
+                'title' => 'Thời Gian Nhận Xét',
+                'data' => 'created_at',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'data' => function($row) {
+                    $status = CourseReview::getCourseReviewStatus($row->status);
+                    if($row->status == CourseReview::STATUS_ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else if($row->status == CourseReview::STATUS_PENDING_DB)
+                        echo Html::span($status, ['class' => 'label label-warning']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
+        $gridView->setFilters([
+            [
+                'title' => 'Tên',
+                'name' => 'user_name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Khóa Học',
+                'name' => 'course_name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => CourseReview::getCourseReviewStatus(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
+
+        return view('backend.courses.admin_course_review', [
+            'gridView' => $gridView,
+        ]);
+    }
+
+    public function controlDeleteCourseReview(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $reviews = CourseReview::whereIn('id', explode(';', $ids))->get();
+
+        foreach($reviews as $review)
+            $review->delete();
+
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\CourseController@adminCourseReview')->with('messageSuccess', 'Thành Công');
+    }
+
+    public function controlChangeStatusCourseReview(Request $request, $status)
+    {
+        $ids = $request->input('ids');
+
+        $reviews = CourseReview::whereIn('id', explode(';', $ids))->get();
+
+        foreach($reviews as $review)
+        {
+            if($status == CourseReview::STATUS_INACTIVE_DB)
+                $review->status = CourseReview::STATUS_INACTIVE_DB;
+            else
+                $review->status = CourseReview::STATUS_ACTIVE_DB;
+
+            $review->save();
+        }
+
+        if($request->headers->has('referer'))
+            return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
+        else
+            return redirect()->action('Backend\CourseController@adminCourseReview')->with('messageSuccess', 'Thành Công');
     }
 }
