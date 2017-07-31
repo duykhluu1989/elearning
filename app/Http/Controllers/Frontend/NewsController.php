@@ -1,7 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Pharmacity
- * Date: 7/31/2017
- * Time: 6:20 PM
- */
+
+namespace App\Http\Controllers\Backend;
+
+use App\Http\Controllers\Controller;
+use App\Models\NewsCategory;
+
+class NewsController extends Controller
+{
+    public function adminCategory()
+    {
+        return view('frontend.news.admin_category');
+    }
+}
