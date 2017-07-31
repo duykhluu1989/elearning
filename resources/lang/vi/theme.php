@@ -114,5 +114,6 @@ return [
     'new_password' => 'Mật khẩu mới',
     're_new_password' => 'Xác nhận mật khẩu mới',
     'old_password_error' => 'Mật khẩu hiện tại không chính xác',
+    'sent' => 'Đã gửi',
 
 ];

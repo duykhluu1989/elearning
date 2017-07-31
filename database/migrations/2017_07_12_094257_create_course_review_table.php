@@ -14,6 +14,7 @@ class CreateCourseReviewTable extends Migration
             $table->unsignedInteger('course_id');
             $table->string('detail', 1000);
             $table->dateTime('created_at');
+            $table->unsignedTinyInteger('status')->default(0);
         });
     }
 

@@ -114,5 +114,6 @@ return [
     'new_password' => 'New password',
     're_new_password' => 'Confirm new password',
     'old_password_error' => 'Old password is not correct',
+    'sent' => 'Sent',
 
 ];

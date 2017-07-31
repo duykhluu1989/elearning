@@ -259,6 +259,7 @@ class CourseController extends Controller
         }, 'user.profile' => function($query) {
             $query->select('user_id', 'name');
         }])->select('user_id', 'detail', 'created_at')
+            ->where('status', CourseReview::STATUS_ACTIVE_DB)
             ->where('course_id', $id)
             ->orderBy('id', 'desc')
             ->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
@@ -286,6 +287,7 @@ class CourseController extends Controller
             $review->course_id = $course->id;
             $review->detail = $inputs['detail'];
             $review->created_at = date('Y-m-d H:i:s');
+            $review->status = CourseReview::STATUS_PENDING_DB;
             $review->save();
 
             return 'Success';

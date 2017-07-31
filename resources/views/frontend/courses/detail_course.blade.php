@@ -201,17 +201,14 @@
                         type: 'post',
                         data: '_token=' + $('input[name="_token"]').first().val() + '&detail=' + reviewDetailVal,
                         success: function(result) {
-                            if(result)
+                            if(result == 'Success')
                             {
                                 reviewDetailElem.val('');
 
-                                $.ajax({
-                                    url: '{{ action('Frontend\CourseController@detailCourseReview', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
-                                    type: 'get',
-                                    success: function(result) {
-                                        if(result)
-                                            $('#CourseReviewTab').html(result);
-                                    }
+                                swal({
+                                    title: '@lang('theme.sent')',
+                                    type: 'success',
+                                    confirmButtonClass: 'btn-success'
                                 });
                             }
                         }
