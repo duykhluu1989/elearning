@@ -128,5 +128,6 @@ return [
     'new_course' => 'Khóa học mới',
     'news' => 'Tin tức mới',
     'learn' => 'Học ngay',
+    'had_account' => 'Đã có tài khoản? Đăng nhập',
 
 ];

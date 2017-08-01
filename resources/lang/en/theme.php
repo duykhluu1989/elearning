@@ -128,5 +128,6 @@ return [
     'new_course' => 'New courses',
     'news' => 'News',
     'learn' => 'Learn now',
+    'had_account' => 'Have account? Sign in',
 
 ];

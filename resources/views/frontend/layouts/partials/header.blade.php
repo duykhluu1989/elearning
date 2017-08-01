@@ -91,6 +91,9 @@
                         <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
                         <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
                         {{ csrf_field() }}
+                        <div class="modal-footer">
+                            <p class="text-center"><a href="javascript:void(0)" id="HadAccountModal" class="btn-link">@lang('theme.had_account')</a></p>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -118,7 +121,7 @@
                             <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">@lang('theme.forget_password')</a></p>
                         </div>
                         <div class="modal-footer">
-                            <p class="text-center"><a href="#modal_dangky" class="btn-link" data-toggle="modal">@lang('theme.not_have_account')</a></p>
+                            <p class="text-center"><a href="javascript:void(0)" class="btn-link" id="NotHaveAccountModal">@lang('theme.not_have_account')</a></p>
                         </div>
                     </form>
                 </div>
@@ -153,6 +156,16 @@
                     $('#modal_dangnhap').modal('show');
                 });
             @endif
+
+            $('#HadAccountModal').click(function() {
+                $('#modal_dangky').modal('hide');
+                $('#modal_dangnhap').modal('show');
+            });
+
+            $('#NotHaveAccountModal').click(function() {
+                $('#modal_dangnhap').modal('hide');
+                $('#modal_dangky').modal('show');
+            });
 
             $('#SignUpForm').submit(function(e) {
                 e.preventDefault();
