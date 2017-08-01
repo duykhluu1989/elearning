@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Libraries\Helpers\Utility;
@@ -63,5 +64,57 @@ class User extends Authenticatable
             return $status[$value];
 
         return $status;
+    }
+
+    public function learnCourseNow(Course $course)
+    {
+        if($course->validatePromotionPrice())
+            $coursePrice = $course->promotionPrice->price;
+        else
+            $coursePrice = $course->price;
+
+        if($coursePrice > 0)
+            return false;
+
+        $userCourse = UserCourse::where('user_id', $this->id)->where('course_id', $course->id)->first();
+
+        if(!empty($userCourse))
+            return true;
+
+        try
+        {
+            DB::beginTransaction();
+
+            $userCourse = new UserCourse();
+            $userCourse->user_id = $this->id;
+            $userCourse->course_id = $course->id;
+            $userCourse->save();
+
+            $course->bought_count ++;
+            $course->save();
+
+            if(empty($this->studentInformation))
+            {
+                $student = new Student();
+                $student->user_id = $this->id;
+                $student->course_count = 1;
+                $student->save();
+            }
+            else
+            {
+                $this->studentInformation->course_count += 1;
+                $this->studentInformation->save();
+            }
+
+            DB::commit();
+
+            return true;
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return false;
+        }
     }
 }

@@ -127,5 +127,6 @@ return [
     'complete' => 'Hoàn thành',
     'new_course' => 'Khóa học mới',
     'news' => 'Tin tức mới',
+    'learn' => 'Học ngay',
 
 ];

@@ -32,6 +32,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
         Route::get('thankYou', 'OrderController@thankYou');
 
+        Route::get('learnCourseNow/{id}/{slug}', 'OrderController@learnCourseNow');
+
         Route::get('course/{id}/{slug}/item/{number}', 'CourseController@detailCourseItem');
 
         Route::get('source/{token}', 'CourseController@getSource');

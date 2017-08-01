@@ -127,5 +127,6 @@ return [
     'complete' => 'Complete',
     'new_course' => 'New courses',
     'news' => 'News',
+    'learn' => 'Learn now',
 
 ];

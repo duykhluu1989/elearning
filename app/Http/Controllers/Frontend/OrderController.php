@@ -391,6 +391,30 @@ class OrderController extends Controller
             return redirect()->action('Frontend\OrderController@placeOrder');
     }
 
+    public function learnCourseNow($id, $slug)
+    {
+        $course = Course::with(['promotionPrice' => function($query) {
+            $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+        }])->where('id', $id)
+            ->where('status', Course::STATUS_PUBLISH_DB)
+            ->where('category_status', Utility::ACTIVE_DB)
+            ->where(function($query) use($slug) {
+                $query->where('slug', $slug)->orWhere('slug_en', $slug);
+            })->first();
+
+        if(empty($course))
+            return view('frontend.errors.404');
+
+        $user = auth()->user();
+
+        $learned = $user->learnCourseNow($course);
+
+        if($learned == false)
+            return view('frontend.errors.404');
+        else
+            return redirect()->action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => Utility::getValueByLocale($course, 'slug')]);
+    }
+
     public function getListDistrict(Request $request)
     {
         if($request->ajax() == false)
