@@ -162,7 +162,17 @@ class CourseController extends Controller
         }
         else if($sort == 'free')
         {
-            $builder->where('course.price', 0);
+            $builder->leftJoin('promotion_price', 'course.id', '=', 'promotion_price.course_id')
+                ->where('course.price', 0)
+                ->orWhere(function($query) {
+                    $time = date('Y-m-d H:i:s');
+
+                    $query->where('promotion_price.status', Utility::ACTIVE_DB)
+                        ->where('promotion_price.start_time', '<=', $time)
+                        ->where('promotion_price.end_time', '>=', $time)
+                        ->where('promotion_price.price', 0);
+                });
+
             $listTitle = trans('theme.free_course');
         }
         else
