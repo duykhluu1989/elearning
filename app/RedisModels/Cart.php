@@ -56,12 +56,12 @@ class Cart
 
         $encodedData = $this->encoded();
 
-        return Redis::command('setex', [static::REDIS_KEY . '_' . $this->token, Utility::SECOND_ONE_HOUR, $encodedData]);
+        return Redis::command('setex', [self::REDIS_KEY . '_' . $this->token, Utility::SECOND_ONE_HOUR, $encodedData]);
     }
 
     public static function find($token)
     {
-        $encodeData = Redis::command('get', [static::REDIS_KEY . '_' . $token]);
+        $encodeData = Redis::command('get', [self::REDIS_KEY . '_' . $token]);
 
         if(!empty($encodeData))
         {
@@ -104,6 +104,6 @@ class Cart
     public function delete()
     {
         if(!empty($this->token))
-            Redis::command('del', [static::REDIS_KEY . '_' . $this->token]);
+            Redis::command('del', [self::REDIS_KEY . '_' . $this->token]);
     }
 }

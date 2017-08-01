@@ -130,5 +130,7 @@ return [
     'learn' => 'Learn now',
     'had_account' => 'Have account? Sign in',
     'chat' => 'Chat help & CS',
+    'highlight_news' => 'News highlights of the day',
+    'news_title' => 'News',
 
 ];

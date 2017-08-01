@@ -11,23 +11,23 @@ abstract class Payment
 
     public static function getPayments($code = null)
     {
-        if(empty(static::$payments))
+        if(empty(self::$payments))
         {
             $codPayment = new CodPayment();
             $bankTransferPayment = new BankTransferPayment();
             $atOfficePayment = new AtOfficePayment();
 
-            static::$payments = [
+            self::$payments = [
                 $codPayment->getCode() => $codPayment,
                 $bankTransferPayment->getCode() => $bankTransferPayment,
                 $atOfficePayment->getCode() => $atOfficePayment,
             ];
         }
 
-        if($code !== null && isset(static::$payments[$code]))
-            return static::$payments[$code];
+        if($code !== null && isset(self::$payments[$code]))
+            return self::$payments[$code];
 
-        return static::$payments;
+        return self::$payments;
     }
 
     abstract public function getCode();

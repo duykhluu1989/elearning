@@ -524,50 +524,22 @@
 
         <section class="tintucnoibat">
             <div class="container">
-                <h2 class="title_line">TIN TỨC NỔI BẬT TRONG NGÀY</h2>
+                <h2 class="title_line">@lang('theme.highlight_news')</h2>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="owl_tintucnoibat owl-carousel owl-theme">
-                            <div class="item">
-                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
-                        <span class="table_content">
-                          <img src="{{ asset('themes/images/i_tc.png') }}" alt="" class="img-responsive">
-                        </span>
-                                </a>
-                                <p>TÀI CHÍNH NGÂN HÀNG</p>
-                            </div>
-                            <div class="item">
-                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
-                        <span class="table_content">
-                          <img src="{{ asset('themes/images/i_pl.png') }}" alt="" class="img-responsive">
-                        </span>
-                                </a>
-                                <p>PHÁP LUẬT</p>
-                            </div>
-                            <div class="item">
-                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
-                        <span class="table_content">
-                          <img src="{{ asset('themes/images/i_bds.png') }}" alt="" class="img-responsive">
-                        </span>
-                                </a>
-                                <p>BẤT ĐỘNG SẢN</p>
-                            </div>
-                            <div class="item">
-                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
-                        <span class="table_content">
-                          <img src="{{ asset('themes/images/i_ck.png') }}" alt="" class="img-responsive">
-                        </span>
-                                </a>
-                                <p>ĐẦU TƯ – CHỨNG KHOÁN</p>
-                            </div>
-                            <div class="item">
-                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
-                        <span class="table_content">
-                          <img src="{{ asset('themes/images/i_kns.png') }}" alt="" class="img-responsive">
-                        </span>
-                                </a>
-                                <p>KỸ NĂNG SỐNG</p>
-                            </div>
+
+                            @foreach($newsCategories as $newsCategory)
+                                <div class="item">
+                                    <a href="{{ action('Frontend\NewsController@adminCategory') }}">
+                                        <span class="table_content">
+                                            <img src="{{ $newsCategory->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($newsCategory, 'name') }}" class="img-responsive">
+                                        </span>
+                                    </a>
+                                    <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($newsCategory, 'name') }}</p>
+                                </div>
+                            @endforeach
+
                         </div>
                     </div>
                 </div>

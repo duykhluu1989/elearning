@@ -130,5 +130,7 @@ return [
     'learn' => 'Học ngay',
     'had_account' => 'Đã có tài khoản? Đăng nhập',
     'chat' => 'Nhắn tin tư vấn & CSKH',
+    'highlight_news' => 'Tin tức nổi bật trong ngày',
+    'news_title' => 'Tin tức',
 
 ];

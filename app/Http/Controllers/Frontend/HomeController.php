@@ -11,6 +11,7 @@ use App\Models\Course;
 use App\Models\Category;
 use App\Models\CaseAdvice;
 use App\Models\Certificate;
+use App\Models\NewsCategory;
 
 class HomeController extends Controller
 {
@@ -68,6 +69,11 @@ class HomeController extends Controller
             ->limit(Utility::FRONTEND_HOME_ITEM_LIMIT)
             ->get();
 
+        $newsCategories = NewsCategory::select('id', 'name', 'name_en', 'slug', 'slug_en', 'image')
+            ->where('status', Utility::ACTIVE_DB)
+            ->orderBy('order', 'desc')
+            ->get();
+
         return view('frontend.homes.home', [
             'widgets' => $widgets,
             'groupCourses' => $groupCourses,
@@ -75,6 +81,7 @@ class HomeController extends Controller
             'caseAdviceEconomies' => $caseAdviceEconomies,
             'caseAdviceLaws' => $caseAdviceLaws,
             'certificates' => $certificates,
+            'newsCategories' => $newsCategories,
         ]);
     }
 
