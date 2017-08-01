@@ -4,10 +4,10 @@
             <div class="col-lg-12">
                 <ol class="breadcrumb">
                     <li>
-                        <a href="{{ action('Frontend\HomeController@home') }}"><i class="fa fa-home" aria-hidden="true"></i>@lang('theme.home')</a>
+                        <a href="{{ action('Frontend\HomeController@home') }}"><i class="fa fa-home" aria-hidden="true"></i> @lang('theme.home')</a>
                     </li>
                     <li>
-                        <a href="{{ action('Frontend\ArticleController@adminExpert') }}"><i class="fa fa-home" aria-hidden="true"></i>@lang('theme.expert')</a>
+                        <a href="{{ action('Frontend\ArticleController@adminExpert') }}">@lang('theme.expert')</a>
                     </li>
                     <li class="active">{{ $expert->profile->name }}</li>
                 </ol>

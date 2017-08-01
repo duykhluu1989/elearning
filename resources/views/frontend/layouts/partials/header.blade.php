@@ -89,7 +89,7 @@
                             <input type="password" class="form-control" name="password" placeholder="* @lang('theme.password')" required="required">
                         </div>
                         <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
-                        <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
+                        <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i> @lang('theme.sign_in_with_facebook')</button>
                         {{ csrf_field() }}
                         <div class="modal-footer">
                             <p class="text-center"><a href="javascript:void(0)" id="HadAccountModal" class="btn-link">@lang('theme.had_account')</a></p>
@@ -116,7 +116,7 @@
                             <input type="password" class="form-control" name="password" placeholder="@lang('theme.password')" required="required">
                         </div>
                         <button type="submit" class="btn btn-block btnDangky"><i class="fa fa-sign-in" aria-hidden="true"></i>@lang('theme.sign_in')</button>
-                        <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i>@lang('theme.sign_in_with_facebook')</button>
+                        <button type="button" class="btn btn-block btnDangnhap SignInWithFacebook"><i class="fa fa-facebook-square" aria-hidden="true"></i> @lang('theme.sign_in_with_facebook')</button>
                         <div class="form-group">
                             <p class="text-center mt15"><a class="btn-link" href="#modal_quenMK" data-toggle="modal">@lang('theme.forget_password')</a></p>
                         </div>

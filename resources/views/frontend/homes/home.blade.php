@@ -529,7 +529,7 @@
                     <div class="col-lg-12">
                         <div class="owl_tintucnoibat owl-carousel owl-theme">
                             <div class="item">
-                                <a href="{{ action('Frontend\ArticleController@tintuc') }}">
+                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
                         <span class="table_content">
                           <img src="{{ asset('themes/images/i_tc.png') }}" alt="" class="img-responsive">
                         </span>
@@ -537,7 +537,7 @@
                                 <p>TÀI CHÍNH NGÂN HÀNG</p>
                             </div>
                             <div class="item">
-                                <a href="{{ action('Frontend\ArticleController@tintuc') }}">
+                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
                         <span class="table_content">
                           <img src="{{ asset('themes/images/i_pl.png') }}" alt="" class="img-responsive">
                         </span>
@@ -545,7 +545,7 @@
                                 <p>PHÁP LUẬT</p>
                             </div>
                             <div class="item">
-                                <a href="{{ action('Frontend\ArticleController@tintuc') }}">
+                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
                         <span class="table_content">
                           <img src="{{ asset('themes/images/i_bds.png') }}" alt="" class="img-responsive">
                         </span>
@@ -553,7 +553,7 @@
                                 <p>BẤT ĐỘNG SẢN</p>
                             </div>
                             <div class="item">
-                                <a href="{{ action('Frontend\ArticleController@tintuc') }}">
+                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
                         <span class="table_content">
                           <img src="{{ asset('themes/images/i_ck.png') }}" alt="" class="img-responsive">
                         </span>
@@ -561,7 +561,7 @@
                                 <p>ĐẦU TƯ – CHỨNG KHOÁN</p>
                             </div>
                             <div class="item">
-                                <a href="{{ action('Frontend\ArticleController@tintuc') }}">
+                                <a href="{{ action('Frontend\NewsController@adminCategory') }}">
                         <span class="table_content">
                           <img src="{{ asset('themes/images/i_kns.png') }}" alt="" class="img-responsive">
                         </span>

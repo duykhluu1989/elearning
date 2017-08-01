@@ -12,11 +12,6 @@ use App\Models\User;
 
 class ArticleController extends Controller
 {
-    public function tintuc()
-    {
-        return view('frontend.articles.tintuc');
-    }
-
     public function adminExpert()
     {
         $experts = User::with(['profile' => function($query) {

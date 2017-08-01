@@ -72,12 +72,12 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
     Route::get('page/{id}/{slug}', 'PageController@detailPage');
 
-    Route::get('tintuc', 'ArticleController@tintuc');
-
     Route::get('expert', 'ArticleController@adminExpert');
 
     Route::get('expert/{id}', 'ArticleController@detailExpert');
 
     Route::get('article/{id}/{slug}', 'ArticleController@detailArticle');
+
+    Route::get('news', 'NewsController@adminCategory');
 
 });

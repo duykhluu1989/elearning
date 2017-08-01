@@ -4,7 +4,7 @@
             <div class="col-lg-12">
                 <ol class="breadcrumb">
                     <li>
-                        <a href="{{ action('Frontend\HomeController@home') }}"><i class="fa fa-home" aria-hidden="true"></i>@lang('theme.home')</a>
+                        <a href="{{ action('Frontend\HomeController@home') }}"><i class="fa fa-home" aria-hidden="true"></i> @lang('theme.home')</a>
                     </li>
                     <li class="active">{{ $breabcrumbTitle }}</li>
                 </ol>
