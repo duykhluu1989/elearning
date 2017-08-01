@@ -129,5 +129,6 @@ return [
     'news' => 'News',
     'learn' => 'Learn now',
     'had_account' => 'Have account? Sign in',
+    'chat' => 'Chat help & CS',
 
 ];

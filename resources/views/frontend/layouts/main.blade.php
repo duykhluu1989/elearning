@@ -41,6 +41,8 @@
     }(document, 'script', 'facebook-jssdk'));
 </script>
 <div id="page">
+    <a class="live_chat" href="#"><i class="fa fa-commenting-o fa-lg" aria-hidden="true"></i> @lang('theme.chat')</a>
+
     @yield('section')
 
     @include('frontend.layouts.partials.footer')

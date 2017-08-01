@@ -129,5 +129,6 @@ return [
     'news' => 'Tin tức mới',
     'learn' => 'Học ngay',
     'had_account' => 'Đã có tài khoản? Đăng nhập',
+    'chat' => 'Nhắn tin tư vấn & CSKH',
 
 ];
