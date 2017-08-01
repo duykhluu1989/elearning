@@ -393,7 +393,7 @@ class CourseController extends Controller
         return array();
     }
 
-    public function newCourse(Request $request)
+    public function newCourseAndNews(Request $request)
     {
         if($request->ajax() == false)
             return view('frontend.errors.404');
@@ -401,10 +401,18 @@ class CourseController extends Controller
         if(request()->hasCookie(Utility::VISIT_START_TIME_COOKIE_NAME))
         {
             $newCourses = self::getNewCourses();
+            $newNews = NewsController::getNewNews();
 
-            return view('frontend.courses.partials.new_course', [
-                'newCourses' => $newCourses,
-            ]);
+            $newHtml = [
+                'courses' => view('frontend.courses.partials.new_course', [
+                    'newCourses' => $newCourses,
+                ])->render(),
+                'news' => view('frontend.news.partials.new_news', [
+                    'newNews' => $newNews,
+                ])->render(),
+            ];
+
+            return json_encode($newHtml);
         }
 
         return '';

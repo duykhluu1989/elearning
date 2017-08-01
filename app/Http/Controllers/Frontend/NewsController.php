@@ -44,7 +44,7 @@ class NewsController extends Controller
                                     'title' => (string)$item->title,
                                     'link' => (string)$item->link,
                                     'description' => (string)$item->description,
-                                    'pubDate' => (string)$item->pubDate,
+                                    'pubDate' => strtotime((string)$item->pubDate),
                                 ];
                             }
                         }
@@ -61,5 +61,34 @@ class NewsController extends Controller
             'newsCategories' => $newsCategories,
             'newsRss' => $newsRss,
         ]);
+    }
+
+    public static function getNewNews()
+    {
+        if(request()->hasCookie(Utility::VISIT_START_TIME_COOKIE_NAME))
+        {
+            $newsRss = Redis::command('get', [self::REDIS_KEY]);
+
+            if(!empty($newsRss))
+            {
+                $newsRss = json_decode($newsRss, true);
+
+                $newNews = array();
+
+                foreach($newsRss as $category)
+                {
+                    foreach($category as $item)
+                    {
+                        if($item['pubDate'] > request()->cookie(Utility::VISIT_START_TIME_COOKIE_NAME))
+                            $newNews[] = $item;
+                    }
+                }
+
+                if(count($newNews) > 0)
+                    return $newNews;
+            }
+        }
+
+        return array();
     }
 }

@@ -105,6 +105,7 @@
 
         <?php
         $newCourses = \App\Http\Controllers\Frontend\CourseController::getNewCourses();
+        $newNews = \App\Http\Controllers\Frontend\NewsController::getNewNews();
         ?>
 
         <a class="btn btnBGmoi" href="#modal_BGM" data-toggle="modal">
@@ -113,7 +114,7 @@
         </a>
 
         <a class="btn btnTTmoi" href="#modal_TTM" data-toggle="modal">
-            <span class="count">3</span>
+            <span class="count" id="NewNewsModalCount">{{ count($newNews) }}</span>
             <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> @lang('theme.news')
         </a>
 
@@ -122,21 +123,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title text-center">TIN TỨC MỚI</h4>
+                        <h4 class="modal-title text-center">@lang('theme.news')</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="baivietmoi_content">
-                            <article>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <img src="{{ asset('themes/images/hv01.jpg') }}" alt="" class="img-responsive w100p">
-                                    </div>
-                                    <div class="col-xs-9">
-                                        <h4>Lorem ipsum dolor.</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, deserunt.</p>
-                                    </div>
-                                </div>
-                            </article>
+                        <div class="baivietmoi_content" id="NewNewsModalContent">
+
+                            @include('frontend.news.partials.new_news')
+
                         </div>
                     </div>
                 </div>
@@ -169,19 +162,33 @@
 
         var newCourseTimeInterval = setInterval(function() {
             $.ajax({
-                url: '{{ action('Frontend\CourseController@newCourse') }}',
+                url: '{{ action('Frontend\CourseController@newCourseAndNews') }}',
                 type: 'get',
                 success: function(result) {
                     if(result)
                     {
-                        $('#NewCourseModalContent').html(result);
+                        result = JSON.parse(result);
 
-                        var countNewCourse = result.split('class="row"').length;
+                        var courseHtml = result['courses'];
+                        var newsHtml = result['news'];
 
-                        if(countNewCourse > 0)
-                            countNewCourse -= 1;
+                        if(courseHtml)
+                        {
+                            $('#NewCourseModalContent').html(courseHtml);
+                            var countNewCourse = courseHtml.split('class="row"').length;
+                            if(countNewCourse > 0)
+                                countNewCourse -= 1;
+                            $('#NewCourseModalCount').html(countNewCourse);
+                        }
 
-                        $('#NewCourseModalCount').html(countNewCourse);
+                        if(newsHtml)
+                        {
+                            $('#NewNewsModalContent').html(newsHtml);
+                            var countNewNews = newsHtml.split('class="row"').length;
+                            if(countNewNews > 0)
+                                countNewNews -= 1;
+                            $('#NewNewsModalCount').html(countNewNews);
+                        }
                     }
                 }
             });

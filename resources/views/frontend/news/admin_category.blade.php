@@ -22,25 +22,23 @@
                                     <h1 class="panel-title"><a href="javascript:void(0)">{{ \App\Libraries\Helpers\Utility::getValueByLocale($newsCategory, 'name') }}</a></h1>
                                 </div>
                                 <div class="panel-body">
-                                    <h4><a href="chitiettintuc.php">Lịch sự kiện và tin vắn chứng khoán ngày 12/6</a></h4>
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <a href="chitiettintuc.php"><img src="images/img_giohang.png" alt="" class="img-responsive"></a>
+                                    @if(isset($newsRss[$newsCategory->id]))
+                                        <?php
+                                        $item = array_shift($newsRss[$newsCategory->id]);
+                                        ?>
+                                        <h4><a href="{{ $item['link'] }}">{{ $item['title'] }}</a></h4>
+                                        <div class="row">
+                                            <?php
+                                            echo $item['description'];
+                                            ?>
                                         </div>
-                                        <div class="col-xs-6">
-                                            <p>Tổng hợp toàn bộ tin vắn nổi bật liên quan đến doanh nghiệp niêm yết trên hai sàn chứng khoán.</p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <ul class="list_tintuc">
-
-                                        @if(isset($newsRss[$newsCategory->id]))
+                                        <hr />
+                                        <ul class="list_tintuc">
                                             @foreach($newsRss[$newsCategory->id] as $item)
-                                                <li><a href="{{ $item['link'] }}">{{ $item['title'] }} <span class="gray">({{ $item['pubDate'] }})</span></a></li>
+                                                <li><a href="{{ $item['link'] }}">{{ $item['title'] }} <span class="gray">({{ date('Y-m-d H:i:s', $item['pubDate']) }})</span></a></li>
                                             @endforeach
-                                        @endif
-
-                                    </ul>
+                                        </ul>
+                                    @endif
                                 </div>
                             </div>
                         </div>
