@@ -33,7 +33,7 @@ class Permission
             if(count($permissions) == 0)
                 return '403';
 
-            if(!in_array($route->getMethods()[0] . ' - ' . $route->getPath(), $permissions))
+            if(!in_array($route->methods()[0] . ' - ' . $route->uri(), $permissions))
                 return '403';
         }
 
