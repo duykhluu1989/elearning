@@ -132,5 +132,7 @@ return [
     'chat' => 'Chat help & CS',
     'highlight_news' => 'News highlights of the day',
     'news_title' => 'News',
+    'teacher_register' => 'Registration for teaching',
+    'educational_organization' => 'Educational Organization',
 
 ];

@@ -14,6 +14,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
         Route::get('loginWithToken/{token}', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@loginWithToken']);
 
+        Route::post('registerTeacher', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@registerTeacher']);
+
     });
 
     Route::group(['middleware' => ['auth', 'access']], function() {

@@ -8,7 +8,7 @@ return [
     'highlight_course' => 'Khóa học nổi bật',
     'buy' => 'Mua',
     'sign_in' => 'Đăng nhập',
-    'sign_up' => 'Đăng kí',
+    'sign_up' => 'Đăng ký',
     'home' => 'Trang chủ',
     'teacher' => 'Giảng dạy bởi',
     'course_item_count' => 'Số lượng bài giảng',
@@ -29,7 +29,7 @@ return [
     'forget_password' => 'Quên mật khẩu đăng nhập?',
     'retrieve_password' => 'Lấy lại mật khẩu',
     'retrieve_password_description' => 'Để lấy lại mật khẩu, bạn nhập email đăng nhập vào ô dưới đây. Sau đó caydenthan sẽ gửi email hướng dẫn bạn khôi phục mật khẩu',
-    'sign_up_success' => 'Đăng kí thành công',
+    'sign_up_success' => 'Đăng ký thành công',
     'retrieve_password_email' => 'Vui lòng kiểm tra email để khôi phục mật khẩu',
     'expert' => 'Góc nhìn chuyên gia',
     'student' => 'Học viên nói gì về chúng tôi',
@@ -132,5 +132,7 @@ return [
     'chat' => 'Nhắn tin tư vấn & CSKH',
     'highlight_news' => 'Tin tức nổi bật trong ngày',
     'news_title' => 'Tin tức',
+    'teacher_register' => 'Đăng ký giảng dạy',
+    'educational_organization' => 'Tổ chức giáo dục',
 
 ];

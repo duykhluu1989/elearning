@@ -75,6 +75,12 @@
                     <li class="{{ (request()->is('admin/userCollaborator') ? 'active' : '') }}">
                         <a href="{{ action('Backend\UserController@adminUserCollaborator') }}">Cộng Tác Viên</a>
                     </li>
+                    <li class="{{ (request()->is('admin/userTeacher') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\UserController@adminUserTeacher') }}">Giảng Viên</a>
+                    </li>
+                    <li class="{{ (request()->is('admin/userExpert') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\UserController@adminUserExpert') }}">Chuyên Gia</a>
+                    </li>
                 </ul>
             </li>
             <li class="{{ (request()->is('admin/role*') ? 'active' : '') }}">

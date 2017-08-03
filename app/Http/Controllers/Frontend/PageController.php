@@ -73,6 +73,12 @@ class PageController extends Controller
                     return $this->detailFaqPage($page);
 
                     break;
+
+                case Article::STATIC_ARTICLE_GROUP_TEACHER_DB:
+
+                    return $this->detailTeacherPage($page);
+
+                    break;
             }
         }
 
@@ -134,6 +140,13 @@ class PageController extends Controller
     public function detailFaqPage($page)
     {
         return view('frontend.pages.detail_faq_page', [
+            'page' => $page,
+        ]);
+    }
+
+    public function detailTeacherPage($page)
+    {
+        return view('frontend.pages.detail_teacher_page', [
             'page' => $page,
         ]);
     }

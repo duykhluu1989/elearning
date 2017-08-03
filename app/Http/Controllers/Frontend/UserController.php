@@ -16,6 +16,7 @@ use App\Models\Setting;
 use App\Models\Collaborator;
 use App\Models\Order;
 use App\Models\UserCourse;
+use App\Models\Teacher;
 use Facebook\Facebook;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
@@ -74,7 +75,7 @@ class UserController extends Controller
                 DB::beginTransaction();
 
                 $user = new User();
-                $user->username = explode('@', $inputs['email'])[0];
+                $user->username = explode('@', $inputs['email'])[0] . time();
                 $user->email = $inputs['email'];
                 $user->status = Utility::ACTIVE_DB;
                 $user->admin = Utility::INACTIVE_DB;
@@ -158,7 +159,7 @@ class UserController extends Controller
                     DB::beginTransaction();
 
                     $user = new User();
-                    $user->username = explode('@', $email)[0];
+                    $user->username = explode('@', $email)[0] . time();
                     $user->email = $email;
                     $user->status = Utility::ACTIVE_DB;
                     $user->admin = Utility::INACTIVE_DB;
@@ -368,12 +369,22 @@ class UserController extends Controller
                     $user->profile->last_name = $inputs['last_name'];
                     $user->profile->title = $inputs['title'];
                     $user->profile->name = trim($user->profile->last_name . ' ' . $user->profile->first_name);
-                    $user->profile->gender = $inputs['gender'];
+
+                    if(isset($inputs['gender']) && $inputs['gender'] !== '')
+                        $user->profile->gender = $inputs['gender'];
+
                     $user->profile->birthday = $inputs['birthday'];
                     $user->profile->phone = $inputs['phone'];
                     $user->profile->address = $inputs['address'];
-                    $user->profile->province = Area::$provinces[$inputs['province']]['name'];
-                    $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+
+                    if(!empty($inputs['province']))
+                    {
+                        $user->profile->province = Area::$provinces[$inputs['province']]['name'];
+
+                        if(!empty($inputs['district']))
+                            $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+                    }
+
                     $user->profile->save();
 
                     DB::commit();
@@ -419,7 +430,7 @@ class UserController extends Controller
                         DB::beginTransaction();
 
                         $user = new User();
-                        $user->username = explode('@', $inputs['email'])[0];
+                        $user->username = explode('@', $inputs['email'])[0] . time();
                         $user->email = $inputs['email'];
                         $user->status = Utility::ACTIVE_DB;
                         $user->admin = Utility::INACTIVE_DB;
@@ -518,6 +529,86 @@ class UserController extends Controller
         }
         else
             return '';
+    }
+
+    public function registerTeacher(Request $request)
+    {
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'nullable|string|max:100',
+            'email' => 'required|email|max:255|unique:user,email',
+            'password' => 'required|alpha_dash|min:6|max:32',
+            'phone' => 'nullable|numeric',
+            'birthday' => 'nullable|date',
+            'address' => 'nullable|max:255',
+            'title' => 'nullable|max:255',
+        ]);
+
+        if($validator->passes())
+        {
+            try
+            {
+                DB::beginTransaction();
+
+                $user = new User();
+                $user->username = explode('@', $inputs['email'])[0] . time();
+                $user->email = $inputs['email'];
+                $user->status = Utility::ACTIVE_DB;
+                $user->admin = Utility::INACTIVE_DB;
+                $user->collaborator = Utility::INACTIVE_DB;
+                $user->teacher = Utility::ACTIVE_DB;
+                $user->expert = Utility::INACTIVE_DB;
+                $user->created_at = date('Y-m-d H:i:s');
+                $user->password = Hash::make($inputs['password']);
+                $user->save();
+
+                $profile = new Profile();
+                $profile->user_id = $user->id;
+                $profile->first_name = $inputs['first_name'];
+                $profile->last_name = $inputs['last_name'];
+                $profile->name = trim($profile->last_name . ' ' . $profile->first_name);
+                $profile->title = $inputs['title'];
+
+                if(isset($inputs['gender']) && $inputs['gender'] !== '')
+                    $profile->gender = $inputs['gender'];
+
+                $profile->birthday = $inputs['birthday'];
+                $profile->phone = $inputs['phone'];
+                $profile->address = $inputs['address'];
+
+                if(!empty($inputs['province']))
+                {
+                    $profile->province = Area::$provinces[$inputs['province']]['name'];
+
+                    if(!empty($inputs['district']))
+                        $profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+                }
+
+                $profile->save();
+
+                $teacher = new Teacher();
+                $teacher->user_id = $user->id;
+                $teacher->status = Collaborator::STATUS_PENDING_DB;
+                $teacher->organization = isset($inputs['organization']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                $teacher->save();
+
+                DB::commit();
+
+                auth()->login($user);
+
+                return 'Success';
+            }
+            catch(\Exception $e)
+            {
+                DB::rollBack();
+
+                return json_encode(['first_name' => [$e->getMessage()]]);
+            }
+        }
+        else
+            return json_encode($validator->errors()->messages());
     }
 
     public function adminOrder()

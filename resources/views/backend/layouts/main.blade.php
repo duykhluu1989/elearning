@@ -32,12 +32,14 @@
                         <?php
                         $countPendingOrder = \App\Models\Order::where('payment_status', \App\Models\Order::PAYMENT_STATUS_PENDING_DB)->whereNull('cancelled_at')->count('id');
                         $countNewCollaborator = \App\Models\Collaborator::where('status', \App\Models\Collaborator::STATUS_PENDING_DB)->count('id');
+                        $countNewTeacher = \App\Models\Teacher::where('status', \App\Models\Collaborator::STATUS_PENDING_DB)->count('id');
                         $countNewReview = \App\Models\CourseReview::where('status', \App\Models\CourseReview::STATUS_PENDING_DB)->count('id');
+                        $totalNotify = $countPendingOrder + $countNewCollaborator + $countNewTeacher + $countNewReview;
                         ?>
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">{{ $countPendingOrder + $countNewCollaborator + $countNewReview }}</span>
+                            <span class="label label-warning">{{ $totalNotify }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
@@ -53,6 +55,13 @@
                                         <li>
                                             <a href="{{ action('Backend\UserController@adminUserCollaborator') }}">
                                                 <i class="fa fa-user text-yellow"></i> {{ $countNewCollaborator . ' cộng tác viên mới chờ duyệt' }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if($countNewTeacher > 0)
+                                        <li>
+                                            <a href="{{ action('Backend\UserController@adminUserTeacher') }}">
+                                                <i class="fa fa-graduation-cap text-yellow"></i> {{ $countNewTeacher . '  giảng viên mới chờ duyệt' }}
                                             </a>
                                         </li>
                                     @endif

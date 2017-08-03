@@ -17,6 +17,7 @@ use App\Models\UserRole;
 use App\Models\Profile;
 use App\Models\Collaborator;
 use App\Models\Setting;
+use App\Models\Teacher;
 
 class UserController extends Controller
 {
@@ -151,7 +152,13 @@ class UserController extends Controller
 
     public function createUser(Request $request)
     {
-        Utility::setBackUrlCookie($request, ['/admin/userStudent', '/admin/userCollaborator', '/admin/user?']);
+        Utility::setBackUrlCookie($request, [
+            '/admin/userStudent',
+            '/admin/userCollaborator',
+            '/admin/userTeacher',
+            '/admin/userExpert',
+            '/admin/user?',
+        ]);
 
         $user = new User();
         $user->status = Utility::ACTIVE_DB;
@@ -212,6 +219,15 @@ class UserController extends Controller
                         $collaborator->save();
                     }
 
+                    if($user->teacher == Utility::ACTIVE_DB)
+                    {
+                        $teacher = new Teacher();
+                        $teacher->user_id = $user->id;
+                        $teacher->status = Collaborator::STATUS_ACTIVE_DB;
+                        $teacher->organization = Utility::INACTIVE_DB;
+                        $teacher->save();
+                    }
+
                     DB::commit();
 
                     return redirect()->action('Backend\UserController@editUser', ['id' => $user->id])->with('messageSuccess', 'Thành Công');
@@ -234,11 +250,19 @@ class UserController extends Controller
 
     public function editUser(Request $request, $id)
     {
-        Utility::setBackUrlCookie($request, ['/admin/userStudent', '/admin/userCollaborator', '/admin/user?']);
+        Utility::setBackUrlCookie($request, [
+            '/admin/userStudent',
+            '/admin/userCollaborator',
+            '/admin/userTeacher',
+            '/admin/userExpert',
+            '/admin/user?',
+        ]);
 
         $user = User::with(['userRoles', 'profile', 'collaboratorInformation' => function($query) {
             $query->select('user_id');
-        }, 'studentInformation'])->find($id);
+        }, 'studentInformation', 'teacherInformation' => function($query) {
+            $query->select('user_id');
+        }])->find($id);
 
         if(empty($user))
             return view('backend.errors.404');
@@ -287,6 +311,8 @@ class UserController extends Controller
                     $user->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                     $user->admin = isset($inputs['admin']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                     $user->collaborator = isset($inputs['collaborator']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->teacher = isset($inputs['teacher']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
+                    $user->expert = isset($inputs['expert']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
 
                     if(!empty($inputs['password']))
                         $user->password = Hash::make($inputs['password']);
@@ -328,8 +354,15 @@ class UserController extends Controller
                     $user->profile->phone = $inputs['phone'];
                     $user->profile->address = $inputs['address'];
                     $user->profile->description = $inputs['description'];
-                    $user->profile->province = Area::$provinces[$inputs['province']]['name'];
-                    $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+
+                    if(!empty($inputs['province']))
+                    {
+                        $user->profile->province = Area::$provinces[$inputs['province']]['name'];
+
+                        if(!empty($inputs['district']))
+                            $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+                    }
+
                     $user->profile->save();
 
                     if($user->collaborator == Utility::ACTIVE_DB && empty($user->collaboratorInformation))
@@ -345,6 +378,15 @@ class UserController extends Controller
                         $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
                         $collaborator->status = Collaborator::STATUS_ACTIVE_DB;
                         $collaborator->save();
+                    }
+
+                    if($user->teacher == Utility::ACTIVE_DB && empty($user->teacherInformation))
+                    {
+                        $teacher = new Teacher();
+                        $teacher->user_id = $user->id;
+                        $teacher->status = Collaborator::STATUS_ACTIVE_DB;
+                        $teacher->organization = Utility::INACTIVE_DB;
+                        $teacher->save();
                     }
 
                     DB::commit();
@@ -696,6 +738,265 @@ class UserController extends Controller
         ]);
     }
 
+    public function adminUserTeacher(Request $request)
+    {
+        $dataProvider = User::with(['teacherInformation' => function($query) {
+            $query->select('user_id', 'status', 'organization');
+        }, 'profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('user.id', 'user.username', 'user.email', 'user.status')
+            ->where('user.teacher', Utility::ACTIVE_DB)
+            ->orderBy('user.id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['username']))
+                $dataProvider->where('username', 'like', '%' . $inputs['username'] . '%');
+
+            if(!empty($inputs['email']))
+                $dataProvider->where('email', 'like', '%' . $inputs['email'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('status', $inputs['status']);
+
+            if(isset($inputs['teacher_status']) && $inputs['teacher_status'] !== '')
+            {
+                $sql = $dataProvider->toSql();
+                if(strpos($sql, 'inner join `teacher` on') === false)
+                    $dataProvider->join('teacher', 'teacher.user_id', '=', 'user.id');
+                $dataProvider->where('teacher.status', $inputs['teacher_status']);
+            }
+
+            if(isset($inputs['organization']) && $inputs['organization'] !== '')
+            {
+                $sql = $dataProvider->toSql();
+                if(strpos($sql, 'inner join `teacher` on') === false)
+                    $dataProvider->join('teacher', 'teacher.user_id', '=', 'user.id');
+                $dataProvider->where('teacher.organization', $inputs['organization']);
+            }
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên Tài Khoản',
+                'data' => function($row) {
+                    echo Html::a($row->username, [
+                        'href' => action('Backend\UserController@editUser', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+            [
+                'title' => 'Email',
+                'data' => 'email',
+            ],
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo $row->profile->name;;
+                },
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'data' => function($row) {
+                    $status = User::getUserStatus($row->status);
+                    if($row->status == Utility::ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Tổ Chức',
+                'data' => function($row) {
+                    if($row->teacherInformation->organization == Utility::ACTIVE_DB)
+                        echo Html::span(Html::i('', ['class' => 'fa fa-check']), ['class' => 'label label-success']);
+                },
+            ],
+            [
+                'title' => 'Trạng Thái GV',
+                'data' => function($row) {
+                    $status = Collaborator::getCollaboratorStatus($row->teacherInformation->status);
+                    if($row->teacherInformation->status == Collaborator::STATUS_ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else if($row->teacherInformation->status == Collaborator::STATUS_PENDING_DB)
+                        echo Html::span($status, ['class' => 'label label-warning']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setFilters([
+            [
+                'title' => 'Tên Tài Khoản',
+                'name' => 'username',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Email',
+                'name' => 'email',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => User::getUserStatus(),
+            ],
+            [
+                'title' => 'Trạng Thái GV',
+                'name' => 'teacher_status',
+                'type' => 'select',
+                'options' => Collaborator::getCollaboratorStatus(),
+            ],
+            [
+                'title' => 'Tổ Chức',
+                'name' => 'organization',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
+
+        return view('backend.users.admin_user_teacher', [
+            'gridView' => $gridView,
+        ]);
+    }
+
+    public function adminUserExpert(Request $request)
+    {
+        $dataProvider = User::with(['studentInformation' => function($query) {
+            $query->select('user_id', 'course_count', 'total_spent', 'current_point');
+        }, 'profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('id', 'username', 'email', 'status')->orderBy('id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['username']))
+                $dataProvider->where('username', 'like', '%' . $inputs['username'] . '%');
+
+            if(!empty($inputs['email']))
+                $dataProvider->where('email', 'like', '%' . $inputs['email'] . '%');
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('status', $inputs['status']);
+
+            if(isset($inputs['expert']) && $inputs['expert'] !== '')
+                $dataProvider->where('expert', $inputs['expert']);
+
+            if(isset($inputs['teacher']) && $inputs['teacher'] !== '')
+                $dataProvider->where('teacher', $inputs['teacher']);
+
+            if(isset($inputs['collaborator']) && $inputs['collaborator'] !== '')
+                $dataProvider->where('collaborator', $inputs['collaborator']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên Tài Khoản',
+                'data' => function($row) {
+                    echo Html::a($row->username, [
+                        'href' => action('Backend\UserController@editUser', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+            [
+                'title' => 'Email',
+                'data' => 'email',
+            ],
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo $row->profile->name;;
+                },
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'data' => function($row) {
+                    $status = User::getUserStatus($row->status);
+                    if($row->status == Utility::ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Số Lượng Khóa Học',
+                'data' => function($row) {
+                    if(!empty($row->studentInformation))
+                        echo Utility::formatNumber($row->studentInformation->course_count);
+                },
+            ],
+            [
+                'title' => 'Tổng Chi Tiêu',
+                'data' => function($row) {
+                    if(!empty($row->studentInformation))
+                        echo Utility::formatNumber($row->studentInformation->total_spent) . ' VND';
+                },
+            ],
+            [
+                'title' => 'Điểm Hiện Tại',
+                'data' => function($row) {
+                    if(!empty($row->studentInformation))
+                        echo Utility::formatNumber($row->studentInformation->current_point);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setFilters([
+            [
+                'title' => 'Tên Tài Khoản',
+                'name' => 'username',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Email',
+                'name' => 'email',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => User::getUserStatus(),
+            ],
+            [
+                'title' => 'Chuyên Gia',
+                'name' => 'expert',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
+            ],
+            [
+                'title' => 'Giảng Viên',
+                'name' => 'teacher',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
+            ],
+            [
+                'title' => 'Cộng Tác Viên',
+                'name' => 'collaborator',
+                'type' => 'select',
+                'options' => Utility::getTrueFalse(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
+
+        return view('backend.users.admin_user_student', [
+            'gridView' => $gridView,
+        ]);
+    }
+
     public function editAccount(Request $request)
     {
         $user = auth()->user();
@@ -756,8 +1057,15 @@ class UserController extends Controller
                     $user->profile->phone = $inputs['phone'];
                     $user->profile->address = $inputs['address'];
                     $user->profile->description = $inputs['description'];
-                    $user->profile->province = Area::$provinces[$inputs['province']]['name'];
-                    $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+
+                    if(!empty($inputs['province']))
+                    {
+                        $user->profile->province = Area::$provinces[$inputs['province']]['name'];
+
+                        if(!empty($inputs['district']))
+                            $user->profile->district = Area::$provinces[$inputs['province']]['cities'][$inputs['district']];
+                    }
+
                     $user->profile->save();
 
                     DB::commit();
