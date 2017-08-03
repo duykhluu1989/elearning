@@ -828,6 +828,19 @@ class UserController extends Controller
                         echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-edit fa-fw']), [
+                        'href' => action('Backend\TeacherController@editTeacher', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Chỉnh Sửa Giảng Viên',
+                    ]);
+                },
+            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);
@@ -870,11 +883,11 @@ class UserController extends Controller
 
     public function adminUserExpert(Request $request)
     {
-        $dataProvider = User::with(['studentInformation' => function($query) {
-            $query->select('user_id', 'course_count', 'total_spent', 'current_point');
-        }, 'profile' => function($query) {
+        $dataProvider = User::with(['profile' => function($query) {
             $query->select('user_id', 'name');
-        }])->select('id', 'username', 'email', 'status')->orderBy('id', 'desc');
+        }])->select('id', 'username', 'email', 'status')
+            ->where('expert', Utility::ACTIVE_DB)
+            ->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
@@ -888,15 +901,6 @@ class UserController extends Controller
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
                 $dataProvider->where('status', $inputs['status']);
-
-            if(isset($inputs['expert']) && $inputs['expert'] !== '')
-                $dataProvider->where('expert', $inputs['expert']);
-
-            if(isset($inputs['teacher']) && $inputs['teacher'] !== '')
-                $dataProvider->where('teacher', $inputs['teacher']);
-
-            if(isset($inputs['collaborator']) && $inputs['collaborator'] !== '')
-                $dataProvider->where('collaborator', $inputs['collaborator']);
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -930,27 +934,6 @@ class UserController extends Controller
                         echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
-            [
-                'title' => 'Số Lượng Khóa Học',
-                'data' => function($row) {
-                    if(!empty($row->studentInformation))
-                        echo Utility::formatNumber($row->studentInformation->course_count);
-                },
-            ],
-            [
-                'title' => 'Tổng Chi Tiêu',
-                'data' => function($row) {
-                    if(!empty($row->studentInformation))
-                        echo Utility::formatNumber($row->studentInformation->total_spent) . ' VND';
-                },
-            ],
-            [
-                'title' => 'Điểm Hiện Tại',
-                'data' => function($row) {
-                    if(!empty($row->studentInformation))
-                        echo Utility::formatNumber($row->studentInformation->current_point);
-                },
-            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);
@@ -971,28 +954,10 @@ class UserController extends Controller
                 'type' => 'select',
                 'options' => User::getUserStatus(),
             ],
-            [
-                'title' => 'Chuyên Gia',
-                'name' => 'expert',
-                'type' => 'select',
-                'options' => Utility::getTrueFalse(),
-            ],
-            [
-                'title' => 'Giảng Viên',
-                'name' => 'teacher',
-                'type' => 'select',
-                'options' => Utility::getTrueFalse(),
-            ],
-            [
-                'title' => 'Cộng Tác Viên',
-                'name' => 'collaborator',
-                'type' => 'select',
-                'options' => Utility::getTrueFalse(),
-            ],
         ]);
         $gridView->setFilterValues($inputs);
 
-        return view('backend.users.admin_user_student', [
+        return view('backend.users.admin_user_expert', [
             'gridView' => $gridView,
         ]);
     }
