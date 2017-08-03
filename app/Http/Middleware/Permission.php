@@ -31,10 +31,10 @@ class Permission
         if($isAdmin == false && in_array('permission', $route->middleware()))
         {
             if(count($permissions) == 0)
-                return view('backend.errors.403');
+                return response()->view('backend.errors.403');
 
             if(!in_array($route->methods()[0] . ' - ' . $route->uri(), $permissions))
-                return view('backend.errors.403');
+                return response()->view('backend.errors.403');
         }
 
         return $next($request);
