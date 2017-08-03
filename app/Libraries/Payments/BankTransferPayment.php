@@ -6,9 +6,11 @@ use App\Models\PaymentMethod;
 
 class BankTransferPayment extends Payment
 {
+    const CODE = 'bank_transfer';
+
     public function getCode()
     {
-        return 'bank_transfer';
+        return self::CODE;
     }
 
     public function getName($lang = null)

@@ -6,9 +6,11 @@ use App\Models\PaymentMethod;
 
 class AtOfficePayment extends Payment
 {
+    const CODE = 'at_office';
+
     public function getCode()
     {
-        return 'at_office';
+        return self::CODE;
     }
 
     public function getName($lang = null)

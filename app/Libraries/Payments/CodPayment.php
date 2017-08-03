@@ -7,9 +7,11 @@ use App\Models\PaymentMethod;
 
 class CodPayment extends Payment
 {
+    const CODE = 'cod';
+
     public function getCode()
     {
-        return 'cod';
+        return self::CODE;
     }
 
     public function getName($lang = null)

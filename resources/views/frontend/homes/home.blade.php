@@ -160,36 +160,41 @@
             </div>
         </section>
 
-        <?php
-        $adHorizontalTopItem = null;
+        <section class="banner_qc">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <?php
+                        $adHorizontalTopItem = null;
 
-        if(isset($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]))
-        {
-            if(!empty($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]->detail))
-            {
-                $adHorizontalTopItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]->detail, true);
+                        if(isset($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]))
+                        {
+                            if(!empty($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]->detail))
+                            {
+                                $adHorizontalTopItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_HORIZONTAL_TOP]->detail, true);
 
-                $randomKey = array_rand($adHorizontalTopItems);
+                                $randomKey = array_rand($adHorizontalTopItems);
 
-                $adHorizontalTopItem = $adHorizontalTopItems[$randomKey];
-            }
-        }
-        ?>
-        @if($adHorizontalTopItem)
-            @if(isset($adHorizontalTopItem['script']))
-                <section class="banner_qc">
-                    <?php echo $adHorizontalTopItem['script']; ?>
-                </section>
-            @else
-                <a href="{{ isset($adHorizontalTopItem['url']) ? $adHorizontalTopItem['url'] : 'javascript:void(0)' }}">
-                    <section class="banner_qc" style="background-image: {{ isset($adHorizontalTopItem['image']) ? $adHorizontalTopItem['image'] : '' }}">
-                    </section>
-                </a>
-            @endif
-        @else
-            <section class="banner_qc">
-            </section>
-        @endif
+                                $adHorizontalTopItem = $adHorizontalTopItems[$randomKey];
+                            }
+                        }
+                        ?>
+                        @if($adHorizontalTopItem)
+                            @if(isset($adHorizontalTopItem['script']))
+                                <?php echo $adHorizontalTopItem['script']; ?>
+                            @else
+                                <a href="{{ isset($adHorizontalTopItem['url']) ? $adHorizontalTopItem['url'] : 'javascript:void(0)' }}">
+                                    <img src="{{ isset($adHorizontalTopItem['image']) ? $adHorizontalTopItem['image'] : '' }}" alt="Advertiser" class="img-responsive">
+                                </a>
+                            @endif
+                        @else
+                            <a href="javascript:void(0)"><img src="{{ asset('themes/images/qc_ngang.jpg') }}" alt="Advertiser" class="img-responsive"></a>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section class="chuyengia bg_gray">
             <div class="container">
