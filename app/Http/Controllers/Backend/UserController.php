@@ -18,6 +18,7 @@ use App\Models\Profile;
 use App\Models\Collaborator;
 use App\Models\Setting;
 use App\Models\Teacher;
+use App\Models\Expert;
 
 class UserController extends Controller
 {
@@ -204,29 +205,7 @@ class UserController extends Controller
                     $profile->name = trim($profile->last_name . ' ' . $profile->first_name);
                     $profile->save();
 
-                    if($user->collaborator == Utility::ACTIVE_DB)
-                    {
-                        $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
-                        $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
-
-                        $collaborator = new Collaborator();
-                        $collaborator->user_id = $user->id;
-                        $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
-                        $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
-                        $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
-                        $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
-                        $collaborator->status = Collaborator::STATUS_ACTIVE_DB;
-                        $collaborator->save();
-                    }
-
-                    if($user->teacher == Utility::ACTIVE_DB)
-                    {
-                        $teacher = new Teacher();
-                        $teacher->user_id = $user->id;
-                        $teacher->status = Collaborator::STATUS_ACTIVE_DB;
-                        $teacher->organization = Utility::INACTIVE_DB;
-                        $teacher->save();
-                    }
+                    $this->createUserExternalInformation($user);
 
                     DB::commit();
 
@@ -248,6 +227,41 @@ class UserController extends Controller
         ]);
     }
 
+    protected function createUserExternalInformation($user)
+    {
+        if($user->collaborator == Utility::ACTIVE_DB && empty($user->collaboratorInformation))
+        {
+            $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+            $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
+
+            $collaborator = new Collaborator();
+            $collaborator->user_id = $user->id;
+            $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
+            $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
+            $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
+            $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
+            $collaborator->status = Collaborator::STATUS_ACTIVE_DB;
+            $collaborator->save();
+        }
+
+        if($user->teacher == Utility::ACTIVE_DB && empty($user->teacherInformation))
+        {
+            $teacher = new Teacher();
+            $teacher->user_id = $user->id;
+            $teacher->status = Collaborator::STATUS_ACTIVE_DB;
+            $teacher->organization = Utility::INACTIVE_DB;
+            $teacher->save();
+        }
+
+        if($user->expert == Utility::ACTIVE_DB && empty($user->expertInformation))
+        {
+            $expert = new Expert();
+            $expert->user_id = $user->id;
+            $expert->online = Utility::INACTIVE_DB;
+            $expert->save();
+        }
+    }
+
     public function editUser(Request $request, $id)
     {
         Utility::setBackUrlCookie($request, [
@@ -261,6 +275,8 @@ class UserController extends Controller
         $user = User::with(['userRoles', 'profile', 'collaboratorInformation' => function($query) {
             $query->select('user_id');
         }, 'studentInformation', 'teacherInformation' => function($query) {
+            $query->select('user_id');
+        }, 'expertInformation' => function($query) {
             $query->select('user_id');
         }])->find($id);
 
@@ -365,29 +381,7 @@ class UserController extends Controller
 
                     $user->profile->save();
 
-                    if($user->collaborator == Utility::ACTIVE_DB && empty($user->collaboratorInformation))
-                    {
-                        $settings = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
-                        $collaboratorInfo = json_decode($settings[Setting::COLLABORATOR_SILVER]->value, true);
-
-                        $collaborator = new Collaborator();
-                        $collaborator->user_id = $user->id;
-                        $collaborator->code = Collaborator::BASE_CODE_PREFIX + Collaborator::countTotalCollaborators() + 1;
-                        $collaborator->rank_id = $settings[Setting::COLLABORATOR_SILVER]->id;
-                        $collaborator->create_discount_percent = $collaboratorInfo[Collaborator::DISCOUNT_ATTRIBUTE];
-                        $collaborator->commission_percent = $collaboratorInfo[Collaborator::COMMISSION_ATTRIBUTE];
-                        $collaborator->status = Collaborator::STATUS_ACTIVE_DB;
-                        $collaborator->save();
-                    }
-
-                    if($user->teacher == Utility::ACTIVE_DB && empty($user->teacherInformation))
-                    {
-                        $teacher = new Teacher();
-                        $teacher->user_id = $user->id;
-                        $teacher->status = Collaborator::STATUS_ACTIVE_DB;
-                        $teacher->organization = Utility::INACTIVE_DB;
-                        $teacher->save();
-                    }
+                    $this->createUserExternalInformation($user);
 
                     DB::commit();
 
