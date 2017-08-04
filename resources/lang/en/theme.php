@@ -154,5 +154,9 @@ return [
     'all_certificate' => 'View all certificates',
     'certificate_price' => 'Exam fee',
     'invalid_certificate' => 'Invalid certificate',
+    'law' => 'Law',
+    'economy' => 'Economy',
+    'step' => 'Step',
+    'advice_call' => 'For more details please contact :phone',
 
 ];

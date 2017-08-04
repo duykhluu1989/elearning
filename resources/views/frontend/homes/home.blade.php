@@ -491,31 +491,26 @@
             <div class="container-fluid">
                 <h2 class="title_line">@lang('theme.case_advice')</h2>
                 <div class="col-lg-6 boxright_vechungtoi boxmH">
-                    <div class="row">
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-8">
-                            <img src="{{ asset('themes/images/i_money.png') }}" alt="Economy" class="img-responsive">
-                            <ul class="list_tuvankt">
-                                @foreach($caseAdviceEconomies as $caseAdviceEconomy)
-                                    <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'name') }}</a></li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
+                    <img src="{{ asset('themes/images/i_money.png') }}" alt="Economy" class="img-responsive">
+                    <ul class="list_tuvankt">
+                        @foreach($caseAdviceEconomies as $caseAdviceEconomy)
+                            <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'name') }}</a></li>
+                        @endforeach
+                    </ul>
                 </div>
                 <div class="col-lg-6 boxleft_vechungtoi boxmH display_table">
                     <div class="table_content">
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <img src="{{ asset('themes/images/i_balance.png') }}" alt="Law" class="img-responsive">
-                                <ul class="list_tuvanpl">
-                                    @foreach($caseAdviceLaws as $caseAdviceLaw)
-                                        <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceLaw, 'name') }}</a></li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="col-lg-4"></div>
-                        </div>
+                        <img src="{{ asset('themes/images/i_balance.png') }}" alt="Law" class="img-responsive">
+                        <ul class="list_tuvanpl">
+                            @foreach($caseAdviceLaws as $caseAdviceLaw)
+                                <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceLaw, 'name') }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center mt30">
+                        <a href="{{ action('Frontend\CaseAdviceController@adminCaseAdvice') }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>

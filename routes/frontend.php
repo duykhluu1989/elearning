@@ -92,4 +92,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
     Route::post('registerCertificate', 'CertificateController@registerCertificate');
 
+    Route::get('advice/{type?}', 'CaseAdviceController@adminCaseAdvice');
+
+    Route::get('advice/{id}/{slug}', 'CaseAdviceController@detailCaseAdvice');
+
 });

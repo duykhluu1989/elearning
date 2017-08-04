@@ -154,5 +154,9 @@ return [
     'all_certificate' => 'Xem tất cả các chứng chỉ khoá học',
     'certificate_price' => 'Lệ phí thi',
     'invalid_certificate' => 'Chứng chỉ không hợp lệ',
+    'law' => 'Pháp luật',
+    'economy' => 'Kinh tế',
+    'step' => 'Bước',
+    'advice_call' => 'Để được tư vấn chi tiết hơn vui lòng liên hệ :phone',
 
 ];
