@@ -224,6 +224,12 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('userExpert/{id}/event', 'ExpertController@adminExpertEvent');
 
+        Route::match(['get', 'post'], 'userExpert/{id}/event/create', 'ExpertController@createExpertEvent');
+
+        Route::match(['get', 'post'], 'expertEvent/{id}/edit', 'ExpertController@editExpertEvent');
+
+        Route::get('expertEvent/{id}/delete', 'ExpertController@deleteExpertEvent');
+
         Route::get('role', 'RoleController@adminRole');
 
         Route::match(['get', 'post'], 'role/create', 'RoleController@createRole');
