@@ -480,13 +480,15 @@
         <section class="tuvanphapluat">
             <div class="container-fluid">
                 <h2 class="title_line">@lang('theme.case_advice')</h2>
-                <div class="col-lg-6 boxright_vechungtoi boxmH">
-                    <img src="{{ asset('themes/images/i_money.png') }}" alt="Economy" class="img-responsive">
-                    <ul class="list_tuvankt">
-                        @foreach($caseAdviceEconomies as $caseAdviceEconomy)
-                            <li><a href="{{ action('Frontend\CaseAdviceController@detailCaseAdvice', ['id' => $caseAdviceEconomy->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'slug')]) }}">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'name') }}</a></li>
-                        @endforeach
-                    </ul>
+                <div class="col-lg-6 boxright_vechungtoi boxmH display_table">
+                    <div class="table_content">
+                        <img src="{{ asset('themes/images/i_money.png') }}" alt="Economy" class="img-responsive">
+                        <ul class="list_tuvankt">
+                            @foreach($caseAdviceEconomies as $caseAdviceEconomy)
+                                <li><a href="{{ action('Frontend\CaseAdviceController@detailCaseAdvice', ['id' => $caseAdviceEconomy->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'slug')]) }}">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'name') }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-lg-6 boxleft_vechungtoi boxmH display_table">
                     <div class="table_content">
