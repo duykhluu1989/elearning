@@ -264,6 +264,15 @@
 
                                                             <?php
                                                             break;
+
+                                                        case \App\Models\PaymentMethod::PAYMENT_TYPE_POINT_DB:
+                                                            ?>
+
+                                                            <p>@lang('theme.current_point'): {{ !empty(auth()->user()->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber(auth()->user()->studentInformation->current_point) : 0 }}</p>
+
+                                                            <?php
+
+                                                            break;
                                                     }
                                                     ?>
                                                 </div>

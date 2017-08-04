@@ -16,13 +16,13 @@ class AtOfficePayment extends Payment
     public function getName($lang = null)
     {
         $names = [
-            'en' => 'Pay directly at the office of caydenthan.vn',
+            'en' => 'Pay directly at the office of caydenthan',
         ];
 
         if($lang !== null && isset($names[$lang]))
             return $names[$lang];
 
-        return 'Đóng tiền trực tiếp tại văn phòng của caydenthan.vn';
+        return 'Đóng tiền trực tiếp tại văn phòng của caydenthan';
     }
 
     public function getType()

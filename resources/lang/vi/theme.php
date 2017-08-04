@@ -148,5 +148,8 @@ return [
     'expert_online' => 'Trực tuyến cùng chuyên gia',
     'online' => 'Trực tuyến',
     'old_event' => 'Các sự kiện đã diễn ra',
+    'current_point' => 'Điểm tích lũy hiện tại',
+    'not_enough_point' => 'Không đủ điểm tích lũy',
+    'can_not_buy_by_point' => 'Khóa học :course không thể mua bằng điểm',
 
 ];

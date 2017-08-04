@@ -148,5 +148,8 @@ return [
     'expert_online' => 'Online with experts',
     'online' => 'Online',
     'old_event' => 'Events have taken place',
+    'current_point' => 'Current point',
+    'not_enough_point' => 'Current point not enough',
+    'can_not_buy_by_point' => 'Can not buy :course by point',
 
 ];
