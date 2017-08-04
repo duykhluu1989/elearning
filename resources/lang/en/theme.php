@@ -134,5 +134,16 @@ return [
     'news_title' => 'News',
     'teacher_register' => 'Registration for teaching',
     'educational_organization' => 'Educational Organization',
+    'collaborator' => 'Collaborator',
+    'bank_information' => 'Transfer information',
+    'code' => 'Code',
+    'manager' => 'Manager',
+    'rank' => 'Rank',
+    'create_discount' => 'Percent discount coupon',
+    'commission' => 'Commission percent',
+    'current_revenue' => 'Current revenue',
+    'current_commission' => 'Current commission',
+    'total_revenue' => 'Total revenue',
+    'total_commission' => 'Total commission',
 
 ];

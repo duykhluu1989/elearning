@@ -134,5 +134,16 @@ return [
     'news_title' => 'Tin tức',
     'teacher_register' => 'Đăng ký giảng dạy',
     'educational_organization' => 'Tổ chức giáo dục',
+    'collaborator' => 'Cộng tác viên',
+    'bank_information' => 'Thông tin chuyển khoản',
+    'code' => 'Mã',
+    'manager' => 'Quản lý',
+    'rank' => 'Cấp bậc',
+    'create_discount' => 'Mức giảm giá được tạo',
+    'commission' => 'Mức hoa hồng được hưởng',
+    'current_revenue' => 'Doanh thu hiện tại',
+    'current_commission' => 'Hoa hồng hiện tại',
+    'total_revenue' => 'Doanh thu tổng',
+    'total_commission' => 'Hoa hồng tổng',
 
 ];
