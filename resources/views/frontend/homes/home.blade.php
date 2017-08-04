@@ -552,7 +552,7 @@
                     <div class="col-lg-8 col-lg-offset-2">
                         <ul class="list_khoahoc">
                             @foreach($certificates as $certificate)
-                                <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($certificate, 'name') }}</a></li>
+                                <li><a href="javascript:void(0)" class="CertificateSignUp" data-certificate-id="{{ $certificate->id }}">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($certificate, 'name') }}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -565,6 +565,30 @@
             </div>
         </section>
     </main>
+
+    <div id="CertificateSignUpModal" class="modal fade modal_general" data-backdrop="static" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center">@lang('theme.sign_up') <span class="logo_small"><img src="{{ asset('themes/images/logo_small.png') }}" alt="Logo" class="img-responsive"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ action('Frontend\CertificateController@registerCertificate') }}" method="POST" role="form" class="frm_dangky" id="CertificateSignUpForm">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="name" placeholder="* @lang('theme.name')" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="phone" placeholder="* @lang('theme.phone')" required="required" />
+                        </div>
+                        <input type="hidden" name="certificate_id" />
+                        <button type="submit" class="btn btn-block btnDangky">@lang('theme.sign_up')</button>
+                        {{ csrf_field() }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @stop
 
@@ -589,6 +613,60 @@
 
                 }
             }
+        });
+
+        $('.CertificateSignUp').click(function() {
+            $('input[name="certificate_id"]').val($(this).data('certificate-id'));
+            $('#CertificateSignUpModal').modal('show');
+        });
+
+        $('#CertificateSignUpForm').submit(function(e) {
+            e.preventDefault();
+
+            var formElem = $(this);
+
+            formElem.find('input').each(function() {
+                $(this).parent().removeClass('has-error').find('span[class="help-block"]').first().remove();
+            });
+
+            $.ajax({
+                url: '{{ action('Frontend\CertificateController@registerCertificate') }}',
+                type: 'post',
+                data: '_token=' + $('input[name="_token"]').first().val() + '&' + formElem.serialize(),
+                success: function(result) {
+                    if(result)
+                    {
+                        if(result == 'Success')
+                        {
+                            $('#CertificateSignUpModal').modal('hide');
+
+                            formElem.find('input').each(function() {
+                                $(this).val('');
+                            });
+
+                            swal({
+                                title: '@lang('theme.sign_up_success')',
+                                type: 'success',
+                                confirmButtonClass: 'btn-success'
+                            });
+                        }
+                        else
+                        {
+                            result = JSON.parse(result);
+
+                            for(var name in result)
+                            {
+                                if(result.hasOwnProperty(name))
+                                {
+                                    formElem.find('input[name="' + name + '"]').first().parent().addClass('has-error').append('' +
+                                        '<span class="help-block">' + result[name][0] + '</span>' +
+                                    '');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         });
     </script>
 @endpush
