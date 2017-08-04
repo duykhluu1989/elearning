@@ -484,7 +484,7 @@
                     <img src="{{ asset('themes/images/i_money.png') }}" alt="Economy" class="img-responsive">
                     <ul class="list_tuvankt">
                         @foreach($caseAdviceEconomies as $caseAdviceEconomy)
-                            <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'name') }}</a></li>
+                            <li><a href="{{ action('Frontend\CaseAdviceController@detailCaseAdvice', ['id' => $advice->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($advice, 'slug')]) }}">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceEconomy, 'name') }}</a></li>
                         @endforeach
                     </ul>
                 </div>
@@ -493,7 +493,7 @@
                         <img src="{{ asset('themes/images/i_balance.png') }}" alt="Law" class="img-responsive">
                         <ul class="list_tuvanpl">
                             @foreach($caseAdviceLaws as $caseAdviceLaw)
-                                <li><a href="javascript:void(0)">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceLaw, 'name') }}</a></li>
+                                <li><a href="{{ action('Frontend\CaseAdviceController@detailCaseAdvice', ['id' => $advice->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($advice, 'slug')]) }}">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($caseAdviceLaw, 'name') }}</a></li>
                             @endforeach
                         </ul>
                     </div>
