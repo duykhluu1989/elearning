@@ -265,7 +265,7 @@ class UserController extends Controller
 
                 Mail::send('frontend.emails.retrieve_password', ['loginLink' => $loginLink], function($message) use($user) {
 
-                    $message->from('admin@caydenthan.vn', Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE));
+                    $message->from(Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE), Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE));
                     $message->to($user->email, $user->profile->name);
                     $message->subject(Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE) . ' | ' . trans('theme.retrieve_password'));
 
