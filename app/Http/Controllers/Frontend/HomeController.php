@@ -12,6 +12,8 @@ use App\Models\Category;
 use App\Models\CaseAdvice;
 use App\Models\Certificate;
 use App\Models\NewsCategory;
+use App\Models\Expert;
+use App\Models\ExpertEvent;
 
 class HomeController extends Controller
 {
@@ -74,6 +76,17 @@ class HomeController extends Controller
             ->orderBy('order', 'desc')
             ->get();
 
+        $onlineExperts = Expert::with(['user' => function($query) {
+            $query->select('id', 'avatar');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->where('online', Utility::ACTIVE_DB)
+            ->get();
+
+        $oldExpertEvents = ExpertEvent::orderBy('created_at', 'desc')
+            ->limit(Utility::FRONTEND_HOME_ITEM_LIMIT)
+            ->get();
+
         return view('frontend.homes.home', [
             'widgets' => $widgets,
             'groupCourses' => $groupCourses,
@@ -82,6 +95,8 @@ class HomeController extends Controller
             'caseAdviceLaws' => $caseAdviceLaws,
             'certificates' => $certificates,
             'newsCategories' => $newsCategories,
+            'onlineExperts' => $onlineExperts,
+            'oldExpertEvents' => $oldExpertEvents,
         ]);
     }
 

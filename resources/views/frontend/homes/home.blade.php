@@ -289,39 +289,33 @@
         <section class="relative tructuyen">
             <div class="container">
                 <div class="row">
-                    <h3 class="title_line">Trực tuyến cùng chuyên gia</h3>
+                    <h3 class="title_line">@lang('theme.expert_online')</h3>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <h3 class="title_underline"><i class="fa fa-calendar" aria-hidden="true"></i> Các sự kiện đã diễn ra</h3>
+                        <h3 class="title_underline"><i class="fa fa-calendar" aria-hidden="true"></i> @lang('theme.old_event')</h3>
                         <ul>
-                            <li><a href="">✓ Lorem ipsum dolor sit amet.</a></li>
-                            <li><a href="">✓ Lorem ipsum dolor sit amet, consectetur.</a></li>
-                            <li><a href="">✓ Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></li>
-                            <li><a href="">✓ Lorem ipsum dolor sit amet.</a></li>
-                            <li><a href="">✓ Lorem ipsum dolor sit.</a></li>
+
+                            @foreach($oldExpertEvents as $oldExpertEvent)
+                                <li><a href="{{ $oldExpertEvent->url }}">✓ {{ \App\Libraries\Helpers\Utility::getValueByLocale($oldExpertEvent, 'name') }}</a></li>
+                            @endforeach
+
                         </ul>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <h3 class="title_underline"><i class="fa fa-circle" aria-hidden="true"></i> Trực tuyến</h3>
+                        <h3 class="title_underline"><i class="fa fa-circle" aria-hidden="true"></i> @lang('theme.online')</h3>
                         <div class="owl_tructuyen owl-carousel owl-theme">
-                            <div class="item">
-                                <a href="#"><img src="{{ asset('themes/images/cg01.jpg') }}" alt="" class="img-responsive"></a>
-                            </div>
-                            <div class="item">
-                                <a href="#"><img src="{{ asset('themes/images/cg02.jpg') }}" alt="" class="img-responsive"></a>
-                            </div>
-                            <div class="item">
-                                <a href="#"><img src="{{ asset('themes/images/cg03.jpg') }}" alt="" class="img-responsive"></a>
-                            </div>
-                            <div class="item">
-                                <a href="#"><img src="{{ asset('themes/images/cg04.jpg') }}" alt="" class="img-responsive"></a>
-                            </div>
-                            <div class="item">
-                                <a href="#"><img src="{{ asset('themes/images/cg05.jpg') }}" alt="" class="img-responsive"></a>
-                            </div>
-                            <div class="item">
-                                <a href="#"><img src="{{ asset('themes/images/cg01.jpg') }}" alt="" class="img-responsive"></a>
-                            </div>
+
+                            @foreach($onlineExperts as $onlineExpert)
+                                <?php
+                                $currentEvent = $onlineExpert->getCurrentEvent();
+                                ?>
+                                <div class="item OnlineExpert"<?php echo !empty($currentEvent) ? (' data-url="' . $currentEvent->url . '"') : ''; ?>>
+                                    <a href="javascript:void(0)"><img src="{{ $onlineExpert->user->avatar }}" alt="{{ $onlineExpert->user->profile->name }}" class="img-responsive"></a>
+                                </div>
+                            @endforeach
+
                         </div>
+                    </div>
+                    <div class="col-lg-offset-2 col-lg-8 col-md-offset-1 col-md-10 col-sm-12 col-xs-12" id="OnlineExpertLiveVideo">
                     </div>
                 </div>
             </div>
@@ -568,3 +562,28 @@
     </main>
 
 @stop
+
+@push('scripts')
+    <script type="text/javascript">
+        $('.OnlineExpert').click(function() {
+            if($(this).attr('data-url'))
+            {
+                $('#OnlineExpertLiveVideo').html('' +
+                    '<div class="fb-video" data-href="' + $(this).attr('data-url') + '" data-width="auto" data-allowfullscreen="true" data-show-text="true" data-autoplay="true" data-show-captions="true">' +
+                    '<blockquote cite="' + $(this).attr('data-url') + '" class="fb-xfbml-parse-ignore">' +
+                    '</blockquote>' +
+                    '</div>' +
+                '');
+
+                try
+                {
+                    FB.XFBML.parse();
+                }
+                catch(exception)
+                {
+
+                }
+            }
+        });
+    </script>
+@endpush

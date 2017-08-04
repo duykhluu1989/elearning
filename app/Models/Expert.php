@@ -31,4 +31,11 @@ class Expert extends Model
 
         return $online;
     }
+
+    public function getCurrentEvent()
+    {
+        return ExpertEvent::where('expert_id', $this->user_id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
 }

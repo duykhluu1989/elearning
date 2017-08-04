@@ -145,5 +145,8 @@ return [
     'current_commission' => 'Current commission',
     'total_revenue' => 'Total revenue',
     'total_commission' => 'Total commission',
+    'expert_online' => 'Online with experts',
+    'online' => 'Online',
+    'old_event' => 'Events have taken place',
 
 ];

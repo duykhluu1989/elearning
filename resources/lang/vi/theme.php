@@ -145,5 +145,8 @@ return [
     'current_commission' => 'Hoa hồng hiện tại',
     'total_revenue' => 'Doanh thu tổng',
     'total_commission' => 'Hoa hồng tổng',
+    'expert_online' => 'Trực tuyến cùng chuyên gia',
+    'online' => 'Trực tuyến',
+    'old_event' => 'Các sự kiện đã diễn ra',
 
 ];
