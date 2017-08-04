@@ -377,58 +377,48 @@
             <div class="container-fluid">
                 <div class="col-lg-6 boxleft_vechungtoi boxmH display_table">
                     <div class="table_content">
-                        <div class="row">
-                            <div class="col-lg-4"></div>
-                            <div class="col-lg-8">
-                                <h2>TẠI SAO NÊN CHỌN CÂY ĐÈN THẦN?</h2>
-                                <ul class="list_taisao">
-                                    <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
-                                    <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
-                                    <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
-                                    <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                        <h2>TẠI SAO NÊN CHỌN CÂY ĐÈN THẦN?</h2>
+                        <ul class="list_taisao">
+                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
+                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
+                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
+                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
+                        </ul>
                     </div>
                 </div>
                 <div class="col-lg-6 boxright_vechungtoi boxmH">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <h2>@lang('theme.student')</h2>
-                            <div class="owl_vechungtoi owl-carousel owl-theme">
-                                <?php
-                                $studentItems = array();
+                    <h2>@lang('theme.student')</h2>
+                    <div class="owl_vechungtoi owl-carousel owl-theme">
+                        <?php
+                        $studentItems = array();
 
-                                if(isset($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]))
-                                {
-                                    if(!empty($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]->detail))
-                                        $studentItems = json_decode($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]->detail, true);
-                                }
-                                ?>
+                        if(isset($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]))
+                        {
+                            if(!empty($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]->detail))
+                                $studentItems = json_decode($widgets[\App\Models\Widget::GROUP_STAFF_STUDENT]->detail, true);
+                        }
+                        ?>
 
-                                @foreach($studentItems as $studentItem)
-                                    <div class="item">
-                                        <div class="row">
-                                            <div class="col-lg-4 text-center">
-                                                <a href="{{ isset($studentItem['url']) ? $studentItem['url'] : 'javascript:void(0)' }}">
-                                                    <img src="{{ isset($studentItem['image']) ? $studentItem['image'] : '' }}" alt="{{ isset($studentItem['name']) ? $studentItem['name'] : '' }}" class="img-responsive">
-                                                </a>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <h4>{{ isset($studentItem['name']) ? $studentItem['name'] : '' }}</h4>
-                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($studentItem, 'quote') }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($studentItem, 'description') }}</p>
-                                            </div>
-                                        </div>
+                        @foreach($studentItems as $studentItem)
+                            <div class="item">
+                                <div class="row">
+                                    <div class="col-lg-4 text-center">
+                                        <a href="{{ isset($studentItem['url']) ? $studentItem['url'] : 'javascript:void(0)' }}">
+                                            <img src="{{ isset($studentItem['image']) ? $studentItem['image'] : '' }}" alt="{{ isset($studentItem['name']) ? $studentItem['name'] : '' }}" class="img-responsive">
+                                        </a>
                                     </div>
-                                @endforeach
+                                    <div class="col-lg-8">
+                                        <h4>{{ isset($studentItem['name']) ? $studentItem['name'] : '' }}</h4>
+                                        <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($studentItem, 'quote') }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($studentItem, 'description') }}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4"></div>
+                        @endforeach
                     </div>
                 </div>
             </div>
