@@ -455,7 +455,7 @@ class UserController extends Controller
             [
                 'title' => 'Tên',
                 'data' => function($row) {
-                    echo $row->profile->name;;
+                    echo $row->profile->name;
                 },
             ],
             [
@@ -605,7 +605,7 @@ class UserController extends Controller
             [
                 'title' => 'Tên',
                 'data' => function($row) {
-                    echo $row->profile->name;;
+                    echo $row->profile->name;
                 },
             ],
             [
@@ -686,7 +686,7 @@ class UserController extends Controller
                         'data-content' => 'Lịch Sử Hoa Hồng',
                     ]);
                 },
-            ]
+            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);
@@ -790,7 +790,7 @@ class UserController extends Controller
             [
                 'title' => 'Tên',
                 'data' => function($row) {
-                    echo $row->profile->name;;
+                    echo $row->profile->name;
                 },
             ],
             [
@@ -865,7 +865,7 @@ class UserController extends Controller
                 'title' => 'Tổ Chức',
                 'name' => 'organization',
                 'type' => 'select',
-                'options' => Utility::getTrueFalse(),
+                'options' => Teacher::getTeacherOrganization(),
             ],
         ]);
         $gridView->setFilterValues($inputs);
@@ -877,24 +877,34 @@ class UserController extends Controller
 
     public function adminUserExpert(Request $request)
     {
-        $dataProvider = User::with(['profile' => function($query) {
+        $dataProvider = User::with(['expertInformation' => function($query) {
+            $query->select('user_id', 'online');
+        }, 'profile' => function($query) {
             $query->select('user_id', 'name');
-        }])->select('id', 'username', 'email', 'status')
-            ->where('expert', Utility::ACTIVE_DB)
-            ->orderBy('id', 'desc');
+        }])->select('user.id', 'user.username', 'user.email', 'user.status')
+            ->where('user.expert', Utility::ACTIVE_DB)
+            ->orderBy('user.id', 'desc');
 
         $inputs = $request->all();
 
         if(count($inputs) > 0)
         {
             if(!empty($inputs['username']))
-                $dataProvider->where('username', 'like', '%' . $inputs['username'] . '%');
+                $dataProvider->where('user.username', 'like', '%' . $inputs['username'] . '%');
 
             if(!empty($inputs['email']))
-                $dataProvider->where('email', 'like', '%' . $inputs['email'] . '%');
+                $dataProvider->where('user.email', 'like', '%' . $inputs['email'] . '%');
 
             if(isset($inputs['status']) && $inputs['status'] !== '')
-                $dataProvider->where('status', $inputs['status']);
+                $dataProvider->where('user.status', $inputs['status']);
+
+            if(isset($inputs['online']) && $inputs['online'] !== '')
+            {
+                $sql = $dataProvider->toSql();
+                if(strpos($sql, 'inner join `expert` on') === false)
+                    $dataProvider->join('expert', 'expert.user_id', '=', 'user.id');
+                $dataProvider->where('expert.online', $inputs['online']);
+            }
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -915,7 +925,7 @@ class UserController extends Controller
             [
                 'title' => 'Tên',
                 'data' => function($row) {
-                    echo $row->profile->name;;
+                    echo $row->profile->name;
                 },
             ],
             [
@@ -928,9 +938,30 @@ class UserController extends Controller
                         echo Html::span($status, ['class' => 'label label-danger']);
                 },
             ],
+            [
+                'title' => 'Online',
+                'data' => function($row) {
+                    if($row->expertInformation->online == Utility::ACTIVE_DB)
+                        echo Html::span(Html::i('', ['class' => 'fa fa-check']), ['class' => 'label label-success']);
+                },
+            ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-list fa-fw']), [
+                        'href' => action('Backend\ExpertController@adminExpertEvent', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Lịch Sử Sự Kiện',
+                    ]);
+                },
+            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
         $gridView->setFilters([
             [
                 'title' => 'Tên Tài Khoản',
@@ -947,6 +978,12 @@ class UserController extends Controller
                 'name' => 'status',
                 'type' => 'select',
                 'options' => User::getUserStatus(),
+            ],
+            [
+                'title' => 'Online',
+                'name' => 'online',
+                'type' => 'select',
+                'options' => Expert::getExpertOnline(),
             ],
         ]);
         $gridView->setFilterValues($inputs);

@@ -11,6 +11,8 @@ class CreateExpertEventTable extends Migration
         Schema::create('expert_event', function(Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('expert_id');
+            $table->string('name', 255);
+            $table->string('name_en', 255)->nullable();
             $table->string('url', 1000);
             $table->dateTime('created_at');
         });

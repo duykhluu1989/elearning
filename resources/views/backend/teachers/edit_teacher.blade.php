@@ -36,7 +36,7 @@
                             ?>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="organization" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}"<?php echo ($organization == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Libraries\Helpers\Utility::TRUE_LABEL }}" data-off="{{ \App\Libraries\Helpers\Utility::FALSE_LABEL }}" data-onstyle="success" data-offstyle="danger" />
+                                    <input type="checkbox" name="organization" value="{{ \App\Libraries\Helpers\Utility::ACTIVE_DB }}"<?php echo ($organization == \App\Libraries\Helpers\Utility::ACTIVE_DB ? ' checked="checked"' : ''); ?> data-toggle="toggle" data-on="{{ \App\Models\Teacher::ORGANIZATION_LABEL }}" data-off="{{ \App\Models\Teacher::PERSONAL_LABEL }}" data-onstyle="success" data-offstyle="danger" />
                                 </label>
                             </div>
                         </div>
