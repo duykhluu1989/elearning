@@ -35,11 +35,11 @@
             </div>
             <div class="col-sm-12">
                 <div class="form-group{{ $errors->has('content') ? ' has-error': '' }}">
-                    <label>Nội Dung <i>(bắt buộc)</i></label>
+                    <label id="CaseAdviceStepContentLabel">Nội Dung<?php echo ($type == \App\Models\CaseAdviceStep::TYPE_FREE_DB ? ' <i>(bắt buộc)</i>' : ''); ?></label>
                     @if($errors->has('content'))
                         <span class="help-block">{{ $errors->first('content') }}</span>
                     @endif
-                    <textarea class="form-control" rows="10" name="content" required="required">{{ old('content', $caseStep->content) }}</textarea>
+                    <textarea class="form-control" rows="10" name="content" id="CaseAdviceStepContentInput"<?php echo ($type == \App\Models\CaseAdviceStep::TYPE_FREE_DB ? ' required="required"' : ''); ?>>{{ old('content', $caseStep->content) }}</textarea>
                 </div>
             </div>
             <div class="col-sm-12">
@@ -60,3 +60,20 @@
     </div>
 </div>
 {{ csrf_field() }}
+
+@push('scripts')
+    <script type="text/javascript">
+        $('input[type="radio"][name="type"]').change(function() {
+            if($(this).val() == '{{ \App\Models\CaseAdviceStep::TYPE_FREE_DB }}')
+            {
+                $('#CaseAdviceStepContentInput').prop('required', 'required');
+                $('#CaseAdviceStepContentLabel').html('Nội Dung <i>(bắt buộc)</i>');
+            }
+            else
+            {
+                $('#CaseAdviceStepContentInput').removeAttr('required');
+                $('#CaseAdviceStepContentLabel').html('Nội Dung');
+            }
+        });
+    </script>
+@endpush

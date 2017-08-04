@@ -16,7 +16,7 @@ class CaseAdviceController extends Controller
 {
     public function adminCaseAdvice(Request $request)
     {
-        $dataProvider = CaseAdvice::select('id', 'name', 'type', 'status', 'phone', 'order', 'adviser')->orderBy('id', 'desc');
+        $dataProvider = CaseAdvice::select('id', 'name', 'type', 'status', 'phone', 'order', 'adviser', 'view_count')->orderBy('id', 'desc');
 
         $inputs = $request->all();
 
@@ -75,6 +75,12 @@ class CaseAdviceController extends Controller
                         echo Html::span($status, ['class' => 'label label-success']);
                     else
                         echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+            [
+                'title' => 'Lượt Xem',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->view_count);
                 },
             ],
             [
@@ -358,7 +364,7 @@ class CaseAdviceController extends Controller
             $inputs = $request->all();
 
             $validator = Validator::make($inputs, [
-                'content' => 'required',
+                'content' => 'required_if:type,' . CaseAdviceStep::TYPE_FREE_DB,
             ]);
 
             if($validator->passes())
