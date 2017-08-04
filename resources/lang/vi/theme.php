@@ -158,5 +158,6 @@ return [
     'economy' => 'Kinh tế',
     'step' => 'Bước',
     'advice_call' => 'Để được tư vấn chi tiết hơn vui lòng liên hệ :phone',
+    'pay_by_point_can_not_discount' => 'Không thể sử dụng mã giảm giá khi thanh toán bằng điểm',
 
 ];

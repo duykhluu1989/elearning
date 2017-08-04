@@ -35,6 +35,13 @@ class PointPayment extends Payment
 
     public function validatePlaceOrder($paymentMethod, $inputs, $validator, $cart)
     {
+        if(!empty($inputs['discount_code']))
+        {
+            $validator->errors()->add('payment_method', trans('theme.pay_by_point_can_not_discount'));
+
+            return false;
+        }
+
         if(empty(auth()->user()->studentInformation) || empty(auth()->user()->studentInformation->current_point))
         {
             $validator->errors()->add('payment_method', trans('theme.not_enough_point'));
