@@ -557,6 +557,11 @@
                         </ul>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center mt30">
+                        <a href="{{ action('Frontend\CertificateController@adminCertificate') }}" class="btn btnShowall">@lang('theme.all_certificate') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

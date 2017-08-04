@@ -88,4 +88,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
     Route::get('news', 'NewsController@adminCategory');
 
+    Route::get('certificate', 'CertificateController@adminCertificate');
+
+    Route::post('registerCertificate', 'CertificateController@registerCertificate');
+
 });

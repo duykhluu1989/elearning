@@ -151,5 +151,8 @@ return [
     'current_point' => 'Current point',
     'not_enough_point' => 'Current point not enough',
     'can_not_buy_by_point' => 'Can not buy :course by point',
+    'all_certificate' => 'View all certificates',
+    'certificate_price' => 'Exam fee',
+    'invalid_certificate' => 'Invalid certificate',
 
 ];

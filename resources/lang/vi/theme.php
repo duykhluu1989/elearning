@@ -151,5 +151,8 @@ return [
     'current_point' => 'Điểm tích lũy hiện tại',
     'not_enough_point' => 'Không đủ điểm tích lũy',
     'can_not_buy_by_point' => 'Khóa học :course không thể mua bằng điểm',
+    'all_certificate' => 'Xem tất cả các chứng chỉ khoá học',
+    'certificate_price' => 'Lệ phí thi',
+    'invalid_certificate' => 'Chứng chỉ không hợp lệ',
 
 ];
