@@ -63,4 +63,15 @@ class PointPayment extends Payment
         if(auth()->user()->studentInformation->current_point < $totalPointPrice)
             $validator->errors()->add('payment_method', trans('theme.not_enough_point'));
     }
+
+    public function handlePlacedOrderPayment($order)
+    {
+        $paid = $order->completePayment(null, true);
+
+        if($paid == true)
+        {
+            $order->user->studentInformation->current_point -= $order->total_point_price;
+            $order->user->studentInformation->save();
+        }
+    }
 }

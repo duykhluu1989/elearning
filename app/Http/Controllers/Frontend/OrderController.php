@@ -297,6 +297,8 @@ class OrderController extends Controller
                         $orderAddress->save();
                     }
 
+                    $inputs['payment']->handlePlacedOrderPayment($order);
+
                     DB::commit();
 
                     $orderThankYou = [

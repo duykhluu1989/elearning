@@ -53,6 +53,11 @@ abstract class Payment
 
     }
 
+    public function handlePlacedOrderPayment($order)
+    {
+
+    }
+
     public function initData()
     {
         $paymentMethod = new PaymentMethod();

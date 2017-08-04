@@ -81,7 +81,7 @@ class Order extends Model
         return $status;
     }
 
-    public function completePayment($note = null)
+    public function completePayment($note = null, $payByPoint = false)
     {
         if(empty($this->cancelled_at) && $this->payment_status == self::PAYMENT_STATUS_PENDING_DB)
         {
@@ -89,8 +89,17 @@ class Order extends Model
 
             $transaction = new OrderTransaction();
             $transaction->order_id = $this->id;
-            $transaction->amount = $this->total_price;
-            $transaction->point_amount = $this->total_point_price;
+
+            if($payByPoint == false)
+            {
+                $transaction->amount = $this->total_price;
+                $transaction->point_amount = 0;
+            }
+            else
+            {
+                $transaction->amount = 0;
+                $transaction->point_amount = $this->total_point_price;
+            }
 
             $transaction->type = self::PAYMENT_STATUS_COMPLETE_DB;
             $transaction->created_at = date('Y-m-d H:i:s');
@@ -136,7 +145,7 @@ class Order extends Model
                 $this->user->studentInformation->save();
             }
 
-            if(!empty($this->referral) && $this->referral->status == Utility::ACTIVE_DB)
+            if(!empty($transaction->amount) && !empty($this->referral) && $this->referral->status == Utility::ACTIVE_DB)
             {
                 if(!empty($this->referral->collaboratorInformation) && $this->referral->collaboratorInformation->status == Collaborator::STATUS_ACTIVE_DB)
                 {
