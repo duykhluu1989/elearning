@@ -85,10 +85,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>@lang('theme.bank_name')</label>
-                                                <input type="text" class="form-control" name="bank_name" value="{{ old('bank_name', $user->collaboratorInformation->bank_name) }}" />
-                                                @if($errors->has('bank_name'))
+                                                <input type="text" class="form-control" name="bank_holder" value="{{ old('bank_holder', $user->collaboratorInformation->bank_holder) }}" />
+                                                @if($errors->has('bank_holder'))
                                                     <div class="form-group has-error">
-                                                        <span class="help-block">* {{ $errors->first('bank_name') }}</span>
+                                                        <span class="help-block">* {{ $errors->first('bank_holder') }}</span>
                                                     </div>
                                                 @endif
                                             </div>

@@ -420,6 +420,8 @@ class UserController extends Controller
                     'last_name' => 'nullable|string|max:100',
                     'email' => 'required|email|max:255|unique:user,email',
                     'password' => 'required|alpha_dash|min:6|max:32',
+                    'bank' => 'max:255',
+                    'bank_holder' => 'max:255',
                     'bank_number' => 'nullable|numeric',
                 ]);
 
@@ -484,6 +486,8 @@ class UserController extends Controller
                 $inputs = $request->all();
 
                 $validator = Validator::make($inputs, [
+                    'bank' => 'max:255',
+                    'bank_holder' => 'max:255',
                     'bank_number' => 'nullable|numeric',
                 ]);
 
