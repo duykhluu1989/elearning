@@ -427,16 +427,16 @@ class CourseController extends Controller
                 ->where('course.category_status', Utility::ACTIVE_DB)
                 ->where(function($query) use($searchKeywords) {
 
-                    $query->where('course.name', 'like', '%' . $searchKeywords[0])->orWhere('course.name_en', 'like', '%' . $searchKeywords[0])
-                        ->orWhere('category.name', 'like', '%' . $searchKeywords[0])->orWhere('category.name_en', 'like', '%' . $searchKeywords[0]);
+                    $query->where('course.name', 'like', '%' . $searchKeywords[0] . '%')->orWhere('course.name_en', 'like', '%' . $searchKeywords[0] . '%')
+                        ->orWhere('category.name', 'like', '%' . $searchKeywords[0] . '%')->orWhere('category.name_en', 'like', '%' . $searchKeywords[0] . '%');
 
                     $countKeyword = count($searchKeywords);
                     if($countKeyword > 1)
                     {
                         for($i = 1;$i < $countKeyword;$i ++)
                         {
-                            $query->orWhere('course.name', 'like', '%' . $searchKeywords[$i])->orWhere('course.name_en', 'like', '%' . $searchKeywords[$i])
-                                ->orWhere('category.name', 'like', '%' . $searchKeywords[$i])->orWhere('category.name_en', 'like', '%' . $searchKeywords[$i]);
+                            $query->orWhere('course.name', 'like', '%' . $searchKeywords[$i] . '%')->orWhere('course.name_en', 'like', '%' . $searchKeywords[$i] . '%')
+                                ->orWhere('category.name', 'like', '%' . $searchKeywords[$i] . '%')->orWhere('category.name_en', 'like', '%' . $searchKeywords[$i] . '%');
                         }
                     }
 
