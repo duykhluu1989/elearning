@@ -571,16 +571,16 @@ class UserController extends Controller
                 $profile = new Profile();
                 $profile->user_id = $user->id;
                 $profile->first_name = $inputs['first_name'];
-                $profile->last_name = $inputs['last_name'];
+                $profile->last_name = isset($inputs['last_name']) ? $inputs['last_name'] : null;
                 $profile->name = trim($profile->last_name . ' ' . $profile->first_name);
-                $profile->title = $inputs['title'];
+                $profile->title = isset($inputs['title']) ? $inputs['title'] : null;
 
                 if(isset($inputs['gender']) && $inputs['gender'] !== '')
                     $profile->gender = $inputs['gender'];
 
-                $profile->birthday = $inputs['birthday'];
+                $profile->birthday = isset($inputs['birthday']) ? $inputs['birthday'] : null;
                 $profile->phone = $inputs['phone'];
-                $profile->address = $inputs['address'];
+                $profile->address = isset($inputs['address']) ? $inputs['address'] : null;
 
                 if(!empty($inputs['province']))
                 {
