@@ -160,5 +160,8 @@ return [
     'advice_call' => 'Để được tư vấn chi tiết hơn vui lòng liên hệ :phone',
     'pay_by_point_can_not_discount' => 'Không thể sử dụng mã giảm giá khi thanh toán bằng điểm',
     'not_found' => 'Xin lỗi, trang bạn đang tìm kiếm không thể tìm thấy',
+    'search' => 'Nhập từ khóa tìm kiếm',
+    'search_title' => 'Kết quả tìm kiếm',
+    'search_no_result' => 'Không tìm thấy khóa học nào phù hợp',
 
 ];

@@ -56,8 +56,8 @@
 
                         </li>
                     </ul>
-                    <form action="" class="search-box">
-                        <input type="text" class="text search-input" placeholder="Type here to search..." />
+                    <form action="{{ action('Frontend\CourseController@searchCourse') }}" method="get" class="search-box">
+                        <input type="text" name="k" class="text search-input" placeholder="@lang('theme.search') ..." />
                     </form>
                 </div>
             </div>

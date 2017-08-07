@@ -397,4 +397,59 @@ class CourseController extends Controller
 
         return '';
     }
+
+    public function searchCourse(Request $request)
+    {
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'k' => 'required|min:2|max:100',
+        ]);
+
+        if($validator->passes())
+        {
+            $keywords = explode(' ', Utility::removeWhitespace($inputs['k']));
+            $countKeyword = count($keywords);
+            $searchKeywords = array();
+            for($i = 0;$i < $countKeyword;$i ++)
+                $searchKeywords[] = implode(' ', array_slice($keywords, $i, 2));
+
+            $courses = Course::with(['user' => function($query) {
+                $query->select('id');
+            }, 'user.profile' => function($query) {
+                $query->select('user_id', 'name');
+            }, 'promotionPrice' => function($query) {
+                $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
+            }])->select('course.id', 'course.user_id', 'course.name', 'course.name_en', 'course.price', 'course.image', 'course.slug', 'course.slug_en', 'course.bought_count', 'course.view_count')
+                ->join('category_course', 'course.id', '=', 'category_course.course_id')
+                ->join('category', 'category_course.category_id', '=', 'category.id')
+                ->where('course.status', Course::STATUS_PUBLISH_DB)
+                ->where('course.category_status', Utility::ACTIVE_DB)
+                ->where(function($query) use($searchKeywords) {
+
+                    $query->where('course.name', 'like', '%' . $searchKeywords[0])->orWhere('course.name_en', 'like', '%' . $searchKeywords[0])
+                        ->orWhere('category.name', 'like', '%' . $searchKeywords[0])->orWhere('category.name_en', 'like', '%' . $searchKeywords[0]);
+
+                    $countKeyword = count($searchKeywords);
+                    if($countKeyword > 1)
+                    {
+                        for($i = 1;$i < $countKeyword;$i ++)
+                        {
+                            $query->orWhere('course.name', 'like', '%' . $searchKeywords[$i])->orWhere('course.name_en', 'like', '%' . $searchKeywords[$i])
+                                ->orWhere('category.name', 'like', '%' . $searchKeywords[$i])->orWhere('category.name_en', 'like', '%' . $searchKeywords[$i]);
+                        }
+                    }
+
+                })
+                ->orderBy('course.published_at', 'desc')
+                ->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
+        }
+        else
+            $courses = null;
+
+        return view('frontend.courses.search_course', [
+            'courses' => $courses,
+            'keyword' => isset($inputs['k']) ? $inputs['k'] : '',
+        ]);
+    }
 }

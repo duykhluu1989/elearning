@@ -353,4 +353,9 @@ class Utility
             Cookie::queue($cookieName, $viewIds, self::MINUTE_ONE_MONTH);
         }
     }
+
+    public static function removeWhitespace($string)
+    {
+        return preg_replace('/\s+/', ' ', $string);
+    }
 }

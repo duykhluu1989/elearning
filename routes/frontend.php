@@ -46,6 +46,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
             Route::match(['get', 'post'], 'collaborator', 'CollaboratorController@editCollaborator');
 
+            Route::get('collaborator/course', 'CollaboratorController@adminCourse');
+
         });
 
     });
@@ -71,6 +73,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
     Route::get('course/{id}/{slug}/review', 'CourseController@detailCourseReview');
 
     Route::get('newCourseAndNews', 'CourseController@newCourseAndNews');
+
+    Route::get('search', 'CourseController@searchCourse');
 
     Route::get('cart', 'OrderController@editCart');
 

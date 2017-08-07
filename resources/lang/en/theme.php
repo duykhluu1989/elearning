@@ -160,5 +160,8 @@ return [
     'advice_call' => 'For more details please contact :phone',
     'pay_by_point_can_not_discount' => 'Can not use discount code when paying by points',
     'not_found' => 'Sorry, the page you are looking for could not be found',
+    'search' => 'Type here to search',
+    'search_title' => 'Search result',
+    'search_no_result' => 'No matching keyword course found',
 
 ];
