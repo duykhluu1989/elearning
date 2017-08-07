@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +46,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof NotFoundHttpException)
+        {
+            if($request->segment(1) == 'admin')
+                return response()->view('backend.errors.404', [], 404);
+            else
+                return response()->view('frontend.errors.404', [], 404);
+        }
+
         return parent::render($request, $exception);
     }
 

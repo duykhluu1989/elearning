@@ -1,3 +1,3 @@
-@extends('backend.layouts.main')
+@extends('backend.layouts.blank')
 
-@section('page_heading', '404 Page Not Found')
+@section('page_heading', 'Trang Bạn Đang Tìm Kiếm Không Thể Tìm Thấy')

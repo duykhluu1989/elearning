@@ -1,3 +1,3 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', '403 Access Denied')
+@section('page_heading', 'Bạn Không Có Quyền Truy Xuất')
