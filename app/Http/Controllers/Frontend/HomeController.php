@@ -139,7 +139,7 @@ class HomeController extends Controller
             }
         }
 
-        $courses = Course::select('id', 'name', 'name_en', 'price', 'image', 'slug', 'slug_en', 'category_id')
+        $courses = Course::select('id', 'name', 'name_en', 'price', 'image', 'slug', 'slug_en', 'category_id', 'view_count', 'bought_count')
             ->with(['category' => function($query) {
                 $query->select('id', 'name', 'name_en');
             }, 'promotionPrice' => function($query) {
