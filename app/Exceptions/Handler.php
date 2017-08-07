@@ -49,9 +49,9 @@ class Handler extends ExceptionHandler
         if($exception instanceof NotFoundHttpException)
         {
             if($request->segment(1) == 'admin')
-                return response()->view('backend.errors.404', [], 404);
+                return response()->view('backend.errors.404');
             else
-                return response()->view('frontend.errors.404', [], 404);
+                return response()->view('frontend.errors.404');
         }
 
         return parent::render($request, $exception);

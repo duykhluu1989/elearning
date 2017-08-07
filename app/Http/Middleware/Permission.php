@@ -34,7 +34,7 @@ class Permission
                 return response()->view('backend.errors.403');
 
             if(!in_array($route->methods()[0] . ' - ' . $route->uri(), $permissions))
-                return response()->view('backend.errors.403', [], 403);
+                return response()->view('backend.errors.403');
         }
 
         return $next($request);
