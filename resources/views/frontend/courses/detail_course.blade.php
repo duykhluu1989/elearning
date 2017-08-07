@@ -128,17 +128,17 @@
                                             @foreach($course->courseItems as $courseItem)
                                                 <tr class="CourseItemNavigation{{ $courseItem->number == $userCourse->course_item_tracking + 1 ? ' info' : '' }}" style="cursor: pointer" data-href="{{ action('Frontend\CourseController@detailCourseItem', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug'), 'number' => $courseItem->number]) }}">
                                                     <td class="text-center">{{ $courseItem->number }}</td>
-                                                    <td class="col-sm-11" style="border-right: none">
+                                                    <td class="col-sm-10" style="border-right: none">
                                                         {{ \App\Libraries\Helpers\Utility::getValueByLocale($courseItem, 'name') }}
                                                     </td>
-                                                    <td class="text-center" style="border-left: none">
+                                                    <td class="col-sm-1 text-center" style="border-left: none">
                                                         @if(!empty($courseItem->video_length))
                                                             {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->video_length) }}
                                                         @elseif(!empty($courseItem->audio_length))
                                                             {{ \App\Libraries\Helpers\Utility::formatTimeString($courseItem->audio_length) }}
                                                         @endif
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class= text-center">
                                                         @if($courseItem->number <= $userCourse->course_item_tracking)
                                                             <i class="fa fa-check-circle"></i>
                                                         @endif
