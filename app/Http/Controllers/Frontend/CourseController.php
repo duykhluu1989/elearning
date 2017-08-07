@@ -202,7 +202,7 @@ class CourseController extends Controller
         ]);
     }
 
-    public function detailCourse(Request $request, $id, $slug)
+    public function detailCourse($id, $slug)
     {
         $course = Course::with(['user' => function($query) {
             $query->select('id');
@@ -227,27 +227,7 @@ class CourseController extends Controller
         if(empty($course))
             return view('frontend.errors.404');
 
-        if($request->hasCookie(Utility::VIEW_COURSE_COOKIE_NAME))
-        {
-            $viewIds = $request->cookie(Utility::VIEW_COURSE_COOKIE_NAME);
-            $viewIds = explode(';', $viewIds);
-
-            if(!in_array($course->id, $viewIds))
-            {
-                $course->increment('view_count', 1);
-
-                $viewIds[] = $course->id;
-                $viewIds = implode(';', $viewIds);
-
-                Cookie::queue(Utility::VIEW_COURSE_COOKIE_NAME, $viewIds, Utility::MINUTE_ONE_DAY);
-            }
-        }
-        else
-        {
-            $course->increment('view_count', 1);
-
-            Cookie::queue(Utility::VIEW_COURSE_COOKIE_NAME, $course->id, Utility::MINUTE_ONE_DAY);
-        }
+        Utility::viewCount($course, 'view_count', Utility::VIEW_COURSE_COOKIE_NAME);
 
         $bought = false;
         $userCourse = null;

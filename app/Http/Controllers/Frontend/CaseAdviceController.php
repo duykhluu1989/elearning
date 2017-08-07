@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\CaseAdvice;
@@ -29,7 +27,7 @@ class CaseAdviceController extends Controller
         ]);
     }
 
-    public function detailCaseAdvice(Request $request, $id, $slug)
+    public function detailCaseAdvice($id, $slug)
     {
         $advice = CaseAdvice::with(['caseAdviceSteps' => function($query) {
             $query->orderBy('step');
@@ -43,27 +41,7 @@ class CaseAdviceController extends Controller
         if(empty($advice))
             return view('frontend.errors.404');
 
-        if($request->hasCookie(Utility::VIEW_ADVICE_COOKIE_NAME))
-        {
-            $viewIds = $request->cookie(Utility::VIEW_ADVICE_COOKIE_NAME);
-            $viewIds = explode(';', $viewIds);
-
-            if(!in_array($advice->id, $viewIds))
-            {
-                $advice->increment('view_count', 1);
-
-                $viewIds[] = $advice->id;
-                $viewIds = implode(';', $viewIds);
-
-                Cookie::queue(Utility::VIEW_ADVICE_COOKIE_NAME, $viewIds, Utility::MINUTE_ONE_DAY);
-            }
-        }
-        else
-        {
-            $advice->increment('view_count', 1);
-
-            Cookie::queue(Utility::VIEW_ADVICE_COOKIE_NAME, $advice->id, Utility::MINUTE_ONE_DAY);
-        }
+        Utility::viewCount($advice, 'view_count', Utility::VIEW_ADVICE_COOKIE_NAME);
 
         return view('frontend.caseAdvices.detail_case_advice', [
             'advice' => $advice,

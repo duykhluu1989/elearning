@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Course;
@@ -11,9 +9,9 @@ use App\Models\Article;
 
 class PageController extends Controller
 {
-    public function detailPage(Request $request, $id, $slug)
+    public function detailPage($id, $slug)
     {
-        $page = Article::select('id', 'name', 'name_en', 'content', 'content_en', 'short_description', 'short_description_en', 'image', 'group')
+        $page = Article::select('id', 'name', 'name_en', 'content', 'content_en', 'short_description', 'short_description_en', 'image', 'group', 'view_count')
             ->where('type', Article::TYPE_STATIC_ARTICLE_DB)
             ->where('status', Course::STATUS_PUBLISH_DB)
             ->where('id', $id)
@@ -24,27 +22,7 @@ class PageController extends Controller
         if(empty($page))
             return view('frontend.errors.404');
 
-        if($request->hasCookie(Utility::VIEW_ARTICLE_COOKIE_NAME))
-        {
-            $viewIds = $request->cookie(Utility::VIEW_ARTICLE_COOKIE_NAME);
-            $viewIds = explode(';', $viewIds);
-
-            if(!in_array($page->id, $viewIds))
-            {
-                $page->increment('view_count', 1);
-
-                $viewIds[] = $page->id;
-                $viewIds = implode(';', $viewIds);
-
-                Cookie::queue(Utility::VIEW_ARTICLE_COOKIE_NAME, $viewIds, Utility::MINUTE_ONE_DAY);
-            }
-        }
-        else
-        {
-            $page->increment('view_count', 1);
-
-            Cookie::queue(Utility::VIEW_ARTICLE_COOKIE_NAME, $page->id, Utility::MINUTE_ONE_DAY);
-        }
+        Utility::viewCount($page, 'view_count', Utility::VIEW_ARTICLE_COOKIE_NAME);
 
         if($page->group !== null)
         {
