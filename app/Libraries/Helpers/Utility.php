@@ -330,7 +330,7 @@ class Utility
             $viewIds = request()->cookie($cookieName);
             $viewIds = json_decode($viewIds, true);
 
-            if(!isset($viewIds[$obj->id]) || $viewIds[$obj->id] >= $time)
+            if(!isset($viewIds[$obj->id]) || $viewIds[$obj->id] < $time)
             {
                 $obj->increment($attributeName, 1);
 
