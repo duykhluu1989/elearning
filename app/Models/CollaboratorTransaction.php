@@ -8,8 +8,10 @@ class CollaboratorTransaction extends Model
 {
     const TYPE_INCOME_DB = 0;
     const TYPE_DOWNLINE_INCOME_DB = 1;
+    const TYPE_PAYMENT_DB = 2;
     const TYPE_INCOME_LABEL = 'Hoa Hồng';
     const TYPE_DOWNLINE_INCOME_LABEL = 'Hoa Hồng Từ CTV Cấp Dưới';
+    const TYPE_PAYMENT_LABEL = 'Thanh Toán';
 
     protected $table = 'collaborator_transaction';
 
@@ -35,6 +37,7 @@ class CollaboratorTransaction extends Model
         $type = [
             self::TYPE_INCOME_DB => self::TYPE_INCOME_LABEL,
             self::TYPE_DOWNLINE_INCOME_DB => self::TYPE_DOWNLINE_INCOME_LABEL,
+            self::TYPE_PAYMENT_DB => self::TYPE_PAYMENT_LABEL,
         ];
 
         if($value !== null && isset($type[$value]))

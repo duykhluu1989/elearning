@@ -195,7 +195,7 @@ class OrderController extends Controller
         $inputs = $request->all();
 
         $validator = Validator::make($inputs, [
-            'note' => 'nullable|string',
+            'note' => 'nullable|string|max:255',
         ]);
 
         $validator->after(function($validator) use($order) {

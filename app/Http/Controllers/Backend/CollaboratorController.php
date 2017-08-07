@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -158,7 +159,7 @@ class CollaboratorController extends Controller
 
         $collaborator = User::select('id', 'username')
             ->with(['collaboratorInformation' => function($query) {
-                $query->select('user_id');
+                $query->select('user_id', 'current_commission');
             }])->find($id);
 
         if(empty($collaborator) || empty($collaborator->collaboratorInformation))
@@ -170,7 +171,7 @@ class CollaboratorController extends Controller
             $query->select('id');
         }, 'downlineCollaborator.profile' => function($query) {
             $query->select('user_id', 'name');
-        }])->select('collaborator_transaction.collaborator_id', 'collaborator_transaction.order_id', 'collaborator_transaction.type', 'collaborator_transaction.commission_percent', 'collaborator_transaction.commission_amount', 'collaborator_transaction.created_at', 'collaborator_transaction.downline_collaborator_id')
+        }])->select('collaborator_transaction.collaborator_id', 'collaborator_transaction.order_id', 'collaborator_transaction.type', 'collaborator_transaction.commission_percent', 'collaborator_transaction.commission_amount', 'collaborator_transaction.created_at', 'collaborator_transaction.downline_collaborator_id', 'collaborator_transaction.note')
             ->where('collaborator_transaction.collaborator_id', $id)
             ->orderBy('collaborator_transaction.id', 'desc');
 
@@ -186,6 +187,9 @@ class CollaboratorController extends Controller
 
             if(isset($inputs['type']) && $inputs['type'] !== '')
                 $dataProvider->where('collaborator_transaction.type', $inputs['type']);
+
+            if(!empty($inputs['note']))
+                $dataProvider->where('collaborator_transaction.note', 'like', '%' . $inputs['note'] . '%');
         }
 
         $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
@@ -228,6 +232,10 @@ class CollaboratorController extends Controller
                         echo $row->downlineCollaborator->profile->name;
                 },
             ],
+            [
+                'title' => 'Ghi Chú',
+                'data' => 'note',
+            ],
         ];
 
         $gridView = new GridView($dataProvider, $columns);
@@ -243,6 +251,11 @@ class CollaboratorController extends Controller
                 'type' => 'select',
                 'options' => CollaboratorTransaction::getTransactionType(),
             ],
+            [
+                'title' => 'Ghi Chú',
+                'name' => 'note',
+                'type' => 'input',
+            ],
         ]);
         $gridView->setFilterValues($inputs);
 
@@ -250,5 +263,60 @@ class CollaboratorController extends Controller
             'collaborator' => $collaborator,
             'gridView' => $gridView,
         ]);
+    }
+
+    public function paymentCollaborator(Request $request, $id)
+    {
+        $collaborator = User::select('id')
+            ->with(['collaboratorInformation' => function($query) {
+                $query->select('id', 'user_id', 'current_commission');
+            }])->find($id);
+
+        if(empty($collaborator) || empty($collaborator->collaboratorInformation))
+            return '';
+
+        $inputs = $request->all();
+
+        $inputs['amount'] = str_replace('.', '', $inputs['amount']);
+
+        $validator = Validator::make($inputs, [
+            'amount' => 'required|integer|min:1|max:' . $collaborator->collaboratorInformation->current_commission,
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        if($validator->passes())
+        {
+            try
+            {
+                DB::beginTransaction();
+
+                $collaborator->collaboratorInformation->current_commission -= $inputs['amount'];
+                $collaborator->collaboratorInformation->save();
+
+                $transaction = new CollaboratorTransaction();
+                $transaction->collaborator_id = $collaborator->id;
+                $transaction->type = CollaboratorTransaction::TYPE_PAYMENT_DB;
+                $transaction->commission_amount = $inputs['amount'];
+                $transaction->created_at = date('Y-m-d H:i:s');
+                $transaction->note = $inputs['note'];
+                $transaction->save();
+
+                DB::commit();
+
+                return 'Success';
+            }
+            catch(\Exception $e)
+            {
+                DB::rollBack();
+
+                return view('backend.collaborators.partials.payment_collaborator_form', [
+                    'collaborator' => $collaborator,
+                ])->withErrors(['amount' => [$e->getMessage()]]);
+            }
+        }
+        else
+            return view('backend.collaborators.partials.payment_collaborator_form', [
+                'collaborator' => $collaborator,
+            ])->withErrors($validator);
     }
 }
