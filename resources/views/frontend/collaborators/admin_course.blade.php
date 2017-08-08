@@ -29,14 +29,31 @@
                                 @if(empty($discount))
                                     <a href="{{ action('Frontend\CollaboratorController@generateDiscount') }}" class="btn btn-sm btnThemGH">@lang('theme.create_coupon')</a>
                                 @else
-                                    <div class="col-sm-6">
-                                        <label>{{ $discount->code }}</label>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-sm-6">@lang('theme.percent'): {{ $discount->value . '%' }}</label>
+                                    <form action="{{ action('Frontend\CollaboratorController@adminCourse') }}" method="post">
+                                        <div class="col-sm-5">
+                                            <label>{{ $discount->code }}</label>
                                         </div>
-                                    </div>
+                                        <div class="col-sm-7">
+                                            <div class="form-group">
+                                                <label class="col-sm-6">@lang('theme.percent') <i>(@lang('theme.max'): {{ $user->collaboratorInformation->create_discount_percent . '%' }})</i></label>
+                                                <div class="col-sm-6">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="percent" value="{{ old('percent', $discount->value) }}" required="required" />
+                                                        <span class="input-group-addon">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if($errors->has('percent'))
+                                            <div class="form-group has-error">
+                                                <span class="help-block">* {{ $errors->first('percent') }}</span>
+                                            </div>
+                                        @endif
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-lg btnRed"><i class="fa fa-floppy-o" aria-hidden="true"></i> @lang('theme.save')</button>
+                                        </div>
+                                        {{ csrf_field() }}
+                                    </form>
                                 @endif
                             </div>
                             <hr />

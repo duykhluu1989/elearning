@@ -48,8 +48,30 @@ class CollaboratorController extends Controller
     {
         $user = auth()->user();
 
-        $discount = Discount::select('code', 'value')->where('collaborator_id', $user->id)
+        $discount = Discount::select('id', 'code', 'value')->where('collaborator_id', $user->id)
             ->first();
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'percent' => 'required|integer|min:1|max:' . $user->collaboratorInformation->create_discount_percent,
+            ]);
+
+            if($validator->passes())
+            {
+                if(!empty($discount))
+                {
+                    $discount->value = $inputs['percent'];
+                    $discount->save();
+                }
+
+                return redirect()->action('Frontend\CollaboratorController@adminCourse')->with('messageSuccess', trans('theme.success'));
+            }
+            else
+                return redirect()->action('Frontend\CollaboratorController@adminCourse')->withErrors($validator)->withInput();
+        }
 
         $builder = Course::with(['category' => function($query) {
                 $query->select('id', 'name', 'name_en');
@@ -79,6 +101,7 @@ class CollaboratorController extends Controller
         return view('frontend.collaborators.admin_course', [
             'courses' => $courses,
             'discount' => $discount,
+            'user' => $user,
         ]);
     }
 

@@ -46,7 +46,7 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
             Route::match(['get', 'post'], 'collaborator', 'CollaboratorController@editCollaborator');
 
-            Route::get('collaborator/course', 'CollaboratorController@adminCourse');
+            Route::match(['get', 'post'], 'collaborator/course', 'CollaboratorController@adminCourse');
 
             Route::get('collaborator/generateCoupon', 'CollaboratorController@generateDiscount');
 

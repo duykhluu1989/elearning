@@ -101,7 +101,7 @@
                                                     </div>
                                                 @endif
                                             </div>
-                                            <button type="submit" class="btn btn-lg btn-block btnRed"><i class="fa fa-floppy-o" aria-hidden="true"></i>@lang('theme.save')</button>
+                                            <button type="submit" class="btn btn-lg btn-block btnRed"><i class="fa fa-floppy-o" aria-hidden="true"></i> @lang('theme.save')</button>
                                             {{ csrf_field() }}
                                         </form>
                                     </div>

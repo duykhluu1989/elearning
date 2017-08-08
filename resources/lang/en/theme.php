@@ -178,5 +178,6 @@ return [
     'success' => 'Success',
     'link_1' => 'Collaborator link',
     'link_3' => 'Register link',
+    'max' => 'Max',
 
 ];
