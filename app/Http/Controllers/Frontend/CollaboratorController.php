@@ -110,7 +110,24 @@ class CollaboratorController extends Controller
 
     public function getLinkCourse($id)
     {
-        
+        $user = auth()->user();
+
+        $discount = Discount::select('code', 'value')->where('collaborator_id', $user->id)
+            ->first();
+
+        $course = Course::select('id', 'name', 'name_en', 'slug', 'slug_en')
+            ->where('course.status', Course::STATUS_PUBLISH_DB)
+            ->where('course.category_status', Utility::ACTIVE_DB)
+            ->find($id);
+
+        if(empty($course))
+            return view('frontend.errors.404');
+
+        return view('frontend.collaborators.get_link_course', [
+            'course' => $course,
+            'user' => $user,
+            'discount' => $discount,
+        ]);
     }
 
     public function adminCollaboratorTransaction(Request $request)

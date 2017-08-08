@@ -149,35 +149,50 @@ class Order extends Model
             {
                 if(!empty($this->referral->collaboratorInformation) && $this->referral->collaboratorInformation->status == Collaborator::STATUS_ACTIVE_DB)
                 {
-                    $collaboratorTransaction = new CollaboratorTransaction();
-                    $collaboratorTransaction->collaborator_id = $this->referral_id;
-                    $collaboratorTransaction->order_id = $this->id;
-                    $collaboratorTransaction->type = CollaboratorTransaction::TYPE_INCOME_DB;
-                    $collaboratorTransaction->commission_percent = $this->referral->collaboratorInformation->commission_percent;
-                    $collaboratorTransaction->commission_amount = round($transaction->amount * $collaboratorTransaction->commission_percent / 100);
-                    $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
-                    $collaboratorTransaction->save();
+                    $revenue = 0;
+                    $commission = 0;
 
-                    $this->referral->collaboratorInformation->total_revenue += $transaction->amount;
-                    $this->referral->collaboratorInformation->total_commission += $collaboratorTransaction->commission_amount;
-                    $this->referral->collaboratorInformation->current_revenue += $transaction->amount;
-                    $this->referral->collaboratorInformation->current_commission += $collaboratorTransaction->commission_amount;
-                    $this->referral->collaboratorInformation->save();
-
-                    if(!empty($this->referral->collaboratorInformation->parentCollaborator) && $this->referral->collaboratorInformation->parentCollaborator->status == Collaborator::STATUS_ACTIVE_DB
-                        && $this->referral->collaboratorInformation->parentCollaborator->user->status == Utility::ACTIVE_DB && $this->referral->collaboratorInformation->parentCollaborator->rank->code == Setting::COLLABORATOR_MANAGER)
+                    foreach($this->orderItems as $orderItem)
                     {
-                        $parentCollaboratorRank = json_decode($this->referral->collaboratorInformation->parentCollaborator->rank->value, true);
+                        if($orderItem->referral_item)
+                        {
+                            $revenue = $orderItem->price - $this->total_discount_price;
+                            break;
+                        }
+                    }
 
+                    if($revenue > 0)
+                    {
                         $collaboratorTransaction = new CollaboratorTransaction();
-                        $collaboratorTransaction->collaborator_id = $this->referral->collaboratorInformation->parentCollaborator->user_id;
+                        $collaboratorTransaction->collaborator_id = $this->referral_id;
                         $collaboratorTransaction->order_id = $this->id;
-                        $collaboratorTransaction->type = CollaboratorTransaction::TYPE_DOWNLINE_INCOME_DB;
-                        $collaboratorTransaction->commission_percent = $parentCollaboratorRank[Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE];
-                        $collaboratorTransaction->commission_amount = round($transaction->amount * $collaboratorTransaction->commission_percent / 100);
+                        $collaboratorTransaction->type = CollaboratorTransaction::TYPE_INCOME_DB;
+                        $collaboratorTransaction->commission_percent = $this->referral->collaboratorInformation->commission_percent;
+                        $collaboratorTransaction->commission_amount = round($revenue * $collaboratorTransaction->commission_percent / 100);
                         $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
-                        $collaboratorTransaction->downline_collaborator_id = $this->referral_id;
                         $collaboratorTransaction->save();
+
+                        $this->referral->collaboratorInformation->total_revenue += $revenue;
+                        $this->referral->collaboratorInformation->total_commission += $collaboratorTransaction->commission_amount;
+                        $this->referral->collaboratorInformation->current_revenue += $revenue;
+                        $this->referral->collaboratorInformation->current_commission += $collaboratorTransaction->commission_amount;
+                        $this->referral->collaboratorInformation->save();
+
+                        if(!empty($this->referral->collaboratorInformation->parentCollaborator) && $this->referral->collaboratorInformation->parentCollaborator->status == Collaborator::STATUS_ACTIVE_DB
+                            && $this->referral->collaboratorInformation->parentCollaborator->user->status == Utility::ACTIVE_DB && $this->referral->collaboratorInformation->parentCollaborator->rank->code == Setting::COLLABORATOR_MANAGER)
+                        {
+                            $parentCollaboratorRank = json_decode($this->referral->collaboratorInformation->parentCollaborator->rank->value, true);
+
+                            $collaboratorTransaction = new CollaboratorTransaction();
+                            $collaboratorTransaction->collaborator_id = $this->referral->collaboratorInformation->parentCollaborator->user_id;
+                            $collaboratorTransaction->order_id = $this->id;
+                            $collaboratorTransaction->type = CollaboratorTransaction::TYPE_DOWNLINE_INCOME_DB;
+                            $collaboratorTransaction->commission_percent = $parentCollaboratorRank[Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE];
+                            $collaboratorTransaction->commission_amount = round($revenue * $collaboratorTransaction->commission_percent / 100);
+                            $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
+                            $collaboratorTransaction->downline_collaborator_id = $this->referral_id;
+                            $collaboratorTransaction->save();
+                        }
                     }
                 }
             }

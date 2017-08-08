@@ -176,5 +176,7 @@ return [
     'coupon_code' => 'Mã coupon',
     'create_coupon' => 'Tạo mã coupon',
     'success' => 'Thành công',
+    'link_1' => 'Link cộng tác viên',
+    'link_3' => 'Link đăng ký học',
 
 ];

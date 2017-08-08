@@ -14,6 +14,7 @@ class CreateOrderItemTable extends Migration
             $table->unsignedInteger('course_id');
             $table->double('price')->unsigned();
             $table->double('point_price')->unsigned();
+            $table->unsignedTinyInteger('referral_item')->default(0);
         });
     }
 

@@ -176,5 +176,7 @@ return [
     'coupon_code' => 'Coupon code',
     'create_coupon' => 'Generate coupon code',
     'success' => 'Success',
+    'link_1' => 'Collaborator link',
+    'link_3' => 'Register link',
 
 ];

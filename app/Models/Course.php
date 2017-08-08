@@ -170,4 +170,17 @@ class Course extends Model
             $this->save();
         }
     }
+
+    public function generateCollaboratorLink($collaborator, $discount = null, $register = false)
+    {
+        $params = '?referral=' . $collaborator->collaboratorInformation->code;
+
+        if(!empty($discount))
+            $params .= '&coupon=' . $discount->code;
+
+        if($register == true)
+            $params .= '&register=1';
+
+        return action('Frontend\CourseController@detailCourse', ['id' => $this->id, 'slug' => Utility::getValueByLocale($this, 'slug')]) . $params;
+    }
 }

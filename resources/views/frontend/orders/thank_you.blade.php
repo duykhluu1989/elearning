@@ -15,7 +15,7 @@
                     <div class="col-lg-12">
                         <div class="main_content mb60">
                             <div class="row">
-                                <div class="col-lg-12 ">
+                                <div class="col-lg-12">
                                     <h3 class="text-center">@lang('theme.order_success')</h3>
                                     <p>@lang('theme.order_number'): {{ $orderThankYou['order_number'] }}</p>
                                     <p>@lang('theme.payment_method'): {{ $orderThankYou['payment_method'] }}</p>

@@ -4,7 +4,12 @@ namespace App\Libraries\Helpers;
 
 use Illuminate\Support\Facades\Cookie;
 use Intervention\Image\Facades\Image;
+use App\Http\Controllers\Frontend\OrderController;
 use Firebase\JWT\JWT;
+use App\Models\User;
+use App\Models\Collaborator;
+use App\Models\Discount;
+use App\RedisModels\Cart;
 
 class Utility
 {
@@ -357,5 +362,70 @@ class Utility
     public static function removeWhitespace($string)
     {
         return preg_replace('/\s+/', ' ', $string);
+    }
+
+    public static function setReferral($course)
+    {
+        if(request()->has('referral'))
+        {
+            $checkReferral = false;
+
+            if(request()->hasCookie(self::REFERRAL_COOKIE_NAME) == false)
+                $checkReferral = true;
+            else
+            {
+                $referralData = json_decode(request()->cookie(self::REFERRAL_COOKIE_NAME), true);
+
+                if(!is_array($referralData))
+                    $referralData = array();
+
+                if(!isset($referralData['referral']) || $referralData['referral'] != request()->input('referral'))
+                    $checkReferral = true;
+            }
+
+            if($checkReferral == true)
+            {
+                $referral = User::select('user.id')
+                    ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
+                    ->where('user.status', Utility::ACTIVE_DB)
+                    ->where('collaborator.status', Collaborator::STATUS_ACTIVE_DB)
+                    ->where('collaborator.code', request()->input('referral'))
+                    ->first();
+
+                if(!empty($referral))
+                {
+                    $referralData = [
+                        'referral' => request()->input('referral'),
+                        'course' => $course->id,
+                    ];
+
+                    if(request()->has('coupon'))
+                    {
+                        $discount = Discount::select('code')
+                            ->where('code', request()->input('coupon'))
+                            ->where('collaborator_id', $referral->id)
+                            ->first();
+
+                        if(!empty($discount))
+                            $referralData['coupon'] = request()->input('coupon');
+                    }
+
+                    Cookie::queue(Cookie::make(Utility::REFERRAL_COOKIE_NAME, json_encode($referralData), Utility::MINUTE_ONE_MONTH * 2));
+                }
+            }
+
+            if(request()->has('register'))
+            {
+                $cart = new Cart();
+                $cart->addCartItem($course->id);
+                $cart->save();
+
+                OrderController::setCookieCartToken($cart->token);
+
+                return action('Frontend\OrderController@editCart');
+            }
+        }
+
+        return null;
     }
 }

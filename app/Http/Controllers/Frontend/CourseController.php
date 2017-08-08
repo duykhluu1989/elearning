@@ -240,6 +240,14 @@ class CourseController extends Controller
                 $bought = true;
         }
 
+        if($bought == false)
+        {
+            $redirect = Utility::setReferral($course);
+
+            if(!empty($redirect))
+                return redirect($redirect);
+        }
+
         return view('frontend.courses.detail_course', [
             'bought' => $bought,
             'course' => $course,

@@ -105,17 +105,34 @@ class Discount extends Model
         {
             if(request()->hasCookie(Utility::REFERRAL_COOKIE_NAME))
             {
-                $referral = User::select('user.id')
-                    ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
-                    ->where('user.status', Utility::ACTIVE_DB)
-                    ->where('collaborator.status', Collaborator::STATUS_ACTIVE_DB)
-                    ->where('collaborator.code', request()->cookie(Utility::REFERRAL_COOKIE_NAME))
-                    ->first();
+                $referralData = json_decode(request()->cookie(Utility::REFERRAL_COOKIE_NAME), true);
 
-                if(!empty($referral) && $referral->id == auth()->user()->id)
-                    $referral = null;
+                if(!is_array($referralData))
+                    $referralData = array();
 
-                if(empty($referral) || $referral->id != $discount->collaborator_id)
+                if(isset($referralData['referral']) && isset($referralData['coupon']) && isset($referralData['course']))
+                {
+                    $referral = User::select('user.id')
+                        ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
+                        ->where('user.status', Utility::ACTIVE_DB)
+                        ->where('collaborator.status', Collaborator::STATUS_ACTIVE_DB)
+                        ->where('collaborator.code', $referralData['referral'])
+                        ->first();
+
+                    if(!empty($referral) && $referral->id == auth()->user()->id)
+                        $referral = null;
+
+                    if(empty($referral) || $referral->id != $discount->collaborator_id)
+                        return $result;
+
+                    $discountApplyCoupon = new DiscountApply();
+                    $discountApplyCoupon->discount_id = $discount->id;
+                    $discountApplyCoupon->apply_id = $referralData['course'];
+                    $discountApplyCoupon->target = DiscountApply::TARGET_COURSE_DB;
+
+                    $discount->setRelation('discountApplies', [$discountApplyCoupon]);
+                }
+                else
                     return $result;
             }
             else

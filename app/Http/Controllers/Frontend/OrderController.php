@@ -197,16 +197,29 @@ class OrderController extends Controller
 
                 if($request->hasCookie(Utility::REFERRAL_COOKIE_NAME))
                 {
-                    $referral = User::select('user.id')
-                        ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
-                        ->where('user.status', Utility::ACTIVE_DB)
-                        ->where('collaborator.status', Collaborator::STATUS_ACTIVE_DB)
-                        ->where('collaborator.code', $request->cookie(Utility::REFERRAL_COOKIE_NAME))
-                        ->first();
+                    $referralData = json_decode(request()->cookie(Utility::REFERRAL_COOKIE_NAME), true);
 
-                    if(!empty($referral) && $referral->id == auth()->user()->id)
-                        $referral = null;
+                    if(!is_array($referralData))
+                        $referralData = array();
+
+                    if(isset($referralData['referral']) && isset($referralData['course']))
+                    {
+                        $referral = User::select('user.id')
+                            ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
+                            ->where('user.status', Utility::ACTIVE_DB)
+                            ->where('collaborator.status', Collaborator::STATUS_ACTIVE_DB)
+                            ->where('collaborator.code', $referralData['referral'])
+                            ->first();
+
+                        if(!empty($referral) && $referral->id == auth()->user()->id)
+                        {
+                            $referral = null;
+                            $referralData = array();
+                        }
+                    }
                 }
+                else
+                    $referralData = array();
 
                 $courses = Course::with(['promotionPrice' => function($query) {
                     $query->select('course_id', 'status', 'price', 'start_time', 'end_time');
@@ -281,6 +294,9 @@ class OrderController extends Controller
                         else
                             $orderItem->point_price = $course->point_price;
 
+                        if(isset($referralData['course']) && $course->id == $referralData['course'])
+                            $orderItem->referral_item = Utility::ACTIVE_DB;
+
                         $orderItem->save();
                     }
 
@@ -315,6 +331,9 @@ class OrderController extends Controller
 
                     self::deleteCookieCartToken();
 
+                    if(!empty($order->referral_id))
+                        Cookie::queue(Cookie::forget(Utility::REFERRAL_COOKIE_NAME));
+
                     return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou));
                 }
                 catch(\Exception $e)
@@ -335,9 +354,23 @@ class OrderController extends Controller
             ->orderBy('order', 'desc')
             ->get();
 
+        $coupon = null;
+
+        if($request->hasCookie(Utility::REFERRAL_COOKIE_NAME))
+        {
+            $referralData = json_decode(request()->cookie(Utility::REFERRAL_COOKIE_NAME), true);
+
+            if(!is_array($referralData))
+                $referralData = array();
+
+            if(isset($referralData['coupon']))
+                $coupon = $referralData['coupon'];
+        }
+
         return view('frontend.orders.place_order', [
             'cart' => $cart,
             'paymentMethods' => $paymentMethods,
+            'coupon' => $coupon,
         ]);
     }
 
@@ -498,7 +531,7 @@ class OrderController extends Controller
         return request()->cookie(Cart::CART_TOKEN_COOKIE_NAME);
     }
 
-    protected static function setCookieCartToken($token)
+    public static function setCookieCartToken($token)
     {
         Cookie::queue(Cookie::make(Cart::CART_TOKEN_COOKIE_NAME, $token, Utility::SECOND_ONE_HOUR / 60));
     }

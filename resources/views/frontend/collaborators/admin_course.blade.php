@@ -85,7 +85,7 @@
                                             <td>{{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</td>
                                             <td>{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}</td>
                                             <td class="text-center">
-                                                <a class="btn btn-sm btnThemGH">@lang('theme.get_link')</a>
+                                                <a href="{{ action('Frontend\CollaboratorController@getLinkCourse', ['id' => $course->id]) }}" class="btn btn-sm btnThemGH" target="_blank">@lang('theme.get_link')</a>
                                             </td>
                                         </tr>
                                     @endforeach

@@ -49,7 +49,7 @@
                     {{ $order->user->profile->name }}
                 </div>
                 <div class="col-sm-4">
-                    <p class="page-header">Mã Giám Giá</p>
+                    <p class="page-header">Mã Giảm Giá</p>
                     @if(!empty($order->discount))
                         {{ $order->discount->code }}
                     @endif
