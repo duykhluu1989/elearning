@@ -13,7 +13,7 @@ class CollaboratorTransaction extends Model
     const TYPE_DOWNLINE_INCOME_LABEL = 'Hoa Hồng Từ CTV Cấp Dưới';
     const TYPE_PAYMENT_LABEL = 'Thanh Toán';
     const TYPE_INCOME_LABEL_EN = 'Commission';
-    const TYPE_DOWNLINE_INCOME_LABEL_EN = 'Commission from down line';
+    const TYPE_DOWNLINE_INCOME_LABEL_EN = 'Commission From Down Line';
     const TYPE_PAYMENT_LABEL_EN = 'Payment';
 
     protected $table = 'collaborator_transaction';

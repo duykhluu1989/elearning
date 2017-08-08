@@ -9,6 +9,7 @@ use App\Libraries\Helpers\Utility;
 use App\Models\Course;
 use App\Models\CollaboratorTransaction;
 use App\Models\Discount;
+use App\Models\User;
 
 class CollaboratorController extends Controller
 {
@@ -189,6 +190,32 @@ class CollaboratorController extends Controller
 
         return view('frontend.collaborators.admin_collaborator_transaction', [
             'transactions' => $transactions,
+        ]);
+    }
+
+    public function adminCollaboratorDownLine(Request $request)
+    {
+        $user = auth()->user();
+
+        $builder = User::with(['collaboratorInformation' => function($query) {
+            $query->select('id', 'code');
+        }])->select('user.*')
+            ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
+            ->where('collaborator.parent_id', $user->id)
+            ->orderBy('user.created_at', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+
+        }
+
+        $collaborators = $builder->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
+
+        return view('frontend.collaborators.admin_collaborator_down_line', [
+            'collaborators' => $collaborators,
+            'user' => $user,
         ]);
     }
 }

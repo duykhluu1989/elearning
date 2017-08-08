@@ -179,5 +179,6 @@ return [
     'link_1' => 'Collaborator link',
     'link_3' => 'Register link',
     'max' => 'Max',
+    'collaborator_down_line' => 'Collaborator down line',
 
 ];
