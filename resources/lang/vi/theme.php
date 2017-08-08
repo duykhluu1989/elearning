@@ -163,5 +163,14 @@ return [
     'search' => 'Nhập từ khóa tìm kiếm',
     'search_title' => 'Kết quả tìm kiếm',
     'search_no_result' => 'Không tìm thấy khóa học nào phù hợp',
+    'get_course_link' => 'Lấy link khóa học',
+    'get_link' => 'Lấy link',
+    'search_course' => 'Tìm theo khóa học',
+    'search_category' => 'Tìm theo chủ đề',
+    'commission_history' => 'Lịch sử hoa hồng',
+    'type' => 'Loại',
+    'amount' => 'Tiền',
+    'percent' => 'Phần trăm',
+    'search_order' => 'Tìm theo mã đơn hàng',
 
 ];

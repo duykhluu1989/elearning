@@ -12,6 +12,9 @@ class CollaboratorTransaction extends Model
     const TYPE_INCOME_LABEL = 'Hoa Hồng';
     const TYPE_DOWNLINE_INCOME_LABEL = 'Hoa Hồng Từ CTV Cấp Dưới';
     const TYPE_PAYMENT_LABEL = 'Thanh Toán';
+    const TYPE_INCOME_LABEL_EN = 'Commission';
+    const TYPE_DOWNLINE_INCOME_LABEL_EN = 'Commission from down line';
+    const TYPE_PAYMENT_LABEL_EN = 'Payment';
 
     protected $table = 'collaborator_transaction';
 
@@ -32,7 +35,7 @@ class CollaboratorTransaction extends Model
         return $this->belongsTo('App\Models\User', 'downline_collaborator_id');
     }
 
-    public static function getTransactionType($value = null)
+    public static function getTransactionType($value = null, $lang = 'vi')
     {
         $type = [
             self::TYPE_INCOME_DB => self::TYPE_INCOME_LABEL,
@@ -40,9 +43,21 @@ class CollaboratorTransaction extends Model
             self::TYPE_PAYMENT_DB => self::TYPE_PAYMENT_LABEL,
         ];
 
-        if($value !== null && isset($type[$value]))
-            return $type[$value];
+        $typeEn = [
+            self::TYPE_INCOME_DB => self::TYPE_INCOME_LABEL_EN,
+            self::TYPE_DOWNLINE_INCOME_DB => self::TYPE_DOWNLINE_INCOME_LABEL_EN,
+            self::TYPE_PAYMENT_DB => self::TYPE_PAYMENT_LABEL_EN,
+        ];
 
+        if($value !== null && isset($type[$value]))
+        {
+            if($lang == 'en')
+                return $typeEn[$value];
+            return $type[$value];
+        }
+
+        if($lang == 'en')
+            return $typeEn;
         return $type;
     }
 }

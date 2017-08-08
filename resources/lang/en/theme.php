@@ -163,5 +163,14 @@ return [
     'search' => 'Type here to search',
     'search_title' => 'Search result',
     'search_no_result' => 'No matching keyword course found',
+    'get_course_link' => 'Get the course link',
+    'get_link' => 'Get link',
+    'search_course' => 'Search by course',
+    'search_category' => 'Search by category',
+    'commission_history' => 'Commission history',
+    'type' => 'Type',
+    'amount' => 'Amount',
+    'percent' => 'Percent',
+    'search_order' => 'Search by order number',
 
 ];
