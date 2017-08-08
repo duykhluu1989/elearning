@@ -24,24 +24,47 @@
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                         <div class="main_content">
-                            <div class="table-responsive">
+                            <div class="row">
+                                <h4>@lang('theme.coupon_code')</h4>
+                                @if(empty($discount))
+                                    <a href="{{ action('Frontend\CollaboratorController@generateDiscount') }}" class="btn btn-sm btnThemGH">@lang('theme.create_coupon')</a>
+                                @else
+                                    <div class="col-sm-6">
+                                        <label>{{ $discount->code }}</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-6">@lang('theme.percent'): {{ $discount->value . '%' }}</label>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            <hr />
+                            <div class="row table-responsive">
+                                <h4>@lang('theme.all_course')</h4>
                                 <table class="table table-hover table-bordered">
                                     <thead>
                                     <tr>
+                                        <th></th>
                                         <th>@lang('theme.course')</th>
                                         <th>@lang('theme.category')</th>
+                                        <th>@lang('theme.bought_count')</th>
+                                        <th>@lang('theme.price')</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <form action="{{ action('Frontend\CollaboratorController@adminCourse') }}" method="get">
                                         <tr>
+                                            <td></td>
                                             <td>
                                                 <input type="text" class="form-control" name="course" placeholder="@lang('theme.search_course')" value="{{ request()->input('course') }}" />
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control" name="category" placeholder="@lang('theme.search_category')" value="{{ request()->input('category') }}" />
                                             </td>
+                                            <td></td>
+                                            <td></td>
                                             <td>
                                                 <button type="submit" class="hidden"></button>
                                             </td>
@@ -50,10 +73,17 @@
 
                                     @foreach($courses as $course)
                                         <tr>
+                                            <td class="col-sm-2">
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
+                                                    <img src="{{ $course->image }}" width="100%" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" />
+                                                </a>
+                                            </td>
                                             <td>
                                                 <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}</a>
                                             </td>
                                             <td>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</td>
+                                            <td>{{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</td>
+                                            <td>{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}</td>
                                             <td class="text-center">
                                                 <a class="btn btn-sm btnThemGH">@lang('theme.get_link')</a>
                                             </td>

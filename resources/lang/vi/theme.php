@@ -172,5 +172,9 @@ return [
     'amount' => 'Tiền',
     'percent' => 'Phần trăm',
     'search_order' => 'Tìm theo mã đơn hàng',
+    'bought_count' => 'Đã mua',
+    'coupon_code' => 'Mã coupon',
+    'create_coupon' => 'Tạo mã coupon',
+    'success' => 'Thành công',
 
 ];

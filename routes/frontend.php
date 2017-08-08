@@ -48,6 +48,10 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
             Route::get('collaborator/course', 'CollaboratorController@adminCourse');
 
+            Route::get('collaborator/generateCoupon', 'CollaboratorController@generateDiscount');
+
+            Route::get('collaborator/course/{id}/getLink', 'CollaboratorController@getLinkCourse');
+
             Route::get('collaborator/transaction', 'CollaboratorController@adminCollaboratorTransaction');
 
         });

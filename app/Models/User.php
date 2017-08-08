@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\Expert', 'user_id');
     }
 
+    public function collaboratorDiscount()
+    {
+        return $this->hasOne('App\Models\Discount', 'collaborator_id');
+    }
+
     public static function initCoreUser()
     {
         $user = new User();

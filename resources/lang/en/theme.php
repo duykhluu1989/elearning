@@ -172,5 +172,9 @@ return [
     'amount' => 'Amount',
     'percent' => 'Percent',
     'search_order' => 'Search by order number',
+    'bought_count' => 'Bought',
+    'coupon_code' => 'Coupon code',
+    'create_coupon' => 'Generate coupon code',
+    'success' => 'Success',
 
 ];

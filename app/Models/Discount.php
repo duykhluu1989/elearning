@@ -26,6 +26,11 @@ class Discount extends Model
         return $this->hasMany('App\Models\DiscountApply', 'discount_id');
     }
 
+    public function collaborator()
+    {
+        return $this->belongsTo('App\Models\User', 'collaborator_id');
+    }
+
     public static function getDiscountType($value = null)
     {
         $type = [

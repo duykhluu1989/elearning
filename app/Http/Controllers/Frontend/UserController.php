@@ -389,7 +389,7 @@ class UserController extends Controller
 
                     DB::commit();
 
-                    return redirect()->action('Frontend\UserController@editAccount')->with('messageSuccess', 'Thành Công');
+                    return redirect()->action('Frontend\UserController@editAccount')->with('messageSuccess', trans('theme.success'));
                 }
                 catch(\Exception $e)
                 {

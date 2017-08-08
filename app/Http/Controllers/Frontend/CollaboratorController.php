@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Course;
 use App\Models\CollaboratorTransaction;
+use App\Models\Discount;
 
 class CollaboratorController extends Controller
 {
@@ -32,7 +33,7 @@ class CollaboratorController extends Controller
                 $user->collaboratorInformation->bank_number = $inputs['bank_number'];
                 $user->collaboratorInformation->save();
 
-                return redirect()->action('Frontend\CollaboratorController@editCollaborator')->with('messageSuccess', 'Thành Công');
+                return redirect()->action('Frontend\CollaboratorController@editCollaborator')->with('messageSuccess', trans('theme.success'));
             }
             else
                 return redirect()->action('Frontend\CollaboratorController@editCollaborator')->withErrors($validator)->withInput();
@@ -45,10 +46,15 @@ class CollaboratorController extends Controller
 
     public function adminCourse(Request $request)
     {
+        $user = auth()->user();
+
+        $discount = Discount::select('code', 'value')->where('collaborator_id', $user->id)
+            ->first();
+
         $builder = Course::with(['category' => function($query) {
                 $query->select('id', 'name', 'name_en');
             }])
-            ->select('course.id', 'course.name', 'course.name_en', 'course.price', 'course.image', 'course.slug', 'course.slug_en', 'course.bought_count', 'course.view_count', 'course.category_id')
+            ->select('course.id', 'course.name', 'course.name_en', 'course.price', 'course.image', 'course.slug', 'course.slug_en', 'course.bought_count', 'course.category_id')
             ->where('course.status', Course::STATUS_PUBLISH_DB)
             ->where('course.category_status', Utility::ACTIVE_DB)
             ->orderBy('course.published_at', 'desc');
@@ -72,7 +78,39 @@ class CollaboratorController extends Controller
 
         return view('frontend.collaborators.admin_course', [
             'courses' => $courses,
+            'discount' => $discount,
         ]);
+    }
+
+    public function generateDiscount()
+    {
+        $user = auth()->user();
+
+        $discount = Discount::select('id')->where('collaborator_id', $user->id)
+            ->first();
+
+        if(empty($discount))
+        {
+            $discount = new Discount();
+            $discount->code = Discount::generateCodeByNumberCharacter(20);
+            $discount->status = Utility::ACTIVE_DB;
+            $discount->start_time = date('Y-m-d');
+            $discount->end_time = date('Y-m-d', strtotime('+ 10 years'));
+            $discount->type = Discount::TYPE_PERCENTAGE_DB;
+            $discount->value = $user->collaboratorInformation->commission_percent;
+            $discount->created_at = date('Y-m-d H:i:s');
+            $discount->collaborator_id = $user->id;
+            $discount->save();
+
+            return redirect()->action('Frontend\CollaboratorController@adminCourse')->with('messageSuccess', trans('theme.success'));
+        }
+
+        return redirect()->action('Frontend\CollaboratorController@adminCourse');
+    }
+
+    public function getLinkCourse($id)
+    {
+        
     }
 
     public function adminCollaboratorTransaction(Request $request)
