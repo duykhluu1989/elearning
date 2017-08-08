@@ -60,6 +60,15 @@ class Collaborator extends Model
                         $collaborator->commission_percent = $upRank[self::COMMISSION_ATTRIBUTE];
                         $collaborator->current_revenue -= $collaboratorRank[self::REVENUE_ATTRIBUTE];
                         $collaborator->upranked_at = date('Y-m-d H:i:s');
+
+                        if(!empty($collaborator->user->collaboratorDiscount))
+                        {
+                            if($collaborator->user->collaboratorDiscount->value < $upRank[self::COMMISSION_ATTRIBUTE])
+                            {
+                                $collaborator->user->collaboratorDiscount->value = $upRank[self::COMMISSION_ATTRIBUTE];
+                                $collaborator->user->collaboratorDiscount->save();
+                            }
+                        }
                     }
                 }
             }
