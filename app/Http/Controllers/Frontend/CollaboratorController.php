@@ -227,7 +227,6 @@ class CollaboratorController extends Controller
 
         return view('frontend.collaborators.admin_collaborator_down_line', [
             'collaborators' => $collaborators,
-            'user' => $user,
         ]);
     }
 }

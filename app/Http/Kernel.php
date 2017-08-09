@@ -62,5 +62,6 @@ class Kernel extends HttpKernel
         'visitorCount' => \App\Http\Middleware\VisitorCount::class,
         'setVisitStartTime' => \App\Http\Middleware\SetVisitStartTime::class,
         'collaboratorAccess' => \App\Http\Middleware\CollaboratorAccess::class,
+        'collaboratorManagerAccess' => \App\Http\Middleware\CollaboratorManagerAccess::class,
     ];
 }

@@ -54,7 +54,11 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
             Route::get('collaborator/transaction', 'CollaboratorController@adminCollaboratorTransaction');
 
-            Route::get('collaborator/downLine', 'CollaboratorController@adminCollaboratorDownLine');
+            Route::group(['middleware' => ['collaboratorManagerAccess']], function() {
+
+                Route::get('collaborator/downLine', 'CollaboratorController@adminCollaboratorDownLine');
+
+            });
 
         });
 

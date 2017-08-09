@@ -33,7 +33,7 @@
                                             <input type="text" class="form-control" value="{{ $user->collaboratorInformation->code }}" readonly="readonly" />
                                         </div>
 
-                                        @if(!empty($collaborator->collaboratorInformation->parentCollaborator))
+                                        @if(!empty($user->collaboratorInformation->parentCollaborator))
                                             <div class="form-group">
                                                 <label>@lang('theme.manager')</label>
                                                 <input type="text" class="form-control" value="{{ $user->collaboratorInformation->parentCollaborator->code }}" readonly="readonly" />
@@ -52,6 +52,17 @@
                                             <label>@lang('theme.commission')</label>
                                             <input type="text" class="form-control" value="{{ $user->collaboratorInformation->commission_percent . '%' }}" readonly="readonly" />
                                         </div>
+
+                                        @if($user->collaboratorInformation->rank->code == \App\Models\Setting::COLLABORATOR_MANAGER)
+                                            <?php
+                                            $collaboratorRank = json_decode($user->collaboratorInformation->rank->value, true);
+                                            ?>
+                                            <div class="form-group">
+                                                <label>@lang('theme.commission_down_line')</label>
+                                                <input type="text" class="form-control" value="{{ $collaboratorRank[\App\Models\Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE] . '%' }}" readonly="readonly" />
+                                            </div>
+                                        @endif
+
                                         <div class="form-group">
                                             <label>@lang('theme.current_revenue')</label>
                                             <input type="text" class="form-control" value="{{ \App\Libraries\Helpers\Utility::formatNumber($user->collaboratorInformation->current_revenue) . 'đ' }}" readonly="readonly" />

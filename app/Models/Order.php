@@ -150,7 +150,6 @@ class Order extends Model
                 if(!empty($this->referral->collaboratorInformation) && $this->referral->collaboratorInformation->status == Collaborator::STATUS_ACTIVE_DB)
                 {
                     $revenue = 0;
-                    $commission = 0;
 
                     foreach($this->orderItems as $orderItem)
                     {

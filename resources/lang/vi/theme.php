@@ -182,5 +182,6 @@ return [
     'collaborator_down_line' => 'CTV cấp dưới',
     'search_code' => 'Tìm theo mã',
     'search_name' => 'Tìm theo tên',
+    'commission_down_line' => 'Mức hoa hồng từ cấp dưới',
 
 ];

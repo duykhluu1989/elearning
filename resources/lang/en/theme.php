@@ -182,5 +182,6 @@ return [
     'collaborator_down_line' => 'Collaborator down line',
     'search_code' => 'Search by code',
     'search_name' => 'Search by name',
+    'commission_down_line' => 'Commission percent from down line',
 
 ];
