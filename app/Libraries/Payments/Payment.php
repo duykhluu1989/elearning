@@ -17,12 +17,16 @@ abstract class Payment
             $bankTransferPayment = new BankTransferPayment();
             $atOfficePayment = new AtOfficePayment();
             $pointPayment = new PointPayment();
+            $onePayAtmPayment = new OnePayAtmPayment();
+            $onePayCreditPayment = new OnePayCreditPayment();
 
             self::$payments = [
                 $codPayment->getCode() => $codPayment,
                 $bankTransferPayment->getCode() => $bankTransferPayment,
                 $atOfficePayment->getCode() => $atOfficePayment,
                 $pointPayment->getCode() => $pointPayment,
+                $onePayAtmPayment->getCode() => $onePayAtmPayment,
+                $onePayCreditPayment->getCode() => $onePayCreditPayment,
             ];
         }
 

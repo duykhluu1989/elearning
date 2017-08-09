@@ -11,6 +11,8 @@ class PaymentMethod extends Model
     const PAYMENT_TYPE_BANK_TRANSFER_DB = 1;
     const PAYMENT_TYPE_AT_OFFICE_DB = 2;
     const PAYMENT_TYPE_POINT_DB = 3;
+    const PAYMENT_TYPE_ATM_ONLINE_DB = 4;
+    const PAYMENT_TYPE_CREDIT_ONLINE_DB = 5;
 
     protected $table = 'payment_method';
 
