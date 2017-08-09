@@ -58,6 +58,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
                 Route::get('collaborator/downLine', 'CollaboratorController@adminCollaboratorDownLine');
 
+                Route::match(['get', 'post'], 'collaborator/downLine/{id}/edit', 'CollaboratorController@editCollaboratorDownLine');
+
             });
 
         });

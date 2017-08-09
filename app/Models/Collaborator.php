@@ -33,46 +33,65 @@ class Collaborator extends Model
         parent::boot();
 
         self::saving(function(Collaborator $collaborator) {
-            if($collaborator->current_revenue > $collaborator->getOriginal('current_revenue'))
+            self::changeCurrentRevenueSavingHandle($collaborator);
+
+            self::changeCreateDiscountPercentSavingHandle($collaborator);
+        });
+    }
+
+    protected static function changeCurrentRevenueSavingHandle(Collaborator $collaborator)
+    {
+        if($collaborator->current_revenue > $collaborator->getOriginal('current_revenue'))
+        {
+            if($collaborator->rank->code == Setting::COLLABORATOR_SILVER || $collaborator->rank->code == Setting::COLLABORATOR_GOLD)
             {
-                if($collaborator->rank->code == Setting::COLLABORATOR_SILVER || $collaborator->rank->code == Setting::COLLABORATOR_GOLD)
+                $collaboratorRank = json_decode($collaborator->rank->value, true);
+
+                if($collaborator->current_revenue >= $collaboratorRank[self::REVENUE_ATTRIBUTE])
                 {
-                    $collaboratorRank = json_decode($collaborator->rank->value, true);
+                    $ranks = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
 
-                    if($collaborator->current_revenue >= $collaboratorRank[self::REVENUE_ATTRIBUTE])
+                    if($collaborator->rank->code == Setting::COLLABORATOR_SILVER)
                     {
-                        $ranks = Setting::getSettings(Setting::CATEGORY_COLLABORATOR_DB);
+                        $collaborator->rank_id = $ranks[Setting::COLLABORATOR_GOLD]->id;
 
-                        if($collaborator->rank->code == Setting::COLLABORATOR_SILVER)
+                        $upRank = json_decode($ranks[Setting::COLLABORATOR_GOLD]->value, true);
+                    }
+                    else
+                    {
+                        $collaborator->rank_id = $ranks[Setting::COLLABORATOR_DIAMOND]->id;
+
+                        $upRank = json_decode($ranks[Setting::COLLABORATOR_DIAMOND]->value, true);
+                    }
+
+                    $collaborator->create_discount_percent = $upRank[self::DISCOUNT_ATTRIBUTE];
+                    $collaborator->commission_percent = $upRank[self::COMMISSION_ATTRIBUTE];
+                    $collaborator->current_revenue -= $collaboratorRank[self::REVENUE_ATTRIBUTE];
+                    $collaborator->upranked_at = date('Y-m-d H:i:s');
+
+                    if(!empty($collaborator->user->collaboratorDiscount))
+                    {
+                        if($collaborator->user->collaboratorDiscount->value < $upRank[self::COMMISSION_ATTRIBUTE])
                         {
-                            $collaborator->rank_id = $ranks[Setting::COLLABORATOR_GOLD]->id;
-
-                            $upRank = json_decode($ranks[Setting::COLLABORATOR_GOLD]->value, true);
-                        }
-                        else
-                        {
-                            $collaborator->rank_id = $ranks[Setting::COLLABORATOR_DIAMOND]->id;
-
-                            $upRank = json_decode($ranks[Setting::COLLABORATOR_DIAMOND]->value, true);
-                        }
-
-                        $collaborator->create_discount_percent = $upRank[self::DISCOUNT_ATTRIBUTE];
-                        $collaborator->commission_percent = $upRank[self::COMMISSION_ATTRIBUTE];
-                        $collaborator->current_revenue -= $collaboratorRank[self::REVENUE_ATTRIBUTE];
-                        $collaborator->upranked_at = date('Y-m-d H:i:s');
-
-                        if(!empty($collaborator->user->collaboratorDiscount))
-                        {
-                            if($collaborator->user->collaboratorDiscount->value < $upRank[self::COMMISSION_ATTRIBUTE])
-                            {
-                                $collaborator->user->collaboratorDiscount->value = $upRank[self::COMMISSION_ATTRIBUTE];
-                                $collaborator->user->collaboratorDiscount->save();
-                            }
+                            $collaborator->user->collaboratorDiscount->value = $upRank[self::COMMISSION_ATTRIBUTE];
+                            $collaborator->user->collaboratorDiscount->save();
                         }
                     }
                 }
             }
-        });
+        }
+    }
+
+    protected static function changeCreateDiscountPercentSavingHandle(Collaborator $collaborator)
+    {
+        if($collaborator->create_discount_percent < $collaborator->getOriginal('create_discount_percent'))
+        {
+            if(!empty($collaborator->user->collaboratorDiscount) && $collaborator->user->collaboratorDiscount->value > $collaborator->create_discount_percent)
+            {
+                $collaborator->user->collaboratorDiscount->value = $collaborator->create_discount_percent;
+                $collaborator->user->collaboratorDiscount->save();
+            }
+        }
     }
 
     public function user()

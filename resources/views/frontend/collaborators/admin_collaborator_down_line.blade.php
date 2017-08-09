@@ -25,7 +25,6 @@
                     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                         <div class="main_content">
                             <div class="row table-responsive">
-                                <h4>@lang('theme.all_course')</h4>
                                 <table class="table table-hover table-bordered">
                                     <thead>
                                     <tr>
@@ -73,7 +72,9 @@
 
                                     @foreach($collaborators as $collaborator)
                                         <tr>
-                                            <td>{{ $collaborator->collaboratorInformation->code }}</td>
+                                            <td>
+                                                <a class="label label-danger" href="{{ action('Frontend\CollaboratorController@editCollaboratorDownLine', ['id' => $collaborator->id]) }}">{{ $collaborator->collaboratorInformation->code }}</a>
+                                            </td>
                                             <td>{{ $collaborator->profile->name }}</td>
                                             <td>{{ $collaborator->collaboratorInformation->rank->name }}</td>
                                             <td>{{ \App\Libraries\Helpers\Utility::formatNumber($collaborator->collaboratorInformation->total_commission) . 'đ' }}</td>

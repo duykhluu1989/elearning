@@ -122,6 +122,8 @@ return [
         'new_password' => 'new password',
         're_new_password' => 'confirm new password',
         'bank_number' => 'bank number',
+        'commission_percent' => 'commission percent',
+        'create_discount_percent' => 'discount coupon percent',
     ],
 
 ];

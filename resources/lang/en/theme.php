@@ -139,7 +139,7 @@ return [
     'code' => 'Code',
     'manager' => 'Manager',
     'rank' => 'Rank',
-    'create_discount' => 'Percent discount coupon',
+    'create_discount' => 'Discount coupon percent',
     'commission' => 'Commission percent',
     'current_revenue' => 'Current revenue',
     'current_commission' => 'Current commission',

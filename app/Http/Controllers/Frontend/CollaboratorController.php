@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\Collaborator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -227,6 +228,51 @@ class CollaboratorController extends Controller
 
         return view('frontend.collaborators.admin_collaborator_down_line', [
             'collaborators' => $collaborators,
+        ]);
+    }
+
+    public function editCollaboratorDownLine(Request $request, $id)
+    {
+        $user = auth()->user();
+
+        $collaborator = User::with(['collaboratorInformation' => function($query) {
+            $query->select('id', 'user_id', 'code', 'rank_id', 'total_commission', 'total_revenue', 'create_discount_percent', 'commission_percent');
+        }, 'profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('user.id')
+            ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
+            ->where('collaborator.parent_id', $user->collaboratorInformation->id)
+            ->where('user.id', $id)
+            ->first();
+
+        if(empty($collaborator))
+            return view('frontend.errors.404');
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $collaboratorRank = json_decode($collaborator->collaboratorInformation->rank->value, true);
+
+            $validator = Validator::make($inputs, [
+                'commission_percent' => 'required|integer|min:1|max:' . $collaboratorRank[Collaborator::COMMISSION_ATTRIBUTE],
+                'create_discount_percent' => 'required|integer|min:1|max:' . $collaboratorRank[Collaborator::DISCOUNT_ATTRIBUTE],
+            ]);
+
+            if($validator->passes())
+            {
+                $collaborator->collaboratorInformation->commission_percent = $inputs['commission_percent'];
+                $collaborator->collaboratorInformation->create_discount_percent = $inputs['create_discount_percent'];
+                $collaborator->collaboratorInformation->save();
+
+                return redirect()->action('Frontend\CollaboratorController@editCollaboratorDownLine', ['id' => $collaborator->id])->with('messageSuccess', trans('theme.success'));
+            }
+            else
+                return redirect()->action('Frontend\CollaboratorController@editCollaboratorDownLine', ['id' => $collaborator->id])->withErrors($validator)->withInput();
+        }
+
+        return view('frontend.collaborators.edit_collaborator_down_line', [
+            'collaborator' => $collaborator,
         ]);
     }
 }

@@ -135,6 +135,8 @@ return [
         're_new_password' => 'xác nhận mật khẩu mới',
         'bank_number' => 'số tài khoản',
         'percent' => 'phầm trăm',
+        'commission_percent' => 'mức hoa hồng được hưởng',
+        'create_discount_percent' => 'mức giảm giá được tạo',
     ],
 
 ];
