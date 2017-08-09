@@ -493,12 +493,47 @@ class OrderController extends Controller
 
     public function paymentOrder(Request $request, $id)
     {
+        $order = Order::with(['paymentMethod', 'orderItems.course' => function($query) {
+            $query->select('id', 'name', 'name_en');
+        }])->where('payment_status', Order::PAYMENT_STATUS_PENDING_DB)
+            ->find($id);
+
+        if(empty($order))
+            return view('frontend.errors.404');
+
+        $payment = Payment::getPayments($order->paymentMethod->code);
+
         $inputs = $request->all();
 
-        echo '<pre>';
-        print_r($inputs);
-        echo '</pre>';
-        exit();
+        try
+        {
+            DB::beginTransaction();
+
+            $paid = $payment->handleOrderPaymentResponse($order->paymentMethod, $order, $inputs);
+
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            $paid = false;
+        }
+
+        $orderThankYou = [
+            'order_number' => $order->number,
+            'payment_method' => Utility::getValueByLocale($order->paymentMethod, 'name'),
+            'total_price' => $order->total_price,
+            'courses' => array(),
+        ];
+
+        foreach($order->orderItems as $orderItem)
+            $orderThankYou['courses'][] = Utility::getValueByLocale($orderItem->course, 'name');
+
+        if($paid)
+            return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou))->with('messageSuccess', trans('theme.payment_success'));
+        else
+            return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou))->with('messageSuccess', trans('theme.payment_fail'));
     }
 
     protected static function getCart()

@@ -135,4 +135,9 @@ class OnePayAtmPayment extends Payment
             ];
         }
     }
+
+    public function handleOrderPaymentResponse($paymentMethod, $order, $params)
+    {
+        list($merchantId, $accessCode, $hashCode, $paymentUrl) = self::getPaymentIntegrateInformation($paymentMethod);
+    }
 }

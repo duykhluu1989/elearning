@@ -32,8 +32,6 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
         Route::post('discount', 'OrderController@useDiscountCode');
 
-        Route::get('thankYou', 'OrderController@thankYou');
-
         Route::get('learnCourseNow/{id}/{slug}', 'OrderController@learnCourseNow');
 
         Route::get('course/{id}/{slug}/item/{number}', 'CourseController@detailCourseItem');
@@ -113,6 +111,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
     Route::get('advice/{type?}', 'CaseAdviceController@adminCaseAdvice');
 
     Route::get('advice/{id}/{slug}', 'CaseAdviceController@detailCaseAdvice');
+
+    Route::get('thankYou', 'OrderController@thankYou');
 
     Route::get('order/{id}/payment', 'OrderController@paymentOrder');
 
