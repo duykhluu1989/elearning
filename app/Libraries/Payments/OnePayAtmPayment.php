@@ -2,8 +2,12 @@
 
 namespace App\Libraries\Payments;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
+use App\Libraries\Helpers\Utility;
 use App\Models\PaymentMethod;
+use App\Models\OrderTransaction;
+use App\Models\Order;
 
 class OnePayAtmPayment extends Payment
 {
@@ -44,5 +48,91 @@ class OnePayAtmPayment extends Payment
             $paymentMethod->detail = json_encode($inputs['detail']);
         else
             $paymentMethod->detail = null;
+    }
+
+    public function handlePlacedOrderPayment($paymentMethod, $order)
+    {
+        list($merchantId, $accessCode, $hashCode, $paymentUrl) = self::getPaymentIntegrateInformation($paymentMethod);
+
+        $params = [
+            'vpc_Version' => 2,
+            'vpc_Currency' => 'VND',
+            'vpc_Command' => 'pay',
+            'vpc_AccessCode' => $accessCode,
+            'vpc_Merchant' => $merchantId,
+            'vpc_Locale' => (App::getLocale() == 'en' ? 'en' : 'vn'),
+            'vpc_ReturnURL' => action('Frontend\OrderController@paymentOrder', ['id' => $order->id]),
+            'vpc_MerchTxnRef' => self::generateVpcMerchTxnRef($order),
+            'vpc_OrderInfo' => $order->number,
+            'vpc_Amount' => ($order->total_price * 100),
+            'vpc_TicketNo' => request()->ip(),
+        ];
+
+        ksort($params);
+
+        $stringHashData = '';
+        $paymentUrl .= '?';
+
+        $i = 1;
+        foreach($params as $key => $value)
+        {
+            if($i > 1)
+            {
+                $paymentUrl .= '&';
+                $stringHashData .= '&';
+            }
+
+            $paymentUrl .= urlencode($key) . '=' . urlencode($value);
+            $stringHashData .= $key . '=' . $value;
+
+            $i ++;
+        }
+
+        $vpcSecureHash = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', $hashCode)));
+
+        $paymentUrl .= '&vpc_SecureHash=' . $vpcSecureHash;
+
+        $transaction = new OrderTransaction();
+        $transaction->order_id = $order->id;
+        $transaction->amount = $order->total_price;
+        $transaction->point_amount = 0;
+        $transaction->type = Order::PAYMENT_STATUS_PENDING_DB;
+        $transaction->created_at = date('Y-m-d H:i:s');
+        $transaction->detail = json_encode(array_merge($params, [
+            'vpc_SecureHash' => $vpcSecureHash,
+            'payment_url_redirect' => $paymentUrl,
+        ]));
+        $transaction->save();
+
+        return $paymentUrl;
+    }
+
+    protected static function generateVpcMerchTxnRef($order)
+    {
+        return $order->id . time();
+    }
+
+    protected static function getPaymentIntegrateInformation($paymentMethod)
+    {
+        $paymentDetails = json_decode($paymentMethod->detail, true);
+
+        if(isset($paymentDetails['live']) && $paymentDetails['live'] == Utility::ACTIVE_DB)
+        {
+            return [
+                $paymentDetails['merchant_id_live'],
+                $paymentDetails['access_code_live'],
+                $paymentDetails['hash_code_live'],
+                $paymentDetails['payment_url_live'],
+            ];
+        }
+        else
+        {
+            return [
+                $paymentDetails['merchant_id_test'],
+                $paymentDetails['access_code_test'],
+                $paymentDetails['hash_code_test'],
+                $paymentDetails['payment_url_test'],
+            ];
+        }
     }
 }

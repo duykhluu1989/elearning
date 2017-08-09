@@ -183,5 +183,6 @@ return [
     'search_code' => 'Search by code',
     'search_name' => 'Search by name',
     'commission_down_line' => 'Commission percent from down line',
+    'order_payment_title' => 'Payment order',
 
 ];

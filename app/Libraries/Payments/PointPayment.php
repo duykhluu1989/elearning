@@ -71,7 +71,7 @@ class PointPayment extends Payment
             $validator->errors()->add('payment_method', trans('theme.not_enough_point'));
     }
 
-    public function handlePlacedOrderPayment($order)
+    public function handlePlacedOrderPayment($paymentMethod, $order)
     {
         $paid = $order->completePayment(null, true);
 

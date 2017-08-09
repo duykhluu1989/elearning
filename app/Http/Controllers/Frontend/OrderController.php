@@ -286,6 +286,11 @@ class OrderController extends Controller
                         $student->order_count = 1;
                         $student->save();
                     }
+                    else
+                    {
+                        auth()->user()->studentInformation->order_count += 1;
+                        auth()->user()->studentInformation->save();
+                    }
 
                     foreach($courses as $course)
                     {
@@ -322,7 +327,7 @@ class OrderController extends Controller
                         $orderAddress->save();
                     }
 
-                    $inputs['payment']->handlePlacedOrderPayment($order);
+                    $paymentUrl = $inputs['payment']->handlePlacedOrderPayment($inputs['order_payment_method'], $order);
 
                     DB::commit();
 
@@ -343,7 +348,10 @@ class OrderController extends Controller
                     if(!empty($order->referral_id))
                         Cookie::queue(Cookie::forget(Utility::REFERRAL_COOKIE_NAME));
 
-                    return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou));
+                    if(!empty($paymentUrl))
+                        return redirect($paymentUrl);
+                    else
+                        return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou));
                 }
                 catch(\Exception $e)
                 {
@@ -481,6 +489,16 @@ class OrderController extends Controller
         }
         else
             return '';
+    }
+
+    public function paymentOrder(Request $request, $id)
+    {
+        $inputs = $request->all();
+
+        echo '<pre>';
+        print_r($inputs);
+        echo '</pre>';
+        exit();
     }
 
     protected static function getCart()

@@ -57,7 +57,7 @@ abstract class Payment
 
     }
 
-    public function handlePlacedOrderPayment($order)
+    public function handlePlacedOrderPayment($paymentMethod, $order)
     {
 
     }

@@ -183,5 +183,6 @@ return [
     'search_code' => 'Tìm theo mã',
     'search_name' => 'Tìm theo tên',
     'commission_down_line' => 'Mức hoa hồng từ cấp dưới',
+    'order_payment_title' => 'Thanh toán đơn hàng',
 
 ];

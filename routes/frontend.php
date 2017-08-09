@@ -114,4 +114,6 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
     Route::get('advice/{id}/{slug}', 'CaseAdviceController@detailCaseAdvice');
 
+    Route::get('order/{id}/payment', 'OrderController@paymentOrder');
+
 });
