@@ -126,24 +126,11 @@ class Order extends Model
             $this->user_earn_point = $pointEarn;
             $this->save();
 
-            if(empty($this->user->studentInformation))
-            {
-                $student = new Student();
-                $student->user_id = $this->user_id;
-                $student->course_count = 1;
-                $student->total_spent = $transaction->amount;
-                $student->current_point = $pointEarn;
-                $student->total_point = $pointEarn;
-                $student->save();
-            }
-            else
-            {
-                $this->user->studentInformation->course_count += 1;
-                $this->user->studentInformation->total_spent += $transaction->amount;
-                $this->user->studentInformation->current_point += $pointEarn;
-                $this->user->studentInformation->total_point += $pointEarn;
-                $this->user->studentInformation->save();
-            }
+            $this->user->studentInformation->course_count += 1;
+            $this->user->studentInformation->total_spent += $transaction->amount;
+            $this->user->studentInformation->current_point += $pointEarn;
+            $this->user->studentInformation->total_point += $pointEarn;
+            $this->user->studentInformation->save();
 
             if(!empty($transaction->amount) && !empty($this->referral) && $this->referral->status == Utility::ACTIVE_DB)
             {

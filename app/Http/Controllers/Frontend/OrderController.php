@@ -20,6 +20,7 @@ use App\Models\OrderAddress;
 use App\Models\Discount;
 use App\Models\User;
 use App\Models\Collaborator;
+use App\Models\Student;
 use App\RedisModels\Cart;
 
 class OrderController extends Controller
@@ -278,8 +279,13 @@ class OrderController extends Controller
 
                     $order->save();
 
-                    auth()->user()->studentInformation->order_count += 1;
-                    auth()->user()->studentInformation->save();
+                    if(empty(auth()->user()->studentInformation))
+                    {
+                        $student = new Student();
+                        $student->user_id = auth()->user()->id;
+                        $student->order_count = 1;
+                        $student->save();
+                    }
 
                     foreach($courses as $course)
                     {
