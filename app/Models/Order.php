@@ -208,6 +208,9 @@ class Order extends Model
         {
             $this->cancelled_at = date('Y-m-d H:i:s');
             $this->save();
+
+            $this->user->studentInformation->cancelled_order_count += 1;
+            $this->user->studentInformation->save();
         }
     }
 }

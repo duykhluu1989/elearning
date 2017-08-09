@@ -246,8 +246,21 @@ class OrderController extends Controller
         if(empty($order))
             return view('backend.errors.404');
 
-        $order->cancelOrder();
+        try
+        {
+            DB::beginTransaction();
 
-        return redirect(Utility::getBackUrlCookie(action('Backend\OrderController@adminOrder')))->with('messageSuccess', 'Thành Công');
+            $order->cancelOrder();
+
+            DB::commit();
+
+            return redirect()->action('Backend\OrderController@detailOrder', ['id' => $order->id])->with('messageSuccess', 'Thành Công');
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return redirect()->action('Backend\OrderController@detailOrder', ['id' => $order->id])->with('messageError', $e->getMessage());
+        }
     }
 }

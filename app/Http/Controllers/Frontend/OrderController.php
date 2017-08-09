@@ -278,6 +278,9 @@ class OrderController extends Controller
 
                     $order->save();
 
+                    auth()->user()->studentInformation->order_count += 1;
+                    auth()->user()->studentInformation->save();
+
                     foreach($courses as $course)
                     {
                         $orderItem = new OrderItem();

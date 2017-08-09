@@ -16,6 +16,8 @@ class CreateStudentTable extends Migration
             $table->double('current_point')->unsigned()->default(0);
             $table->double('total_point')->unsigned()->default(0);
             $table->unsignedInteger('finish_course_count')->unsigned()->default(0);
+            $table->unsignedInteger('order_count')->default(0);
+            $table->unsignedInteger('cancelled_order_count')->default(0);
         });
     }
 
