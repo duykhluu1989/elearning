@@ -37,4 +37,12 @@ class OnePayAtmPayment extends Payment
             'paymentMethod' => $paymentMethod,
         ]);
     }
+
+    public function validateAndSetData($paymentMethod, $inputs, $validator)
+    {
+        if(isset($inputs['detail']))
+            $paymentMethod->detail = json_encode($inputs['detail']);
+        else
+            $paymentMethod->detail = null;
+    }
 }

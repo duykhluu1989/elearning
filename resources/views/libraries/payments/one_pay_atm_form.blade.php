@@ -25,13 +25,19 @@ if(!empty($paymentMethod->detail))
     <div class="col-sm-4">
         <div class="form-group">
             <label>Hash Code</label>
-            <input type="text" class="form-control" name="detail[hash_code_live]" value="{{ isset($details['hash_code_live']) ? $details['hash_code_live'] : '' }}" />
+            <input type="password" class="form-control" name="detail[hash_code_live]" value="{{ isset($details['hash_code_live']) ? $details['hash_code_live'] : '' }}" />
         </div>
     </div>
     <div class="col-sm-12">
         <div class="form-group">
             <label>Payment Url</label>
             <input type="text" class="form-control" name="detail[payment_url_live]" value="{{ isset($details['payment_url_live']) ? $details['payment_url_live'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label>Query Url</label>
+            <input type="text" class="form-control" name="detail[query_url_live]" value="{{ isset($details['query_url_live']) ? $details['query_url_live'] : '' }}" />
         </div>
     </div>
 </div>
@@ -41,6 +47,36 @@ if(!empty($paymentMethod->detail))
     </div>
 </div>
 <div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>Merchant ID</label>
+            <input type="text" class="form-control" name="detail[merchant_id_test]" value="{{ isset($details['merchant_id_test']) ? $details['merchant_id_test'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>Access Code</label>
+            <input type="text" class="form-control" name="detail[access_code_test]" value="{{ isset($details['access_code_test']) ? $details['access_code_test'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>Hash Code</label>
+            <input type="text" class="form-control" name="detail[hash_code_test]" value="{{ isset($details['hash_code_test']) ? $details['hash_code_test'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label>Payment Url</label>
+            <input type="text" class="form-control" name="detail[payment_url_test]" value="{{ isset($details['payment_url_test']) ? $details['payment_url_test'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label>Query Url</label>
+            <input type="text" class="form-control" name="detail[query_url_test]" value="{{ isset($details['query_url_test']) ? $details['query_url_test'] : '' }}" />
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-4">
