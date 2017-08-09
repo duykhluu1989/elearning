@@ -495,11 +495,14 @@ class OrderController extends Controller
     {
         $order = Order::with(['paymentMethod', 'orderItems.course' => function($query) {
             $query->select('id', 'name', 'name_en');
+        }, 'orderTransactions' => function($query) {
+            $query->select('order_id', 'type', 'detail')->where('type', Order::PAYMENT_STATUS_PENDING_DB);
         }])->where('payment_status', Order::PAYMENT_STATUS_PENDING_DB)
+            ->whereNull('cancelled_at')
             ->find($id);
 
         if(empty($order))
-            return view('frontend.errors.404');
+            return redirect()->action('Frontend\HomeController@home');
 
         $payment = Payment::getPayments($order->paymentMethod->code);
 

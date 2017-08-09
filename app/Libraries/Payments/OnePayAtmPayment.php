@@ -138,6 +138,74 @@ class OnePayAtmPayment extends Payment
 
     public function handleOrderPaymentResponse($paymentMethod, $order, $params)
     {
+        $paid = false;
+
         list($merchantId, $accessCode, $hashCode, $paymentUrl) = self::getPaymentIntegrateInformation($paymentMethod);
+
+        $vpcSecureHash = strtoupper($params['vpc_SecureHash']);
+        unset($params['vpc_SecureHash']);
+
+        $validateSecureHash = false;
+
+        if($params['vpc_TxnResponseCode'] != '7' && $params['vpc_TxnResponseCode'] != 'No Value Returned')
+        {
+            ksort($params);
+
+            $stringHashData = '';
+
+            $i = 1;
+            foreach($params as $key => $value )
+            {
+                if($i > 1)
+                    $stringHashData .= '&';
+
+                $stringHashData .= $key . '=' . $value;
+
+                $i ++;
+            }
+
+            $vpcSecureHashCalculated = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', $hashCode)));
+
+            if($vpcSecureHash == $vpcSecureHashCalculated)
+                $validateSecureHash = true;
+        }
+
+        $vpcAmount = (isset($params['vpc_Amount']) ? $params['vpc_Amount'] : '');
+        $vpcOrderInfo = (isset($params['vpc_OrderInfo']) ? $params['vpc_OrderInfo'] : '');
+        $vpcMerchantID = (isset($params['vpc_Merchant']) ? $params['vpc_Merchant'] : '');
+        $vpcMerchTxnRef = (isset($params['vpc_MerchTxnRef']) ? $params['vpc_MerchTxnRef'] : '');
+        $vpcTransactionNo = (isset($params['vpc_TransactionNo']) ? $params['vpc_TransactionNo'] : '');
+        $vpcTxnResponseCode = (isset($params['vpc_TxnResponseCode']) ? $params['vpc_TxnResponseCode'] : '');
+
+        $details = array();
+        foreach($order->orderTransactions as $orderTransaction)
+        {
+            if($orderTransaction->type == Order::PAYMENT_STATUS_PENDING_DB)
+                $details = json_decode($orderTransaction->detail, true);
+        }
+
+        if($vpcAmount * 100 != $order->total_price || $vpcOrderInfo != $order->number || $vpcMerchantID != $merchantId || !isset($details['vpc_MerchTxnRef']) || $vpcMerchTxnRef != $details['vpc_MerchTxnRef'] || empty($vpcTransactionNo))
+            $validateSecureHash = false;
+
+        if($validateSecureHash == true && $vpcTxnResponseCode == '0')
+        {
+            $paid = true;
+
+            $order->completePayment(null, false, json_encode(array_merge($params, [
+                'vpc_SecureHash' => $vpcSecureHash,
+            ])));
+
+            return $paid;
+        }
+        else if($vpcTxnResponseCode != '0')
+        {
+
+            return $paid;
+        }
+        else if($validateSecureHash == false)
+        {
+
+
+        }
     }
 }

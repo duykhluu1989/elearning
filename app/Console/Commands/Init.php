@@ -20,35 +20,40 @@ class Init extends Command
 
     public function handle()
     {
-        try
+        $setting = Setting::first();
+
+        if(empty($setting))
         {
-            DB::beginTransaction();
+            try
+            {
+                DB::beginTransaction();
 
-            Setting::initCoreSettings();
+                Setting::initCoreSettings();
 
-            User::initCoreUser();
+                User::initCoreUser();
 
-            Profile::initCoreProfile();
+                Profile::initCoreProfile();
 
-            Role::initCoreRoles();
+                Role::initCoreRoles();
 
-            UserRole::initCoreUserRoles();
+                UserRole::initCoreUserRoles();
 
-            Widget::initCoreWidgets();
+                Widget::initCoreWidgets();
 
-            PaymentMethod::initCorePaymentMethods();
+                PaymentMethod::initCorePaymentMethods();
 
-            DB::commit();
+                DB::commit();
 
-            echo 'Init Succeed';
-            echo "\r\n";
-        }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
+                echo 'Init Succeed';
+                echo "\r\n";
+            }
+            catch(\Exception $e)
+            {
+                DB::rollBack();
 
-            echo 'Init Failed: ' . $e->getMessage();
-            echo "\r\n";
+                echo 'Init Failed: ' . $e->getMessage();
+                echo "\r\n";
+            }
         }
     }
 }

@@ -81,7 +81,7 @@ class Order extends Model
         return $status;
     }
 
-    public function completePayment($note = null, $payByPoint = false)
+    public function completePayment($note = null, $payByPoint = false, $detail = null)
     {
         if(empty($this->cancelled_at) && $this->payment_status == self::PAYMENT_STATUS_PENDING_DB)
         {
@@ -106,6 +106,9 @@ class Order extends Model
 
             if($note !== null)
                 $transaction->note = $note;
+
+            if($detail !== null)
+                $transaction->detail = $detail;
 
             $transaction->save();
 
