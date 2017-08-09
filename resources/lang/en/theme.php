@@ -180,5 +180,7 @@ return [
     'link_3' => 'Register link',
     'max' => 'Max',
     'collaborator_down_line' => 'Collaborator down line',
+    'search_code' => 'Search by code',
+    'search_name' => 'Search by name',
 
 ];

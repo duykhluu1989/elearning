@@ -180,5 +180,7 @@ return [
     'link_3' => 'Link đăng ký học',
     'max' => 'Tối đa',
     'collaborator_down_line' => 'CTV cấp dưới',
+    'search_code' => 'Tìm theo mã',
+    'search_name' => 'Tìm theo tên',
 
 ];

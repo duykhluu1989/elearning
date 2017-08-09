@@ -198,17 +198,29 @@ class CollaboratorController extends Controller
         $user = auth()->user();
 
         $builder = User::with(['collaboratorInformation' => function($query) {
-            $query->select('id', 'code');
-        }])->select('user.*')
+            $query->select('user_id', 'code', 'rank_id', 'total_commission', 'total_revenue', 'create_discount_percent', 'commission_percent');
+        }, 'profile' => function($query) {
+            $query->select('user_id', 'name');
+        }])->select('user.id')
             ->join('collaborator', 'user.id', '=', 'collaborator.user_id')
-            ->where('collaborator.parent_id', $user->id)
+            ->where('collaborator.parent_id', $user->collaboratorInformation->id)
             ->orderBy('user.created_at', 'desc');
 
         $inputs = $request->all();
 
         if(count($inputs) > 0)
         {
+            if(!empty($inputs['code']))
+                $builder->where('collaborator.code', 'like', '%' . $inputs['code'] . '%');
 
+            if(!empty($inputs['name']))
+            {
+                $builder->join('profile', 'user.id', '=', 'profile.user_id')
+                    ->where('profile.name', 'like', '%' . $inputs['name'] . '%');
+            }
+
+            if(!empty($inputs['rank']))
+                $builder->where('collaborator.rank_id', $inputs['rank']);
         }
 
         $collaborators = $builder->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
