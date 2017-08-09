@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\Init::class,
+        \App\Console\Commands\CheckCollaboratorRankExtension::class,
     ];
 
     /**
