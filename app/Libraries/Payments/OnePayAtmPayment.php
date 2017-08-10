@@ -184,28 +184,33 @@ class OnePayAtmPayment extends Payment
                 $details = json_decode($orderTransaction->detail, true);
         }
 
-        if($vpcAmount * 100 != $order->total_price || $vpcOrderInfo != $order->number || $vpcMerchantID != $merchantId || !isset($details['vpc_MerchTxnRef']) || $vpcMerchTxnRef != $details['vpc_MerchTxnRef'] || empty($vpcTransactionNo))
+        if($vpcAmount != $order->total_price * 100 || $vpcOrderInfo != $order->number || $vpcMerchantID != $merchantId || !isset($details['vpc_MerchTxnRef']) || $vpcMerchTxnRef != $details['vpc_MerchTxnRef'] || empty($vpcTransactionNo))
             $validateSecureHash = false;
 
-        if($validateSecureHash == true && $vpcTxnResponseCode == '0')
+        if($validateSecureHash == true)
         {
-            $paid = true;
+            if($vpcTxnResponseCode == '0')
+            {
+                $paid = true;
 
-            $order->completePayment(null, false, json_encode(array_merge($params, [
-                'vpc_SecureHash' => $vpcSecureHash,
-            ])));
+                $order->completePayment(null, false, json_encode(array_merge($params, [
+                    'vpc_SecureHash' => $vpcSecureHash,
+                ])));
 
-            return $paid;
+                return $paid;
+            }
+            else
+            {
+                $order->failPayment(null, json_encode(array_merge($params, [
+                    'vpc_SecureHash' => $vpcSecureHash,
+                ])));
+
+                $order->cancelOrder();
+
+                return $paid;
+            }
         }
-        else if($vpcTxnResponseCode != '0')
-        {
 
-            return $paid;
-        }
-        else if($validateSecureHash == false)
-        {
-
-
-        }
+        return $paid;
     }
 }

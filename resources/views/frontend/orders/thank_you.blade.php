@@ -16,7 +16,13 @@
                         <div class="main_content mb60">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <h3 class="text-center">@lang('theme.order_success')</h3>
+                                    <h3 class="text-center">
+                                        @if(session('messageError'))
+                                            @lang('theme.order_fail')
+                                        @else
+                                            @lang('theme.order_success')
+                                        @endif
+                                    </h3>
                                     <p>@lang('theme.order_number'): {{ $orderThankYou['order_number'] }}</p>
                                     <p>@lang('theme.payment_method'): {{ $orderThankYou['payment_method'] }}</p>
                                     <p>@lang('theme.total_price'): {{ \App\Libraries\Helpers\Utility::formatNumber($orderThankYou['total_price']) . 'đ' }}</p>

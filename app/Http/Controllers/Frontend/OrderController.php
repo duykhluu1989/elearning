@@ -536,7 +536,7 @@ class OrderController extends Controller
         if($paid)
             return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou))->with('messageSuccess', trans('theme.payment_success'));
         else
-            return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou))->with('messageSuccess', trans('theme.payment_fail'));
+            return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou))->with('messageError', trans('theme.payment_fail'));
     }
 
     protected static function getCart()

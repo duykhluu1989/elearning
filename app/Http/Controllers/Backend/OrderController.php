@@ -100,13 +100,19 @@ class OrderController extends Controller
                     $status = Order::getOrderPaymentStatus($row->payment_status);
                     if($row->payment_status == Order::PAYMENT_STATUS_COMPLETE_DB)
                         echo Html::span($status, ['class' => 'label label-success']);
-                    else
+                    else if($row->payment_status == Order::PAYMENT_STATUS_FAIL_DB)
                         echo Html::span($status, ['class' => 'label label-danger']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-warning']);
                 },
             ],
             [
                 'title' => 'Thời Gian Đặt Đơn Hàng',
                 'data' => 'created_at',
+            ],
+            [
+                'title' => 'Hủy Đơn Hàng',
+                'data' => 'cancelled_at',
             ],
         ];
 
@@ -239,7 +245,7 @@ class OrderController extends Controller
 
     public function cancelOrder($id)
     {
-        $order = Order::with('orderItems')->where('payment_status', Order::PAYMENT_STATUS_PENDING_DB)
+        $order = Order::with('orderItems')->where('payment_status', '<>', Order::PAYMENT_STATUS_COMPLETE_DB)
             ->whereNull('cancelled_at')
             ->find($id);
 

@@ -8,11 +8,11 @@
         <div class="box-header with-border">
             @if(empty($order->cancelled_at))
                 @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
-
                     <button type="button" class="btn btn-primary SubmitPaymentButton">Xác Nhận Thanh Toán</button>
+                @endif
 
+                @if($order->payment_status != \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
                     <a href="{{ action('Backend\OrderController@cancelOrder', ['id' => $order->id]) }}" class="btn btn-primary pull-right Confirmation">Hủy</a>
-
                 @endif
             @endif
 
@@ -38,8 +38,10 @@
                     $status = \App\Models\Order::getOrderPaymentStatus($order->payment_status);
                     if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
                         echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-success']);
-                    else
+                    else if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_FAIL_DB)
                         echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-danger']);
+                    else
+                        echo \App\Libraries\Helpers\Html::span($status, ['class' => 'label label-warning']);
                     ?>
                 </div>
             </div>
@@ -154,6 +156,7 @@
                                     <th>Tiền</th>
                                     <th>Điểm</th>
                                     <th>Ghi Chú</th>
+                                    <th>Chi Tiết</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -164,6 +167,16 @@
                                         <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderTransaction->amount) . ' VND' }}</td>
                                         <td>{{ \App\Libraries\Helpers\Utility::formatNumber($orderTransaction->point_amount) }}</td>
                                         <td>{{ $orderTransaction->note }}</td>
+                                        <td style="word-wrap: break-word;word-break: break-all">
+                                            <?php
+                                            $details = array();
+                                            if(!empty($orderTransaction->detail))
+                                                $details = json_decode($orderTransaction->detail, true);
+                                            ?>
+                                            @foreach($details as $key => $detail)
+                                                <b>{{ $key }}:</b> {{ $detail }}<br />
+                                            @endforeach
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -208,11 +221,11 @@
         <div class="box-footer">
             @if(empty($order->cancelled_at))
                 @if($order->payment_status == \App\Models\Order::PAYMENT_STATUS_PENDING_DB)
-
                     <button type="button" class="btn btn-primary SubmitPaymentButton">Xác Nhận Thanh Toán</button>
+                @endif
 
+                @if($order->payment_status != \App\Models\Order::PAYMENT_STATUS_COMPLETE_DB)
                     <a href="{{ action('Backend\OrderController@cancelOrder', ['id' => $order->id]) }}" class="btn btn-primary pull-right Confirmation">Hủy</a>
-
                 @endif
             @endif
 

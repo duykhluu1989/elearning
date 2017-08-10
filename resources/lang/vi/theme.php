@@ -185,5 +185,6 @@ return [
     'commission_down_line' => 'Mức hoa hồng từ cấp dưới',
     'payment_success' => 'Thanh toán đơn hàng thành công',
     'payment_fail' => 'Thanh toán đơn hàng thất bại',
+    'order_fail' => 'Đặt đơn hàng thất bại',
 
 ];

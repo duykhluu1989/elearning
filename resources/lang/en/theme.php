@@ -185,5 +185,6 @@ return [
     'commission_down_line' => 'Commission percent from down line',
     'payment_success' => 'Order payment successful',
     'payment_fail' => 'Order payment failed',
+    'order_fail' => 'Order failed',
 
 ];

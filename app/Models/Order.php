@@ -9,8 +9,10 @@ class Order extends Model
 {
     const PAYMENT_STATUS_PENDING_DB = 0;
     const PAYMENT_STATUS_COMPLETE_DB = 1;
+    const PAYMENT_STATUS_FAIL_DB = 2;
     const PAYMENT_STATUS_PENDING_LABEL = 'Chưa Thanh Toán';
     const PAYMENT_STATUS_COMPLETE_LABEL = 'Đã Thanh Toán';
+    const PAYMENT_STATUS_FAIL_LABEL = 'Thanh Toán Thất Bại';
 
     const ORDER_NUMBER_PREFIX = 1987654321;
 
@@ -73,6 +75,7 @@ class Order extends Model
         $status = [
             self::PAYMENT_STATUS_PENDING_DB => self::PAYMENT_STATUS_PENDING_LABEL,
             self::PAYMENT_STATUS_COMPLETE_DB => self::PAYMENT_STATUS_COMPLETE_LABEL,
+            self::PAYMENT_STATUS_FAIL_DB => self::PAYMENT_STATUS_FAIL_LABEL,
         ];
 
         if($value !== null && isset($status[$value]))
@@ -192,9 +195,33 @@ class Order extends Model
         return false;
     }
 
-    public function cancelOrder()
+    public function failPayment($note = null, $detail = null)
     {
         if(empty($this->cancelled_at) && $this->payment_status == self::PAYMENT_STATUS_PENDING_DB)
+        {
+            $this->payment_status = self::PAYMENT_STATUS_FAIL_DB;
+            $this->save();
+
+            $transaction = new OrderTransaction();
+            $transaction->order_id = $this->id;
+            $transaction->amount = $this->total_price;
+            $transaction->point_amount = 0;
+            $transaction->type = self::PAYMENT_STATUS_FAIL_DB;
+            $transaction->created_at = date('Y-m-d H:i:s');
+
+            if($note !== null)
+                $transaction->note = $note;
+
+            if($detail !== null)
+                $transaction->detail = $detail;
+
+            $transaction->save();
+        }
+    }
+
+    public function cancelOrder()
+    {
+        if(empty($this->cancelled_at) && $this->payment_status != self::PAYMENT_STATUS_COMPLETE_DB)
         {
             $this->cancelled_at = date('Y-m-d H:i:s');
             $this->save();
