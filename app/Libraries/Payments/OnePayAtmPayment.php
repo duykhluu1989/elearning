@@ -52,14 +52,14 @@ class OnePayAtmPayment extends Payment
 
     public function handlePlacedOrderPayment($paymentMethod, $order)
     {
-        list($merchantId, $accessCode, $hashCode, $paymentUrl) = self::getPaymentIntegrateInformation($paymentMethod);
+        $integrateInformation = self::getPaymentIntegrateInformation($paymentMethod);
 
         $params = [
             'vpc_Version' => 2,
             'vpc_Currency' => 'VND',
             'vpc_Command' => 'pay',
-            'vpc_AccessCode' => $accessCode,
-            'vpc_Merchant' => $merchantId,
+            'vpc_AccessCode' => $integrateInformation['access_code'],
+            'vpc_Merchant' => $integrateInformation['merchant_id'],
             'vpc_Locale' => (App::getLocale() == 'en' ? 'en' : 'vn'),
             'vpc_ReturnURL' => action('Frontend\OrderController@paymentOrder', ['id' => $order->id]),
             'vpc_MerchTxnRef' => self::generateVpcMerchTxnRef($order),
@@ -71,26 +71,26 @@ class OnePayAtmPayment extends Payment
         ksort($params);
 
         $stringHashData = '';
-        $paymentUrl .= '?';
+        $integrateInformation['payment_url'] .= '?';
 
         $i = 1;
         foreach($params as $key => $value)
         {
             if($i > 1)
             {
-                $paymentUrl .= '&';
+                $integrateInformation['payment_url'] .= '&';
                 $stringHashData .= '&';
             }
 
-            $paymentUrl .= urlencode($key) . '=' . urlencode($value);
+            $integrateInformation['payment_url'] .= urlencode($key) . '=' . urlencode($value);
             $stringHashData .= $key . '=' . $value;
 
             $i ++;
         }
 
-        $vpcSecureHash = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', $hashCode)));
+        $vpcSecureHash = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', $integrateInformation['hash_code'])));
 
-        $paymentUrl .= '&vpc_SecureHash=' . $vpcSecureHash;
+        $integrateInformation['payment_url'] .= '&vpc_SecureHash=' . $vpcSecureHash;
 
         $transaction = new OrderTransaction();
         $transaction->order_id = $order->id;
@@ -100,11 +100,11 @@ class OnePayAtmPayment extends Payment
         $transaction->created_at = date('Y-m-d H:i:s');
         $transaction->detail = json_encode(array_merge($params, [
             'vpc_SecureHash' => $vpcSecureHash,
-            'payment_url_redirect' => $paymentUrl,
+            'payment_url_redirect' => $integrateInformation['payment_url'],
         ]));
         $transaction->save();
 
-        return $paymentUrl;
+        return $integrateInformation['payment_url'];
     }
 
     protected static function generateVpcMerchTxnRef($order)
@@ -118,20 +118,26 @@ class OnePayAtmPayment extends Payment
 
         if(isset($paymentDetails['live']) && $paymentDetails['live'] == Utility::ACTIVE_DB)
         {
-            return [
-                $paymentDetails['merchant_id_live'],
-                $paymentDetails['access_code_live'],
-                $paymentDetails['hash_code_live'],
-                $paymentDetails['payment_url_live'],
+            return $information = [
+                'merchant_id' => isset($paymentDetails['merchant_id_live']) ? $paymentDetails['merchant_id_live'] : '',
+                'access_code' => isset($paymentDetails['access_code_live']) ? $paymentDetails['access_code_live'] : '',
+                'hash_code' => isset($paymentDetails['hash_code_live']) ? $paymentDetails['hash_code_live'] : '',
+                'payment_url' => isset($paymentDetails['payment_url_live']) ? $paymentDetails['payment_url_live'] : '',
+                'user' => isset($paymentDetails['user_live']) ? $paymentDetails['user_live'] : '',
+                'password' => isset($paymentDetails['password_live']) ? $paymentDetails['password_live'] : '',
+                'query_url' => isset($paymentDetails['query_url_live']) ? $paymentDetails['query_url_live'] : '',
             ];
         }
         else
         {
             return [
-                $paymentDetails['merchant_id_test'],
-                $paymentDetails['access_code_test'],
-                $paymentDetails['hash_code_test'],
-                $paymentDetails['payment_url_test'],
+                'merchant_id' => isset($paymentDetails['merchant_id_test']) ? $paymentDetails['merchant_id_test'] : '',
+                'access_code' => isset($paymentDetails['access_code_test']) ? $paymentDetails['access_code_test'] : '',
+                'hash_code' => isset($paymentDetails['hash_code_test']) ? $paymentDetails['hash_code_test'] : '',
+                'payment_url' => isset($paymentDetails['payment_url_test']) ? $paymentDetails['payment_url_test'] : '',
+                'user' => isset($paymentDetails['user_test']) ? $paymentDetails['user_test'] : '',
+                'password' => isset($paymentDetails['password_test']) ? $paymentDetails['password_test'] : '',
+                'query_url' => isset($paymentDetails['query_url_test']) ? $paymentDetails['query_url_test'] : '',
             ];
         }
     }
@@ -140,7 +146,7 @@ class OnePayAtmPayment extends Payment
     {
         $paid = false;
 
-        list($merchantId, $accessCode, $hashCode, $paymentUrl) = self::getPaymentIntegrateInformation($paymentMethod);
+        $integrateInformation = self::getPaymentIntegrateInformation($paymentMethod);
 
         $vpcSecureHash = strtoupper($params['vpc_SecureHash']);
         unset($params['vpc_SecureHash']);
@@ -164,7 +170,7 @@ class OnePayAtmPayment extends Payment
                 $i ++;
             }
 
-            $vpcSecureHashCalculated = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', $hashCode)));
+            $vpcSecureHashCalculated = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', $integrateInformation['hash_code'])));
 
             if($vpcSecureHash == $vpcSecureHashCalculated)
                 $validateSecureHash = true;
@@ -184,33 +190,74 @@ class OnePayAtmPayment extends Payment
                 $details = json_decode($orderTransaction->detail, true);
         }
 
-        if($vpcAmount != $order->total_price * 100 || $vpcOrderInfo != $order->number || $vpcMerchantID != $merchantId || !isset($details['vpc_MerchTxnRef']) || $vpcMerchTxnRef != $details['vpc_MerchTxnRef'] || empty($vpcTransactionNo))
+        if($vpcAmount != $order->total_price * 100 || $vpcOrderInfo != $order->number || $vpcMerchantID != $integrateInformation['merchant_id'] || !isset($details['vpc_MerchTxnRef']) || $vpcMerchTxnRef != $details['vpc_MerchTxnRef'] || empty($vpcTransactionNo))
             $validateSecureHash = false;
 
         if($validateSecureHash == true)
         {
             if($vpcTxnResponseCode == '0')
-            {
                 $paid = true;
+        }
+        else
+            $paid = null;
 
-                $order->completePayment(null, false, json_encode(array_merge($params, [
-                    'vpc_SecureHash' => $vpcSecureHash,
-                ])));
+        return $paid;
+    }
 
-                return $paid;
-            }
-            else
+    public function checkOrderPaymentResult($paymentMethod, $order)
+    {
+        $paid = null;
+        $responseParams = null;
+
+        $integrateInformation = self::getPaymentIntegrateInformation($paymentMethod);
+
+        $details = array();
+        foreach($order->orderTransactions as $orderTransaction)
+        {
+            if($orderTransaction->type == Order::PAYMENT_STATUS_PENDING_DB)
+                $details = json_decode($orderTransaction->detail, true);
+        }
+
+        $params = [
+            'vpc_Command' => 'queryDR',
+            'vpc_Version' => 1,
+            'vpc_MerchTxnRef' => (isset($details['vpc_MerchTxnRef']) ? $details['vpc_MerchTxnRef'] : ''),
+            'vpc_Merchant' => $integrateInformation['merchant_id'],
+            'vpc_AccessCode' => $integrateInformation['access_code'],
+            'vpc_User' => $integrateInformation['user'],
+            'vpc_Password' => $integrateInformation['password'],
+        ];
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL, $integrateInformation['query_url']);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
+
+        if(app()->environment() != 'production')
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        if(!empty($result))
+        {
+            parse_str($result, $responseParams);
+
+            if($responseParams['vpc_DRExists'] == 'Y')
             {
-                $order->failPayment(null, json_encode(array_merge($params, [
-                    'vpc_SecureHash' => $vpcSecureHash,
-                ])));
-
-                $order->cancelOrder();
-
-                return $paid;
+                if($responseParams['vpc_TxnResponseCode'] == '0')
+                    $paid = true;
+                else
+                    $paid = false;
             }
         }
 
-        return $paid;
+        return [
+            $paid,
+            $responseParams,
+        ];
     }
 }

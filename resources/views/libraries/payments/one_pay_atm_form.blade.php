@@ -34,6 +34,18 @@ if(!empty($paymentMethod->detail))
             <input type="text" class="form-control" name="detail[payment_url_live]" value="{{ isset($details['payment_url_live']) ? $details['payment_url_live'] : '' }}" />
         </div>
     </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>User</label>
+            <input type="text" class="form-control" name="detail[user_live]" value="{{ isset($details['user_live']) ? $details['user_live'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" name="detail[password_live]" value="{{ isset($details['password_live']) ? $details['password_live'] : '' }}" />
+        </div>
+    </div>
     <div class="col-sm-12">
         <div class="form-group">
             <label>Query Url</label>
@@ -69,6 +81,18 @@ if(!empty($paymentMethod->detail))
         <div class="form-group">
             <label>Payment Url</label>
             <input type="text" class="form-control" name="detail[payment_url_test]" value="{{ isset($details['payment_url_test']) ? $details['payment_url_test'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>User</label>
+            <input type="text" class="form-control" name="detail[user_test]" value="{{ isset($details['user_test']) ? $details['user_test'] : '' }}" />
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" name="detail[password_test]" value="{{ isset($details['password_test']) ? $details['password_test'] : '' }}" />
         </div>
     </div>
     <div class="col-sm-12">

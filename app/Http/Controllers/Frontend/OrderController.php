@@ -514,6 +514,15 @@ class OrderController extends Controller
 
             $paid = $payment->handleOrderPaymentResponse($order->paymentMethod, $order, $inputs);
 
+            if($paid === true)
+                $order->completePayment(null, false, json_encode($inputs));
+            else if($paid === false)
+            {
+                $order->failPayment(null, json_encode($inputs));
+
+                $order->cancelOrder();
+            }
+
             DB::commit();
         }
         catch(\Exception $e)
@@ -533,7 +542,7 @@ class OrderController extends Controller
         foreach($order->orderItems as $orderItem)
             $orderThankYou['courses'][] = Utility::getValueByLocale($orderItem->course, 'name');
 
-        if($paid)
+        if($paid === true)
             return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou))->with('messageSuccess', trans('theme.payment_success'));
         else
             return redirect()->action('Frontend\OrderController@thankYou')->with('order', json_encode($orderThankYou))->with('messageError', trans('theme.payment_fail'));
