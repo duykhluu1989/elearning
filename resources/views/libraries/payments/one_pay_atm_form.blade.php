@@ -92,7 +92,7 @@ if(!empty($paymentMethod->detail))
     <div class="col-sm-4">
         <div class="form-group">
             <label>Password</label>
-            <input type="password" class="form-control" name="detail[password_test]" value="{{ isset($details['password_test']) ? $details['password_test'] : '' }}" />
+            <input type="text" class="form-control" name="detail[password_test]" value="{{ isset($details['password_test']) ? $details['password_test'] : '' }}" />
         </div>
     </div>
     <div class="col-sm-12">

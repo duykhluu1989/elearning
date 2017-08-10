@@ -2,10 +2,9 @@
 
 namespace App\Libraries\Payments;
 
-use Illuminate\Support\Facades\Validator;
 use App\Models\PaymentMethod;
 
-class OnePayCreditPayment extends Payment
+class OnePayCreditPayment extends OnePayAtmPayment
 {
     const CODE = 'one_pay_credit';
 
@@ -29,12 +28,5 @@ class OnePayCreditPayment extends Payment
     public function getType()
     {
         return PaymentMethod::PAYMENT_TYPE_CREDIT_ONLINE_DB;
-    }
-
-    public function renderView($paymentMethod)
-    {
-        echo view('libraries.payments.one_pay_credit_form', [
-            'paymentMethod' => $paymentMethod,
-        ]);
     }
 }

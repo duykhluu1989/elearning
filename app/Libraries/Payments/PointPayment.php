@@ -2,7 +2,6 @@
 
 namespace App\Libraries\Payments;
 
-use Illuminate\Support\Facades\Validator;
 use App\Libraries\Helpers\Utility;
 use App\Models\PaymentMethod;
 use App\Models\Course;
