@@ -16,6 +16,7 @@ class CreateOrderTransactionTable extends Migration
             $table->unsignedTinyInteger('type')->default(0);
             $table->dateTime('created_at');
             $table->string('note', 255)->nullable();
+            $table->text('detail')->nullable();
         });
     }
 
