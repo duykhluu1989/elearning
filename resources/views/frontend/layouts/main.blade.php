@@ -47,7 +47,7 @@
 
     @include('frontend.layouts.partials.footer')
 </div>
-<script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('themes/js/jquery-1.9.1.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('themes/js/jquery.easing.1.3.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
