@@ -360,6 +360,9 @@ class UserController extends Controller
                         }
                     }
 
+                    $user->username = $inputs['username'];
+                    $user->email = $inputs['email'];
+
                     if(!empty($inputs['new_password']))
                         $user->password = Hash::make($inputs['new_password']);
 
