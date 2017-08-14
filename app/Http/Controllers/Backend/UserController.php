@@ -110,7 +110,7 @@ class UserController extends Controller
                 'title' => 'Vai Trò',
                 'data' => function($row) {
                     foreach($row->userRoles as $userRole)
-                        echo $userRole->role->name . ' ';
+                        echo $userRole->role->name . '<br />';
                 },
             ],
             [
