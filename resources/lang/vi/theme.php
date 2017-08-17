@@ -186,5 +186,6 @@ return [
     'payment_success' => 'Thanh toán đơn hàng thành công',
     'payment_fail' => 'Thanh toán đơn hàng thất bại',
     'order_fail' => 'Đặt đơn hàng thất bại',
+    'set_new_password' => 'Vui lòng thiết lập mật khẩu mới',
 
 ];

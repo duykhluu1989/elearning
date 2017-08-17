@@ -258,6 +258,8 @@ class UserController extends Controller
 
             try
             {
+                DB::beginTransaction();
+
                 $user->password = $token;
                 $user->save();
 
@@ -274,10 +276,14 @@ class UserController extends Controller
 
                 });
 
+                DB::commit();
+
                 return 'Success';
             }
             catch(\Exception $e)
             {
+                DB::rollBack();
+
                 return json_encode(['email' => [trans('theme.system_error')]]);
             }
         }
@@ -295,16 +301,22 @@ class UserController extends Controller
 
             if(!empty($user) && $user->password == $token)
             {
+                DB::beginTransaction();
+
                 $user->password = null;
                 $user->save();
 
                 auth()->login($user);
+
+                DB::commit();
             }
 
-            return redirect()->action('Frontend\HomeController@home');
+            return redirect()->action('Frontend\UserController@editAccount')->with('messageSuccess', trans('theme.set_new_password'));
         }
         catch(\Exception $e)
         {
+            DB::rollBack();
+
             return view('frontend.errors.404');
         }
     }

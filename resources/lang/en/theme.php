@@ -186,5 +186,6 @@ return [
     'payment_success' => 'Order payment successful',
     'payment_fail' => 'Order payment failed',
     'order_fail' => 'Order failed',
+    'set_new_password' => 'Please update your new password',
 
 ];
