@@ -359,9 +359,9 @@ class Utility
         }
     }
 
-    public static function removeWhitespace($string)
+    public static function removeWhitespace($string, $replace = ' ')
     {
-        return preg_replace('/\s+/', ' ', $string);
+        return preg_replace('/\s+/', $replace, $string);
     }
 
     public static function setReferral($course)
