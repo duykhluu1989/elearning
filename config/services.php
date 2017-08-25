@@ -35,4 +35,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'ffmpeg' => [
+        'ffmpeg_binaries' => env('FFMPEG_BINARIES', '/usr/bin/ffmpeg'),
+        'ffprobe_binaries' => env('FFPROBE_BINARIES', '/usr/bin/ffprobe'),
+    ],
+
 ];
