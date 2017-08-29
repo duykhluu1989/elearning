@@ -22,6 +22,7 @@ class CreateUserTable extends Migration
             $table->unsignedTinyInteger('collaborator')->default(0);
             $table->unsignedTinyInteger('teacher')->default(0);
             $table->unsignedTinyInteger('expert')->default(0);
+            $table->string('login_token', 1000)->nullable();
         });
     }
 
