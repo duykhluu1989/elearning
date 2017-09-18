@@ -197,7 +197,7 @@
         </section>
 
         <section class="chuyengia bg_gray">
-            <div class="container">
+            <div class="container relative">
                 <div class="qc_left hidden-sm hidden-xs">
                     <?php
                     $adVerticalLeftItem = null;

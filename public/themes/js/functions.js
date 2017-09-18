@@ -297,18 +297,6 @@ $('.navbar-collapse ul li a').click(function() {
 
 $(document).ready(function() {
 
-    //menu hover
-    $(".dropdown").hover(
-        function() {
-            $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideDown("500");
-            $(this).toggleClass('open');
-        },
-        function() {
-            $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideUp("500");
-            $(this).toggleClass('open');
-        }
-    );
-
     //search on header
     $('.header').on('click', '.search-toggle', function(e) {
         var selector = $(this).data('selector');
@@ -341,7 +329,11 @@ $(document).ready(function() {
         $('html, body').animate({ scrollTop: 0 }, 800);
     });
 
-    
+    $('ul.nav li.dropdown').hover(function() {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+    }, function() {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+    });
 
 });
 
