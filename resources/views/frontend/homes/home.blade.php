@@ -418,12 +418,25 @@
             <div class="container-fluid">
                 <div class="col-lg-6 boxleft_vechungtoi boxmH display_table">
                     <div class="table_content">
-                        <h2>TẠI SAO NÊN CHỌN CÂY ĐÈN THẦN?</h2>
+                        <h2>@lang('theme.why_us')</h2>
                         <ul class="list_taisao">
-                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
-                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
-                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
-                            <li><a href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien libero, tincidunt nec lorem sed, pretium consequat nisi.</a></li>
+                            <?php
+                            $whyUsItems = array();
+
+                            if(isset($widgets[\App\Models\Widget::GROUP_WHY_US]))
+                            {
+                                if(!empty($widgets[\App\Models\Widget::GROUP_WHY_US]->detail))
+                                    $whyUsItems = json_decode($widgets[\App\Models\Widget::GROUP_WHY_US]->detail, true);
+                            }
+                            ?>
+
+                            @foreach($whyUsItems as $whyUsItem)
+                                <li style="{{ isset($whyUsItem['image']) ? ('background-image: url(' . $whyUsItem['image'] . ')') : '' }}">
+                                    <a href="{{ isset($whyUsItem['url']) ? $whyUsItem['url'] : 'javascript:void(0)' }}">
+                                        <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($whyUsItem, 'description') }}</p>
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>

@@ -187,5 +187,6 @@ return [
     'payment_fail' => 'Thanh toán đơn hàng thất bại',
     'order_fail' => 'Đặt đơn hàng thất bại',
     'set_new_password' => 'Vui lòng thiết lập mật khẩu mới',
+    'why_us' => 'Tại sao nên chọn cây đèn thần?',
 
 ];

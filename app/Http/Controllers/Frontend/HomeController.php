@@ -30,6 +30,7 @@ class HomeController extends Controller
             Widget::GROUP_STAFF_EXPERT,
             Widget::GROUP_STAFF_STUDENT,
             Widget::GROUP_STAFF_TEACHER,
+            Widget::GROUP_WHY_US,
         ];
 
         for($i = 1;$i <= 3;$i ++)

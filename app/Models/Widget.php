@@ -342,13 +342,18 @@ class Widget extends Model
 
         foreach($coreWidgets as $coreWidget)
         {
-            $widget = new Widget();
-            $widget->code = $coreWidget[0];
-            $widget->name = $coreWidget[1];
-            $widget->status = $coreWidget[2];
-            $widget->type = $coreWidget[3];
-            $widget->attribute = $coreWidget[4];
-            $widget->save();
+            $widget = Widget::select('id')->where('code', $coreWidget[0])->first();
+
+            if(empty($widget))
+            {
+                $widget = new Widget();
+                $widget->code = $coreWidget[0];
+                $widget->name = $coreWidget[1];
+                $widget->status = $coreWidget[2];
+                $widget->type = $coreWidget[3];
+                $widget->attribute = $coreWidget[4];
+                $widget->save();
+            }
         }
     }
 }
