@@ -10,6 +10,7 @@ class Setting extends Model
     const WEB_DESCRIPTION = 'web_description';
     const WEB_KEYWORD = 'web_keyword';
     const WEB_LOGO = 'web_logo';
+    const HOT_LINE = 'hot_line';
     const CONTACT_EMAIL = 'contact_email';
     const WEB_VISITOR_COUNT = 'web_visitor_count';
 
@@ -48,6 +49,7 @@ class Setting extends Model
             [self::WEB_DESCRIPTION, 'Mô Tả Website', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
             [self::WEB_KEYWORD, 'Từ Khóa', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
             [self::WEB_LOGO, 'Logo', self::TYPE_IMAGE_DB, '', self::CATEGORY_GENERAL_DB],
+            [self::HOT_LINE, 'Hot Line', self::TYPE_STRING_DB, '', self::CATEGORY_GENERAL_DB],
             [self::CONTACT_EMAIL, 'Email Liên Hệ', self::TYPE_STRING_DB, 'admin@caydenthan.info', self::CATEGORY_GENERAL_DB],
             [self::WEB_VISITOR_COUNT, 'Lượt View', self::TYPE_INT_DB, 0, self::CATEGORY_GENERAL_DB],
 

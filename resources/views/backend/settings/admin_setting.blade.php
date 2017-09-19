@@ -45,6 +45,12 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>{{ $settings[\App\Models\Setting::HOT_LINE]->name }}</label>
+                            <input type="text" class="form-control" name="{{ \App\Models\Setting::HOT_LINE }}" value="{{ old(\App\Models\Setting::HOT_LINE, $settings[\App\Models\Setting::HOT_LINE]->value) }}" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
                         <div class="form-group{{ $errors->has(\App\Models\Setting::CONTACT_EMAIL) ? ' has-error': '' }}">
                             <label>{{ $settings[\App\Models\Setting::CONTACT_EMAIL]->name }}</label>
                             <input type="text" class="form-control" name="{{ \App\Models\Setting::CONTACT_EMAIL }}" value="{{ old(\App\Models\Setting::CONTACT_EMAIL, $settings[\App\Models\Setting::CONTACT_EMAIL]->value) }}" />
