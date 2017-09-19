@@ -98,7 +98,7 @@ class Menu extends Model
 
     public static function getMenuTree($themePosition)
     {
-        $rootMenus = Menu::select('id', 'name', 'url', 'target_id', 'target', 'type')
+        $rootMenus = Menu::select('id', 'name', 'name_en', 'url', 'target_id', 'target', 'type')
             ->whereNull('parent_id')
             ->where('theme_position', $themePosition)
             ->orderBy('position')
@@ -113,7 +113,7 @@ class Menu extends Model
     public function lazyLoadChildrenMenus()
     {
         $this->load(['childrenMenus' => function($query) {
-            $query->select('id', 'parent_id', 'name', 'url', 'target_id', 'target', 'type')->orderBy('position');
+            $query->select('id', 'parent_id', 'name', 'name_en', 'url', 'target_id', 'target', 'type')->orderBy('position');
         }, 'targetInformation' => function($query) {
             $query->select('id', 'name', 'name_en', 'slug', 'slug_en');
         }]);

@@ -119,6 +119,7 @@ class NewsController extends Controller
                 $category->name_en = $inputs['name_en'];
                 $category->status = isset($inputs['status']) ? Utility::ACTIVE_DB : Utility::INACTIVE_DB;
                 $category->order = $inputs['order'];
+                $category->image = $inputs['image'];
 
                 if(empty($inputs['slug']))
                     $category->slug = str_slug($category->name);

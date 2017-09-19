@@ -39,7 +39,9 @@
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">{{ $totalNotify }}</span>
+                            @if($totalNotify > 0)
+                                <span class="label label-warning">{{ $totalNotify }}</span>
+                            @endif
                         </a>
                         <ul class="dropdown-menu">
                             <li>
