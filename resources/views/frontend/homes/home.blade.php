@@ -432,9 +432,7 @@
 
                             @foreach($whyUsItems as $whyUsItem)
                                 <li style="{{ isset($whyUsItem['image']) ? ('background-image: url(' . $whyUsItem['image'] . ')') : '' }}">
-                                    <a href="{{ isset($whyUsItem['url']) ? $whyUsItem['url'] : 'javascript:void(0)' }}">
-                                        <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($whyUsItem, 'description') }}</p>
-                                    </a>
+                                    <a href="{{ isset($whyUsItem['url']) ? $whyUsItem['url'] : 'javascript:void(0)' }}">{{ \App\Libraries\Helpers\Utility::getValueByLocale($whyUsItem, 'description') }}</a>
                                 </li>
                             @endforeach
                         </ul>
