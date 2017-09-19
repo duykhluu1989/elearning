@@ -265,12 +265,9 @@ class UserController extends Controller
 
                 $loginLink = action('Frontend\UserController@loginWithToken', ['token' => $token]);
 
-                Mail::send('frontend.emails.retrieve_password', ['loginLink' => $loginLink], function($message) use($user, $request) {
+                Mail::send('frontend.emails.retrieve_password', ['loginLink' => $loginLink], function($message) use($user) {
 
-                    $host = $request->getHost();                    
-                    $host = explode('://', $host)[1];
-
-                    $message->from('admin@' . $host, Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE));
+                    $message->from(Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::CONTACT_EMAIL), Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE));
                     $message->to($user->email, $user->profile->name);
                     $message->subject(Setting::getSettings(Setting::CATEGORY_GENERAL_DB, Setting::WEB_TITLE) . ' | ' . trans('theme.retrieve_password'));
 

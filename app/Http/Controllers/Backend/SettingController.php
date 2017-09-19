@@ -23,6 +23,7 @@ class SettingController extends Controller
             $inputs[Setting::EXCHANGE_POINT_RATE] = implode('', explode('.', $inputs[Setting::EXCHANGE_POINT_RATE]));
 
             $validator = Validator::make($inputs, [
+                Setting::CONTACT_EMAIL => 'nullable|email',
                 Setting::EXCHANGE_USD_RATE => 'required|integer|min:1',
                 Setting::EXCHANGE_POINT_RATE => 'required|integer|min:1',
             ]);

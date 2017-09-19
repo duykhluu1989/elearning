@@ -22,7 +22,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="{{ action('Frontend\HomeController@home') }}" class="navbar-brand"></a>
+                    <a href="{{ action('Frontend\HomeController@home') }}" class="navbar-brand" style="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_LOGO) ? ('background-image: url(' . \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_LOGO) . ')') : '' }}"></a>
                 </div>
                 <div class="collapse navbar-collapse js-navbar-collapse">
                     <ul class="nav navbar-nav main_menu">

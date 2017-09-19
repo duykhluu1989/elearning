@@ -9,6 +9,8 @@ class Setting extends Model
     const WEB_TITLE = 'web_title';
     const WEB_DESCRIPTION = 'web_description';
     const WEB_KEYWORD = 'web_keyword';
+    const WEB_LOGO = 'web_logo';
+    const CONTACT_EMAIL = 'contact_email';
     const WEB_VISITOR_COUNT = 'web_visitor_count';
 
     const EXCHANGE_USD_RATE = 'exchange_usd_rate';
@@ -27,6 +29,7 @@ class Setting extends Model
     const TYPE_STRING_DB = 0;
     const TYPE_INT_DB = 1;
     const TYPE_JSON_DB = 2;
+    const TYPE_IMAGE_DB = 3;
 
     const CATEGORY_GENERAL_DB = 0;
     const CATEGORY_COLLABORATOR_DB = 1;
@@ -44,6 +47,8 @@ class Setting extends Model
             [self::WEB_TITLE, 'Tiêu Đề Website', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
             [self::WEB_DESCRIPTION, 'Mô Tả Website', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
             [self::WEB_KEYWORD, 'Từ Khóa', self::TYPE_STRING_DB, 'caydenthan', self::CATEGORY_GENERAL_DB],
+            [self::WEB_LOGO, 'Logo', self::TYPE_IMAGE_DB, '', self::CATEGORY_GENERAL_DB],
+            [self::CONTACT_EMAIL, 'Email Liên Hệ', self::TYPE_STRING_DB, 'admin@caydenthan.info', self::CATEGORY_GENERAL_DB],
             [self::WEB_VISITOR_COUNT, 'Lượt View', self::TYPE_INT_DB, 0, self::CATEGORY_GENERAL_DB],
 
             [self::EXCHANGE_USD_RATE, 'Tỉ Lệ Quy Đổi USD', self::TYPE_INT_DB, 22000, self::CATEGORY_GENERAL_DB],
@@ -104,13 +109,18 @@ class Setting extends Model
 
         foreach($coreSettings as $coreSetting)
         {
-            $setting = new Setting();
-            $setting->code = $coreSetting[0];
-            $setting->name = $coreSetting[1];
-            $setting->type = $coreSetting[2];
-            $setting->value = $coreSetting[3];
-            $setting->category = $coreSetting[4];
-            $setting->save();
+            $setting = Setting::select('id')->where('code', $coreSetting[0])->first();
+
+            if(empty($setting))
+            {
+                $setting = new Setting();
+                $setting->code = $coreSetting[0];
+                $setting->name = $coreSetting[1];
+                $setting->type = $coreSetting[2];
+                $setting->value = $coreSetting[3];
+                $setting->category = $coreSetting[4];
+                $setting->save();
+            }
         }
     }
 
