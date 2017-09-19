@@ -40,149 +40,156 @@
     </section>
 
     <main>
-        <section>
-            <div class="container">
-                <div class="row">
-                    <h3 class="title_line">@lang('theme.free_course')</h3>
-                    <div class="col-lg-12">
-                        <div class="owl_khmp owl-carousel owl-theme">
 
-                            @foreach($groupCourses[\App\Models\Widget::GROUP_FREE_COURSE] as $course)
-                                <div class="item">
-                                    <div class="box_item">
-                                        <div class="border"></div>
-                                        <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
-                                        <div class="ticker">
-                                            <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
-                                        </div>
-                                        <div class="box_item_content">
-                                            <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
-                                            </a>
-                                            <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
-                                            <p class="gia">
-                                                @if($course->validatePromotionPrice())
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
-                                                @else
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
-                                                @endif
-                                            </p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
-                                                @if(empty($course->price))
-                                                    @lang('theme.free')
-                                                @else
-                                                    @lang('theme.buy')
-                                                @endif
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+        @if(count($groupCourses[\App\Models\Widget::GROUP_FREE_COURSE]) > 0)
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <h3 class="title_line">@lang('theme.free_course')</h3>
+                        <div class="col-lg-12">
+                            <div class="owl_khmp owl-carousel owl-theme">
 
-                        </div>
-                    </div>
-                    <div class="col-lg-12 text-center mt30">
-                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'free']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="bg_gray">
-            <div class="container">
-                <div class="row">
-                    <h3 class="title_line">@lang('theme.discount_course')</h3>
-                    <div class="col-lg-12">
-                        <div class="owl_khmp owl-carousel owl-theme">
-
-                            @foreach($groupCourses[\App\Models\Widget::GROUP_DISCOUNT_COURSE] as $course)
-                                <div class="item">
-                                    <div class="box_item">
-                                        <div class="border"></div>
-                                        <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
-                                        <div class="ticker">
-                                            <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
-                                        </div>
-                                        <div class="box_item_content">
-                                            <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
-                                            </a>
-                                            <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
-                                            <p class="gia">
-                                                @if($course->validatePromotionPrice())
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
-                                                @else
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
-                                                @endif
-                                            </p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
-                                                @if(empty($course->price))
-                                                    @lang('theme.free')
-                                                @else
-                                                    @lang('theme.buy')
-                                                @endif
-                                            </a>
+                                @foreach($groupCourses[\App\Models\Widget::GROUP_FREE_COURSE] as $course)
+                                    <div class="item">
+                                        <div class="box_item">
+                                            <div class="border"></div>
+                                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
+                                            <div class="ticker">
+                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
+                                            </div>
+                                            <div class="box_item_content">
+                                                <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
+                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                </a>
+                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
+                                                <p class="gia">
+                                                    @if($course->validatePromotionPrice())
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                    @else
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
+                                                    @endif
+                                                </p>
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
+                                                    @if(empty($course->price))
+                                                        @lang('theme.free')
+                                                    @else
+                                                        @lang('theme.buy')
+                                                    @endif
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
 
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center mt30">
+                            <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'free']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <div class="col-lg-12 text-center mt30">
-                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'promotion']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
-        <section class="">
-            <div class="container">
-                <div class="row">
-                    <h3 class="title_line">@lang('theme.highlight_course')</h3>
-                    <div class="col-lg-12">
-                        <div class="owl_khmp owl-carousel owl-theme">
+        @if(count($groupCourses[\App\Models\Widget::GROUP_DISCOUNT_COURSE]) > 0)
+            <section class="bg_gray">
+                <div class="container">
+                    <div class="row">
+                        <h3 class="title_line">@lang('theme.discount_course')</h3>
+                        <div class="col-lg-12">
+                            <div class="owl_khmp owl-carousel owl-theme">
 
-                            @foreach($groupCourses[\App\Models\Widget::GROUP_HIGHLIGHT_COURSE] as $course)
-                                <div class="item">
-                                    <div class="box_item">
-                                        <div class="border"></div>
-                                        <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
-                                        <div class="ticker">
-                                            <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
-                                        </div>
-                                        <div class="box_item_content">
-                                            <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
-                                            </a>
-                                            <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
-                                            <p class="gia">
-                                                @if($course->validatePromotionPrice())
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
-                                                @else
-                                                    {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
-                                                @endif
-                                            </p>
-                                            <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
-                                                @if(empty($course->price))
-                                                    @lang('theme.free')
-                                                @else
-                                                    @lang('theme.buy')
-                                                @endif
-                                            </a>
+                                @foreach($groupCourses[\App\Models\Widget::GROUP_DISCOUNT_COURSE] as $course)
+                                    <div class="item">
+                                        <div class="box_item">
+                                            <div class="border"></div>
+                                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
+                                            <div class="ticker">
+                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
+                                            </div>
+                                            <div class="box_item_content">
+                                                <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
+                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                </a>
+                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
+                                                <p class="gia">
+                                                    @if($course->validatePromotionPrice())
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                    @else
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
+                                                    @endif
+                                                </p>
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
+                                                    @if(empty($course->price))
+                                                        @lang('theme.free')
+                                                    @else
+                                                        @lang('theme.buy')
+                                                    @endif
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
 
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center mt30">
+                            <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'promotion']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <div class="col-lg-12 text-center mt30">
-                        <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'highlight']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                </div>
+            </section>
+        @endif
+
+        @if(count($groupCourses[\App\Models\Widget::GROUP_HIGHLIGHT_COURSE]) > 0)
+            <section class="">
+                <div class="container">
+                    <div class="row">
+                        <h3 class="title_line">@lang('theme.highlight_course')</h3>
+                        <div class="col-lg-12">
+                            <div class="owl_khmp owl-carousel owl-theme">
+
+                                @foreach($groupCourses[\App\Models\Widget::GROUP_HIGHLIGHT_COURSE] as $course)
+                                    <div class="item">
+                                        <div class="box_item">
+                                            <div class="border"></div>
+                                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
+                                            <div class="ticker">
+                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
+                                            </div>
+                                            <div class="box_item_content">
+                                                <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
+                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                </a>
+                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
+                                                <p class="gia">
+                                                    @if($course->validatePromotionPrice())
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                    @else
+                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
+                                                    @endif
+                                                </p>
+                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
+                                                    @if(empty($course->price))
+                                                        @lang('theme.free')
+                                                    @else
+                                                        @lang('theme.buy')
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center mt30">
+                            <a href="{{ action('Frontend\CourseController@adminCourse', ['sort' => 'highlight']) }}" class="btn btnShowall">@lang('theme.view_more') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
         <section class="banner_qc">
             <div class="container">
@@ -356,53 +363,55 @@
             }
             ?>
 
-            <section class="relative">
-                <div class="container">
-                    <div class="row">
-                        <h3 class="title_line">{{ isset($details['custom_detail']) ? \App\Libraries\Helpers\Utility::getValueByLocale($details['custom_detail'], 'title') : '' }}</h3>
-                        <div class="col-lg-12">
-                            <div class="owl_markerting owl-carousel owl-theme">
+            @if(count($groupCourses[\App\Models\Widget::GROUP_CUSTOM_COURSE . '_' . $i]) > 0)
+                <section class="relative">
+                    <div class="container">
+                        <div class="row">
+                            <h3 class="title_line">{{ isset($details['custom_detail']) ? \App\Libraries\Helpers\Utility::getValueByLocale($details['custom_detail'], 'title') : '' }}</h3>
+                            <div class="col-lg-12">
+                                <div class="owl_markerting owl-carousel owl-theme">
 
-                                @foreach($groupCourses[\App\Models\Widget::GROUP_CUSTOM_COURSE . '_' . $i] as $course)
-                                    <div class="item">
-                                        <div class="box_item">
-                                            <div class="border"></div>
-                                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
-                                            <div class="ticker">
-                                                <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
-                                            </div>
-                                            <div class="box_item_content">
-                                                <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
-                                                </a>
-                                                <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
-                                                <p class="gia">
-                                                    @if($course->validatePromotionPrice())
-                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
-                                                    @else
-                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
-                                                    @endif
-                                                </p>
-                                                <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
-                                                    @if(empty($course->price))
-                                                        @lang('theme.free')
-                                                    @else
-                                                        @lang('theme.buy')
-                                                    @endif
-                                                </a>
+                                    @foreach($groupCourses[\App\Models\Widget::GROUP_CUSTOM_COURSE . '_' . $i] as $course)
+                                        <div class="item">
+                                            <div class="box_item">
+                                                <div class="border"></div>
+                                                <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive"></a>
+                                                <div class="ticker">
+                                                    <p><span class="view"><i class="fa fa-eye" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->view_count) }}</span> - <span class="buy"><i class="fa fa-money" aria-hidden="true"></i> {{ \App\Libraries\Helpers\Utility::formatNumber($course->bought_count) }}</span></p>
+                                                </div>
+                                                <div class="box_item_content">
+                                                    <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
+                                                        {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                    </a>
+                                                    <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
+                                                    <p class="gia">
+                                                        @if($course->validatePromotionPrice())
+                                                            {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                        @else
+                                                            {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
+                                                        @endif
+                                                    </p>
+                                                    <a href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn_yellow btnMua">
+                                                        @if(empty($course->price))
+                                                            @lang('theme.free')
+                                                        @else
+                                                            @lang('theme.buy')
+                                                        @endif
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
 
+                                </div>
+                            </div>
+                            <div class="col-lg-12 text-center mt30">
+                                <a href="{{ action('Frontend\CourseController@adminCourse') }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
                             </div>
                         </div>
-                        <div class="col-lg-12 text-center mt30">
-                            <a href="{{ action('Frontend\CourseController@adminCourse') }}" class="btn btnShowall">@lang('theme.all_course') <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i></a>
-                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            @endif
         @endfor
 
         <section class="vechungtoi bg_gray">
