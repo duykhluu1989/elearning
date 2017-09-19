@@ -18,6 +18,7 @@ class Widget extends Model
     const GROUP_STAFF_TEACHER = 'group_staff_teacher';
     const GROUP_STAFF_EXPERT = 'group_staff_expert';
     const GROUP_STAFF_STUDENT = 'group_staff_student';
+    const GROUP_WHY_US = 'group_why_us';
 
     const TYPE_SLIDER_DB = 0;
     const TYPE_GROUP_COURSE_DB = 1;
@@ -274,6 +275,34 @@ class Widget extends Model
                         'title' => 'Trích Dẫn EN',
                         'name' => 'quote_en',
                         'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Nội Dung',
+                        'name' => 'description',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Nội Dung EN',
+                        'name' => 'description_en',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                    [
+                        'title' => 'Đường Dẫn',
+                        'name' => 'url',
+                        'type' => self::ATTRIBUTE_TYPE_STRING_DB,
+                    ],
+                ]),
+            ],
+            [
+                self::GROUP_WHY_US,
+                'Tại sao nên chọn cây đèn thần?',
+                Utility::ACTIVE_DB,
+                self::TYPE_GROUP_STAFF_DB,
+                json_encode([
+                    [
+                        'title' => 'Ảnh',
+                        'name' => 'image',
+                        'type' => self::ATTRIBUTE_TYPE_IMAGE_DB,
                     ],
                     [
                         'title' => 'Nội Dung',

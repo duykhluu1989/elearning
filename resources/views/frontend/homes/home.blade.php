@@ -459,7 +459,7 @@
         <section class="giaovien">
             <div class="container">
                 <h3 class="title_line">@lang('theme.teacher_staff')</h3>
-                <p class="text-center mb60"> Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+                <p class="text-center mb60"></p>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="owl_giaovien owl-carousel owl-theme">
