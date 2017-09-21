@@ -1,4 +1,4 @@
-<section class="hotdeal mt125{{ auth()->user() ? ' mt152' : '' }}">
+<section class="hotdeal">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
