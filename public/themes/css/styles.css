@@ -1773,3 +1773,9 @@ ul.list_tintuc li:hover a {
   right: 30px;
   border-radius: 3px;
 }
+.info_user {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-size: 13px;
+}
