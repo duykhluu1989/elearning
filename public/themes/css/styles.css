@@ -551,6 +551,7 @@ ul.list_khoahoc li:hover a {
     color: #FF6F6F;
 }
 ul.list_tuvanpl, ul.list_tuvankt {
+    position: relative;
     padding-left: 0;
     list-style: none;
     margin-top: 15px;
