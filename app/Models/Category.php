@@ -146,22 +146,12 @@ class Category extends Model
             do
             {
                 $courses = Course::select('course.id', 'course.category_status')
-                    ->with(['categoryCourses' => function($query) {
-                        $query->orderBy('level', 'desc');
-                    }, 'categoryCourses.category' => function($query) {
-                        $query->select('id', 'status', 'parent_status');
-                    }])
-                    ->join('category_course', 'course.id', '=', 'category_course.course_id')
-                    ->where('category_course.category_id', $category->id)
+                    ->where('course.category_id', $category->id)
                     ->paginate(Utility::LARGE_SET_LIMIT, ['*'], 'page', $page);
 
                 foreach($courses as $course)
                 {
-                    if($course->categoryCourses[0]->category->status == Utility::INACTIVE_DB || $course->categoryCourses[0]->category->parent_status == Utility::INACTIVE_DB )
-                        $course->category_status = Utility::INACTIVE_DB;
-                    else
-                        $course->category_status = Utility::ACTIVE_DB;
-
+                    $course->category_status = $parentStatus;
                     $course->save();
                 }
 
