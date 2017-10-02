@@ -577,7 +577,7 @@
 
                             @foreach($newsCategories as $newsCategory)
                                 <div class="item">
-                                    <a href="{{ action('Frontend\NewsController@adminCategory') }}">
+                                    <a href="{{ action('Frontend\NewsController@detailCategory', ['id' => $newsCategory->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($newsCategory, 'slug')]) }}">
                                         <span class="table_content">
                                             <img src="{{ $newsCategory->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($newsCategory, 'name') }}" class="img-responsive">
                                         </span>

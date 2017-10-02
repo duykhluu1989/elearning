@@ -102,7 +102,9 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
     Route::get('article/{id}/{slug}', 'ArticleController@detailArticle');
 
-    Route::get('news', 'NewsController@adminCategory');
+    Route::get('newsCategory/{id}/{slug}', 'NewsController@detailCategory');
+
+    Route::get('news/{id}/{slug}', 'NewsController@detailArticle');
 
     Route::get('certificate', 'CertificateController@adminCertificate');
 
