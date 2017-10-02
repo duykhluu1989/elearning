@@ -57,8 +57,8 @@
 <script src="{{ asset('themes/js/clamp.js') }}"></script>
 <script src="{{ asset('themes/js/functions.js') }}"></script>
 <script src="{{ asset('themes/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<script src="{{ asset('themes/js/text-slider.js') }}"></script>
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-<script src="{{ asset('assets/js/text-slider.js') }}"></script>
 <script src="{{ asset('assets/js/frontend.js') }}"></script>
 @stack('scripts')
 @if(session('messageSuccess'))
