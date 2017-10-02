@@ -15,6 +15,7 @@ class CreateUserCourseTable extends Migration
             $table->unsignedInteger('course_item_tracking')->default(0);
             $table->unsignedInteger('order_id')->nullable();
             $table->unsignedTinyInteger('finish')->default(0);
+            $table->text('student_note')->nullable();
         });
     }
 

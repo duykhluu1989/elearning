@@ -34,26 +34,31 @@
                                         $filePart = explode('.', $file);
                                         $type = $filePart[count($filePart) - 1];
 
-                                        if($courseItem->type == \App\Models\CourseItem::TYPE_VIDEO_DB)
-                                        {
-                                            ?>
+                                        ?>
 
-                                            <video controls class="col-sm-12">
-                                                <source src="{{ action('Frontend\CourseController@getSource', ['token' => $token]) }}" type="video/{{ $type }}">
-                                            </video>
+                                        <div class="row">
 
-                                            <?php
-                                        }
-                                        else
-                                        {
-                                            ?>
+                                            @if($courseItem->type == \App\Models\CourseItem::TYPE_VIDEO_DB)
+                                                <video controls class="col-sm-10">
+                                                    <source src="{{ action('Frontend\CourseController@getSource', ['token' => $token]) }}" type="video/{{ $type }}">
+                                                </video>
+                                            @else
+                                                <audio controls class="col-sm-12">
+                                                    <source src="{{ action('Frontend\CourseController@getSource', ['token' => $token]) }}" type="audio/{{ $type }}">
+                                                </audio>
+                                            @endif
 
-                                            <audio controls class="col-sm-12">
-                                                <source src="{{ action('Frontend\CourseController@getSource', ['token' => $token]) }}" type="audio/{{ $type }}">
-                                            </audio>
+                                            <div class="col-sm-2">
+                                                <?php
+                                                $studentNotes = array();
+                                                if(!empty($userCourse->student_note))
+                                                    $studentNotes = json_decode($userCourse->student_note, true);
+                                                ?>
+                                                <textarea class="form-control">{{ isset($studentNotes[$courseItem->number]) ? $studentNotes[$courseItem->number] : '' }}</textarea>
+                                            </div>
+                                        </div>
 
-                                            <?php
-                                        }
+                                        <?php
                                     }
                                     ?>
                                 </div>
