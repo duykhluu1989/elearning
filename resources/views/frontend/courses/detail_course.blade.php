@@ -27,15 +27,16 @@
                         <p>@lang('theme.teacher') <span class="red"><b>{{ $course->user->profile->name }}</b></span></p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6 boxmH display_table">
-                        <div class="table_content">
-                            <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive w100p"></a>
+
+                @if($bought == false)
+                    <div class="row">
+                        <div class="col-lg-6 boxmH display_table">
+                            <div class="table_content">
+                                <a href="javascript:void(0)"><img src="{{ $course->image }}" alt="{{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}" class="img-responsive w100p"></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 boxmH">
-                        <div class="box_info_khoahoc">
-                            @if($bought == false)
+                        <div class="col-lg-6 boxmH">
+                            <div class="box_info_khoahoc">
                                 <p class="big_price"><i class="fa fa-tags" aria-hidden="true"></i>
                                     @if($course->validatePromotionPrice())
                                         <?php
@@ -49,55 +50,53 @@
                                         <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}</span>
                                     @endif
                                 </p>
-                            @endif
+                                <div class="row">
+                                    <div class="col-lg-8">
 
-                            <div class="row">
-                                <div class="col-lg-8">
-
-                                    @if($bought == false)
                                         @if($coursePrice == 0)
                                             <a href="{{ action('Frontend\OrderController@learnCourseNow', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" class="btn btn-lg btnMuaKH"><i class="fa fa-book" aria-hidden="true"></i> @lang('theme.learn')</a>
                                         @else
                                             <a href="javascript:void(0)" class="btn btn-lg btnMuaKH QuickBuyCourse" data-course-id="{{ $course->id }}"><i class="fa fa-cart-plus" aria-hidden="true"></i> @lang('theme.buy_course')</a>
                                             <a href="javascript:void(0)" class="btn btn-lg btnThemGH AddCartItem" data-course-id="{{ $course->id }}"><i class="fa fa-plus-square-o" aria-hidden="true"></i> @lang('theme.add_cart')</a>
                                         @endif
-                                    @endif
 
-                                    <div class="box_sl_baigiang">
-                                        <p>@lang('theme.course_item_count'): <span><b>{{ $course->item_count }}</b></span></p>
-                                        @if(!empty($course->video_length))
-                                            <p>@lang('theme.video_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</b></span></p>
-                                        @endif
-                                        @if(!empty($course->audio_length))
-                                            <p>@lang('theme.audio_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->audio_length) }}</b></span></p>
-                                        @endif
-                                        @if(!empty($course->level))
-                                            <p>@lang('theme.level'): <span><b>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->level, 'name') }}</b></span></p>
-                                        @endif
+                                        <div class="box_sl_baigiang">
+                                            <p>@lang('theme.course_item_count'): <span><b>{{ $course->item_count }}</b></span></p>
+                                            @if(!empty($course->video_length))
+                                                <p>@lang('theme.video_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->video_length) }}</b></span></p>
+                                            @endif
+                                            @if(!empty($course->audio_length))
+                                                <p>@lang('theme.audio_length'): <span><b>{{ \App\Libraries\Helpers\Utility::formatTimeString($course->audio_length) }}</b></span></p>
+                                            @endif
+                                            @if(!empty($course->level))
+                                                <p>@lang('theme.level'): <span><b>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->level, 'name') }}</b></span></p>
+                                            @endif
+                                        </div>
+
+                                        <div class="fb-like" data-href="{{ request()->url() }}" data-layout="button" data-action="like" data-size="large" data-show-faces="false" data-share="true"></div>
                                     </div>
-
-                                    <div class="fb-like" data-href="{{ request()->url() }}" data-layout="button" data-action="like" data-size="large" data-show-faces="false" data-share="true"></div>
-                                </div>
-                                <div class="col-lg-4">
+                                    <div class="col-lg-4">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
+
                 <div class="row mt30">
                     <div class="col-lg-12">
                         <ul class="nav nav-tabs tabs_info">
-                            <li class="active"><a data-toggle="tab" href="#section_gioithieu">@lang('theme.course_description')</a></li>
-                            <li><a data-toggle="tab" href="#section_noidungKH">@lang('theme.detail')</a></li>
+                            <li class="{{ $bought == false ? 'active' : '' }}"><a data-toggle="tab" href="#section_gioithieu">@lang('theme.course_description')</a></li>
+                            <li class="{{ $bought == true ? 'active' : '' }}"><a data-toggle="tab" href="#section_noidungKH">@lang('theme.detail')</a></li>
                             <li><a data-toggle="tab" href="#section_giangvien">@lang('theme.teacher_label')</a></li>
                             <li><a data-toggle="tab" href="#section_binhluan">@lang('theme.review')</a></li>
                         </ul>
                         <div class="tab-content tabs_info_content">
-                            <div id="section_gioithieu" class="tab-pane fade in active">
+                            <div id="section_gioithieu" class="tab-pane fade{{ $bought == false ? ' in active' : '' }}">
                                 <h4>@lang('theme.course_description_title')</h4>
                                 <?php echo \App\Libraries\Helpers\Utility::getValueByLocale($course, 'description'); ?>
                             </div>
-                            <div id="section_noidungKH" class="tab-pane fade">
+                            <div id="section_noidungKH" class="tab-pane fade{{ $bought == true ? ' in active' : '' }}">
                                 @if($bought == false)
                                     <h4>@lang('theme.list_course_item')</h4>
                                     <div class="table-responsive table_noidungKH">

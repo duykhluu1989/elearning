@@ -105,6 +105,8 @@ class NewsController extends Controller
         if(empty($article))
             return view('frontend.errors.404');
 
+        Utility::viewCount($article, 'view_count', Utility::VIEW_NEWS_COOKIE_NAME);
+
         $listCategories = NewsCategory::select('id', 'name', 'name_en', 'slug', 'slug_en', 'rss')
             ->where('status', Utility::ACTIVE_DB)
             ->orderBy('order', 'desc')
