@@ -76,16 +76,23 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Điểm Hiện Tại</label>
-                                        <span class="form-control no-border">{{ !empty($user->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->current_point) : '' }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
                                         <label>Tổng Điểm</label>
                                         <span class="form-control no-border">{{ !empty($user->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->total_point) : '' }}</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group{{ $errors->has('current_point') ? ' has-error': '' }}">
+                                        <label>Điểm Hiện Tại</label>
+                                        <input type="text" class="form-control InputForNumber" name="current_point" required="required" value="{{ old('current_point', (!empty($user->studentInformation) ? \App\Libraries\Helpers\Utility::formatNumber($user->studentInformation->current_point) : 0)) }}" />
+                                        @if($errors->has('current_point'))
+                                            <span class="help-block">{{ $errors->first('current_point') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label>Trạng Thái</label>

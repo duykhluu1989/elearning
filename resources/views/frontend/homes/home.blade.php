@@ -59,12 +59,14 @@
                                             </div>
                                             <div class="box_item_content">
                                                 <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                    {{ str_limit(\App\Libraries\Helpers\Utility::getValueByLocale($course, 'name'), 100) }}
                                                 </a>
                                                 <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                                 <p class="gia">
                                                     @if($course->validatePromotionPrice())
-                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}</span>
+                                                        <br />
+                                                        <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }})</span>
                                                     @else
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                     @endif
@@ -109,12 +111,14 @@
                                             </div>
                                             <div class="box_item_content">
                                                 <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                    {{ str_limit(\App\Libraries\Helpers\Utility::getValueByLocale($course, 'name'), 100) }}
                                                 </a>
                                                 <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                                 <p class="gia">
                                                     @if($course->validatePromotionPrice())
-                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}</span>
+                                                        <br />
+                                                        <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }})</span>
                                                     @else
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                     @endif
@@ -159,12 +163,14 @@
                                             </div>
                                             <div class="box_item_content">
                                                 <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                    {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                    {{ str_limit(\App\Libraries\Helpers\Utility::getValueByLocale($course, 'name'), 100) }}
                                                 </a>
                                                 <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                                 <p class="gia">
                                                     @if($course->validatePromotionPrice())
-                                                        {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                        <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}</span>
+                                                        <br />
+                                                        <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }})</span>
                                                     @else
                                                         {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                     @endif
@@ -381,12 +387,14 @@
                                                 </div>
                                                 <div class="box_item_content">
                                                     <a style="color: #ffffff" href="{{ action('Frontend\CourseController@detailCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}">
-                                                        {{ \App\Libraries\Helpers\Utility::getValueByLocale($course, 'name') }}
+                                                        {{ str_limit(\App\Libraries\Helpers\Utility::getValueByLocale($course, 'name'), 100) }}
                                                     </a>
                                                     <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($course->category, 'name') }}</p>
                                                     <p class="gia">
                                                         @if($course->validatePromotionPrice())
-                                                            {{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}
+                                                            <span class="new_price">{{ \App\Libraries\Helpers\Utility::formatNumber($course->promotionPrice->price) . 'đ' }}</span>
+                                                            <br />
+                                                            <span class="sale">({{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }})</span>
                                                         @else
                                                             {{ \App\Libraries\Helpers\Utility::formatNumber($course->price) . 'đ' }}
                                                         @endif

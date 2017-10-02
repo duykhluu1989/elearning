@@ -19,6 +19,7 @@ use App\Models\Collaborator;
 use App\Models\Setting;
 use App\Models\Teacher;
 use App\Models\Expert;
+use App\Models\Student;
 
 class UserController extends Controller
 {
@@ -227,7 +228,7 @@ class UserController extends Controller
         ]);
     }
 
-    protected function createUserExternalInformation($user)
+    protected function createUserExternalInformation($user, $inputs = array())
     {
         if($user->collaborator == Utility::ACTIVE_DB && empty($user->collaboratorInformation))
         {
@@ -260,6 +261,24 @@ class UserController extends Controller
             $expert->online = Utility::INACTIVE_DB;
             $expert->save();
         }
+
+        if(!empty($inputs['current_point']))
+        {
+            if(empty($user->studentInformation))
+            {
+                $student = new Student();
+                $student->user_id = $user->id;
+                $student->total_point = $inputs['current_point'];
+                $student->current_point = $inputs['current_point'];
+                $student->save();
+            }
+            else
+            {
+                $user->studentInformation->total_point += $inputs['current_point'] - $user->studentInformation->current_point;
+                $user->studentInformation->current_point = $inputs['current_point'];
+                $user->studentInformation->save();
+            }
+        }
     }
 
     public function editUser(Request $request, $id)
@@ -287,6 +306,8 @@ class UserController extends Controller
         {
             $inputs = $request->all();
 
+            $inputs['current_point'] = implode('', explode('.', $inputs['current_point']));
+
             $validator = Validator::make($inputs, [
                 'username' => 'required|alpha_dash|min:4|max:255|unique:user,username,' . $user->id,
                 'email' => 'required|email|unique:user,email,' . $user->id,
@@ -297,6 +318,7 @@ class UserController extends Controller
                 'last_name' => 'nullable|max:100',
                 'phone' => 'nullable|numeric',
                 'birthday' => 'nullable|date',
+                'current_point' => 'required|integer|min:0',
             ]);
 
             if($validator->passes())
@@ -381,7 +403,7 @@ class UserController extends Controller
 
                     $user->profile->save();
 
-                    $this->createUserExternalInformation($user);
+                    $this->createUserExternalInformation($user, $inputs);
 
                     DB::commit();
 
