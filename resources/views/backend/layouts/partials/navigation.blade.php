@@ -29,8 +29,16 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ (request()->is('admin/newsCategory*') ? 'active' : '') }}">
-                <a href="{{ action('Backend\NewsController@adminCategory') }}"><i class="fa fa-rss"></i><span>Tin Tức</span></a>
+            <li class="treeview{{ (request()->is('admin/news*') ? ' active' : '') }}">
+                <a href="#"><i class="fa fa-rss"></i><span>Tin Tức</span></a>
+                <ul class="treeview-menu">
+                    <li class="{{ (request()->is('admin/newsCategory*') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\NewsController@adminCategory') }}">Chuyên Mục</a>
+                    </li>
+                    <li class="{{ (request()->is('admin/newsArticle*') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\NewsController@adminArticle') }}">Tin Tức</a>
+                    </li>
+                </ul>
             </li>
             <li class="{{ (request()->is('admin/discount*') ? 'active' : '') }}">
                 <a href="{{ action('Backend\DiscountController@adminDiscount') }}"><i class="fa fa-tags"></i><span>Mã Giảm Giá</span></a>

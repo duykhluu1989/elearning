@@ -65,9 +65,9 @@
                     <label>Liên Kết Tĩnh</label>
                     <div class="input-group">
                         @if(empty($category->id))
-                            <span class="input-group-addon">{{ url('news') }}/</span>
+                            <span class="input-group-addon">{{ url('newsCategory') }}/</span>
                         @else
-                            <span class="input-group-addon">{{ url('news', ['id' => $category->id]) }}/</span>
+                            <span class="input-group-addon">{{ url('newsCategory', ['id' => $category->id]) }}/</span>
                         @endif
                         <input type="text" class="form-control" name="slug" value="{{ old('slug', $category->slug) }}" />
                     </div>
@@ -78,9 +78,9 @@
                     <label>Liên Kết Tĩnh EN</label>
                     <div class="input-group">
                         @if(empty($category->id))
-                            <span class="input-group-addon">{{ url('news') }}/</span>
+                            <span class="input-group-addon">{{ url('newsCategory') }}/</span>
                         @else
-                            <span class="input-group-addon">{{ url('news', ['id' => $category->id]) }}/</span>
+                            <span class="input-group-addon">{{ url('newsCategory', ['id' => $category->id]) }}/</span>
                         @endif
                         <input type="text" class="form-control" name="slug_en" value="{{ old('slug_en', $category->slug_en) }}" />
                     </div>

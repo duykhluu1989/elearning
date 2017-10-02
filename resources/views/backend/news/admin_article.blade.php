@@ -1,6 +1,6 @@
 @extends('backend.layouts.main')
 
-@section('page_heading', 'Chuyên Mục')
+@section('page_heading', 'Tin Tức')
 
 @section('section')
 
@@ -9,12 +9,12 @@
     $gridView->setTools([
         function() {
             echo \App\Libraries\Helpers\Html::a(\App\Libraries\Helpers\Html::i('', ['class' => 'fa fa-plus fa-fw']), [
-                'href' => action('Backend\NewsController@createCategory'),
+                'href' => action('Backend\NewsController@createArticle'),
                 'class' => 'btn btn-primary',
                 'data-container' => 'body',
                 'data-toggle' => 'popover',
                 'data-placement' => 'top',
-                'data-content' => 'Chuyên Mục Mới',
+                'data-content' => 'Tin Tức Mới',
             ]);
         },
         function() {
@@ -24,7 +24,7 @@
                 'data-toggle' => 'popover',
                 'data-placement' => 'top',
                 'data-content' => 'Xóa',
-                'value' => action('Backend\NewsController@controlDeleteCategory'),
+                'value' => action('Backend\NewsController@controlDeleteArticle'),
                 'style' => 'display: none',
             ]);
         },

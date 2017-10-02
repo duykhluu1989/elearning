@@ -145,8 +145,8 @@ class Category extends Model
 
             do
             {
-                $courses = Course::select('course.id', 'course.category_status')
-                    ->where('course.category_id', $category->id)
+                $courses = Course::select('id', 'category_status')
+                    ->where('category_id', $category->id)
                     ->paginate(Utility::LARGE_SET_LIMIT, ['*'], 'page', $page);
 
                 foreach($courses as $course)
