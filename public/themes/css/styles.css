@@ -330,7 +330,7 @@ section {padding: 60px 0;}
 }
 .box_item img {
     width: 100%;
-    min-height: 274px;
+    height: 274px;
 }
 .box_item_content {
     background: rgba(0, 0, 0, 0.5);
@@ -440,10 +440,11 @@ section {padding: 60px 0;}
 }
 .owl_chuyengia .item p {
     margin-top: 15px;
+    min-height: 50px;
 }
 .owl_chuyengia .item img {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     border: 1px solid #ccc;
     margin: 0 auto;
@@ -539,6 +540,9 @@ ul.list_taisao li:hover a {
     bottom: 0;
     line-height: 1.3em;
 }
+.box_item_gv img {
+  height: 204px;
+}
 ul.list_khoahoc {
     list-style: none;
     padding-left: 0;
@@ -551,7 +555,6 @@ ul.list_khoahoc li:hover a {
     color: #FF6F6F;
 }
 ul.list_tuvanpl, ul.list_tuvankt {
-    position: relative;
     padding-left: 0;
     list-style: none;
     margin-top: 15px;
@@ -828,22 +831,7 @@ ul.list_social li:hover a {
 .chuyengia {
   position: relative;
 }
-.qc_left {
-  position: absolute;
-  z-index: 10;
-  left: -200px;
-  top: 15%;
-  display: none;
-  width: 200px;
-}
-.qc_right {
-  position: absolute;
-  z-index: 10;
-  right: -200px;
-  top: 15%;
-  display: none;
-  width: 200px;
-}
+
 .qc_right img {
   width: 100%;
 }
@@ -854,7 +842,7 @@ ul.list_social li:hover a {
   background: url('../images/btnClose.png') no-repeat;
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 40px;
 }
 .btnDangky {
   background: #fe645e;
@@ -1774,9 +1762,11 @@ ul.list_tintuc li:hover a {
   right: 30px;
   border-radius: 3px;
 }
+
+/*20-09-2017*/
 .info_user {
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    font-size: 13px;
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  font-size: 13px;
 }

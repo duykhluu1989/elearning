@@ -9,9 +9,7 @@
     }
 }
 @media (max-width: 1280px) {
-	.lang {
-        display: none;
-    }
+	
 }
 
 @media (min-width: 1200px) {
@@ -19,7 +17,40 @@
 }
 
 @media (max-width: 1024px) {
-	
+	.navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px 0;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .navbar-text {
+        float: none;
+        margin: 15px 0;
+    }
+    .navbar-collapse.collapse.in { 
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
 }
 
 @media (max-width: 980px) {
@@ -145,6 +176,77 @@
     .live_chat {
         bottom: 15px;
     }
+    /*20-09-2017*/
+    .info_user {
+        position: relative;
+        text-align: center;
+    }
+
+    /*28-092017*/
+    .navbar-brand {
+        margin-left: 0;
+        margin: 15px auto;
+        float: none;
+    }
+    .navbar-nav>li>a {
+        border-bottom: 1px solid #ccc;
+        text-align: center;
+    }
+    .mega-dropdown-menu {
+        padding: 5px 0;
+    }
+    .navbar-nav .open .dropdown-menu {
+        border-bottom: 1px solid #ccc;
+        padding: 0;
+    }
+    .navbar-nav .open .dropdown-menu > li > a {
+        border-bottom: 1px solid #eee;
+        text-align: center;
+        font-size: 13px;
+        background: #ccc;
+        color: #fff !important;
+    }
+    .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+        border-bottom: none;
+    }
+    .mega-dropdown-menu > li > ul > li > a {
+        text-align: center;
+    }
+    .mega-dropdown-menu .dropdown-header {
+        text-align: center;
+        border-bottom: 1px solid #ccc;
+    }
+    .lang {
+        margin-top: 0;
+    }    
+    .lang li {
+        display: block;
+        width: 50%;
+        text-align: center;
+        float: left;
+    }
+    .lang li:after {
+        border: none;
+    }
+    .lang li:nth-child(2) a {
+        background: #FF6F6F;
+        color: #fff;
+    }
+    .lang li:nth-child(3) a {
+        background: #FDBE34;
+        color: #fff;
+    }
+    .modal_general .modal-body {
+        padding: 15px;
+    }
+    .btnDangnhap, .btnDangky {
+        font-size: 14px;
+    }
+    .box_item img, .box_item_gv img {
+        height: auto;
+    }
+    
+    
 }
 
 @media (max-width: 736px) {
