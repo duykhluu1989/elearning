@@ -36,6 +36,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
         Route::get('course/{id}/{slug}/item/{number}', 'CourseController@detailCourseItem');
 
+        Route::post('courseItem/{id}/note', 'CourseController@saveCourseItemNote');
+
         Route::get('source/{token}', 'CourseController@getSource');
 
         Route::post('reviewCourse/{id}/{slug}', 'CourseController@reviewCourse');

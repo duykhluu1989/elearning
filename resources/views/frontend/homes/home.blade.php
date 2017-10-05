@@ -234,68 +234,41 @@
         </section>
 
         <section class="chuyengia bg_gray">
-            <div class="container relative">
-                <div class="qc_left hidden-sm hidden-xs">
-                    <?php
-                    $adVerticalLeftItem = null;
-
-                    if(isset($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]))
-                    {
-                        if(!empty($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]->detail))
-                        {
-                            $adVerticalLeftItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]->detail, true);
-
-                            $randomKey = array_rand($adVerticalLeftItems);
-
-                            $adVerticalLeftItem = $adVerticalLeftItems[$randomKey];
-                        }
-                    }
-                    ?>
-
-                    @if($adVerticalLeftItem)
-                        @if(isset($adVerticalLeftItem['script']))
-                            <?php echo $adVerticalLeftItem['script']; ?>
-                        @else
-                            <a href="{{ isset($adVerticalLeftItem['url']) ? $adVerticalLeftItem['url'] : 'javascript:void(0)' }}"><img src="{{ isset($adVerticalLeftItem['image']) ? $adVerticalLeftItem['image'] : '' }}" alt="Advertiser" class="img-responsive"></a>
-                        @endif
-                        <a href="javascript:void(0)" class="btnClose"></a>
-                    @else
-                        <a href="javascript:void(0)"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
-                        <a href="javascript:void(0)" class="btnClose"></a>
-                    @endif
-                </div>
-                <div class="qc_right hidden-xs hidden-sm">
-                    <?php
-                    $adVerticalRightItem = null;
-
-                    if(isset($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]))
-                    {
-                        if(!empty($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]->detail))
-                        {
-                            $adVerticalRightItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]->detail, true);
-
-                            $randomKey = array_rand($adVerticalRightItems);
-
-                            $adVerticalRightItem = $adVerticalRightItems[$randomKey];
-                        }
-                    }
-                    ?>
-
-                    @if($adVerticalRightItem)
-                        @if(isset($adVerticalRightItem['script']))
-                            <?php echo $adVerticalRightItem['script']; ?>
-                        @else
-                            <a href="{{ isset($adVerticalRightItem['url']) ? $adVerticalRightItem['url'] : 'javascript:void(0)' }}"><img src="{{ isset($adVerticalRightItem['image']) ? $adVerticalRightItem['image'] : '' }}" alt="Advertiser" class="img-responsive"></a>
-                        @endif
-                        <a href="javascript:void(0)" class="btnClose"></a>
-                    @else
-                        <a href="javascript:void(0)"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
-                        <a href="javascript:void(0)" class="btnClose"></a>
-                    @endif
-                </div>
+            <div class="container">
                 <div class="row">
                     <h3 class="title_line">@lang('theme.expert')</h3>
-                    <div class="col-lg-12">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                        <div class="qc_left">
+                            <?php
+                            $adVerticalLeftItem = null;
+
+                            if(isset($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]))
+                            {
+                                if(!empty($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]->detail))
+                                {
+                                    $adVerticalLeftItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_LEFT]->detail, true);
+
+                                    $randomKey = array_rand($adVerticalLeftItems);
+
+                                    $adVerticalLeftItem = $adVerticalLeftItems[$randomKey];
+                                }
+                            }
+                            ?>
+
+                            @if($adVerticalLeftItem)
+                                @if(isset($adVerticalLeftItem['script']))
+                                    <?php echo $adVerticalLeftItem['script']; ?>
+                                @else
+                                    <a href="{{ isset($adVerticalLeftItem['url']) ? $adVerticalLeftItem['url'] : 'javascript:void(0)' }}"><img src="{{ isset($adVerticalLeftItem['image']) ? $adVerticalLeftItem['image'] : '' }}" alt="Advertiser" class="img-responsive"></a>
+                                @endif
+                                <a href="javascript:void(0)" class="btnClose"></a>
+                            @else
+                                <a href="javascript:void(0)"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
+                                <a href="javascript:void(0)" class="btnClose"></a>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                         <div class="owl_chuyengia owl-carousel owl-theme">
                             <?php
                             $expertItems = array();
@@ -314,6 +287,37 @@
                                     <p>{{ \App\Libraries\Helpers\Utility::getValueByLocale($expertItem, 'quote') }}</p>
                                 </div>
                             @endforeach
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                        <div class="qc_right">
+                            <?php
+                            $adVerticalRightItem = null;
+
+                            if(isset($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]))
+                            {
+                                if(!empty($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]->detail))
+                                {
+                                    $adVerticalRightItems = json_decode($widgets[\App\Models\Widget::ADVERTISE_VERTICAL_RIGHT]->detail, true);
+
+                                    $randomKey = array_rand($adVerticalRightItems);
+
+                                    $adVerticalRightItem = $adVerticalRightItems[$randomKey];
+                                }
+                            }
+                            ?>
+
+                            @if($adVerticalRightItem)
+                                @if(isset($adVerticalRightItem['script']))
+                                    <?php echo $adVerticalRightItem['script']; ?>
+                                @else
+                                    <a href="{{ isset($adVerticalRightItem['url']) ? $adVerticalRightItem['url'] : 'javascript:void(0)' }}"><img src="{{ isset($adVerticalRightItem['image']) ? $adVerticalRightItem['image'] : '' }}" alt="Advertiser" class="img-responsive"></a>
+                                @endif
+                                <a href="javascript:void(0)" class="btnClose"></a>
+                            @else
+                                <a href="javascript:void(0)"><img src="{{ asset('themes/images/qc.jpg') }}" alt="Advertiser" class="img-responsive"></a>
+                                <a href="javascript:void(0)" class="btnClose"></a>
+                            @endif
                         </div>
                     </div>
                     <div class="col-lg-12 text-center mt30">

@@ -460,4 +460,39 @@ class CourseController extends Controller
             'keyword' => isset($inputs['k']) ? $inputs['k'] : '',
         ]);
     }
+
+    public function saveCourseItemNote(Request $request, $id)
+    {
+        $courseItem = CourseItem::find($id);
+
+        if(empty($courseItem))
+            return '';
+
+        $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $courseItem->course_id)->first();
+
+        if(empty($userCourse))
+            return '';
+
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'note' => 'nullable|string|max:1000',
+        ]);
+
+        if($validator->passes())
+        {
+            $studentNotes = array();
+            if(!empty($userCourse->student_note))
+                $studentNotes = json_decode($userCourse->student_note, true);
+
+            $studentNotes[$courseItem->number] = $inputs['note'];
+
+            $userCourse->student_note = json_encode($studentNotes);
+            $userCourse->save();
+
+            return 'Success';
+        }
+
+        return '';
+    }
 }

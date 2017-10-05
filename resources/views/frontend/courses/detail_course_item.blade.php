@@ -39,22 +39,27 @@
                                         <div class="row">
 
                                             @if($courseItem->type == \App\Models\CourseItem::TYPE_VIDEO_DB)
-                                                <video controls class="col-sm-10">
+                                                <video controls class="col-sm-9">
                                                     <source src="{{ action('Frontend\CourseController@getSource', ['token' => $token]) }}" type="video/{{ $type }}">
                                                 </video>
                                             @else
-                                                <audio controls class="col-sm-12">
+                                                <audio controls class="col-sm-9">
                                                     <source src="{{ action('Frontend\CourseController@getSource', ['token' => $token]) }}" type="audio/{{ $type }}">
                                                 </audio>
                                             @endif
 
-                                            <div class="col-sm-2">
-                                                <?php
-                                                $studentNotes = array();
-                                                if(!empty($userCourse->student_note))
-                                                    $studentNotes = json_decode($userCourse->student_note, true);
-                                                ?>
-                                                <textarea class="form-control">{{ isset($studentNotes[$courseItem->number]) ? $studentNotes[$courseItem->number] : '' }}</textarea>
+                                            <div class="col-sm-3">
+                                                <div class="form-group text-center">
+                                                    <label class="control-label">@lang('theme.note')</label>
+                                                    <?php
+                                                    $studentNotes = array();
+                                                    if(!empty($userCourse->student_note))
+                                                        $studentNotes = json_decode($userCourse->student_note, true);
+                                                    ?>
+                                                    <textarea class="form-control" id="CourseItemNoteArea" rows="15">{{ isset($studentNotes[$courseItem->number]) ? $studentNotes[$courseItem->number] : '' }}</textarea>
+                                                    <button type="button" id="CourseItemNoteSaveButton" class="btn btnGui">@lang('theme.save')</button>
+                                                    {{ csrf_field() }}
+                                                </div>
                                             </div>
                                         </div>
 
@@ -71,3 +76,26 @@
     </main>
 
 @stop
+
+@if($courseItem->type != \App\Models\CourseItem::TYPE_TEXT_DB)
+    @push('scripts')
+        <script type="text/javascript">
+            $('#CourseItemNoteSaveButton').click(function() {
+                $.ajax({
+                    url: '{{ action('Frontend\CourseController@saveCourseItemNote', ['id' => $courseItem->id]) }}',
+                    type: 'post',
+                    data: '_token=' + $('input[name="_token"]').first().val() + '&note=' + $('#CourseItemNoteArea').val(),
+                    success: function(result) {
+                        if(result)
+                        {
+                            if(result == 'Success')
+                                $('#CourseItemNoteArea').parent().addClass('has-success');
+                            else
+                                $('#CourseItemNoteArea').parent().addClass('has-error');
+                        }
+                    }
+                });
+            });
+        </script>
+    @endpush
+@endif
