@@ -34,7 +34,8 @@
                         $countNewCollaborator = \App\Models\Collaborator::where('status', \App\Models\Collaborator::STATUS_PENDING_DB)->count('id');
                         $countNewTeacher = \App\Models\Teacher::where('status', \App\Models\Collaborator::STATUS_PENDING_DB)->count('id');
                         $countNewReview = \App\Models\CourseReview::where('status', \App\Models\CourseReview::STATUS_PENDING_DB)->count('id');
-                        $totalNotify = $countPendingOrder + $countNewCollaborator + $countNewTeacher + $countNewReview;
+                        $countNewQuestion = \App\Models\CourseQuestion::where('status', \App\Models\CourseReview::STATUS_PENDING_DB)->count('id');
+                        $totalNotify = $countPendingOrder + $countNewCollaborator + $countNewTeacher + $countNewReview + $countNewQuestion;
                         ?>
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -71,6 +72,13 @@
                                         <li>
                                             <a href="{{ action('Backend\CourseController@adminCourseReview') }}">
                                                 <i class="fa fa-comment-o text-yellow"></i> {{ $countNewReview . ' nhận xét khóa học mới chờ duyệt' }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if($countNewQuestion > 0)
+                                        <li>
+                                            <a href="{{ action('Backend\CourseController@adminCourseQuestion') }}">
+                                                <i class="fa fa-question text-yellow"></i> {{ $countNewQuestion . ' câu hỏi khóa học mới chờ trả lời' }}
                                             </a>
                                         </li>
                                     @endif

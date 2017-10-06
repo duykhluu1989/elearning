@@ -27,6 +27,9 @@
                     <li class="{{ (request()->is('admin/courseReview') ? 'active' : '') }}">
                         <a href="{{ action('Backend\CourseController@adminCourseReview') }}">Nhận Xét Khóa Học</a>
                     </li>
+                    <li class="{{ (request()->is('admin/courseQuestion') ? 'active' : '') }}">
+                        <a href="{{ action('Backend\CourseController@adminCourseQuestion') }}">Hỏi Đáp Khóa Học</a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview{{ (request()->is('admin/news*') ? ' active' : '') }}">

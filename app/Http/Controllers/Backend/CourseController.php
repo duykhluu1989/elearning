@@ -20,6 +20,7 @@ use App\Models\TagCourse;
 use App\Models\PromotionPrice;
 use App\Models\Discount;
 use App\Models\CourseReview;
+use App\Models\CourseQuestion;
 use FFMpeg\FFProbe;
 
 class CourseController extends Controller
@@ -1701,5 +1702,150 @@ class CourseController extends Controller
             return redirect($request->headers->get('referer'))->with('messageSuccess', 'Thành Công');
         else
             return redirect()->action('Backend\CourseController@adminCourseReview')->with('messageSuccess', 'Thành Công');
+    }
+
+    public function adminCourseQuestion(Request $request)
+    {
+        $dataProvider = CourseQuestion::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'course' => function($query) {
+            $query->select('id', 'name');
+        }])
+            ->select('course_question.*')
+            ->orderBy('course_question.id', 'desc');
+
+        $inputs = $request->all();
+
+        if(count($inputs) > 0)
+        {
+            if(!empty($inputs['user_name']))
+            {
+                $dataProvider->join('user', 'course_question.user_id', '=', 'user.id')
+                    ->join('profile', 'user.id', '=', 'profile.user_id')
+                    ->where('profile.name', 'like', '%' . $inputs['user_name'] . '%');
+            }
+
+            if(!empty($inputs['course_name']))
+            {
+                $dataProvider->join('course', 'course_question.course_id', '=', 'course.id')
+                    ->where('course.name', 'like', '%' . $inputs['course_name'] . '%');
+            }
+
+            if(isset($inputs['status']) && $inputs['status'] !== '')
+                $dataProvider->where('course_question.status', $inputs['status']);
+        }
+
+        $dataProvider = $dataProvider->paginate(GridView::ROWS_PER_PAGE);
+
+        $columns = [
+            [
+                'title' => 'Tên',
+                'data' => function($row) {
+                    echo $row->user->profile->name;
+                },
+            ],
+            [
+                'title' => 'Khóa Học',
+                'data' => function($row) {
+                    echo $row->course->name;
+                },
+            ],
+            [
+                'title' => 'Câu Hỏi',
+                'data' => function($row) {
+                    echo Html::a($row->question, [
+                        'href' => action('Backend\CourseController@editCourseQuestion', ['id' => $row->id]),
+                    ]);
+                },
+            ],
+            [
+                'title' => 'Trả Lời',
+                'data' => 'answer',
+            ],
+            [
+                'title' => 'Thời Gian Hỏi',
+                'data' => 'created_at',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'data' => function($row) {
+                    $status = CourseQuestion::getCourseQuestionStatus($row->status);
+                    if($row->status == CourseQuestion::STATUS_ACTIVE_DB)
+                        echo Html::span($status, ['class' => 'label label-success']);
+                    else if($row->status == CourseQuestion::STATUS_PENDING_DB || $row->status == CourseQuestion::STATUS_WAIT_TEACHER_DB)
+                        echo Html::span($status, ['class' => 'label label-warning']);
+                    else
+                        echo Html::span($status, ['class' => 'label label-danger']);
+                },
+            ],
+        ];
+
+        $gridView = new GridView($dataProvider, $columns);
+        $gridView->setCheckbox();
+        $gridView->setFilters([
+            [
+                'title' => 'Tên',
+                'name' => 'user_name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Khóa Học',
+                'name' => 'course_name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Trạng Thái',
+                'name' => 'status',
+                'type' => 'select',
+                'options' => CourseQuestion::getCourseQuestionStatus(),
+            ],
+        ]);
+        $gridView->setFilterValues($inputs);
+
+        return view('backend.courses.admin_course_question', [
+            'gridView' => $gridView,
+        ]);
+    }
+
+    public function editCourseQuestion(Request $request, $id)
+    {
+        Utility::setBackUrlCookie($request, '/admin/courseQuestion?');
+
+        $question = CourseQuestion::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'course' => function($query) {
+            $query->select('id', 'name');
+        }])->find($id);
+
+        if(empty($question))
+            return view('backend.errors.404');
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'answer' => 'nullable|string|max:1000',
+            ]);
+
+            if($validator->passes())
+            {
+                $question->answer = $inputs['answer'];
+                $question->status = $inputs['status'];
+                $question->save();
+
+                return redirect()->action('Backend\CourseController@editCourseQuestion', ['id' => $question->id])->with('messageSuccess', 'Thành Công');
+            }
+            else
+                return redirect()->action('Backend\CourseController@editCourseQuestion', ['id' => $question->id])->withErrors($validator)->withInput();
+        }
+
+        return view('backend.courses.edit_course_question', [
+            'question' => $question,
+        ]);
     }
 }

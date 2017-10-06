@@ -110,6 +110,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::get('courseReview/changeStatus/{status}', 'CourseController@controlChangeStatusCourseReview');
 
+        Route::get('courseQuestion', 'CourseController@adminCourseQuestion');
+
+        Route::match(['get', 'post'], 'courseQuestion/{id}/edit', 'CourseController@editCourseQuestion');
+
         Route::get('discount', 'DiscountController@adminDiscount');
 
         Route::match(['get', 'post'], 'discount/create', 'DiscountController@createDiscount');
