@@ -190,5 +190,11 @@ return [
     'why_us' => 'Why should choose us?',
     'news_category_list' => 'Categories',
     'question' => 'Question & answer',
+    'questions' => 'Question',
+    'answer' => 'Answer',
+    'search_question' => 'Search by question',
+    'search_status' => 'Search by status',
+    'need_answer' => 'Need answer',
+    'answered' => 'Answered',
 
 ];

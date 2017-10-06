@@ -74,6 +74,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
             Route::get('teacher/question', 'TeacherController@adminCourseQuestion');
 
+            Route::match(['get', 'post'], 'teacher/question/{id}/edit', 'TeacherController@editCourseQuestion');
+
         });
 
     });

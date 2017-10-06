@@ -190,5 +190,11 @@ return [
     'why_us' => 'Tại sao nên chọn cây đèn thần?',
     'news_category_list' => 'Chuyên mục',
     'question' => 'Hỏi & đáp',
+    'questions' => 'Câu hỏi',
+    'answer' => 'Trả lời',
+    'search_question' => 'Tìm theo câu hỏi',
+    'search_status' => 'Tìm theo trạng thái',
+    'need_answer' => 'Chờ trả lời',
+    'answered' => 'Đã trả lời',
 
 ];

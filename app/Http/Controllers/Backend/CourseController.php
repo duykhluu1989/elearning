@@ -1733,6 +1733,9 @@ class CourseController extends Controller
                     ->where('course.name', 'like', '%' . $inputs['course_name'] . '%');
             }
 
+            if(!empty($inputs['question']))
+                $dataProvider->where('course_question.question', 'like', '%' . $inputs['question'] . '%');
+
             if(isset($inputs['status']) && $inputs['status'] !== '')
                 $dataProvider->where('course_question.status', $inputs['status']);
         }
@@ -1793,6 +1796,11 @@ class CourseController extends Controller
             [
                 'title' => 'Khóa Học',
                 'name' => 'course_name',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Câu Hỏi',
+                'name' => 'question',
                 'type' => 'input',
             ],
             [
