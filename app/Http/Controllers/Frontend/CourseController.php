@@ -515,6 +515,8 @@ class CourseController extends Controller
             $query->select('id', 'user_id');
         }, 'course.user' => function($query) {
             $query->select('id', 'avatar');
+        }, 'course.user.profile' => function($query) {
+            $query->select('user_id', 'name');
         }])->select('user_id', 'course_id', 'question', 'answer', 'created_at')
             ->where('status', CourseQuestion::STATUS_ACTIVE_DB)
             ->where('course_id', $id)

@@ -19,6 +19,25 @@
                         </div>
                     </div>
                 </div>
+                <ul class="comments-list reply-list">
+                    <li>
+
+                        @if(!empty($courseQuestion->course->user->avatar))
+                            <div class="comment-avatar"><img src="{{ $courseQuestion->course->user->avatar }}" alt="Teacher Avatar"></div>
+                        @endif
+
+                        <div class="comment-box">
+                            <div class="comment-head">
+                                <h6 class="comment-name"><a href="javascript:void(0)">{{ $courseQuestion->course->user->profile->name }}</a></h6>
+                                <span>{{ $courseQuestion->created_at }}</span>
+                                <i class="fa fa-reply"></i>
+                            </div>
+                            <div class="comment-content">
+                                {{ $courseQuestion->answer }}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </li>
         @endforeach
 
