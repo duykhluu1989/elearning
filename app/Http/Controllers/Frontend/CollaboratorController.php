@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Models\Collaborator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Helpers\Utility;
 use App\Models\Course;
+use App\Models\Collaborator;
 use App\Models\CollaboratorTransaction;
 use App\Models\Discount;
 use App\Models\User;

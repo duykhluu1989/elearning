@@ -6,4 +6,8 @@
     @if(!empty(auth()->user()->collaboratorInformation) && auth()->user()->collaboratorInformation->status != \App\Models\Collaborator::STATUS_PENDING_DB)
         <li><a href="{{ action('Frontend\CollaboratorController@editCollaborator') }}">@lang('theme.collaborator')</a></li>
     @endif
+
+    @if(!empty(auth()->user()->teacherInformation) && auth()->user()->teacherInformation->status != \App\Models\Collaborator::STATUS_PENDING_DB)
+        <li><a href="{{ action('Frontend\TeacherController@editTeacher') }}">@lang('theme.teacher_label')</a></li>
+    @endif
 </ul>

@@ -68,6 +68,14 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
         });
 
+        Route::group(['middleware' => ['teacherAccess']], function() {
+
+            Route::get('teacher', 'TeacherController@editTeacher');
+
+            Route::get('teacher/question', 'TeacherController@adminCourseQuestion');
+
+        });
+
     });
 
     Route::post('registerCollaborator', ['middleware' => 'throttle:5,30', 'uses' => 'UserController@registerCollaborator']);
