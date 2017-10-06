@@ -34,7 +34,7 @@
                     <div class="col-sm-12">
                         <div class="form-group{{ $errors->has('answer') ? ' has-error': '' }}">
                             <label>Trả Lời</label>
-                            <textarea class="form-control" name="answer">{{ $question->answer }}</textarea>
+                            <textarea class="form-control" name="answer">{{ old('answer', $question->answer) }}</textarea>
                             @if($errors->has('answer'))
                                 <span class="help-block">{{ $errors->first('answer') }}</span>
                             @endif
@@ -43,9 +43,12 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Trạng Thái</label>
+                            <?php
+                            $status = old('status', $question->status);
+                            ?>
                             <select class="form-control" name="status">
                                 @foreach(\App\Models\CourseQuestion::getCourseQuestionStatus() as $value => $label)
-                                    @if($question->status == $value)
+                                    @if($status == $value)
                                         <option selected="selected" value="{{ $value }}">{{ $label }}</option>
                                     @else
                                         <option value="{{ $value }}">{{ $label }}</option>

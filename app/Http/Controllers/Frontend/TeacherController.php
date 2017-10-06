@@ -61,6 +61,48 @@ class TeacherController extends Controller
 
     public function editCourseQuestion(Request $request, $id)
     {
+        $user = auth()->user();
 
+        $question = CourseQuestion::with(['user' => function($query) {
+            $query->select('id');
+        }, 'user.profile' => function($query) {
+            $query->select('user_id', 'name');
+        }, 'course' => function($query) {
+            $query->select('id', 'name', 'name_en');
+        }])->join('course', 'course_question.course_id', '=', 'course.id')
+            ->select('course_question.*')
+            ->whereIn('course_question.status', [
+                CourseQuestion::STATUS_WAIT_TEACHER_DB,
+                CourseQuestion::STATUS_ACTIVE_DB,
+            ])
+            ->where('course.user_id', $user->id)
+            ->find($id);
+
+        if(empty($question))
+            return view('frontend.errors.404');
+
+        if($request->isMethod('post'))
+        {
+            $inputs = $request->all();
+
+            $validator = Validator::make($inputs, [
+                'answer' => 'nullable|string|max:1000',
+            ]);
+
+            if($validator->passes())
+            {
+                $question->answer = $inputs['answer'];
+                $question->status = $inputs['status'];
+                $question->save();
+
+                return redirect()->action('Frontend\TeacherController@editCourseQuestion', ['id' => $question->id])->with('messageSuccess', trans('theme.success'));
+            }
+            else
+                return redirect()->action('Frontend\TeacherController@editCourseQuestion', ['id' => $question->id])->withErrors($validator)->withInput();
+        }
+
+        return view('frontend.teachers.edit_course_question', [
+            'question' => $question,
+        ]);
     }
 }
