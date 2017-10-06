@@ -189,6 +189,39 @@
                     <input type="text" class="form-control" id="TagInput" name="tags" value="{{ old('tags', $tags) }}" />
                 </div>
             </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>Loại Hoa Hồng</label>
+                    <?php
+                    $type = old('commission_type', $course->commission_type);
+                    ?>
+                    <div>
+                        @foreach(\App\Models\Discount::getDiscountType() as $value => $label)
+                            @if($type == $value)
+                                <label class="radio-inline">
+                                    <input type="radio" name="commission_type" checked="checked" value="{{ $value }}">{{ $label }}
+                                </label>
+                            @else
+                                <label class="radio-inline">
+                                    <input type="radio" name="commission_type" value="{{ $value }}">{{ $label }}
+                                </label>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group{{ $errors->has('value') ? ' has-error': '' }}">
+                    <label>Giá Trị Hoa Hồng <i>(bắt buộc)</i></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="CommissionValueInput" name="commission_value" required="required" value="{{ old('commission_value', ($type == \App\Models\Discount::TYPE_FIX_AMOUNT_DB ? \App\Libraries\Helpers\Utility::formatNumber($course->commission_value) : $course->commission_value)) }}" />
+                        <span class="input-group-addon" id="CommissionValueUnit">{{ $type == \App\Models\Discount::TYPE_FIX_AMOUNT_DB ? 'VND' : '%' }}</span>
+                    </div>
+                    @if($errors->has('commission_value'))
+                        <span class="help-block">{{ $errors->first('commission_value') }}</span>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
     <div class="box-body">
@@ -437,6 +470,34 @@
                 elFinderSelectedFile.parent().append('' +
                     '<img src="' + fileUrl + '" width="100%" alt="Course Image" />' +
                 '');
+            }
+        }
+
+        setValueInputFormatNumber(true);
+
+        $('input[type="radio"][name="commission_type"]').change(function() {
+            setValueInputFormatNumber(false);
+        });
+
+        function setValueInputFormatNumber(init)
+        {
+            var valueInputElem = $('#CommissionValueInput');
+
+            if($('input[type="radio"][name="commission_type"]:checked').val() == '{{ \App\Models\Discount::TYPE_FIX_AMOUNT_DB }}')
+            {
+                $('#CommissionValueUnit').html('VND');
+                if(init == false)
+                    valueInputElem.val(0);
+                valueInputElem.on('keyup', function() {
+                    $(this).val(formatNumber($(this).val(), '.'));
+                });
+            }
+            else
+            {
+                $('#CommissionValueUnit').html('%');
+                if(init == false)
+                    valueInputElem.val(0);
+                valueInputElem.off('keyup');
             }
         }
     </script>

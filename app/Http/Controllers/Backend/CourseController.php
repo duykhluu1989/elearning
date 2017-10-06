@@ -725,6 +725,8 @@ class CourseController extends Controller
         $course->highlight = Utility::INACTIVE_DB;
         $course->category_status = Utility::ACTIVE_DB;
         $course->price = 0;
+        $course->commission_type = Discount::TYPE_FIX_AMOUNT_DB;
+        $course->commission_value = 0;
 
         return $this->saveCourse($request, $course);
     }
@@ -762,6 +764,8 @@ class CourseController extends Controller
             if(!empty($inputs['point_price']))
                 $inputs['point_price'] = implode('', explode('.', $inputs['point_price']));
 
+            $inputs['commission_value'] = implode('', explode('.', $inputs['commission_value']));
+
             $validator = Validator::make($inputs, [
                 'user_name' => 'required',
                 'name' => 'required|unique:course,name' . ($create == true ? '' : (',' . $course->id)),
@@ -773,6 +777,7 @@ class CourseController extends Controller
                 'slug_en' => 'nullable|unique:course,slug_en' . ($create == true ? '' : (',' . $course->id)),
                 'code' => 'required|alpha_num|unique:course,code' . ($create == true ? '' : (',' . $course->id)),
                 'category_name' => 'required',
+                'commission_value' => 'required|integer|min:0',
             ]);
 
             $validator->after(function($validator) use(&$inputs) {
@@ -843,6 +848,8 @@ class CourseController extends Controller
                     if($create == true)
                         $course->created_at = date('Y-m-d H:i:s');
 
+                    $course->commission_type = $inputs['commission_type'];
+                    $course->commission_value = $inputs['commission_value'];
                     $course->save();
 
                     if(!empty($course->promotionPrice) && $course->promotionPrice->price >= $course->price)
