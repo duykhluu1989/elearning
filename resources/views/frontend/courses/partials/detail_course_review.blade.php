@@ -6,8 +6,8 @@
             <li>
                 <div class="comment-main-level">
 
-                    @if(!empty($courseReview->user->image))
-                        <div class="comment-avatar"><img src="{{ $courseReview->user->image }}" alt="User Avatar"></div>
+                    @if(!empty($courseReview->user->avatar))
+                        <div class="comment-avatar"><img src="{{ $courseReview->user->avatar }}" alt="User Avatar"></div>
                     @endif
 
                     <div class="comment-box">

@@ -189,5 +189,6 @@ return [
     'set_new_password' => 'Please update your new password',
     'why_us' => 'Why should choose us?',
     'news_category_list' => 'Categories',
+    'question' => 'Question & answer',
 
 ];

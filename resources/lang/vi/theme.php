@@ -189,5 +189,6 @@ return [
     'set_new_password' => 'Vui lòng thiết lập mật khẩu mới',
     'why_us' => 'Tại sao nên chọn cây đèn thần?',
     'news_category_list' => 'Chuyên mục',
+    'question' => 'Hỏi & đáp',
 
 ];

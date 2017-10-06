@@ -90,6 +90,11 @@
                             <li class="{{ $bought == true ? 'active' : '' }}"><a data-toggle="tab" href="#section_noidungKH">@lang('theme.detail')</a></li>
                             <li><a data-toggle="tab" href="#section_giangvien">@lang('theme.teacher_label')</a></li>
                             <li><a data-toggle="tab" href="#section_binhluan">@lang('theme.review')</a></li>
+
+                            @if($bought == true)
+                                <li><a data-toggle="tab" href="#section_hoidap">@lang('theme.question')</a></li>
+                            @endif
+
                         </ul>
                         <div class="tab-content tabs_info_content">
                             <div id="section_gioithieu" class="tab-pane fade{{ $bought == false ? ' in active' : '' }}">
@@ -173,6 +178,25 @@
                                 @endif
 
                             </div>
+
+                            @if($bought == true)
+                                <div id="section_hoidap" class="tab-pane fade">
+                                    <h3>@lang('theme.question')</h3>
+                                    <span id="CourseQuestionTab">
+                                    </span>
+                                    <hr />
+                                    <div class="block_input_comment">
+                                        <form id="CourseQuestionForm" action="{{ action('Frontend\CourseController@questionCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}" method="POST" role="form">
+                                            <div class="form-group">
+                                                <textarea id="CourseQuestionDetail" name="question" class="form-control" rows="8" required="required"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-lg btnGui pull-right">@lang('theme.send')</button>
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -190,6 +214,15 @@
             $(document).ready(function() {
                 if(location.href.indexOf('#section_noidungKH') !== -1)
                     $('a[href="#section_noidungKH"]').trigger('click');
+
+                $.ajax({
+                    url: '{{ action('Frontend\CourseController@detailCourseQuestion', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
+                    type: 'get',
+                    success: function(result) {
+                        if(result)
+                            $('#CourseQuestionTab').html(result);
+                    }
+                });
             });
 
             $('.CourseItemNavigation').click(function() {
@@ -213,6 +246,49 @@
                             if(result == 'Success')
                             {
                                 reviewDetailElem.val('');
+
+                                swal({
+                                    title: '@lang('theme.sent')',
+                                    type: 'success',
+                                    confirmButtonClass: 'btn-success'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('#CourseQuestionTab').on('click', 'a', function() {
+                if($(this).attr('data-page'))
+                {
+                    $.ajax({
+                        url: '{{ action('Frontend\CourseController@detailCourseQuestion', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
+                        type: 'get',
+                        data: 'page=' + $(this).attr('data-page'),
+                        success: function(result) {
+                            if(result)
+                                $('#CourseQuestionTab').html(result);
+                        }
+                    });
+                }
+            });
+
+            $('#CourseQuestionForm').submit(function(e) {
+                e.preventDefault();
+
+                var questionDetailElem = $('#CourseQuestionDetail');
+                var questionDetailVal = questionDetailElem.val().trim();
+
+                if(questionDetailVal != '')
+                {
+                    $.ajax({
+                        url: '{{ action('Frontend\CourseController@questionCourse', ['id' => $course->id, 'slug' => \App\Libraries\Helpers\Utility::getValueByLocale($course, 'slug')]) }}',
+                        type: 'post',
+                        data: '_token=' + $('input[name="_token"]').first().val() + '&question=' + questionDetailVal,
+                        success: function(result) {
+                            if(result == 'Success')
+                            {
+                                questionDetailElem.val('');
 
                                 swal({
                                     title: '@lang('theme.sent')',

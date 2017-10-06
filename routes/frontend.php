@@ -42,6 +42,10 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['setVisitStartTime', '
 
         Route::post('reviewCourse/{id}/{slug}', 'CourseController@reviewCourse');
 
+        Route::get('course/{id}/{slug}/question', 'CourseController@detailCourseQuestion');
+
+        Route::post('questionCourse/{id}/{slug}', 'CourseController@questionCourse');
+
         Route::group(['middleware' => ['collaboratorAccess']], function() {
 
             Route::match(['get', 'post'], 'collaborator', 'CollaboratorController@editCollaborator');

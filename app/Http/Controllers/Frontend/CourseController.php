@@ -12,6 +12,7 @@ use App\Models\CourseItem;
 use App\Models\UserCourse;
 use App\Models\Category;
 use App\Models\CourseReview;
+use App\Models\CourseQuestion;
 
 class CourseController extends Controller
 {
@@ -342,6 +343,11 @@ class CourseController extends Controller
         if(empty($course))
             return '';
 
+        $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $id)->first();
+
+        if(empty($userCourse))
+            return '';
+
         $inputs = $request->all();
 
         $validator = Validator::make($inputs, [
@@ -489,6 +495,63 @@ class CourseController extends Controller
 
             $userCourse->student_note = json_encode($studentNotes);
             $userCourse->save();
+
+            return 'Success';
+        }
+
+        return '';
+    }
+
+    public function detailCourseQuestion(Request $request, $id, $slug)
+    {
+        if($request->ajax() == false)
+            return view('frontend.errors.404');
+
+        $user = auth()->user();
+
+        $courseQuestions = CourseQuestion::with(['user' => function($query) {
+            $query->select('id', 'avatar');
+        }, 'course' => function($query) {
+            $query->select('id', 'user_id');
+        }, 'course.user' => function($query) {
+            $query->select('id', 'avatar');
+        }])->select('user_id', 'course_id', 'question', 'answer', 'created_at')
+            ->where('status', CourseQuestion::STATUS_ACTIVE_DB)
+            ->where('course_id', $id)
+            ->where('user_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->paginate(Utility::FRONTEND_ROWS_PER_PAGE);
+
+        return view('frontend.courses.partials.detail_course_question', ['courseQuestions' => $courseQuestions]);
+    }
+
+    public function questionCourse(Request $request, $id, $slug)
+    {
+        $course = Course::select('id')->find($id);
+
+        if(empty($course))
+            return '';
+
+        $userCourse = UserCourse::where('user_id', auth()->user()->id)->where('course_id', $id)->first();
+
+        if(empty($userCourse))
+            return '';
+
+        $inputs = $request->all();
+
+        $validator = Validator::make($inputs, [
+            'question' => 'required|string|max:1000',
+        ]);
+
+        if($validator->passes())
+        {
+            $question = new CourseQuestion();
+            $question->user_id = auth()->user()->id;
+            $question->course_id = $course->id;
+            $question->question = $inputs['question'];
+            $question->created_at = date('Y-m-d H:i:s');
+            $question->status = CourseReview::STATUS_PENDING_DB;
+            $question->save();
 
             return 'Success';
         }
