@@ -236,6 +236,10 @@ Route::group(['namespace' => 'Backend'], function() {
 
         Route::match(['get', 'post'], 'userTeacher/{id}/edit', 'TeacherController@editTeacher');
 
+        Route::get('userTeacher/{id}/transaction', 'TeacherController@adminTeacherTransaction');
+
+        Route::post('userTeacher/{id}/payment', 'TeacherController@paymentTeacher');
+
         Route::get('userExpert/changeOnline/{online}', 'ExpertController@controlChangeOnlineExpert');
 
         Route::get('userExpert/{id}/event', 'ExpertController@adminExpertEvent');

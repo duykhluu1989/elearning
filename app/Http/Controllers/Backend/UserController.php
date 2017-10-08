@@ -757,7 +757,7 @@ class UserController extends Controller
     public function adminUserTeacher(Request $request)
     {
         $dataProvider = User::with(['teacherInformation' => function($query) {
-            $query->select('user_id', 'status', 'organization');
+            $query->select('user_id', 'status', 'organization', 'current_commission');
         }, 'profile' => function($query) {
             $query->select('user_id', 'name');
         }])->select('user.id', 'user.username', 'user.email', 'user.status')
@@ -833,6 +833,12 @@ class UserController extends Controller
                 },
             ],
             [
+                'title' => 'Hoa Hồng Hiện Tại',
+                'data' => function($row) {
+                    echo Utility::formatNumber($row->teacherInformation->current_commission) . ' VND';
+                },
+            ],
+            [
                 'title' => 'Trạng Thái GV',
                 'data' => function($row) {
                     $status = Collaborator::getCollaboratorStatus($row->teacherInformation->status);
@@ -854,6 +860,19 @@ class UserController extends Controller
                         'data-toggle' => 'popover',
                         'data-placement' => 'top',
                         'data-content' => 'Chỉnh Sửa Giảng Viên',
+                    ]);
+                },
+            ],
+            [
+                'title' => '',
+                'data' => function($row) {
+                    echo Html::a(Html::i('', ['class' => 'fa fa-list fa-fw']), [
+                        'href' => action('Backend\TeacherController@adminTeacherTransaction', ['id' => $row->id]),
+                        'class' => 'btn btn-primary',
+                        'data-container' => 'body',
+                        'data-toggle' => 'popover',
+                        'data-placement' => 'top',
+                        'data-content' => 'Lịch Sử Hoa Hồng',
                     ]);
                 },
             ],

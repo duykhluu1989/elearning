@@ -10,6 +10,7 @@
             <div class="box-header with-border">
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
                 <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\UserController@adminUserTeacher')) }}" class="btn btn-default">Quay Lại</a>
+                <a href="{{ action('Backend\TeacherController@adminTeacherTransaction', ['id' => $teacher->id]) }}" class="btn btn-primary">Lịch Sử Hoa Hồng</a>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -42,10 +43,25 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Hoa Hồng Hiện Tại</label>
+                            <span class="form-control no-border">{{ \App\Libraries\Helpers\Utility::formatNumber($teacher->teacherInformation->current_commission) . ' VND' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Hoa Hồng Tổng</label>
+                            <span class="form-control no-border">{{ \App\Libraries\Helpers\Utility::formatNumber($teacher->teacherInformation->total_commission) . ' VND' }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
                 <a href="{{ \App\Libraries\Helpers\Utility::getBackUrlCookie(action('Backend\UserController@adminUserTeacher')) }}" class="btn btn-default">Quay Lại</a>
+                <a href="{{ action('Backend\TeacherController@adminTeacherTransaction', ['id' => $teacher->id]) }}" class="btn btn-primary">Lịch Sử Hoa Hồng</a>
             </div>
         </div>
         {{ csrf_field() }}
