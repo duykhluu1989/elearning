@@ -804,6 +804,9 @@ class CourseController extends Controller
                     $validator->errors()->add('category_name', 'Chủ Đề Không Tồn Tại');
                 else
                     $inputs['category'] = $category;
+
+                if($inputs['commission_type'] == Discount::TYPE_PERCENTAGE_DB && $inputs['commission_value'] > 99)
+                    $validator->errors()->add('commission_value', 'Phần Trăm Hoa Hồng Không Được Lớn Hơn 99');
             });
 
             if($validator->passes())

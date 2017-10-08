@@ -138,61 +138,103 @@ class Order extends Model
             $this->user->studentInformation->total_point += $pointEarn;
             $this->user->studentInformation->save();
 
-            if(!empty($transaction->amount) && !empty($this->referral) && $this->referral->status == Utility::ACTIVE_DB)
-            {
-                if(!empty($this->referral->collaboratorInformation) && $this->referral->collaboratorInformation->status == Collaborator::STATUS_ACTIVE_DB)
-                {
-                    $revenue = 0;
+            $this->addCollaboratorCommission($transaction);
 
-                    foreach($this->orderItems as $orderItem)
-                    {
-                        if($orderItem->referral_item)
-                        {
-                            $revenue = $orderItem->price - $this->total_discount_price;
-                            break;
-                        }
-                    }
-
-                    if($revenue > 0)
-                    {
-                        $collaboratorTransaction = new CollaboratorTransaction();
-                        $collaboratorTransaction->collaborator_id = $this->referral_id;
-                        $collaboratorTransaction->order_id = $this->id;
-                        $collaboratorTransaction->type = CollaboratorTransaction::TYPE_INCOME_DB;
-                        $collaboratorTransaction->commission_percent = $this->referral->collaboratorInformation->commission_percent;
-                        $collaboratorTransaction->commission_amount = round($revenue * $collaboratorTransaction->commission_percent / 100);
-                        $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
-                        $collaboratorTransaction->save();
-
-                        $this->referral->collaboratorInformation->total_revenue += $revenue;
-                        $this->referral->collaboratorInformation->total_commission += $collaboratorTransaction->commission_amount;
-                        $this->referral->collaboratorInformation->current_revenue += $revenue;
-                        $this->referral->collaboratorInformation->current_commission += $collaboratorTransaction->commission_amount;
-                        $this->referral->collaboratorInformation->save();
-
-                        if(!empty($this->referral->collaboratorInformation->parentCollaborator) && $this->referral->collaboratorInformation->parentCollaborator->status == Collaborator::STATUS_ACTIVE_DB
-                            && $this->referral->collaboratorInformation->parentCollaborator->user->status == Utility::ACTIVE_DB && $this->referral->collaboratorInformation->parentCollaborator->rank->code == Setting::COLLABORATOR_MANAGER)
-                        {
-                            $parentCollaboratorRank = json_decode($this->referral->collaboratorInformation->parentCollaborator->rank->value, true);
-
-                            $collaboratorTransaction = new CollaboratorTransaction();
-                            $collaboratorTransaction->collaborator_id = $this->referral->collaboratorInformation->parentCollaborator->user_id;
-                            $collaboratorTransaction->order_id = $this->id;
-                            $collaboratorTransaction->type = CollaboratorTransaction::TYPE_DOWNLINE_INCOME_DB;
-                            $collaboratorTransaction->commission_percent = $parentCollaboratorRank[Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE];
-                            $collaboratorTransaction->commission_amount = round($revenue * $collaboratorTransaction->commission_percent / 100);
-                            $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
-                            $collaboratorTransaction->downline_collaborator_id = $this->referral_id;
-                            $collaboratorTransaction->save();
-                        }
-                    }
-                }
-            }
+            $this->addTeacherCommission($transaction);
 
             return true;
         }
 
         return false;
+    }
+
+    protected function addCollaboratorCommission($transaction)
+    {
+        if(!empty($transaction->amount) && !empty($this->referral) && $this->referral->status == Utility::ACTIVE_DB)
+        {
+            if(!empty($this->referral->collaboratorInformation) && $this->referral->collaboratorInformation->status == Collaborator::STATUS_ACTIVE_DB)
+            {
+                $revenue = 0;
+
+                foreach($this->orderItems as $orderItem)
+                {
+                    if($orderItem->referral_item)
+                    {
+                        $revenue = $orderItem->price - $this->total_discount_price;
+                        break;
+                    }
+                }
+
+                if($revenue > 0)
+                {
+                    $collaboratorTransaction = new CollaboratorTransaction();
+                    $collaboratorTransaction->collaborator_id = $this->referral_id;
+                    $collaboratorTransaction->order_id = $this->id;
+                    $collaboratorTransaction->type = CollaboratorTransaction::TYPE_INCOME_DB;
+                    $collaboratorTransaction->commission_percent = $this->referral->collaboratorInformation->commission_percent;
+                    $collaboratorTransaction->commission_amount = round($revenue * $collaboratorTransaction->commission_percent / 100);
+                    $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
+                    $collaboratorTransaction->save();
+
+                    $this->referral->collaboratorInformation->total_revenue += $revenue;
+                    $this->referral->collaboratorInformation->total_commission += $collaboratorTransaction->commission_amount;
+                    $this->referral->collaboratorInformation->current_revenue += $revenue;
+                    $this->referral->collaboratorInformation->current_commission += $collaboratorTransaction->commission_amount;
+                    $this->referral->collaboratorInformation->save();
+
+                    if(!empty($this->referral->collaboratorInformation->parentCollaborator) && $this->referral->collaboratorInformation->parentCollaborator->status == Collaborator::STATUS_ACTIVE_DB
+                        && $this->referral->collaboratorInformation->parentCollaborator->user->status == Utility::ACTIVE_DB && $this->referral->collaboratorInformation->parentCollaborator->rank->code == Setting::COLLABORATOR_MANAGER)
+                    {
+                        $parentCollaboratorRank = json_decode($this->referral->collaboratorInformation->parentCollaborator->rank->value, true);
+
+                        $collaboratorTransaction = new CollaboratorTransaction();
+                        $collaboratorTransaction->collaborator_id = $this->referral->collaboratorInformation->parentCollaborator->user_id;
+                        $collaboratorTransaction->order_id = $this->id;
+                        $collaboratorTransaction->type = CollaboratorTransaction::TYPE_DOWNLINE_INCOME_DB;
+                        $collaboratorTransaction->commission_percent = $parentCollaboratorRank[Collaborator::COMMISSION_DOWNLINE_ATTRIBUTE];
+                        $collaboratorTransaction->commission_amount = round($revenue * $collaboratorTransaction->commission_percent / 100);
+                        $collaboratorTransaction->created_at = date('Y-m-d H:i:s');
+                        $collaboratorTransaction->downline_collaborator_id = $this->referral_id;
+                        $collaboratorTransaction->save();
+                    }
+                }
+            }
+        }
+    }
+
+    protected function addTeacherCommission($transaction)
+    {
+        if(!empty($transaction->amount))
+        {
+            foreach($this->orderItems as $orderItem)
+            {
+                if($orderItem->price > 0)
+                {
+                    if($orderItem->course->commission_value > 0)
+                    {
+                        $teacherTransaction = new TeacherTransaction();
+                        $teacherTransaction->teacher_id = $orderItem->course->user_id;
+                        $teacherTransaction->order_id = $this->id;
+                        $teacherTransaction->type = CollaboratorTransaction::TYPE_INCOME_DB;
+                        $teacherTransaction->created_at = date('Y-m-d H:i:s');
+
+                        if($orderItem->course->commission_type == Discount::TYPE_FIX_AMOUNT_DB)
+                            $teacherTransaction->commission_amount = ($orderItem->course->commission_value > $orderItem->price ? $orderItem->price : $orderItem->course->commission_value);
+                        else
+                        {
+                            $teacherTransaction->commission_percent = $orderItem->course->commission_value;
+                            $teacherTransaction->commission_amount = round($orderItem->price * $orderItem->course->commission_value / 100);
+                        }
+
+                        $teacherTransaction->save();
+
+                        $orderItem->course->user->teacherInformation->total_commission += $teacherTransaction->commission_amount;
+                        $orderItem->course->user->teacherInformation->current_commission += $teacherTransaction->commission_amount;
+                        $orderItem->course->user->teacherInformation->save();
+                    }
+                }
+            }
+        }
     }
 
     public function failPayment($note = null, $detail = null)
