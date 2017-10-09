@@ -54,7 +54,9 @@ class TeacherController extends Controller
 
         $dataProvider = TeacherTransaction::with(['order' => function($query) {
             $query->select('id', 'number');
-        }])->select('teacher_transaction.teacher_id', 'teacher_transaction.order_id', 'teacher_transaction.type', 'teacher_transaction.commission_percent', 'teacher_transaction.commission_amount', 'teacher_transaction.created_at', 'teacher_transaction.note')
+        }, 'course' => function($query) {
+            $query->select('id', 'name');
+        }])->select('teacher_transaction.teacher_id', 'teacher_transaction.order_id', 'teacher_transaction.course_id', 'teacher_transaction.type', 'teacher_transaction.commission_percent', 'teacher_transaction.commission_amount', 'teacher_transaction.created_at', 'teacher_transaction.note')
             ->where('teacher_transaction.teacher_id', $id)
             ->orderBy('teacher_transaction.id', 'desc');
 
@@ -66,6 +68,12 @@ class TeacherController extends Controller
             {
                 $dataProvider->join('order', 'teacher_transaction.order_id', '=', 'order.id')
                     ->where('order.number', 'like', '%' . $inputs['order_number'] . '%');
+            }
+
+            if(!empty($inputs['course_name']))
+            {
+                $dataProvider->join('course', 'teacher_transaction.course_id', '=', 'course.id')
+                    ->where('course.name', 'like', '%' . $inputs['course_name'] . '%');
             }
 
             if(isset($inputs['type']) && $inputs['type'] !== '')
@@ -87,6 +95,13 @@ class TeacherController extends Controller
                 'data' => function($row) {
                     if(!empty($row->order))
                         echo $row->order->number;
+                },
+            ],
+            [
+                'title' => 'Khóa Học',
+                'data' => function($row) {
+                    if(!empty($row->course))
+                        echo $row->course->name;
                 },
             ],
             [
@@ -119,6 +134,11 @@ class TeacherController extends Controller
             [
                 'title' => 'Đơn Hàng',
                 'name' => 'order_number',
+                'type' => 'input',
+            ],
+            [
+                'title' => 'Khóa Học',
+                'name' => 'course_name',
                 'type' => 'input',
             ],
             [

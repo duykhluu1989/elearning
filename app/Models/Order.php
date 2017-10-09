@@ -215,6 +215,7 @@ class Order extends Model
                         $teacherTransaction = new TeacherTransaction();
                         $teacherTransaction->teacher_id = $orderItem->course->user_id;
                         $teacherTransaction->order_id = $this->id;
+                        $teacherTransaction->course_id = $orderItem->course_id;
                         $teacherTransaction->type = CollaboratorTransaction::TYPE_INCOME_DB;
                         $teacherTransaction->created_at = date('Y-m-d H:i:s');
 

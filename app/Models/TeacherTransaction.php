@@ -19,4 +19,9 @@ class TeacherTransaction extends Model
     {
         return $this->belongsTo('App\Models\Order', 'order_id');
     }
+
+    public function course()
+    {
+        return $this->belongsTo('App\Models\Course', 'course_id');
+    }
 }

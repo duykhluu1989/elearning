@@ -12,6 +12,7 @@ class CreateTeacherTransactionTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('teacher_id');
             $table->unsignedInteger('order_id')->nullable();
+            $table->unsignedInteger('course_id')->nullable();
             $table->unsignedTinyInteger('type')->default(0);
             $table->double('commission_percent')->unsigned()->nullable();
             $table->double('commission_amount')->unsigned()->nullable();
