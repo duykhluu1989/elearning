@@ -62,6 +62,7 @@
 <script src="{{ asset('themes/js/text-slider.js') }}"></script>
 <script src="{{ asset('themes/js/animsition.min.js') }}"></script>
 <script src="{{ asset('themes/js/bootstrap-dropdownhover.js') }}"></script>
+<script src="{{ asset('themes/js/jquery-scrolltofixed.js') }}"></script>
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('assets/js/frontend.js') }}"></script>
 @stack('scripts')

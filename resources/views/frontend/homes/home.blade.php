@@ -739,6 +739,11 @@
 
 @push('scripts')
     <script type="text/javascript">
+        $('#banner1, #banner2').scrollToFixed({
+            dontSetWidth:true,
+            marginTop: $('.header').outerHeight(true) + 50
+        });
+
         $('.OnlineExpert').click(function() {
             if($(this).attr('data-url'))
             {
