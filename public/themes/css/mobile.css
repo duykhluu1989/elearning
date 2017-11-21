@@ -37,7 +37,7 @@
     .navbar-nav>li {
         float: none;
     }
-    .navbar-nav>li>a {
+    .navbar-nav > li > a {
         padding-top: 10px;
         padding-bottom: 10px;
     }
@@ -106,12 +106,17 @@
 }
 
 @media (min-width: 768px) {
-	
+	.navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
+        margin-left: auto;
+    }
 }
 
 @media (max-width: 768px) {
     .navbar-toggle {
         margin-top: 30px;
+        margin-left: 15px;
+        margin-right: 0;
+        float: left;
     }
     section {
         padding: 20px 0;
@@ -123,9 +128,10 @@
         margin-left: -24px;
     }
 	.title_line {
-        font-size: 13px;
         padding-bottom: 15px;
         padding-top: 15px;
+        font-size: 28px;
+        line-height: 1.3em;
     }
     .navbar-brand {
         margin-left: 15px;
@@ -184,7 +190,7 @@
 
     /*28-092017*/
     .navbar-brand {
-        margin-left: 0;
+        margin-left: auto;
         margin: 15px auto;
         float: none;
     }
@@ -198,6 +204,8 @@
     .navbar-nav .open .dropdown-menu {
         border-bottom: 1px solid #ccc;
         padding: 0;
+        position: relative;
+        width: 100%;
     }
     .navbar-nav .open .dropdown-menu > li > a {
         border-bottom: 1px solid #eee;
@@ -245,12 +253,34 @@
     .box_item img, .box_item_gv img {
         height: auto;
     }
+    .vechungtoi .owl-item img {
+        margin: 0 auto;
+    }
+    .owl_taisao {
+        margin-bottom: 30px;
+    }
+    .vechungtoi h2 {
+        font-size: 20px;
+        min-height: 70px;
+    }
+    .hotdeal p {
+        float: none;
+    }
+    .title_line2 {
+        padding-bottom: 15px;
+    }
+    .box_tuvanphapluat {
+        margin-bottom: 15px;
+    }
     
     
 }
 
 @media (max-width: 736px) {
-	
+	.vechungtoi h2 {
+        font-size: 20px;
+        min-height: inherit;
+    }
 }
 
 @media (max-width: 667px) {

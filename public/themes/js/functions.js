@@ -1,5 +1,32 @@
 jQuery(function($) {
 
+    $(".animsition").animsition({
+        inClass: 'fade-in',
+        outClass: 'fade-out',
+        // inClass: 'overlay-slide-in-top',
+        // outClass: 'overlay-slide-out-top',
+
+        inDuration: 1500,
+        outDuration: 800,
+        linkElement: '.animsition-link',
+        // e.g. linkElement: 'a:not([target="_blank"]):not([href^="#"])'
+        loading: true,
+        loadingParentElement: 'body', //animsition wrapper element
+        loadingClass: 'animsition-loading',
+        loadingInner: '', // e.g '<img src="loading.svg" />'
+        timeout: false,
+        timeoutCountdown: 5000,
+        onLoadEvent: true,
+        browser: ['animation-duration', '-webkit-animation-duration'],
+        // "browser" option allows you to disable the "animsition" in case the css property in the array is not supported by your browser.
+        // The default setting is to disable the "animsition" in a browser that does not support "animation-duration".
+        overlay: false,
+        overlayClass: 'animsition-overlay-slide',
+        overlayParentElement: 'body',
+        transition: function(url) { window.location.href = url; }
+    });
+
+
     $('.slide_text').textSlider({
         timeout: 5000,
         slideTime: 750,
@@ -55,6 +82,11 @@ jQuery(function($) {
     $('.owl_banner').owlCarousel({
         loop: true,
         margin: 10,
+        nav: true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
         responsive: {
             0: {
                 items: 1
@@ -70,7 +102,7 @@ jQuery(function($) {
             "<i class='fa fa-chevron-left fa-2x'></i>",
             "<i class='fa fa-chevron-right fa-2x'></i>"
         ],
-        dots: false,
+        // dots: false,
         responsive: {
             0: {
                 items: 1
@@ -87,12 +119,11 @@ jQuery(function($) {
     $('.owl_chuyengia').owlCarousel({
         loop: true,
         margin: 10,
-        // nav:true,
+        nav:true,
         navText: [
             "<i class='fa fa-chevron-left fa-2x'></i>",
             "<i class='fa fa-chevron-right fa-2x'></i>"
         ],
-        // dots: false,
         responsive: {
             0: {
                 items: 1
@@ -114,14 +145,13 @@ jQuery(function($) {
             "<i class='fa fa-chevron-left fa-2x'></i>",
             "<i class='fa fa-chevron-right fa-2x'></i>"
         ],
-        dots: false,
         responsive: {
             0: {
                 items: 1
             },
             600: {
                 items: 2
-            },
+            },          
             1000: {
                 items: 4
             }
@@ -136,7 +166,6 @@ jQuery(function($) {
             "<i class='fa fa-chevron-left fa-2x'></i>",
             "<i class='fa fa-chevron-right fa-2x'></i>"
         ],
-        dots: false,
         responsive: {
             0: {
                 items: 1
@@ -172,15 +201,35 @@ jQuery(function($) {
         }
     });
 
-    $('.owl_vechungtoi').owlCarousel({
+    $('.owl_taisao').owlCarousel({
         loop: true,
         // margin:30,
-        // nav:true,
+        nav:true,
         navText: [
             "<i class='fa fa-chevron-left fa-2x'></i>",
             "<i class='fa fa-chevron-right fa-2x'></i>"
         ],
-        // dots: false,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 1
+            },
+            1000: {
+                items: 1
+            }
+        }
+    });
+
+    $('.owl_vechungtoi').owlCarousel({
+        loop: true,
+        // margin:30,
+        nav:true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
         responsive: {
             0: {
                 items: 1
@@ -196,13 +245,12 @@ jQuery(function($) {
 
     $('.owl_giaovien').owlCarousel({
         loop: true,
-        margin: 30,
+        margin: 10,
         nav: true,
         navText: [
             "<i class='fa fa-chevron-left fa-2x'></i>",
             "<i class='fa fa-chevron-right fa-2x'></i>"
         ],
-        dots: false,
         responsive: {
             0: {
                 items: 1
@@ -220,15 +268,20 @@ jQuery(function($) {
         loop: true,
         margin: 15,
         dots: true,
+        nav:true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
         responsive: {
             0: {
-                items: 3
+                items: 1
             },
             600: {
-                items: 3
+                items: 2
             },
             1000: {
-                items: 5
+                items: 2
             }
         }
     });
@@ -241,7 +294,7 @@ jQuery(function($) {
             "<i class='fa fa-chevron-left fa-2x'></i>",
             "<i class='fa fa-chevron-right fa-2x'></i>"
         ],
-        dots: false,
+        // dots: false,
         responsive: {
             0: {
                 items: 1
@@ -254,6 +307,29 @@ jQuery(function($) {
             }
         }
     });
+
+    $('.owl_KTPL').owlCarousel({
+        loop: true,
+        margin: 10,
+        nav:true,
+        navText: [
+            "<i class='fa fa-chevron-left fa-2x'></i>",
+            "<i class='fa fa-chevron-right fa-2x'></i>"
+        ],
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 1
+            },
+            1000: {
+                items: 1
+            }
+        }
+    });
+
+
 
 
 });
@@ -304,31 +380,11 @@ $('.navbar-collapse ul li a').click(function() {
 
 $(document).ready(function() {
 
-    //menu hover
-    // $(".dropdown").hover(
-    //     function() {
-    //         $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideDown("500");
-    //         $(this).toggleClass('open');
-    //     },
-    //     function() {
-    //         $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideUp("500");
-    //         $(this).toggleClass('open');
-    //     }
-    // );
-
-    $('ul.nav li.dropdown').hover(function() {
-      $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-    }, function() {
-      $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-    });
-
     //search on header
     $('.header').on('click', '.search-toggle', function(e) {
         var selector = $(this).data('selector');
-
         $(selector).toggleClass('show').find('.search-input').focus();
         $(this).toggleClass('active');
-
         e.preventDefault();
     });
 
@@ -338,13 +394,12 @@ $(document).ready(function() {
         e.preventDefault();
         $('.qc_left').hide();
     });
-    $('.qc_right .btnClose').on('click', function(e) {
+    $('.qc_right .btnClose_right').on('click', function(e) {
         e.preventDefault();
         $('.qc_right').hide();
     });
 
     //file browser
-
     $("#doiavatar").filestyle({
         size: 'lg',
     });
@@ -354,27 +409,4 @@ $(document).ready(function() {
         $('html, body').animate({ scrollTop: 0 }, 800);
     });
 
-    
-
 });
-
-// show hide when scroll to element
-// $(document).scroll(function() {
-//     var y = $(document).scrollTop();
-//     var body = $('body').height();
-//     var height_window = $(window).height();
-//     var height_footer_bottom = 0; //$('.bottom_searchCondition').height();
-//     // var h_services = $('#bottom_searchCondition').height() + $('#services').height();
-
-//     if (y <= (body + height_footer_bottom)) {
-//         setTimeout(function() {
-//             $('.btnBGmoi, .btnTTmoi').removeClass('no_fixed');
-//         }, 200);
-
-//     } else {
-//         setTimeout(function() {
-//             $('.btnBGmoi, .btnTTmoi').addClass('no_fixed');
-//         }, 200);
-
-//     }
-// });

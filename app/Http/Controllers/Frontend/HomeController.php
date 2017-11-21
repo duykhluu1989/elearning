@@ -59,7 +59,7 @@ class HomeController extends Controller
             ->limit(Utility::FRONTEND_HOME_ITEM_LIMIT)
             ->get();
 
-        $caseAdviceLaws = CaseAdvice::select('id', 'name', 'name_en', 'slug', 'slug_en')
+        $caseAdviceLaws = CaseAdvice::select('id', 'name', 'name_en', 'description', 'description_en', 'slug', 'slug_en')
             ->where('type', CaseAdvice::TYPE_LAW_DB)
             ->where('status', Utility::ACTIVE_DB)
             ->orderBy('order', 'desc')

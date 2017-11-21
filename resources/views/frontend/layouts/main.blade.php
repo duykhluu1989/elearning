@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="{{ asset('themes/owlcarousel/assets/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('themes/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('themes/css/mobile.css') }}">
+    <link rel="stylesheet" href="{{ asset('themes/css/animsition.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('themes/css/bootstrap-dropdownhover.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/sweetalert.css') }}">
     @stack('stylesheets')
 </head>
@@ -40,7 +42,7 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 </script>
-<div id="page">
+<div id="page" class="animsition">
     <a class="live_chat" href="#"><i class="fa fa-commenting-o fa-lg" aria-hidden="true"></i> @lang('theme.chat')</a>
 
     @yield('section')
@@ -58,6 +60,8 @@
 <script src="{{ asset('themes/js/functions.js') }}"></script>
 <script src="{{ asset('themes/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script src="{{ asset('themes/js/text-slider.js') }}"></script>
+<script src="{{ asset('themes/js/animsition.min.js') }}"></script>
+<script src="{{ asset('themes/js/bootstrap-dropdownhover.js') }}"></script>
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('assets/js/frontend.js') }}"></script>
 @stack('scripts')

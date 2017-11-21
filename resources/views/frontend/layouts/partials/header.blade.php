@@ -9,6 +9,11 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
+
+                    @if(auth()->guest())
+                        <a href="#modal_dangky" data-toggle="modal" class="btn btn_DK_DN visible-sm visible-xs"><i class="fa fa-user fa-lg" aria-hidden="true"></i></a>
+                    @endif
+
                     <a href="{{ action('Frontend\HomeController@home') }}" class="navbar-brand" style="{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_LOGO) ? ('background-image: url(' . \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_LOGO) . ')') : '' }}"></a>
                 </div>
                 <div class="collapse navbar-collapse js-navbar-collapse">
@@ -18,7 +23,7 @@
 
                     </ul>
                     <ul class="nav navbar-nav navbar-right lang">
-                        <li>
+                        <li class="hidden-xs">
                             <div class="search-button">
                                 <a href="#" class="search-toggle" data-selector="#header-1"></a>
                             </div>
@@ -26,18 +31,18 @@
 
                         @if(auth()->guest())
 
-                            <li><a href="#modal_dangky" data-toggle="modal">@lang('theme.sign_up')</a></li>
-                            <li><a href="#modal_dangnhap" data-toggle="modal">@lang('theme.sign_in')</a></li>
+                            <li class="hidden-sm hidden-xs"><a href="#modal_dangky" data-toggle="modal">@lang('theme.sign_up')</a></li>
+                            <li class="hidden-sm hidden-xs"><a href="#modal_dangnhap" data-toggle="modal">@lang('theme.sign_in')</a></li>
 
                         @endif
 
-                        <li>
+                        <li class="hidden-sm hidden-xs">
                             <a href="{{ action('Frontend\HomeController@language', ['locale' => 'vi']) }}"><img src="{{ asset('themes/images/vn.jpg') }}" alt="VN" class="img-responsive"></a>
                         </li>
-                        <li>
+                        <li class="hidden-sm hidden-xs">
                             <a href="{{ action('Frontend\HomeController@language', ['locale' => 'en']) }}"><img src="{{ asset('themes/images/en.jpg') }}" alt="EN" class="img-responsive"></a>
                         </li>
-                        <li id="CartDetail">
+                        <li class="hidden-sm hidden-xs" id="CartDetail">
 
                             @include('frontend.orders.partials.cart', ['cart' => \App\Http\Controllers\Frontend\OrderController::getFullCart()])
 

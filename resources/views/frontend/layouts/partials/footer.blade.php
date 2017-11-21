@@ -79,15 +79,20 @@
     <section class="footer_bottom">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                     <p class="copyright">&copy; 2017 <a href="{{ action('Frontend\HomeController@home') }}">{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_TITLE) }}</a>. All rights reserved.</p>
+                    <address><b>Địa chỉ:</b> 40 Vũ Tùng, P1, Q. Bình Thạnh, TP. HCM</address>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <p class="bocongthuong"><a href="javascript:void(0)"><img src="{{ asset('assets/images/bocongthuong.png') }}" alt="" class="img-responsive"></a></p>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             <p class="luottruycap"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>@lang('theme.visitor_count'): <span>{{ \App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_GENERAL_DB, \App\Models\Setting::WEB_VISITOR_COUNT) }}</p>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <p class="text_social">We are social: </p>
                             <ul class="list_social">
 
                                 @if(!empty(\App\Models\Setting::getSettings(\App\Models\Setting::CATEGORY_SOCIAL_DB, \App\Models\Setting::FACEBOOK_PAGE_URL)))
@@ -110,7 +115,7 @@
 
         <a class="btn btnBGmoi" href="#modal_BGM" data-toggle="modal">
             <span class="count" id="NewCourseModalCount">{{ count($newCourses) }}</span>
-            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> @lang('theme.new_course')
+            <i class="fa fa-file-text fa-lg" aria-hidden="true"></i> @lang('theme.new_course')
         </a>
 
         <a class="btn btnTTmoi" href="#modal_TTM" data-toggle="modal">
