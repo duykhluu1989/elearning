@@ -16,12 +16,12 @@ class Access
         {
             auth()->logout();
 
-            if(Route::current()->getPrefix() == 'admin')
+            if(Route::current()->getPrefix() == '/admin')
                 return redirect()->action('Backend\UserController@login');
             else
                 return redirect()->action('Frontend\HomeController@home');
         }
-        else if(Route::current()->getPrefix() == 'admin')
+        else if(Route::current()->getPrefix() == '/admin')
         {
             if($user->admin == false)
                 return redirect()->action('Frontend\HomeController@home');
